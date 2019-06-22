@@ -101,6 +101,166 @@ namespace NextDepartures.Standard
             }
         }
 
+        /// <summary>Gets a list of stops by location.</summary>
+        public List<Stop> GetStopsByLocation(double minLon, double minLat, double maxLon, double maxLat)
+        {
+            List<Stop> results = new List<Stop>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connection))
+                {
+                    connection.Open();
+
+                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE CAST(StopLat as REAL) >= {0} AND CAST(StopLat as REAL) <= {1} AND CAST(StopLon as REAL) >= {2} AND CAST(StopLon as REAL) <= {3} AND StopLat != '0' AND StopLon != '0'", minLat, maxLat, minLon, maxLon), connection)
+                    {
+                        CommandTimeout = 0,
+                        CommandType = CommandType.Text
+                    };
+
+                    _dataReader = _command.ExecuteReader();
+
+                    while (_dataReader.Read())
+                    {
+                        results.Add(new Stop()
+                        {
+                            StopID = _dataReader.GetValue(0).ToString(),
+                            StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(_dataReader.GetValue(1).ToString().ToLower()),
+                            StopTimezone = _dataReader.GetValue(2).ToString()
+                        });
+                    }
+
+                    _dataReader.Close();
+                }
+
+                return results;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>Gets a list of stops by location.</summary>
+        public async Task<List<Stop>> GetStopsByLocationAsync(double minLon, double minLat, double maxLon, double maxLat)
+        {
+            List<Stop> results = new List<Stop>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connection))
+                {
+                    connection.Open();
+
+                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE CAST(StopLat as REAL) >= {0} AND CAST(StopLat as REAL) <= {1} AND CAST(StopLon as REAL) >= {2} AND CAST(StopLon as REAL) <= {3} AND StopLat != '0' AND StopLon != '0'", minLat, maxLat, minLon, maxLon), connection)
+                    {
+                        CommandTimeout = 0,
+                        CommandType = CommandType.Text
+                    };
+
+                    _dataReader = await _command.ExecuteReaderAsync();
+
+                    while (await _dataReader.ReadAsync())
+                    {
+                        results.Add(new Stop()
+                        {
+                            StopID = _dataReader.GetValue(0).ToString(),
+                            StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(_dataReader.GetValue(1).ToString().ToLower()),
+                            StopTimezone = _dataReader.GetValue(2).ToString()
+                        });
+                    }
+
+                    _dataReader.Close();
+                }
+
+                return results;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>Gets a list of stops by query and location.</summary>
+        public List<Stop> GetStopsByQueryAndLocation(string query, double minLon, double minLat, double maxLon, double maxLat)
+        {
+            List<Stop> results = new List<Stop>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connection))
+                {
+                    connection.Open();
+
+                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE StopID LIKE '%{0}%' OR StopName LIKE '%{0}%' AND CAST(StopLat as REAL) >= {1} AND CAST(StopLat as REAL) <= {2} AND CAST(StopLon as REAL) >= {3} AND CAST(StopLon as REAL) <= {4} AND StopLat != '0' AND StopLon != '0'", query, minLat, maxLat, minLon, maxLon), connection)
+                    {
+                        CommandTimeout = 0,
+                        CommandType = CommandType.Text
+                    };
+
+                    _dataReader = _command.ExecuteReader();
+
+                    while (_dataReader.Read())
+                    {
+                        results.Add(new Stop()
+                        {
+                            StopID = _dataReader.GetValue(0).ToString(),
+                            StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(_dataReader.GetValue(1).ToString().ToLower()),
+                            StopTimezone = _dataReader.GetValue(2).ToString()
+                        });
+                    }
+
+                    _dataReader.Close();
+                }
+
+                return results;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>Gets a list of stops by query and location.</summary>
+        public async Task<List<Stop>> GetStopsByQueryAndLocationAsync(string query, double minLon, double minLat, double maxLon, double maxLat)
+        {
+            List<Stop> results = new List<Stop>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connection))
+                {
+                    connection.Open();
+
+                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE StopID LIKE '%{0}%' OR StopName LIKE '%{0}%' AND CAST(StopLat as REAL) >= {1} AND CAST(StopLat as REAL) <= {2} AND CAST(StopLon as REAL) >= {3} AND CAST(StopLon as REAL) <= {4} AND StopLat != '0' AND StopLon != '0'", query, minLat, maxLat, minLon, maxLon), connection)
+                    {
+                        CommandTimeout = 0,
+                        CommandType = CommandType.Text
+                    };
+
+                    _dataReader = await _command.ExecuteReaderAsync();
+
+                    while (await _dataReader.ReadAsync())
+                    {
+                        results.Add(new Stop()
+                        {
+                            StopID = _dataReader.GetValue(0).ToString(),
+                            StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(_dataReader.GetValue(1).ToString().ToLower()),
+                            StopTimezone = _dataReader.GetValue(2).ToString()
+                        });
+                    }
+
+                    _dataReader.Close();
+                }
+
+                return results;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         /// <summary>Gets a list of services by stop.</summary>
         public List<Service> GetServicesByStop(string id, int count = 10)
         {
