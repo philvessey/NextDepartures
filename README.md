@@ -10,6 +10,10 @@ using NextDepartures.Standard;
 Feed feed = new Feed([connection]);
 List<Stop> results = feed.GetStopsByQuery([query]);
 List<Stop> results = await feed.GetStopsByQueryAsync([query]);
+List<Stop> results = feed.GetStopsByLocation([minLon], [minLat], [maxLon], [maxLat]);
+List<Stop> results = await feed.GetStopsByLocationAsync([minLon], [minLat], [maxLon], [maxLat]);
+List<Stop> results = feed.GetStopsByQueryAndLocation([query], [minLon], [minLat], [maxLon], [maxLat]);
+List<Stop> results = await feed.GetStopsByQueryAndLocationAsync([query], [minLon], [minLat], [maxLon], [maxLat]);
 
 Feed feed = new Feed([connection]);
 List<Service> results = feed.GetServicesByStop([id]);

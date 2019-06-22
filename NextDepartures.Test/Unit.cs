@@ -27,6 +27,42 @@ namespace NextDepartures.Test
         }
 
         [TestMethod]
+        public void GetStopsByLocation()
+        {
+            Feed feed = new Feed("");
+            List<Stop> results = feed.GetStopsByLocation(0, 0, 0, 0);
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
+        public async Task GetStopsByLocationAsync()
+        {
+            Feed feed = new Feed("");
+            List<Stop> results = await feed.GetStopsByLocationAsync(0, 0, 0, 0);
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
+        public void GetStopsByQueryAndLocation()
+        {
+            Feed feed = new Feed("");
+            List<Stop> results = feed.GetStopsByQueryAndLocation("", 0, 0, 0, 0);
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
+        public async Task GetStopsByQueryAndLocationAsync()
+        {
+            Feed feed = new Feed("");
+            List<Stop> results = await feed.GetStopsByQueryAndLocationAsync("", 0, 0, 0, 0);
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
         public void GetServicesByStop()
         {
             Feed feed = new Feed("");
