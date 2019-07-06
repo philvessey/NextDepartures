@@ -195,7 +195,7 @@ namespace NextDepartures.Database
 
                 await _command.ExecuteNonQueryAsync();
 
-                _command = new SqlCommand("CREATE TABLE Agency (AgencyID nvarchar(255) PRIMARY KEY, AgencyName nvarchar(255), AgencyUrl nvarchar(255), AgencyTimezone nvarchar(255), AgencyLang nvarchar(255), AgencyPhone nvarchar(255), AgencyFareUrl nvarchar(255), AgencyEmail nvarchar(255))", connection)
+                _command = new SqlCommand("CREATE TABLE Agency (AgencyID nvarchar(255), AgencyName nvarchar(255), AgencyUrl nvarchar(255), AgencyTimezone nvarchar(255), AgencyLang nvarchar(255), AgencyPhone nvarchar(255), AgencyFareUrl nvarchar(255), AgencyEmail nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
@@ -810,7 +810,15 @@ namespace NextDepartures.Database
                     }
                 }
 
-                _command = new SqlCommand("CREATE NONCLUSTERED INDEX StopTimeIndex ON StopTime (StopID, PickupType) INCLUDE (TripID, ArrivalTime, DepartureTime, StopSequence, StopHeadsign, DropOffType, ShapeDistTraveled, Timepoint) WITH (ONLINE = ON)", connection)
+                _command = new SqlCommand("CREATE NONCLUSTERED INDEX StopTimeIndexStop ON StopTime (StopID, PickupType) INCLUDE (TripID, ArrivalTime, DepartureTime, StopSequence, StopHeadsign, DropOffType, ShapeDistTraveled, Timepoint) WITH (ONLINE = ON)", connection)
+                {
+                    CommandTimeout = 0,
+                    CommandType = CommandType.Text
+                };
+
+                await _command.ExecuteNonQueryAsync();
+
+                _command = new SqlCommand("CREATE NONCLUSTERED INDEX StopTimeIndexTrip ON StopTime (TripID, PickupType) INCLUDE (ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, DropOffType, ShapeDistTraveled, Timepoint) WITH (ONLINE = ON)", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text

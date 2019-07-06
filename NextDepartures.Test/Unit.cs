@@ -9,19 +9,37 @@ namespace NextDepartures.Test
     public class Unit
     {
         [TestMethod]
-        public void GetStopsByQuery()
+        public void GetServicesByStop()
         {
             Feed feed = new Feed("");
-            List<Stop> results = feed.GetStopsByQuery("");
+            List<Service> results = feed.GetServicesByStop("");
 
             Assert.IsNotNull(results);
         }
 
         [TestMethod]
-        public async Task GetStopsByQueryAsync()
+        public async Task GetServicesByStopAsync()
         {
             Feed feed = new Feed("");
-            List<Stop> results = await feed.GetStopsByQueryAsync("");
+            List<Service> results = await feed.GetServicesByStopAsync("");
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
+        public void GetServicesByTrip()
+        {
+            Feed feed = new Feed("");
+            List<Service> results = feed.GetServicesByTrip("");
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
+        public async Task GetServicesByTripAsync()
+        {
+            Feed feed = new Feed("");
+            List<Service> results = await feed.GetServicesByTripAsync("");
 
             Assert.IsNotNull(results);
         }
@@ -45,37 +63,37 @@ namespace NextDepartures.Test
         }
 
         [TestMethod]
-        public void GetStopsByQueryAndLocation()
+        public void GetStopsByQuery()
         {
             Feed feed = new Feed("");
-            List<Stop> results = feed.GetStopsByQueryAndLocation("", 0, 0, 0, 0);
+            List<Stop> results = feed.GetStopsByQuery("");
 
             Assert.IsNotNull(results);
         }
 
         [TestMethod]
-        public async Task GetStopsByQueryAndLocationAsync()
+        public async Task GetStopsByQueryAsync()
         {
             Feed feed = new Feed("");
-            List<Stop> results = await feed.GetStopsByQueryAndLocationAsync("", 0, 0, 0, 0);
+            List<Stop> results = await feed.GetStopsByQueryAsync("");
 
             Assert.IsNotNull(results);
         }
 
         [TestMethod]
-        public void GetServicesByStop()
+        public void GetStopsByWildcard()
         {
             Feed feed = new Feed("");
-            List<Service> results = feed.GetServicesByStop("");
+            List<Stop> results = feed.GetStopsByWildcard(0, 0, 0, 0, "");
 
             Assert.IsNotNull(results);
         }
 
         [TestMethod]
-        public async Task GetServicesByStopAsync()
+        public async Task GetStopsByWildcardAsync()
         {
             Feed feed = new Feed("");
-            List<Service> results = await feed.GetServicesByStopAsync("");
+            List<Stop> results = await feed.GetStopsByWildcardAsync(0, 0, 0, 0, "");
 
             Assert.IsNotNull(results);
         }
