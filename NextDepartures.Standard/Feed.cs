@@ -9758,7 +9758,7 @@ namespace NextDepartures.Standard
                 {
                     connection.Open();
 
-                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE StopID LIKE '%{0}%' OR StopName LIKE '%{0}%' AND StopLat != '0' AND StopLon != '0'", query), connection)
+                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE LOWER(StopID) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%' AND StopLat != '0' AND StopLon != '0'", query.ToLower()), connection)
                     {
                         CommandTimeout = 0,
                         CommandType = CommandType.Text
@@ -9798,7 +9798,7 @@ namespace NextDepartures.Standard
                 {
                     connection.Open();
 
-                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE StopID LIKE '%{0}%' OR StopName LIKE '%{0}%' AND StopLat != '0' AND StopLon != '0'", query), connection)
+                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE LOWER(StopID) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%' AND StopLat != '0' AND StopLon != '0'", query.ToLower()), connection)
                     {
                         CommandTimeout = 0,
                         CommandType = CommandType.Text
@@ -9838,7 +9838,7 @@ namespace NextDepartures.Standard
                 {
                     connection.Open();
 
-                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE StopID LIKE '%{0}%' OR StopName LIKE '%{0}%' AND CAST(StopLat as REAL) >= {1} AND CAST(StopLat as REAL) <= {2} AND CAST(StopLon as REAL) >= {3} AND CAST(StopLon as REAL) <= {4} AND StopLat != '0' AND StopLon != '0'", query, minLat, maxLat, minLon, maxLon), connection)
+                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE LOWER(StopID) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%' AND CAST(StopLat as REAL) >= {1} AND CAST(StopLat as REAL) <= {2} AND CAST(StopLon as REAL) >= {3} AND CAST(StopLon as REAL) <= {4} AND StopLat != '0' AND StopLon != '0'", query.ToLower(), minLat, maxLat, minLon, maxLon), connection)
                     {
                         CommandTimeout = 0,
                         CommandType = CommandType.Text
@@ -9878,7 +9878,7 @@ namespace NextDepartures.Standard
                 {
                     connection.Open();
 
-                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE StopID LIKE '%{0}%' OR StopName LIKE '%{0}%' AND CAST(StopLat as REAL) >= {1} AND CAST(StopLat as REAL) <= {2} AND CAST(StopLon as REAL) >= {3} AND CAST(StopLon as REAL) <= {4} AND StopLat != '0' AND StopLon != '0'", query, minLat, maxLat, minLon, maxLon), connection)
+                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE LOWER(StopID) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%' AND CAST(StopLat as REAL) >= {1} AND CAST(StopLat as REAL) <= {2} AND CAST(StopLon as REAL) >= {3} AND CAST(StopLon as REAL) <= {4} AND StopLat != '0' AND StopLon != '0'", query.ToLower(), minLat, maxLat, minLon, maxLon), connection)
                     {
                         CommandTimeout = 0,
                         CommandType = CommandType.Text
