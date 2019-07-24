@@ -9668,7 +9668,7 @@ namespace NextDepartures.Standard
         }
 
         /// <summary>Gets a list of stops by location.</summary>
-        public List<Stop> GetStopsByLocation(double minLon, double minLat, double maxLon, double maxLat)
+        public List<Stop> GetStopsByLocation(double minLon, double minLat, double maxLon, double maxLat, int count = 10)
         {
             List<Stop> results = new List<Stop>();
 
@@ -9698,6 +9698,8 @@ namespace NextDepartures.Standard
 
                     _dataReader.Close();
                 }
+
+                results = results.Take(count).ToList();
 
                 return results;
             }
@@ -9708,7 +9710,7 @@ namespace NextDepartures.Standard
         }
 
         /// <summary>Gets a list of stops by location.</summary>
-        public async Task<List<Stop>> GetStopsByLocationAsync(double minLon, double minLat, double maxLon, double maxLat)
+        public async Task<List<Stop>> GetStopsByLocationAsync(double minLon, double minLat, double maxLon, double maxLat, int count = 10)
         {
             List<Stop> results = new List<Stop>();
 
@@ -9739,6 +9741,8 @@ namespace NextDepartures.Standard
                     _dataReader.Close();
                 }
 
+                results = results.Take(count).ToList();
+
                 return results;
             }
             catch
@@ -9748,7 +9752,7 @@ namespace NextDepartures.Standard
         }
 
         /// <summary>Gets a list of stops by query.</summary>
-        public List<Stop> GetStopsByQuery(string query)
+        public List<Stop> GetStopsByQuery(string query, int count = 10)
         {
             List<Stop> results = new List<Stop>();
 
@@ -9779,6 +9783,8 @@ namespace NextDepartures.Standard
                     _dataReader.Close();
                 }
 
+                results = results.Take(count).ToList();
+
                 return results;
             }
             catch
@@ -9788,7 +9794,7 @@ namespace NextDepartures.Standard
         }
 
         /// <summary>Gets a list of stops by query.</summary>
-        public async Task<List<Stop>> GetStopsByQueryAsync(string query)
+        public async Task<List<Stop>> GetStopsByQueryAsync(string query, int count = 10)
         {
             List<Stop> results = new List<Stop>();
 
@@ -9819,6 +9825,8 @@ namespace NextDepartures.Standard
                     _dataReader.Close();
                 }
 
+                results = results.Take(count).ToList();
+
                 return results;
             }
             catch
@@ -9828,7 +9836,7 @@ namespace NextDepartures.Standard
         }
 
         /// <summary>Gets a list of stops by location and query.</summary>
-        public List<Stop> GetStopsByWildcard(double minLon, double minLat, double maxLon, double maxLat, string query)
+        public List<Stop> GetStopsByWildcard(double minLon, double minLat, double maxLon, double maxLat, string query, int count = 10)
         {
             List<Stop> results = new List<Stop>();
 
@@ -9859,6 +9867,8 @@ namespace NextDepartures.Standard
                     _dataReader.Close();
                 }
 
+                results = results.Take(count).ToList();
+
                 return results;
             }
             catch
@@ -9868,7 +9878,7 @@ namespace NextDepartures.Standard
         }
 
         /// <summary>Gets a list of stops by location and query.</summary>
-        public async Task<List<Stop>> GetStopsByWildcardAsync(double minLon, double minLat, double maxLon, double maxLat, string query)
+        public async Task<List<Stop>> GetStopsByWildcardAsync(double minLon, double minLat, double maxLon, double maxLat, string query, int count = 10)
         {
             List<Stop> results = new List<Stop>();
 
@@ -9898,6 +9908,8 @@ namespace NextDepartures.Standard
 
                     _dataReader.Close();
                 }
+
+                results = results.Take(count).ToList();
 
                 return results;
             }
