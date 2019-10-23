@@ -235,27 +235,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
@@ -279,27 +259,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -326,27 +286,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
@@ -370,27 +310,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -417,27 +337,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
@@ -461,27 +361,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -508,27 +388,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
@@ -552,27 +412,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -599,27 +439,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
@@ -643,27 +463,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -690,27 +490,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
@@ -734,27 +514,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -781,27 +541,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
@@ -825,27 +565,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -959,27 +679,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= todayDate && endDate >= todayDate)
@@ -1003,27 +703,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -1050,27 +730,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= todayDate && endDate >= todayDate)
@@ -1094,27 +754,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -1141,27 +781,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= todayDate && endDate >= todayDate)
@@ -1185,27 +805,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -1232,27 +832,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= todayDate && endDate >= todayDate)
@@ -1276,27 +856,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -1323,27 +883,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= todayDate && endDate >= todayDate)
@@ -1367,27 +907,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -1414,27 +934,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= todayDate && endDate >= todayDate)
@@ -1458,27 +958,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -1505,27 +985,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= todayDate && endDate >= todayDate)
@@ -1549,27 +1009,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -1683,27 +1123,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
@@ -1727,27 +1147,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -1774,27 +1174,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
@@ -1818,27 +1198,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -1865,27 +1225,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
@@ -1909,27 +1249,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -1956,27 +1276,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
@@ -2000,27 +1300,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -2047,27 +1327,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
@@ -2091,27 +1351,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -2138,27 +1378,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
@@ -2182,27 +1402,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -2229,27 +1429,7 @@ namespace NextDepartures.Standard
 
                                 if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                             else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
@@ -2273,27 +1453,7 @@ namespace NextDepartures.Standard
 
                                 if (include && departureTime >= now && departureTime <= now.AddHours(1))
                                 {
-                                    workingDepartures.Add(new Departure()
-                                    {
-                                        AgencyID = departure.AgencyID,
-                                        DepartureTime = departureTime.ToString(),
-                                        EndDate = departure.EndDate,
-                                        Friday = departure.Friday,
-                                        Monday = departure.Monday,
-                                        RouteLongName = departure.RouteLongName,
-                                        RouteShortName = departure.RouteShortName,
-                                        Saturday = departure.Saturday,
-                                        ServiceID = departure.ServiceID,
-                                        StartDate = departure.StartDate,
-                                        StopID = departure.StopID,
-                                        Sunday = departure.Sunday,
-                                        Thursday = departure.Thursday,
-                                        TripHeadsign = departure.TripHeadsign,
-                                        TripID = departure.TripID,
-                                        TripShortName = departure.TripShortName,
-                                        Tuesday = departure.Tuesday,
-                                        Wednesday = departure.Wednesday
-                                    });
+                                    workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                                 }
                             }
                         }
@@ -2419,7 +1579,15 @@ namespace NextDepartures.Standard
                     routeName = routeName.Trim();
                     stopName = stopName.Trim();
 
-                    results.Add(new Service() { AgencyName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(agencyName.ToLower()), DepartureTime = departure.DepartureTime, DestinationName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(destinationName.ToLower()), RouteName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(routeName.ToLower()), StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(stopName.ToLower()), TripID = departure.TripID });
+                    results.Add(new Service()
+                    {
+                        AgencyName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(agencyName.ToLower()),
+                        DepartureTime = departure.DepartureTime,
+                        DestinationName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(destinationName.ToLower()),
+                        RouteName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(routeName.ToLower()),
+                        StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(stopName.ToLower()),
+                        TripID = departure.TripID
+                    });
                 }
 
                 return results;
