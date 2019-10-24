@@ -11,7 +11,7 @@ namespace NextDepartures.Standard
 {
     public partial class Feed
     {
-        /// <summary>Gets a list of services.</summary>
+        /// <summary>Gets a list of services by stop.</summary>
         public async Task<List<Service>> GetServicesByStopAsync(string id, int count = 10)
         {
             List<Service> results = new List<Service>();
@@ -32,100 +32,104 @@ namespace NextDepartures.Standard
                 {
                     connection.Open();
 
-                    _command = new SqlCommand(string.Format("SELECT s.DepartureTime, s.StopID, t.ServiceID, t.TripID, t.TripHeadsign, t.TripShortName, r.AgencyID, r.RouteShortName, r.RouteLongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM StopTime s LEFT JOIN Trip t ON (s.TripID = t.TripID) LEFT JOIN Route r ON (t.RouteID = r.RouteID) LEFT JOIN Calendar c ON (t.ServiceID = c.ServiceID) WHERE LOWER(s.StopID) = '{0}' AND s.PickupType != '1' ORDER BY s.DepartureTime ASC", id.ToLower()), connection)
+                    SqlCommand command = new SqlCommand(string.Format("SELECT s.DepartureTime, s.StopID, t.ServiceID, t.TripID, t.TripHeadsign, t.TripShortName, r.AgencyID, r.RouteShortName, r.RouteLongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM StopTime s LEFT JOIN Trip t ON (s.TripID = t.TripID) LEFT JOIN Route r ON (t.RouteID = r.RouteID) LEFT JOIN Calendar c ON (t.ServiceID = c.ServiceID) WHERE LOWER(s.StopID) = '{0}' AND s.PickupType != '1' ORDER BY s.DepartureTime ASC", id.ToLower()), connection)
                     {
                         CommandTimeout = 0,
                         CommandType = CommandType.Text
                     };
 
-                    _dataReader = await _command.ExecuteReaderAsync();
+                    SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-                    while (_dataReader.Read())
+                    while (dataReader.Read())
                     {
                         tempDepartures.Add(new Departure()
                         {
-                            DepartureTime = _dataReader.GetValue(0).ToString(),
-                            StopID = _dataReader.GetValue(1).ToString(),
-                            ServiceID = _dataReader.GetValue(2).ToString(),
-                            TripID = _dataReader.GetValue(3).ToString(),
-                            TripHeadsign = _dataReader.GetValue(4).ToString(),
-                            TripShortName = _dataReader.GetValue(5).ToString(),
-                            AgencyID = _dataReader.GetValue(6).ToString(),
-                            RouteShortName = _dataReader.GetValue(7).ToString(),
-                            RouteLongName = _dataReader.GetValue(8).ToString(),
-                            Monday = _dataReader.GetValue(9).ToString(),
-                            Tuesday = _dataReader.GetValue(10).ToString(),
-                            Wednesday = _dataReader.GetValue(11).ToString(),
-                            Thursday = _dataReader.GetValue(12).ToString(),
-                            Friday = _dataReader.GetValue(13).ToString(),
-                            Saturday = _dataReader.GetValue(14).ToString(),
-                            Sunday = _dataReader.GetValue(15).ToString(),
-                            StartDate = _dataReader.GetValue(16).ToString(),
-                            EndDate = _dataReader.GetValue(17).ToString()
+                            DepartureTime = dataReader.GetValue(0).ToString(),
+                            StopID = dataReader.GetValue(1).ToString(),
+                            ServiceID = dataReader.GetValue(2).ToString(),
+                            TripID = dataReader.GetValue(3).ToString(),
+                            TripHeadsign = dataReader.GetValue(4).ToString(),
+                            TripShortName = dataReader.GetValue(5).ToString(),
+                            AgencyID = dataReader.GetValue(6).ToString(),
+                            RouteShortName = dataReader.GetValue(7).ToString(),
+                            RouteLongName = dataReader.GetValue(8).ToString(),
+                            Monday = dataReader.GetValue(9).ToString(),
+                            Tuesday = dataReader.GetValue(10).ToString(),
+                            Wednesday = dataReader.GetValue(11).ToString(),
+                            Thursday = dataReader.GetValue(12).ToString(),
+                            Friday = dataReader.GetValue(13).ToString(),
+                            Saturday = dataReader.GetValue(14).ToString(),
+                            Sunday = dataReader.GetValue(15).ToString(),
+                            StartDate = dataReader.GetValue(16).ToString(),
+                            EndDate = dataReader.GetValue(17).ToString()
                         });
                     }
 
-                    _dataReader.Close();
+                    dataReader.Close();
+                    command.Dispose();
 
-                    _command = new SqlCommand("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency", connection)
+                    command = new SqlCommand("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency", connection)
                     {
                         CommandTimeout = 0,
                         CommandType = CommandType.Text
                     };
 
-                    _dataReader = await _command.ExecuteReaderAsync();
+                    dataReader = await command.ExecuteReaderAsync();
 
-                    while (await _dataReader.ReadAsync())
+                    while (await dataReader.ReadAsync())
                     {
                         workingAgencies.Add(new Agency()
                         {
-                            AgencyID = _dataReader.GetValue(0).ToString(),
-                            AgencyName = _dataReader.GetValue(1).ToString(),
-                            AgencyTimezone = _dataReader.GetValue(2).ToString()
+                            AgencyID = dataReader.GetValue(0).ToString(),
+                            AgencyName = dataReader.GetValue(1).ToString(),
+                            AgencyTimezone = dataReader.GetValue(2).ToString()
                         });
                     }
 
-                    _dataReader.Close();
+                    dataReader.Close();
+                    command.Dispose();
 
-                    _command = new SqlCommand("SELECT Date, ExceptionType, ServiceID FROM CalendarDate", connection)
+                    command = new SqlCommand("SELECT Date, ExceptionType, ServiceID FROM CalendarDate", connection)
                     {
                         CommandTimeout = 0,
                         CommandType = CommandType.Text
                     };
 
-                    _dataReader = await _command.ExecuteReaderAsync();
+                    dataReader = await command.ExecuteReaderAsync();
 
-                    while (await _dataReader.ReadAsync())
+                    while (await dataReader.ReadAsync())
                     {
                         workingExceptions.Add(new Exception()
                         {
-                            Date = _dataReader.GetValue(0).ToString(),
-                            ExceptionType = _dataReader.GetValue(1).ToString(),
-                            ServiceID = _dataReader.GetValue(2).ToString()
+                            Date = dataReader.GetValue(0).ToString(),
+                            ExceptionType = dataReader.GetValue(1).ToString(),
+                            ServiceID = dataReader.GetValue(2).ToString()
                         });
                     }
 
-                    _dataReader.Close();
+                    dataReader.Close();
+                    command.Dispose();
 
-                    _command = new SqlCommand("SELECT StopID, StopName, StopTimezone FROM Stop", connection)
+                    command = new SqlCommand("SELECT StopID, StopName, StopTimezone FROM Stop", connection)
                     {
                         CommandTimeout = 0,
                         CommandType = CommandType.Text
                     };
 
-                    _dataReader = await _command.ExecuteReaderAsync();
+                    dataReader = await command.ExecuteReaderAsync();
 
-                    while (await _dataReader.ReadAsync())
+                    while (await dataReader.ReadAsync())
                     {
                         workingStops.Add(new Stop()
                         {
-                            StopID = _dataReader.GetValue(0).ToString(),
-                            StopName = _dataReader.GetValue(1).ToString(),
-                            StopTimezone = _dataReader.GetValue(2).ToString()
+                            StopID = dataReader.GetValue(0).ToString(),
+                            StopName = dataReader.GetValue(1).ToString(),
+                            StopTimezone = dataReader.GetValue(2).ToString()
                         });
                     }
 
-                    _dataReader.Close();
+                    dataReader.Close();
+                    command.Dispose();
                 }
 
                 List<Departure> workingDepartures = new List<Departure>();

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Data.SqlClient;
 
 namespace NextDepartures.Standard
 {
     public partial class Feed
     {
-        private SqlCommand _command;
-        private SqlDataReader _dataReader;
         private readonly string _connection;
 
         /// <summary>Creates a new feed.</summary>

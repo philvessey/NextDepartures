@@ -20,25 +20,26 @@ namespace NextDepartures.Standard
                 {
                     connection.Open();
 
-                    _command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE LOWER(StopID) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%' AND StopLat != '0' AND StopLon != '0'", query.ToLower()), connection)
+                    SqlCommand command = new SqlCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE LOWER(StopID) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%' AND StopLat != '0' AND StopLon != '0'", query.ToLower()), connection)
                     {
                         CommandTimeout = 0,
                         CommandType = CommandType.Text
                     };
 
-                    _dataReader = await _command.ExecuteReaderAsync();
+                    SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-                    while (await _dataReader.ReadAsync())
+                    while (await dataReader.ReadAsync())
                     {
                         results.Add(new Stop()
                         {
-                            StopID = _dataReader.GetValue(0).ToString(),
-                            StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(_dataReader.GetValue(1).ToString().ToLower()),
-                            StopTimezone = _dataReader.GetValue(2).ToString()
+                            StopID = dataReader.GetValue(0).ToString(),
+                            StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader.GetValue(1).ToString().ToLower()),
+                            StopTimezone = dataReader.GetValue(2).ToString()
                         });
                     }
 
-                    _dataReader.Close();
+                    dataReader.Close();
+                    command.Dispose();
                 }
 
                 results = results.Take(count).ToList();
