@@ -1,11 +1,12 @@
 ﻿using NextDepartures.Standard.Model;
+
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
+
 using TimeZoneConverter;
 
 namespace NextDepartures.Standard
@@ -26,7 +27,7 @@ namespace NextDepartures.Standard
 
                 List<Departure> tempDepartures = new List<Departure>();
                 List<Agency> workingAgencies = new List<Agency>();
-                List<Exception> workingExceptions = new List<Exception>();
+                List<Model.Exception> workingExceptions = new List<Model.Exception>();
                 List<Stop> workingStops = new List<Stop>();
 
                 using (SqlConnection connection = new SqlConnection(_connection))
@@ -100,7 +101,7 @@ namespace NextDepartures.Standard
 
                     while (await dataReader.ReadAsync())
                     {
-                        workingExceptions.Add(new Exception()
+                        workingExceptions.Add(new Model.Exception()
                         {
                             Date = dataReader.GetValue(0).ToString(),
                             ExceptionType = dataReader.GetValue(1).ToString(),
@@ -221,7 +222,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -245,7 +246,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -272,7 +273,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -296,7 +297,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -323,7 +324,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -347,7 +348,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -374,7 +375,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -398,7 +399,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -425,7 +426,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -449,7 +450,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -476,7 +477,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -500,7 +501,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -527,7 +528,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -551,7 +552,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -660,7 +661,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -684,7 +685,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -711,7 +712,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -735,7 +736,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -762,7 +763,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -786,7 +787,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -813,7 +814,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -837,7 +838,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -864,7 +865,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -888,7 +889,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "")
                                 {
@@ -915,7 +916,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -939,7 +940,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -966,7 +967,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -990,7 +991,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -1099,7 +1100,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -1123,7 +1124,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -1150,7 +1151,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -1174,7 +1175,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -1201,7 +1202,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -1225,7 +1226,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -1252,7 +1253,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -1276,7 +1277,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -1303,7 +1304,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -1327,7 +1328,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "")
                                 {
@@ -1354,7 +1355,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -1378,7 +1379,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                                 {
@@ -1405,7 +1406,7 @@ namespace NextDepartures.Standard
                         {
                             bool exclude = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                                 {
@@ -1429,7 +1430,7 @@ namespace NextDepartures.Standard
                         {
                             bool include = false;
 
-                            foreach (Exception exception in workingExceptions)
+                            foreach (var exception in workingExceptions)
                             {
                                 if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                                 {
