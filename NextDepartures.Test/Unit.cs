@@ -9,28 +9,10 @@ namespace NextDepartures.Test
     public class Unit
     {
         [TestMethod]
-        public void GetServicesByStop()
-        {
-            Feed feed = new Feed("");
-            List<Service> results = feed.GetServicesByStop("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
         public async Task GetServicesByStopAsync()
         {
             Feed feed = new Feed("");
             List<Service> results = await feed.GetServicesByStopAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public void GetServicesByTrip()
-        {
-            Feed feed = new Feed("");
-            List<Service> results = feed.GetServicesByTrip("");
 
             Assert.IsNotNull(results);
         }
@@ -45,15 +27,6 @@ namespace NextDepartures.Test
         }
 
         [TestMethod]
-        public void GetStopsByLocation()
-        {
-            Feed feed = new Feed("");
-            List<Stop> results = feed.GetStopsByLocation(0, 0, 0, 0);
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
         public async Task GetStopsByLocationAsync()
         {
             Feed feed = new Feed("");
@@ -63,28 +36,10 @@ namespace NextDepartures.Test
         }
 
         [TestMethod]
-        public void GetStopsByQuery()
-        {
-            Feed feed = new Feed("");
-            List<Stop> results = feed.GetStopsByQuery("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
         public async Task GetStopsByQueryAsync()
         {
             Feed feed = new Feed("");
             List<Stop> results = await feed.GetStopsByQueryAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public void GetStopsByWildcard()
-        {
-            Feed feed = new Feed("");
-            List<Stop> results = feed.GetStopsByWildcard(0, 0, 0, 0, "");
 
             Assert.IsNotNull(results);
         }
