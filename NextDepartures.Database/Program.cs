@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using NextDepartures.Database.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,8 +15,6 @@ namespace NextDepartures.Database
 {
     class Program
     {
-        static SqlCommand _command;
-
         static void Main(string[] args)
         {
             MainAsync(args).GetAwaiter().GetResult();
@@ -27,341 +26,383 @@ namespace NextDepartures.Database
             {
                 connection.Open();
 
-                _command = new SqlCommand("DROP PROCEDURE IF EXISTS AgencyProcedure", connection)
+                SqlCommand command = new SqlCommand("DROP PROCEDURE IF EXISTS AgencyProcedure", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP PROCEDURE IF EXISTS CalendarProcedure", connection)
+                command = new SqlCommand("DROP PROCEDURE IF EXISTS CalendarProcedure", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP PROCEDURE IF EXISTS CalendarDateProcedure", connection)
+                command = new SqlCommand("DROP PROCEDURE IF EXISTS CalendarDateProcedure", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP PROCEDURE IF EXISTS RouteProcedure", connection)
+                command = new SqlCommand("DROP PROCEDURE IF EXISTS RouteProcedure", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP PROCEDURE IF EXISTS StopTimeProcedure", connection)
+                command = new SqlCommand("DROP PROCEDURE IF EXISTS StopProcedure", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP PROCEDURE IF EXISTS StopProcedure", connection)
+                command = new SqlCommand("DROP PROCEDURE IF EXISTS StopTimeProcedure", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP PROCEDURE IF EXISTS TripProcedure", connection)
+                command = new SqlCommand("DROP PROCEDURE IF EXISTS TripProcedure", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TYPE IF EXISTS AgencyType", connection)
+                command = new SqlCommand("DROP TYPE IF EXISTS AgencyType", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TYPE IF EXISTS CalendarType", connection)
+                command = new SqlCommand("DROP TYPE IF EXISTS CalendarType", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TYPE IF EXISTS CalendarDateType", connection)
+                command = new SqlCommand("DROP TYPE IF EXISTS CalendarDateType", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TYPE IF EXISTS RouteType", connection)
+                command = new SqlCommand("DROP TYPE IF EXISTS RouteType", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TYPE IF EXISTS StopTimeType", connection)
+                command = new SqlCommand("DROP TYPE IF EXISTS StopType", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TYPE IF EXISTS StopType", connection)
+                command = new SqlCommand("DROP TYPE IF EXISTS StopTimeType", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TYPE IF EXISTS TripType", connection)
+                command = new SqlCommand("DROP TYPE IF EXISTS TripType", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TABLE IF EXISTS Agency", connection)
+                command = new SqlCommand("DROP TABLE IF EXISTS Agency", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TABLE IF EXISTS Calendar", connection)
+                command = new SqlCommand("DROP TABLE IF EXISTS Calendar", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TABLE IF EXISTS CalendarDate", connection)
+                command = new SqlCommand("DROP TABLE IF EXISTS CalendarDate", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TABLE IF EXISTS Route", connection)
+                command = new SqlCommand("DROP TABLE IF EXISTS Route", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TABLE IF EXISTS StopTime", connection)
+                command = new SqlCommand("DROP TABLE IF EXISTS Stop", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TABLE IF EXISTS Stop", connection)
+                command = new SqlCommand("DROP TABLE IF EXISTS StopTime", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("DROP TABLE IF EXISTS Trip", connection)
+                command = new SqlCommand("DROP TABLE IF EXISTS Trip", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TABLE Agency (AgencyID nvarchar(255), AgencyName nvarchar(255), AgencyUrl nvarchar(255), AgencyTimezone nvarchar(255), AgencyLang nvarchar(255), AgencyPhone nvarchar(255), AgencyFareUrl nvarchar(255), AgencyEmail nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TABLE Agency (AgencyID nvarchar(255), AgencyName nvarchar(255), AgencyUrl nvarchar(255), AgencyTimezone nvarchar(255), AgencyLang nvarchar(255), AgencyPhone nvarchar(255), AgencyFareUrl nvarchar(255), AgencyEmail nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TABLE Calendar (ServiceID nvarchar(255) PRIMARY KEY, Monday nvarchar(255), Tuesday nvarchar(255), Wednesday nvarchar(255), Thursday nvarchar(255), Friday nvarchar(255), Saturday nvarchar(255), Sunday nvarchar(255), StartDate nvarchar(255), EndDate nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TABLE Calendar (ServiceID nvarchar(255) PRIMARY KEY, Monday nvarchar(255), Tuesday nvarchar(255), Wednesday nvarchar(255), Thursday nvarchar(255), Friday nvarchar(255), Saturday nvarchar(255), Sunday nvarchar(255), StartDate nvarchar(255), EndDate nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TABLE CalendarDate (ServiceID nvarchar(255), Date nvarchar(255), ExceptionType nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TABLE CalendarDate (ServiceID nvarchar(255), Date nvarchar(255), ExceptionType nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TABLE Route (RouteID nvarchar(255) PRIMARY KEY, AgencyID nvarchar(255), RouteShortName nvarchar(255), RouteLongName nvarchar(255), RouteDesc nvarchar(255), RouteType nvarchar(255), RouteUrl nvarchar(255), RouteColor nvarchar(255), RouteTextColor nvarchar(255), RouteSortOrder nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TABLE Route (RouteID nvarchar(255) PRIMARY KEY, AgencyID nvarchar(255), RouteShortName nvarchar(255), RouteLongName nvarchar(255), RouteDesc nvarchar(255), RouteType nvarchar(255), RouteUrl nvarchar(255), RouteColor nvarchar(255), RouteTextColor nvarchar(255), RouteSortOrder nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TABLE StopTime (TripID nvarchar(255), ArrivalTime nvarchar(255), DepartureTime nvarchar(255), StopID nvarchar(255), StopSequence nvarchar(255), StopHeadsign nvarchar(255), PickupType nvarchar(255), DropOffType nvarchar(255), ShapeDistTraveled nvarchar(255), Timepoint nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TABLE Stop (StopID nvarchar(255) PRIMARY KEY, StopCode nvarchar(255), StopName nvarchar(255), StopDesc nvarchar(255), StopLat nvarchar(255), StopLon nvarchar(255), ZoneID nvarchar(255), StopUrl nvarchar(255), LocationType nvarchar(255), ParentStation nvarchar(255), StopTimezone nvarchar(255), WheelchairBoarding nvarchar(255), LevelID nvarchar(255), PlatformCode nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TABLE Stop (StopID nvarchar(255) PRIMARY KEY, StopCode nvarchar(255), StopName nvarchar(255), StopDesc nvarchar(255), StopLat nvarchar(255), StopLon nvarchar(255), ZoneID nvarchar(255), StopUrl nvarchar(255), LocationType nvarchar(255), ParentStation nvarchar(255), StopTimezone nvarchar(255), WheelchairBoarding nvarchar(255), LevelID nvarchar(255), PlatformCode nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TABLE StopTime (TripID nvarchar(255), ArrivalTime nvarchar(255), DepartureTime nvarchar(255), StopID nvarchar(255), StopSequence nvarchar(255), StopHeadsign nvarchar(255), PickupType nvarchar(255), DropOffType nvarchar(255), ShapeDistTraveled nvarchar(255), Timepoint nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TABLE Trip (RouteID nvarchar(255), ServiceID nvarchar(255), TripID nvarchar(255) PRIMARY KEY, TripHeadsign nvarchar(255), TripShortName nvarchar(255), DirectionID nvarchar(255), BlockID nvarchar(255), ShapeID nvarchar(255), WheelchairAccessible nvarchar(255), BikesAllowed nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TABLE Trip (RouteID nvarchar(255), ServiceID nvarchar(255), TripID nvarchar(255) PRIMARY KEY, TripHeadsign nvarchar(255), TripShortName nvarchar(255), DirectionID nvarchar(255), BlockID nvarchar(255), ShapeID nvarchar(255), WheelchairAccessible nvarchar(255), BikesAllowed nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TYPE AgencyType AS TABLE (AgencyID nvarchar(255), AgencyName nvarchar(255), AgencyUrl nvarchar(255), AgencyTimezone nvarchar(255), AgencyLang nvarchar(255), AgencyPhone nvarchar(255), AgencyFareUrl nvarchar(255), AgencyEmail nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TYPE AgencyType AS TABLE (AgencyID nvarchar(255), AgencyName nvarchar(255), AgencyUrl nvarchar(255), AgencyTimezone nvarchar(255), AgencyLang nvarchar(255), AgencyPhone nvarchar(255), AgencyFareUrl nvarchar(255), AgencyEmail nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TYPE CalendarType AS TABLE (ServiceID nvarchar(255), Monday nvarchar(255), Tuesday nvarchar(255), Wednesday nvarchar(255), Thursday nvarchar(255), Friday nvarchar(255), Saturday nvarchar(255), Sunday nvarchar(255), StartDate nvarchar(255), EndDate nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TYPE CalendarType AS TABLE (ServiceID nvarchar(255), Monday nvarchar(255), Tuesday nvarchar(255), Wednesday nvarchar(255), Thursday nvarchar(255), Friday nvarchar(255), Saturday nvarchar(255), Sunday nvarchar(255), StartDate nvarchar(255), EndDate nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TYPE CalendarDateType AS TABLE (ServiceID nvarchar(255), Date nvarchar(255), ExceptionType nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TYPE CalendarDateType AS TABLE (ServiceID nvarchar(255), Date nvarchar(255), ExceptionType nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TYPE RouteType AS TABLE (RouteID nvarchar(255), AgencyID nvarchar(255), RouteShortName nvarchar(255), RouteLongName nvarchar(255), RouteDesc nvarchar(255), RouteType nvarchar(255), RouteUrl nvarchar(255), RouteColor nvarchar(255), RouteTextColor nvarchar(255), RouteSortOrder nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TYPE RouteType AS TABLE (RouteID nvarchar(255), AgencyID nvarchar(255), RouteShortName nvarchar(255), RouteLongName nvarchar(255), RouteDesc nvarchar(255), RouteType nvarchar(255), RouteUrl nvarchar(255), RouteColor nvarchar(255), RouteTextColor nvarchar(255), RouteSortOrder nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TYPE StopTimeType AS TABLE (TripID nvarchar(255), ArrivalTime nvarchar(255), DepartureTime nvarchar(255), StopID nvarchar(255), StopSequence nvarchar(255), StopHeadsign nvarchar(255), PickupType nvarchar(255), DropOffType nvarchar(255), ShapeDistTraveled nvarchar(255), Timepoint nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TYPE StopType AS TABLE (StopID nvarchar(255), StopCode nvarchar(255), StopName nvarchar(255), StopDesc nvarchar(255), StopLat nvarchar(255), StopLon nvarchar(255), ZoneID nvarchar(255), StopUrl nvarchar(255), LocationType nvarchar(255), ParentStation nvarchar(255), StopTimezone nvarchar(255), WheelchairBoarding nvarchar(255), LevelID nvarchar(255), PlatformCode nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TYPE StopType AS TABLE (StopID nvarchar(255), StopCode nvarchar(255), StopName nvarchar(255), StopDesc nvarchar(255), StopLat nvarchar(255), StopLon nvarchar(255), ZoneID nvarchar(255), StopUrl nvarchar(255), LocationType nvarchar(255), ParentStation nvarchar(255), StopTimezone nvarchar(255), WheelchairBoarding nvarchar(255), LevelID nvarchar(255), PlatformCode nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TYPE StopTimeType AS TABLE (TripID nvarchar(255), ArrivalTime nvarchar(255), DepartureTime nvarchar(255), StopID nvarchar(255), StopSequence nvarchar(255), StopHeadsign nvarchar(255), PickupType nvarchar(255), DropOffType nvarchar(255), ShapeDistTraveled nvarchar(255), Timepoint nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE TYPE TripType AS TABLE (RouteID nvarchar(255), ServiceID nvarchar(255), TripID nvarchar(255), TripHeadsign nvarchar(255), TripShortName nvarchar(255), DirectionID nvarchar(255), BlockID nvarchar(255), ShapeID nvarchar(255), WheelchairAccessible nvarchar(255), BikesAllowed nvarchar(255))", connection)
+                command = new SqlCommand("CREATE TYPE TripType AS TABLE (RouteID nvarchar(255), ServiceID nvarchar(255), TripID nvarchar(255), TripHeadsign nvarchar(255), TripShortName nvarchar(255), DirectionID nvarchar(255), BlockID nvarchar(255), ShapeID nvarchar(255), WheelchairAccessible nvarchar(255), BikesAllowed nvarchar(255))", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE PROCEDURE AgencyProcedure (@table AgencyType READONLY) AS INSERT INTO Agency (AgencyID, AgencyName, AgencyUrl, AgencyTimezone, AgencyLang, AgencyPhone, AgencyFareUrl, AgencyEmail) SELECT AgencyID, AgencyName, AgencyUrl, AgencyTimezone, AgencyLang, AgencyPhone, AgencyFareUrl, AgencyEmail FROM @table", connection)
+                command = new SqlCommand("CREATE PROCEDURE AgencyProcedure (@table AgencyType READONLY) AS INSERT INTO Agency (AgencyID, AgencyName, AgencyUrl, AgencyTimezone, AgencyLang, AgencyPhone, AgencyFareUrl, AgencyEmail) SELECT AgencyID, AgencyName, AgencyUrl, AgencyTimezone, AgencyLang, AgencyPhone, AgencyFareUrl, AgencyEmail FROM @table", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE PROCEDURE CalendarProcedure (@table CalendarType READONLY) AS INSERT INTO Calendar (ServiceID, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, StartDate, EndDate) SELECT ServiceID, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, StartDate, EndDate FROM @table", connection)
+                command = new SqlCommand("CREATE PROCEDURE CalendarProcedure (@table CalendarType READONLY) AS INSERT INTO Calendar (ServiceID, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, StartDate, EndDate) SELECT ServiceID, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, StartDate, EndDate FROM @table", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE PROCEDURE CalendarDateProcedure (@table CalendarDateType READONLY) AS INSERT INTO CalendarDate (ServiceID, Date, ExceptionType) SELECT ServiceID, Date, ExceptionType FROM @table", connection)
+                command = new SqlCommand("CREATE PROCEDURE CalendarDateProcedure (@table CalendarDateType READONLY) AS INSERT INTO CalendarDate (ServiceID, Date, ExceptionType) SELECT ServiceID, Date, ExceptionType FROM @table", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE PROCEDURE RouteProcedure (@table RouteType READONLY) AS INSERT INTO Route (RouteID, AgencyID, RouteShortName, RouteLongName, RouteDesc, RouteType, RouteUrl, RouteColor, RouteTextColor, RouteSortOrder) SELECT RouteID, AgencyID, RouteShortName, RouteLongName, RouteDesc, RouteType, RouteUrl, RouteColor, RouteTextColor, RouteSortOrder FROM @table", connection)
+                command = new SqlCommand("CREATE PROCEDURE RouteProcedure (@table RouteType READONLY) AS INSERT INTO Route (RouteID, AgencyID, RouteShortName, RouteLongName, RouteDesc, RouteType, RouteUrl, RouteColor, RouteTextColor, RouteSortOrder) SELECT RouteID, AgencyID, RouteShortName, RouteLongName, RouteDesc, RouteType, RouteUrl, RouteColor, RouteTextColor, RouteSortOrder FROM @table", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE PROCEDURE StopTimeProcedure (@table StopTimeType READONLY) AS INSERT INTO StopTime (TripID, ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTraveled, Timepoint) SELECT TripID, ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTraveled, Timepoint FROM @table", connection)
+                command = new SqlCommand("CREATE PROCEDURE StopProcedure (@table StopType READONLY) AS INSERT INTO Stop (StopID, StopCode, StopName, StopDesc, StopLat, StopLon, ZoneID, StopUrl, LocationType, ParentStation, StopTimezone, WheelchairBoarding, LevelID, PlatformCode) SELECT StopID, StopCode, StopName, StopDesc, StopLat, StopLon, ZoneID, StopUrl, LocationType, ParentStation, StopTimezone, WheelchairBoarding, LevelID, PlatformCode FROM @table", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE PROCEDURE StopProcedure (@table StopType READONLY) AS INSERT INTO Stop (StopID, StopCode, StopName, StopDesc, StopLat, StopLon, ZoneID, StopUrl, LocationType, ParentStation, StopTimezone, WheelchairBoarding, LevelID, PlatformCode) SELECT StopID, StopCode, StopName, StopDesc, StopLat, StopLon, ZoneID, StopUrl, LocationType, ParentStation, StopTimezone, WheelchairBoarding, LevelID, PlatformCode FROM @table", connection)
+                command = new SqlCommand("CREATE PROCEDURE StopTimeProcedure (@table StopTimeType READONLY) AS INSERT INTO StopTime (TripID, ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTraveled, Timepoint) SELECT TripID, ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTraveled, Timepoint FROM @table", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE PROCEDURE TripProcedure (@table TripType READONLY) AS INSERT INTO Trip (RouteID, ServiceID, TripID, TripHeadsign, TripShortName, DirectionID, BlockID, ShapeID, WheelchairAccessible, BikesAllowed) SELECT RouteID, ServiceID, TripID, TripHeadsign, TripShortName, DirectionID, BlockID, ShapeID, WheelchairAccessible, BikesAllowed FROM @table", connection)
+                command = new SqlCommand("CREATE PROCEDURE TripProcedure (@table TripType READONLY) AS INSERT INTO Trip (RouteID, ServiceID, TripID, TripHeadsign, TripShortName, DirectionID, BlockID, ShapeID, WheelchairAccessible, BikesAllowed) SELECT RouteID, ServiceID, TripID, TripHeadsign, TripShortName, DirectionID, BlockID, ShapeID, WheelchairAccessible, BikesAllowed FROM @table", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
                 using (HttpClient http = new HttpClient())
                 {
@@ -400,15 +441,16 @@ namespace NextDepartures.Database
 
                                             if (table.Rows.Count > 999999)
                                             {
-                                                _command = new SqlCommand("AgencyProcedure", connection)
+                                                command = new SqlCommand("AgencyProcedure", connection)
                                                 {
                                                     CommandTimeout = 0,
                                                     CommandType = CommandType.StoredProcedure
                                                 };
 
-                                                _command.Parameters.AddWithValue("@table", table);
+                                                command.Parameters.AddWithValue("@table", table);
 
-                                                await _command.ExecuteNonQueryAsync();
+                                                await command.ExecuteNonQueryAsync();
+                                                command.Dispose();
 
                                                 table.Rows.Clear();
                                             }
@@ -416,15 +458,16 @@ namespace NextDepartures.Database
 
                                         if (table.Rows.Count > 0)
                                         {
-                                            _command = new SqlCommand("AgencyProcedure", connection)
+                                            command = new SqlCommand("AgencyProcedure", connection)
                                             {
                                                 CommandTimeout = 0,
                                                 CommandType = CommandType.StoredProcedure
                                             };
 
-                                            _command.Parameters.AddWithValue("@table", table);
+                                            command.Parameters.AddWithValue("@table", table);
 
-                                            await _command.ExecuteNonQueryAsync();
+                                            await command.ExecuteNonQueryAsync();
+                                            command.Dispose();
 
                                             table.Rows.Clear();
                                         }
@@ -463,15 +506,16 @@ namespace NextDepartures.Database
 
                                             if (table.Rows.Count > 999999)
                                             {
-                                                _command = new SqlCommand("CalendarProcedure", connection)
+                                                command = new SqlCommand("CalendarProcedure", connection)
                                                 {
                                                     CommandTimeout = 0,
                                                     CommandType = CommandType.StoredProcedure
                                                 };
 
-                                                _command.Parameters.AddWithValue("@table", table);
+                                                command.Parameters.AddWithValue("@table", table);
 
-                                                await _command.ExecuteNonQueryAsync();
+                                                await command.ExecuteNonQueryAsync();
+                                                command.Dispose();
 
                                                 table.Rows.Clear();
                                             }
@@ -479,15 +523,16 @@ namespace NextDepartures.Database
 
                                         if (table.Rows.Count > 0)
                                         {
-                                            _command = new SqlCommand("CalendarProcedure", connection)
+                                            command = new SqlCommand("CalendarProcedure", connection)
                                             {
                                                 CommandTimeout = 0,
                                                 CommandType = CommandType.StoredProcedure
                                             };
 
-                                            _command.Parameters.AddWithValue("@table", table);
+                                            command.Parameters.AddWithValue("@table", table);
 
-                                            await _command.ExecuteNonQueryAsync();
+                                            await command.ExecuteNonQueryAsync();
+                                            command.Dispose();
 
                                             table.Rows.Clear();
                                         }
@@ -519,15 +564,16 @@ namespace NextDepartures.Database
 
                                             if (table.Rows.Count > 999999)
                                             {
-                                                _command = new SqlCommand("CalendarDateProcedure", connection)
+                                                command = new SqlCommand("CalendarDateProcedure", connection)
                                                 {
                                                     CommandTimeout = 0,
                                                     CommandType = CommandType.StoredProcedure
                                                 };
 
-                                                _command.Parameters.AddWithValue("@table", table);
+                                                command.Parameters.AddWithValue("@table", table);
 
-                                                await _command.ExecuteNonQueryAsync();
+                                                await command.ExecuteNonQueryAsync();
+                                                command.Dispose();
 
                                                 table.Rows.Clear();
                                             }
@@ -535,15 +581,16 @@ namespace NextDepartures.Database
 
                                         if (table.Rows.Count > 0)
                                         {
-                                            _command = new SqlCommand("CalendarDateProcedure", connection)
+                                            command = new SqlCommand("CalendarDateProcedure", connection)
                                             {
                                                 CommandTimeout = 0,
                                                 CommandType = CommandType.StoredProcedure
                                             };
 
-                                            _command.Parameters.AddWithValue("@table", table);
+                                            command.Parameters.AddWithValue("@table", table);
 
-                                            await _command.ExecuteNonQueryAsync();
+                                            await command.ExecuteNonQueryAsync();
+                                            command.Dispose();
 
                                             table.Rows.Clear();
                                         }
@@ -582,15 +629,16 @@ namespace NextDepartures.Database
 
                                             if (table.Rows.Count > 999999)
                                             {
-                                                _command = new SqlCommand("RouteProcedure", connection)
+                                                command = new SqlCommand("RouteProcedure", connection)
                                                 {
                                                     CommandTimeout = 0,
                                                     CommandType = CommandType.StoredProcedure
                                                 };
 
-                                                _command.Parameters.AddWithValue("@table", table);
+                                                command.Parameters.AddWithValue("@table", table);
 
-                                                await _command.ExecuteNonQueryAsync();
+                                                await command.ExecuteNonQueryAsync();
+                                                command.Dispose();
 
                                                 table.Rows.Clear();
                                             }
@@ -598,78 +646,16 @@ namespace NextDepartures.Database
 
                                         if (table.Rows.Count > 0)
                                         {
-                                            _command = new SqlCommand("RouteProcedure", connection)
+                                            command = new SqlCommand("RouteProcedure", connection)
                                             {
                                                 CommandTimeout = 0,
                                                 CommandType = CommandType.StoredProcedure
                                             };
 
-                                            _command.Parameters.AddWithValue("@table", table);
+                                            command.Parameters.AddWithValue("@table", table);
 
-                                            await _command.ExecuteNonQueryAsync();
-
-                                            table.Rows.Clear();
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (archiveEntry.Name == "stop_times.txt")
-                            {
-                                using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
-                                {
-                                    using (CsvReader feedReader = new CsvReader(feedInput))
-                                    {
-                                        feedReader.Configuration.BadDataFound = null;
-                                        feedReader.Configuration.HeaderValidated = null;
-                                        feedReader.Configuration.MissingFieldFound = null;
-                                        feedReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.Replace(" ", "");
-
-                                        IEnumerable<StopTime> workingStopTimes = feedReader.GetRecords<StopTime>();
-
-                                        DataTable table = new DataTable();
-                                        table.Columns.Add("TripID", typeof(string));
-                                        table.Columns.Add("ArrivalTime", typeof(string));
-                                        table.Columns.Add("DepartureTime", typeof(string));
-                                        table.Columns.Add("StopID", typeof(string));
-                                        table.Columns.Add("StopSequence", typeof(string));
-                                        table.Columns.Add("StopHeadsign", typeof(string));
-                                        table.Columns.Add("PickupType", typeof(string));
-                                        table.Columns.Add("DropOffType", typeof(string));
-                                        table.Columns.Add("ShapeDistTraveled", typeof(string));
-                                        table.Columns.Add("Timepoint", typeof(string));
-
-                                        foreach (StopTime stopTime in workingStopTimes)
-                                        {
-                                            table.Rows.Add(stopTime.trip_id, stopTime.arrival_time, stopTime.departure_time, stopTime.stop_id, stopTime.stop_sequence, stopTime.stop_headsign, stopTime.pickup_type, stopTime.drop_off_type, stopTime.shape_dist_traveled, stopTime.timepoint);
-
-                                            if (table.Rows.Count > 999999)
-                                            {
-                                                _command = new SqlCommand("StopTimeProcedure", connection)
-                                                {
-                                                    CommandTimeout = 0,
-                                                    CommandType = CommandType.StoredProcedure
-                                                };
-
-                                                _command.Parameters.AddWithValue("@table", table);
-
-                                                await _command.ExecuteNonQueryAsync();
-
-                                                table.Rows.Clear();
-                                            }
-                                        }
-
-                                        if (table.Rows.Count > 0)
-                                        {
-                                            _command = new SqlCommand("StopTimeProcedure", connection)
-                                            {
-                                                CommandTimeout = 0,
-                                                CommandType = CommandType.StoredProcedure
-                                            };
-
-                                            _command.Parameters.AddWithValue("@table", table);
-
-                                            await _command.ExecuteNonQueryAsync();
+                                            await command.ExecuteNonQueryAsync();
+                                            command.Dispose();
 
                                             table.Rows.Clear();
                                         }
@@ -712,15 +698,16 @@ namespace NextDepartures.Database
 
                                             if (table.Rows.Count > 999999)
                                             {
-                                                _command = new SqlCommand("StopProcedure", connection)
+                                                command = new SqlCommand("StopProcedure", connection)
                                                 {
                                                     CommandTimeout = 0,
                                                     CommandType = CommandType.StoredProcedure
                                                 };
 
-                                                _command.Parameters.AddWithValue("@table", table);
+                                                command.Parameters.AddWithValue("@table", table);
 
-                                                await _command.ExecuteNonQueryAsync();
+                                                await command.ExecuteNonQueryAsync();
+                                                command.Dispose();
 
                                                 table.Rows.Clear();
                                             }
@@ -728,15 +715,81 @@ namespace NextDepartures.Database
 
                                         if (table.Rows.Count > 0)
                                         {
-                                            _command = new SqlCommand("StopProcedure", connection)
+                                            command = new SqlCommand("StopProcedure", connection)
                                             {
                                                 CommandTimeout = 0,
                                                 CommandType = CommandType.StoredProcedure
                                             };
 
-                                            _command.Parameters.AddWithValue("@table", table);
+                                            command.Parameters.AddWithValue("@table", table);
 
-                                            await _command.ExecuteNonQueryAsync();
+                                            await command.ExecuteNonQueryAsync();
+                                            command.Dispose();
+
+                                            table.Rows.Clear();
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (archiveEntry.Name == "stop_times.txt")
+                            {
+                                using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
+                                {
+                                    using (CsvReader feedReader = new CsvReader(feedInput))
+                                    {
+                                        feedReader.Configuration.BadDataFound = null;
+                                        feedReader.Configuration.HeaderValidated = null;
+                                        feedReader.Configuration.MissingFieldFound = null;
+                                        feedReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.Replace(" ", "");
+
+                                        IEnumerable<StopTime> workingStopTimes = feedReader.GetRecords<StopTime>();
+
+                                        DataTable table = new DataTable();
+                                        table.Columns.Add("TripID", typeof(string));
+                                        table.Columns.Add("ArrivalTime", typeof(string));
+                                        table.Columns.Add("DepartureTime", typeof(string));
+                                        table.Columns.Add("StopID", typeof(string));
+                                        table.Columns.Add("StopSequence", typeof(string));
+                                        table.Columns.Add("StopHeadsign", typeof(string));
+                                        table.Columns.Add("PickupType", typeof(string));
+                                        table.Columns.Add("DropOffType", typeof(string));
+                                        table.Columns.Add("ShapeDistTraveled", typeof(string));
+                                        table.Columns.Add("Timepoint", typeof(string));
+
+                                        foreach (StopTime stopTime in workingStopTimes)
+                                        {
+                                            table.Rows.Add(stopTime.trip_id, stopTime.arrival_time, stopTime.departure_time, stopTime.stop_id, stopTime.stop_sequence, stopTime.stop_headsign, stopTime.pickup_type, stopTime.drop_off_type, stopTime.shape_dist_traveled, stopTime.timepoint);
+
+                                            if (table.Rows.Count > 999999)
+                                            {
+                                                command = new SqlCommand("StopTimeProcedure", connection)
+                                                {
+                                                    CommandTimeout = 0,
+                                                    CommandType = CommandType.StoredProcedure
+                                                };
+
+                                                command.Parameters.AddWithValue("@table", table);
+
+                                                await command.ExecuteNonQueryAsync();
+                                                command.Dispose();
+
+                                                table.Rows.Clear();
+                                            }
+                                        }
+
+                                        if (table.Rows.Count > 0)
+                                        {
+                                            command = new SqlCommand("StopTimeProcedure", connection)
+                                            {
+                                                CommandTimeout = 0,
+                                                CommandType = CommandType.StoredProcedure
+                                            };
+
+                                            command.Parameters.AddWithValue("@table", table);
+
+                                            await command.ExecuteNonQueryAsync();
+                                            command.Dispose();
 
                                             table.Rows.Clear();
                                         }
@@ -775,15 +828,16 @@ namespace NextDepartures.Database
 
                                             if (table.Rows.Count > 999999)
                                             {
-                                                _command = new SqlCommand("TripProcedure", connection)
+                                                command = new SqlCommand("TripProcedure", connection)
                                                 {
                                                     CommandTimeout = 0,
                                                     CommandType = CommandType.StoredProcedure
                                                 };
 
-                                                _command.Parameters.AddWithValue("@table", table);
+                                                command.Parameters.AddWithValue("@table", table);
 
-                                                await _command.ExecuteNonQueryAsync();
+                                                await command.ExecuteNonQueryAsync();
+                                                command.Dispose();
 
                                                 table.Rows.Clear();
                                             }
@@ -791,15 +845,16 @@ namespace NextDepartures.Database
 
                                         if (table.Rows.Count > 0)
                                         {
-                                            _command = new SqlCommand("TripProcedure", connection)
+                                            command = new SqlCommand("TripProcedure", connection)
                                             {
                                                 CommandTimeout = 0,
                                                 CommandType = CommandType.StoredProcedure
                                             };
 
-                                            _command.Parameters.AddWithValue("@table", table);
+                                            command.Parameters.AddWithValue("@table", table);
 
-                                            await _command.ExecuteNonQueryAsync();
+                                            await command.ExecuteNonQueryAsync();
+                                            command.Dispose();
 
                                             table.Rows.Clear();
                                         }
@@ -810,115 +865,24 @@ namespace NextDepartures.Database
                     }
                 }
 
-                _command = new SqlCommand("CREATE NONCLUSTERED INDEX StopTimeIndexStop ON StopTime (StopID, PickupType) INCLUDE (TripID, ArrivalTime, DepartureTime, StopSequence, StopHeadsign, DropOffType, ShapeDistTraveled, Timepoint) WITH (ONLINE = ON)", connection)
+                command = new SqlCommand("CREATE NONCLUSTERED INDEX StopTimeIndexStop ON StopTime (StopID, PickupType) INCLUDE (TripID, ArrivalTime, DepartureTime, StopSequence, StopHeadsign, DropOffType, ShapeDistTraveled, Timepoint) WITH (ONLINE = ON)", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
 
-                _command = new SqlCommand("CREATE NONCLUSTERED INDEX StopTimeIndexTrip ON StopTime (TripID, PickupType) INCLUDE (ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, DropOffType, ShapeDistTraveled, Timepoint) WITH (ONLINE = ON)", connection)
+                command = new SqlCommand("CREATE NONCLUSTERED INDEX StopTimeIndexTrip ON StopTime (TripID, PickupType) INCLUDE (ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, DropOffType, ShapeDistTraveled, Timepoint) WITH (ONLINE = ON)", connection)
                 {
                     CommandTimeout = 0,
                     CommandType = CommandType.Text
                 };
 
-                await _command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
+                command.Dispose();
             }
         }
-    }
-
-    class Agency
-    {
-        public string agency_id { get; set; }
-        public string agency_name { get; set; }
-        public string agency_url { get; set; }
-        public string agency_timezone { get; set; }
-        public string agency_lang { get; set; }
-        public string agency_phone { get; set; }
-        public string agency_fare_url { get; set; }
-        public string agency_email { get; set; }
-    }
-
-    class Calendar
-    {
-        public string service_id { get; set; }
-        public string monday { get; set; }
-        public string tuesday { get; set; }
-        public string wednesday { get; set; }
-        public string thursday { get; set; }
-        public string friday { get; set; }
-        public string saturday { get; set; }
-        public string sunday { get; set; }
-        public string start_date { get; set; }
-        public string end_date { get; set; }
-    }
-
-    class CalendarDate
-    {
-        public string service_id { get; set; }
-        public string date { get; set; }
-        public string exception_type { get; set; }
-    }
-
-    class Route
-    {
-        public string route_id { get; set; }
-        public string agency_id { get; set; }
-        public string route_short_name { get; set; }
-        public string route_long_name { get; set; }
-        public string route_desc { get; set; }
-        public string route_type { get; set; }
-        public string route_url { get; set; }
-        public string route_color { get; set; }
-        public string route_text_color { get; set; }
-        public string route_sort_order { get; set; }
-    }
-
-    class StopTime
-    {
-        public string trip_id { get; set; }
-        public string arrival_time { get; set; }
-        public string departure_time { get; set; }
-        public string stop_id { get; set; }
-        public string stop_sequence { get; set; }
-        public string stop_headsign { get; set; }
-        public string pickup_type { get; set; }
-        public string drop_off_type { get; set; }
-        public string shape_dist_traveled { get; set; }
-        public string timepoint { get; set; }
-    }
-
-    class Stop
-    {
-        public string stop_id { get; set; }
-        public string stop_code { get; set; }
-        public string stop_name { get; set; }
-        public string stop_desc { get; set; }
-        public string stop_lat { get; set; }
-        public string stop_lon { get; set; }
-        public string zone_id { get; set; }
-        public string stop_url { get; set; }
-        public string location_type { get; set; }
-        public string parent_station { get; set; }
-        public string stop_timezone { get; set; }
-        public string wheelchair_boarding { get; set; }
-        public string level_id { get; set; }
-        public string platform_code { get; set; }
-    }
-
-    class Trip
-    {
-        public string route_id { get; set; }
-        public string service_id { get; set; }
-        public string trip_id { get; set; }
-        public string trip_headsign { get; set; }
-        public string trip_short_name { get; set; }
-        public string direction_id { get; set; }
-        public string block_id { get; set; }
-        public string shape_id { get; set; }
-        public string wheelchair_accessible { get; set; }
-        public string bikes_allowed { get; set; }
     }
 }
