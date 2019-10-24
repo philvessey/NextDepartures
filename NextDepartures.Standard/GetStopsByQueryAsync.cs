@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NextDepartures.Standard.Model;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;

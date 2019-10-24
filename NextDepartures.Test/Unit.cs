@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
+using NextDepartures.Standard.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
