@@ -1,6 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using NextDepartures.Standard;
 using NextDepartures.Standard.Model;
+using NextDepartures.Test.Mocks;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,7 +15,7 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetServicesByStopAsync()
         {
-            Feed feed = new Feed("");
+            Feed feed = new Feed(new EmptyStorage());
             List<Service> results = await feed.GetServicesByStopAsync("");
 
             Assert.IsNotNull(results);
@@ -21,7 +24,7 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetServicesByTripAsync()
         {
-            Feed feed = new Feed("");
+            Feed feed = new Feed(new EmptyStorage());
             List<Service> results = await feed.GetServicesByTripAsync("");
 
             Assert.IsNotNull(results);
@@ -30,7 +33,7 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetStopsByLocationAsync()
         {
-            Feed feed = new Feed("");
+            Feed feed = new Feed(new EmptyStorage());
             List<Stop> results = await feed.GetStopsByLocationAsync(0, 0, 0, 0);
 
             Assert.IsNotNull(results);
@@ -39,7 +42,7 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetStopsByQueryAsync()
         {
-            Feed feed = new Feed("");
+            Feed feed = new Feed(new EmptyStorage());
             List<Stop> results = await feed.GetStopsByQueryAsync("");
 
             Assert.IsNotNull(results);
@@ -48,7 +51,7 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetStopsByWildcardAsync()
         {
-            Feed feed = new Feed("");
+            Feed feed = new Feed(new EmptyStorage());
             List<Stop> results = await feed.GetStopsByWildcardAsync(0, 0, 0, 0, "");
 
             Assert.IsNotNull(results);

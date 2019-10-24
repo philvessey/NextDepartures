@@ -1,16 +1,21 @@
-﻿using NextDepartures.Standard.Model;
+﻿using NextDepartures.Standard.Interfaces;
+using NextDepartures.Standard.Model;
+
 using System;
 
 namespace NextDepartures.Standard
 {
     public partial class Feed
     {
-        private readonly string _connection;
+        private readonly IDataStorage _dataStorage;
 
-        /// <summary>Creates a new feed.</summary>
-        public Feed(string connection)
+        /// <summary>
+        /// Creates a new feed.
+        /// </summary>
+        /// <param name="dataStorage">The data storage to use.</param>
+        public Feed(IDataStorage dataStorage)
         {
-            _connection = connection;
+            _dataStorage = dataStorage;
         }
 
         private Departure CreateWorkingDeparture(Departure tempDeparture, DateTime departureTime)

@@ -1,6 +1,6 @@
 ﻿namespace NextDepartures.Standard.Model
 {
-    internal class Departure
+    public class Departure
     {
         public string AgencyID { get; set; }
         public string DepartureTime { get; set; }

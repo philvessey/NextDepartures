@@ -2,8 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Globalization;
 using System.Threading.Tasks;
 
@@ -25,114 +23,10 @@ namespace NextDepartures.Standard
                 int todayDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.Year, now.Month.ToString("00"), now.Day.ToString("00")));
                 int tomorrowDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.AddDays(1).Year, now.AddDays(1).Month.ToString("00"), now.AddDays(1).Day.ToString("00")));
 
-                List<Departure> tempDepartures = new List<Departure>();
-                List<Agency> workingAgencies = new List<Agency>();
-                List<Model.Exception> workingExceptions = new List<Model.Exception>();
-                List<Stop> workingStops = new List<Stop>();
-
-                using (SqlConnection connection = new SqlConnection(_connection))
-                {
-                    connection.Open();
-
-                    SqlCommand command = new SqlCommand(string.Format("SELECT s.DepartureTime, s.StopID, t.ServiceID, t.TripID, t.TripHeadsign, t.TripShortName, r.AgencyID, r.RouteShortName, r.RouteLongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM StopTime s LEFT JOIN Trip t ON (s.TripID = t.TripID) LEFT JOIN Route r ON (t.RouteID = r.RouteID) LEFT JOIN Calendar c ON (t.ServiceID = c.ServiceID) WHERE LOWER(s.TripID) = '{0}' AND s.PickupType != '1' ORDER BY s.DepartureTime ASC", id.ToLower()), connection)
-                    {
-                        CommandTimeout = 0,
-                        CommandType = CommandType.Text
-                    };
-
-                    SqlDataReader dataReader = await command.ExecuteReaderAsync();
-
-                    while (await dataReader.ReadAsync())
-                    {
-                        tempDepartures.Add(new Departure()
-                        {
-                            DepartureTime = dataReader.GetValue(0).ToString(),
-                            StopID = dataReader.GetValue(1).ToString(),
-                            ServiceID = dataReader.GetValue(2).ToString(),
-                            TripID = dataReader.GetValue(3).ToString(),
-                            TripHeadsign = dataReader.GetValue(4).ToString(),
-                            TripShortName = dataReader.GetValue(5).ToString(),
-                            AgencyID = dataReader.GetValue(6).ToString(),
-                            RouteShortName = dataReader.GetValue(7).ToString(),
-                            RouteLongName = dataReader.GetValue(8).ToString(),
-                            Monday = dataReader.GetValue(9).ToString(),
-                            Tuesday = dataReader.GetValue(10).ToString(),
-                            Wednesday = dataReader.GetValue(11).ToString(),
-                            Thursday = dataReader.GetValue(12).ToString(),
-                            Friday = dataReader.GetValue(13).ToString(),
-                            Saturday = dataReader.GetValue(14).ToString(),
-                            Sunday = dataReader.GetValue(15).ToString(),
-                            StartDate = dataReader.GetValue(16).ToString(),
-                            EndDate = dataReader.GetValue(17).ToString()
-                        });
-                    }
-
-                    dataReader.Close();
-                    command.Dispose();
-
-                    command = new SqlCommand("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency", connection)
-                    {
-                        CommandTimeout = 0,
-                        CommandType = CommandType.Text
-                    };
-
-                    dataReader = await command.ExecuteReaderAsync();
-
-                    while (await dataReader.ReadAsync())
-                    {
-                        workingAgencies.Add(new Agency()
-                        {
-                            AgencyID = dataReader.GetValue(0).ToString(),
-                            AgencyName = dataReader.GetValue(1).ToString(),
-                            AgencyTimezone = dataReader.GetValue(2).ToString()
-                        });
-                    }
-
-                    dataReader.Close();
-                    command.Dispose();
-
-                    command = new SqlCommand("SELECT Date, ExceptionType, ServiceID FROM CalendarDate", connection)
-                    {
-                        CommandTimeout = 0,
-                        CommandType = CommandType.Text
-                    };
-
-                    dataReader = await command.ExecuteReaderAsync();
-
-                    while (await dataReader.ReadAsync())
-                    {
-                        workingExceptions.Add(new Model.Exception()
-                        {
-                            Date = dataReader.GetValue(0).ToString(),
-                            ExceptionType = dataReader.GetValue(1).ToString(),
-                            ServiceID = dataReader.GetValue(2).ToString()
-                        });
-                    }
-
-                    dataReader.Close();
-                    command.Dispose();
-
-                    command = new SqlCommand("SELECT StopID, StopName, StopTimezone FROM Stop", connection)
-                    {
-                        CommandTimeout = 0,
-                        CommandType = CommandType.Text
-                    };
-
-                    dataReader = await command.ExecuteReaderAsync();
-
-                    while (await dataReader.ReadAsync())
-                    {
-                        workingStops.Add(new Stop()
-                        {
-                            StopID = dataReader.GetValue(0).ToString(),
-                            StopName = dataReader.GetValue(1).ToString(),
-                            StopTimezone = dataReader.GetValue(2).ToString()
-                        });
-                    }
-
-                    dataReader.Close();
-                    command.Dispose();
-                }
+                List<Departure> tempDepartures = await _dataStorage.GetDeparturesForTripAsync(id);
+                List<Agency> workingAgencies = await _dataStorage.GetAgenciesAsync();
+                List<Model.Exception> workingExceptions = await _dataStorage.GetExceptionsAsync();
+                List<Stop> workingStops = await _dataStorage.GetStopsAsync();
 
                 List<Departure> workingDepartures = new List<Departure>();
 
