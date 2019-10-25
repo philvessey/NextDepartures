@@ -11,7 +11,7 @@ namespace NextDepartures.Standard.Interfaces
     public interface IDataStorage
     {
         /// <summary>
-        /// Gets the agencies.
+        /// Gets all available agencies.
         /// </summary>
         /// <returns>A list of agencies.</returns>
         Task<List<Agency>> GetAgenciesAsync();
@@ -20,6 +20,7 @@ namespace NextDepartures.Standard.Interfaces
         /// Gets the departures for a specific stop.
         /// </summary>
         /// <param name="id">The id of the stop.</param>
+        /// <remarks>The list should be ordered asecnding by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
         /// <returns>A list of departures.</returns>
         Task<List<Departure>> GetDeparturesForStopAsync(string id);
 
@@ -27,17 +28,18 @@ namespace NextDepartures.Standard.Interfaces
         /// Gets the departures for a specific trip.
         /// </summary>
         /// <param name="id">The id of the trip.</param>
+        /// <remarks>The list should be ordered asecnding by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
         /// <returns>A list of departures.</returns>
         Task<List<Departure>> GetDeparturesForTripAsync(string id);
 
         /// <summary>
-        /// Gets the exceptions.
+        /// Gets all available exceptions.
         /// </summary>
         /// <returns>A list of exceptions.</returns>
         Task<List<Exception>> GetExceptionsAsync();
 
         /// <summary>
-        /// Gets the stops.
+        /// Gets all available stops.
         /// </summary>
         /// <returns>A list of stops.</returns>
         Task<List<Stop>> GetStopsAsync();
