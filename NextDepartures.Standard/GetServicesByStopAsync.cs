@@ -1,11 +1,9 @@
-﻿using NextDepartures.Standard.Model;
-
+﻿using NextDepartures.Standard.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-
 using TimeZoneConverter;
 
 namespace NextDepartures.Standard
@@ -26,7 +24,7 @@ namespace NextDepartures.Standard
 
                 List<Departure> tempDepartures = await _dataStorage.GetDeparturesForStopAsync(id);
                 List<Agency> workingAgencies = await _dataStorage.GetAgenciesAsync();
-                List<Model.Exception> workingExceptions = await _dataStorage.GetExceptionsAsync();
+                List<Models.Exception> workingExceptions = await _dataStorage.GetExceptionsAsync();
                 List<Stop> workingStops = await _dataStorage.GetStopsAsync();
 
                 List<Departure> workingDepartures = new List<Departure>();

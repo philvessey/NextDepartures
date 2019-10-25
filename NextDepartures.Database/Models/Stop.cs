@@ -1,4 +1,4 @@
-﻿namespace NextDepartures.Database.Model
+﻿namespace NextDepartures.Database.Models
 {
     internal class Stop
     {

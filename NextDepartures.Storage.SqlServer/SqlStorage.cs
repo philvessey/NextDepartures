@@ -1,6 +1,5 @@
 ﻿using NextDepartures.Standard.Interfaces;
-using NextDepartures.Standard.Model;
-
+using NextDepartures.Standard.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -99,9 +98,9 @@ namespace NextDepartures.Storage.SqlServer
             };
         }
 
-        private Standard.Model.Exception GetExceptionFromDataReader(SqlDataReader dataReader)
+        private Standard.Models.Exception GetExceptionFromDataReader(SqlDataReader dataReader)
         {
-            return new Standard.Model.Exception()
+            return new Standard.Models.Exception()
             {
                 Date = dataReader.GetValue(0).ToString(),
                 ExceptionType = dataReader.GetValue(1).ToString(),
@@ -134,7 +133,7 @@ namespace NextDepartures.Storage.SqlServer
             return ExecuteCommand(string.Format("SELECT s.DepartureTime, s.StopID, t.ServiceID, t.TripID, t.TripHeadsign, t.TripShortName, r.AgencyID, r.RouteShortName, r.RouteLongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM StopTime s LEFT JOIN Trip t ON (s.TripID = t.TripID) LEFT JOIN Route r ON (t.RouteID = r.RouteID) LEFT JOIN Calendar c ON (t.ServiceID = c.ServiceID) WHERE LOWER(s.TripID) = '{0}' AND s.PickupType != '1' ORDER BY s.DepartureTime ASC", id.ToLower()), GetDepartureFromDataReader);
         }
 
-        public Task<List<Standard.Model.Exception>> GetExceptionsAsync()
+        public Task<List<Standard.Models.Exception>> GetExceptionsAsync()
         {
             return ExecuteCommand("SELECT Date, ExceptionType, ServiceID FROM CalendarDate", GetExceptionFromDataReader);
         }

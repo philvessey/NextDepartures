@@ -1,4 +1,4 @@
-﻿namespace NextDepartures.Standard.Model
+﻿namespace NextDepartures.Standard.Models
 {
     public class Departure
     {

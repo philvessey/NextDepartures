@@ -1,9 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using NextDepartures.Standard;
-using NextDepartures.Standard.Model;
+using NextDepartures.Standard.Models;
 using NextDepartures.Test.Mocks;
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
