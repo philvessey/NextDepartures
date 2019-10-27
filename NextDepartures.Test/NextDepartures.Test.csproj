@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NextDepartures.Standard\NextDepartures.Standard.csproj" />
+    <ProjectReference Include="..\NextDepartures.Storage.SqlServer\NextDepartures.Storage.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>

@@ -17,6 +17,13 @@ namespace NextDepartures.Standard
             _dataStorage = dataStorage;
         }
 
+        /// <summary>
+        /// Creates a working departure.
+        /// </summary>
+        /// <param name="tempDeparture">The temporary departure.</param>
+        /// <param name="departureTime">The departure time.</param>
+        /// <remarks>A working departure is a departure actually running on the date / time.</remarks>
+        /// <returns>A departure.</returns>
         private Departure CreateWorkingDeparture(Departure tempDeparture, DateTime departureTime)
         {
             return new Departure()

@@ -7,7 +7,12 @@ namespace NextDepartures.Standard
 {
     public partial class Feed
     {
-        /// <summary>Gets a list of stops by query.</summary>
+        /// <summary>
+        /// Gets the stops by the given query.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="count">The number of results to return. Default is 10 but can be overridden.</param>
+        /// <returns>A list of stops.</returns>
         public async Task<List<Stop>> GetStopsByQueryAsync(string query, int count = 10)
         {
             try

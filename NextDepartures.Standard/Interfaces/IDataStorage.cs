@@ -19,7 +19,7 @@ namespace NextDepartures.Standard.Interfaces
         /// Gets the departures for a specific stop.
         /// </summary>
         /// <param name="id">The id of the stop.</param>
-        /// <remarks>The list should be ordered asecnding by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
+        /// <remarks>The list should be ordered ascending by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
         /// <returns>A list of departures.</returns>
         Task<List<Departure>> GetDeparturesForStopAsync(string id);
 
@@ -27,7 +27,7 @@ namespace NextDepartures.Standard.Interfaces
         /// Gets the departures for a specific trip.
         /// </summary>
         /// <param name="id">The id of the trip.</param>
-        /// <remarks>The list should be ordered asecnding by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
+        /// <remarks>The list should be ordered ascending by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
         /// <returns>A list of departures.</returns>
         Task<List<Departure>> GetDeparturesForTripAsync(string id);
 
@@ -42,6 +42,17 @@ namespace NextDepartures.Standard.Interfaces
         /// </summary>
         /// <returns>A list of stops.</returns>
         Task<List<Stop>> GetStopsAsync();
+
+        /// <summary>
+        /// Gets the stops by the given area and query.
+        /// </summary>
+        /// <param name="minLon">The minimum longitude.</param>
+        /// <param name="minLat">The minimum latitude.</param>
+        /// <param name="maxLon">The maximum longitude.</param>
+        /// <param name="maxLat">The maximum latitude.</param>
+        /// <param name="query">The query.</param>
+        /// <returns>A list of stops.</returns>
+        Task<List<Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query);
 
         /// <summary>
         /// Gets the stops in the given area.
@@ -59,16 +70,5 @@ namespace NextDepartures.Standard.Interfaces
         /// <param name="query">The query.</param>
         /// <returns>A list of stops.</returns>
         Task<List<Stop>> GetStopsByQueryAsync(string query);
-
-        /// <summary>
-        /// Gets the stops by the given area and query.
-        /// </summary>
-        /// <param name="minLon">The minimum longitude.</param>
-        /// <param name="minLat">The minimum latitude.</param>
-        /// <param name="maxLon">The maximum longitude.</param>
-        /// <param name="maxLat">The maximum latitude.</param>
-        /// <param name="query">The query.</param>
-        /// <returns>A list of stops.</returns>
-        Task<List<Stop>> GetStopsByLocationAndQueryAsync(double minLon, double minLat, double maxLon, double maxLat, string query);
     }
 }

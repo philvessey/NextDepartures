@@ -7,9 +7,15 @@ using System.Threading.Tasks;
 
 namespace NextDepartures.Test
 {
+    /// <summary>
+    /// Represents unit tests.
+    /// </summary>
     [TestClass]
     public class Unit
     {
+        /// <summary>
+        /// Gets the services for a specific stop.
+        /// </summary>
         [TestMethod]
         public async Task GetServicesByStopAsync()
         {
@@ -19,6 +25,9 @@ namespace NextDepartures.Test
             Assert.IsNotNull(results);
         }
 
+        /// <summary>
+        /// Gets the services for a specific trip.
+        /// </summary>
         [TestMethod]
         public async Task GetServicesByTripAsync()
         {
@@ -28,6 +37,21 @@ namespace NextDepartures.Test
             Assert.IsNotNull(results);
         }
 
+        /// <summary>
+        /// Gets the stops by the given area and query.
+        /// </summary>
+        [TestMethod]
+        public async Task GetStopsByAllAsync()
+        {
+            Feed feed = new Feed(new EmptyStorage());
+            List<Stop> results = await feed.GetStopsByAllAsync(0, 0, 0, 0, "");
+
+            Assert.IsNotNull(results);
+        }
+
+        /// <summary>
+        /// Gets the stops in the given area.
+        /// </summary>
         [TestMethod]
         public async Task GetStopsByLocationAsync()
         {
@@ -37,20 +61,14 @@ namespace NextDepartures.Test
             Assert.IsNotNull(results);
         }
 
+        /// <summary>
+        /// Gets the stops by the given query.
+        /// </summary>
         [TestMethod]
         public async Task GetStopsByQueryAsync()
         {
             Feed feed = new Feed(new EmptyStorage());
             List<Stop> results = await feed.GetStopsByQueryAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public async Task GetStopsByWildcardAsync()
-        {
-            Feed feed = new Feed(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByWildcardAsync(0, 0, 0, 0, "");
 
             Assert.IsNotNull(results);
         }
