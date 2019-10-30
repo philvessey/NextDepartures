@@ -1,8 +1,6 @@
 ﻿using CsvHelper;
-
 using NextDepartures.Database.Extensions;
 using NextDepartures.Database.Models;
-
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -69,6 +67,8 @@ namespace NextDepartures.Database
                 await connection.ExecuteCommandAsync("CREATE PROCEDURE StopTimeProcedure (@table StopTimeType READONLY) AS INSERT INTO StopTime (TripID, ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTraveled, Timepoint) SELECT TripID, ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTraveled, Timepoint FROM @table");
                 await connection.ExecuteCommandAsync("CREATE PROCEDURE TripProcedure (@table TripType READONLY) AS INSERT INTO Trip (RouteID, ServiceID, TripID, TripHeadsign, TripShortName, DirectionID, BlockID, ShapeID, WheelchairAccessible, BikesAllowed) SELECT RouteID, ServiceID, TripID, TripHeadsign, TripShortName, DirectionID, BlockID, ShapeID, WheelchairAccessible, BikesAllowed FROM @table");
 
+                Console.WriteLine("1/9 Tables created!");
+
                 using (HttpClient http = new HttpClient())
                 {
                     http.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true };
@@ -120,6 +120,8 @@ namespace NextDepartures.Database
                                         }
                                     }
                                 }
+
+                                Console.WriteLine("2/9 Agency inserted!");
                             }
 
                             if (archiveEntry.Name == "calendar.txt")
@@ -167,6 +169,8 @@ namespace NextDepartures.Database
                                         }
                                     }
                                 }
+
+                                Console.WriteLine("3/9 Calendar inserted!");
                             }
 
                             if (archiveEntry.Name == "calendar_dates.txt")
@@ -207,6 +211,8 @@ namespace NextDepartures.Database
                                         }
                                     }
                                 }
+
+                                Console.WriteLine("4/9 CalendarDate inserted!");
                             }
 
                             if (archiveEntry.Name == "routes.txt")
@@ -254,6 +260,8 @@ namespace NextDepartures.Database
                                         }
                                     }
                                 }
+
+                                Console.WriteLine("5/9 Route inserted!");
                             }
 
                             if (archiveEntry.Name == "stops.txt")
@@ -305,6 +313,8 @@ namespace NextDepartures.Database
                                         }
                                     }
                                 }
+
+                                Console.WriteLine("6/9 Stop inserted!");
                             }
 
                             if (archiveEntry.Name == "stop_times.txt")
@@ -352,6 +362,8 @@ namespace NextDepartures.Database
                                         }
                                     }
                                 }
+
+                                Console.WriteLine("7/9 StopTime inserted!");
                             }
 
                             if (archiveEntry.Name == "trips.txt")
@@ -399,6 +411,8 @@ namespace NextDepartures.Database
                                         }
                                     }
                                 }
+
+                                Console.WriteLine("8/9 Trip inserted!");
                             }
                         }
                     }
@@ -406,6 +420,8 @@ namespace NextDepartures.Database
 
                 await connection.ExecuteCommandAsync("CREATE NONCLUSTERED INDEX StopTimeIndexStop ON StopTime (StopID, PickupType) INCLUDE (TripID, ArrivalTime, DepartureTime, StopSequence, StopHeadsign, DropOffType, ShapeDistTraveled, Timepoint) WITH (ONLINE = ON)");
                 await connection.ExecuteCommandAsync("CREATE NONCLUSTERED INDEX StopTimeIndexTrip ON StopTime (TripID, PickupType) INCLUDE (ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, DropOffType, ShapeDistTraveled, Timepoint) WITH (ONLINE = ON)");
+
+                Console.WriteLine("9/9 Indexes created!");
             }
         }
     }
