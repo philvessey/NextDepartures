@@ -20,6 +20,8 @@ namespace NextDepartures.Database
 
         public async Task RunAsync(string[] args)
         {
+            Console.WriteLine("");
+
             using (SqlConnection connection = new SqlConnection(args[0]))
             {
                 connection.Open();
@@ -75,7 +77,7 @@ namespace NextDepartures.Database
 
                     using (ZipArchive archive = new ZipArchive(await http.GetStreamAsync(new Uri(args[1]))))
                     {
-                        foreach (ZipArchiveEntry archiveEntry in archive.Entries)
+                        foreach (ZipArchiveEntry archiveEntry in archive.Entries.OrderBy(x => x.Name))
                         {
                             if (archiveEntry.Name == "agency.txt")
                             {
@@ -264,6 +266,55 @@ namespace NextDepartures.Database
                                 Console.WriteLine("5/9 Route inserted!");
                             }
 
+                            if (archiveEntry.Name == "stop_times.txt")
+                            {
+                                using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
+                                {
+                                    using (CsvReader feedReader = new CsvReader(feedInput))
+                                    {
+                                        feedReader.Configuration.BadDataFound = null;
+                                        feedReader.Configuration.HeaderValidated = null;
+                                        feedReader.Configuration.MissingFieldFound = null;
+                                        feedReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.Replace(" ", "");
+
+                                        IEnumerable<StopTime> workingStopTimes = feedReader.GetRecords<StopTime>();
+
+                                        DataTable table = new DataTable();
+                                        table.Columns.Add("TripID", typeof(string));
+                                        table.Columns.Add("ArrivalTime", typeof(string));
+                                        table.Columns.Add("DepartureTime", typeof(string));
+                                        table.Columns.Add("StopID", typeof(string));
+                                        table.Columns.Add("StopSequence", typeof(string));
+                                        table.Columns.Add("StopHeadsign", typeof(string));
+                                        table.Columns.Add("PickupType", typeof(string));
+                                        table.Columns.Add("DropOffType", typeof(string));
+                                        table.Columns.Add("ShapeDistTraveled", typeof(string));
+                                        table.Columns.Add("Timepoint", typeof(string));
+
+                                        foreach (StopTime stopTime in workingStopTimes)
+                                        {
+                                            table.Rows.Add(stopTime.trip_id, stopTime.arrival_time, stopTime.departure_time, stopTime.stop_id, stopTime.stop_sequence, stopTime.stop_headsign, stopTime.pickup_type, stopTime.drop_off_type, stopTime.shape_dist_traveled, stopTime.timepoint);
+
+                                            if (table.Rows.Count > 999999)
+                                            {
+                                                await connection.ExecuteCommandAsync("StopTimeProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
+
+                                                table.Rows.Clear();
+                                            }
+                                        }
+
+                                        if (table.Rows.Count > 0)
+                                        {
+                                            await connection.ExecuteCommandAsync("StopTimeProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
+
+                                            table.Rows.Clear();
+                                        }
+                                    }
+                                }
+
+                                Console.WriteLine("6/9 StopTime inserted!");
+                            }
+
                             if (archiveEntry.Name == "stops.txt")
                             {
                                 using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
@@ -314,56 +365,7 @@ namespace NextDepartures.Database
                                     }
                                 }
 
-                                Console.WriteLine("6/9 Stop inserted!");
-                            }
-
-                            if (archiveEntry.Name == "stop_times.txt")
-                            {
-                                using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
-                                {
-                                    using (CsvReader feedReader = new CsvReader(feedInput))
-                                    {
-                                        feedReader.Configuration.BadDataFound = null;
-                                        feedReader.Configuration.HeaderValidated = null;
-                                        feedReader.Configuration.MissingFieldFound = null;
-                                        feedReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.Replace(" ", "");
-
-                                        IEnumerable<StopTime> workingStopTimes = feedReader.GetRecords<StopTime>();
-
-                                        DataTable table = new DataTable();
-                                        table.Columns.Add("TripID", typeof(string));
-                                        table.Columns.Add("ArrivalTime", typeof(string));
-                                        table.Columns.Add("DepartureTime", typeof(string));
-                                        table.Columns.Add("StopID", typeof(string));
-                                        table.Columns.Add("StopSequence", typeof(string));
-                                        table.Columns.Add("StopHeadsign", typeof(string));
-                                        table.Columns.Add("PickupType", typeof(string));
-                                        table.Columns.Add("DropOffType", typeof(string));
-                                        table.Columns.Add("ShapeDistTraveled", typeof(string));
-                                        table.Columns.Add("Timepoint", typeof(string));
-
-                                        foreach (StopTime stopTime in workingStopTimes)
-                                        {
-                                            table.Rows.Add(stopTime.trip_id, stopTime.arrival_time, stopTime.departure_time, stopTime.stop_id, stopTime.stop_sequence, stopTime.stop_headsign, stopTime.pickup_type, stopTime.drop_off_type, stopTime.shape_dist_traveled, stopTime.timepoint);
-
-                                            if (table.Rows.Count > 999999)
-                                            {
-                                                await connection.ExecuteCommandAsync("StopTimeProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                                table.Rows.Clear();
-                                            }
-                                        }
-
-                                        if (table.Rows.Count > 0)
-                                        {
-                                            await connection.ExecuteCommandAsync("StopTimeProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                            table.Rows.Clear();
-                                        }
-                                    }
-                                }
-
-                                Console.WriteLine("7/9 StopTime inserted!");
+                                Console.WriteLine("7/9 Stop inserted!");
                             }
 
                             if (archiveEntry.Name == "trips.txt")
