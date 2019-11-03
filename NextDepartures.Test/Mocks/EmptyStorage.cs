@@ -60,15 +60,16 @@ namespace NextDepartures.Test.Mocks
         }
 
         /// <summary>
-        /// Gets the stops by the given area and query.
+        /// Gets the stops by the given area, query and timezone.
         /// </summary>
         /// <param name="minLon">The minimum longitude.</param>
         /// <param name="minLat">The minimum latitude.</param>
         /// <param name="maxLon">The maximum longitude.</param>
         /// <param name="maxLat">The maximum latitude.</param>
         /// <param name="query">The query.</param>
+        /// <param name="timezone">The timezone.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query)
+        public Task<List<Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query, string timezone)
         {
             return Task.FromResult(new List<Stop>());
         }
@@ -92,6 +93,16 @@ namespace NextDepartures.Test.Mocks
         /// <param name="query">The query.</param>
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByQueryAsync(string query)
+        {
+            return Task.FromResult(new List<Stop>());
+        }
+
+        /// <summary>
+        /// Gets the stops in the given timezone.
+        /// </summary>
+        /// <param name="timezone">The timezone.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone)
         {
             return Task.FromResult(new List<Stop>());
         }

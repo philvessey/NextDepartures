@@ -24,7 +24,15 @@ namespace NextDepartures.Database
 
             using (SqlConnection connection = new SqlConnection(args[0]))
             {
-                connection.Open();
+                try
+                {
+                    connection.Open();
+                }
+                catch (SqlException exception)
+                {
+                    Console.WriteLine(exception.Message);
+                    Environment.Exit(0);
+                }
 
                 await connection.ExecuteCommandAsync("DROP PROCEDURE IF EXISTS AgencyProcedure");
                 await connection.ExecuteCommandAsync("DROP PROCEDURE IF EXISTS CalendarProcedure");
@@ -69,7 +77,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteCommandAsync("CREATE PROCEDURE StopTimeProcedure (@table StopTimeType READONLY) AS INSERT INTO StopTime (TripID, ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTraveled, Timepoint) SELECT TripID, ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTraveled, Timepoint FROM @table");
                 await connection.ExecuteCommandAsync("CREATE PROCEDURE TripProcedure (@table TripType READONLY) AS INSERT INTO Trip (RouteID, ServiceID, TripID, TripHeadsign, TripShortName, DirectionID, BlockID, ShapeID, WheelchairAccessible, BikesAllowed) SELECT RouteID, ServiceID, TripID, TripHeadsign, TripShortName, DirectionID, BlockID, ShapeID, WheelchairAccessible, BikesAllowed FROM @table");
 
-                Console.WriteLine("1/9 Tables created!");
+                Console.WriteLine("CREATE: tables");
 
                 using (HttpClient http = new HttpClient())
                 {
@@ -77,6 +85,8 @@ namespace NextDepartures.Database
 
                     using (ZipArchive archive = new ZipArchive(await http.GetStreamAsync(new Uri(args[1]))))
                     {
+                        Console.WriteLine("GET: feed.zip");
+
                         foreach (ZipArchiveEntry archiveEntry in archive.Entries.OrderBy(x => x.Name))
                         {
                             if (archiveEntry.Name == "agency.txt")
@@ -123,7 +133,7 @@ namespace NextDepartures.Database
                                     }
                                 }
 
-                                Console.WriteLine("2/9 Agency inserted!");
+                                Console.WriteLine("INSERT: agency.txt");
                             }
 
                             if (archiveEntry.Name == "calendar.txt")
@@ -172,7 +182,7 @@ namespace NextDepartures.Database
                                     }
                                 }
 
-                                Console.WriteLine("3/9 Calendar inserted!");
+                                Console.WriteLine("INSERT: calendar.txt");
                             }
 
                             if (archiveEntry.Name == "calendar_dates.txt")
@@ -214,7 +224,7 @@ namespace NextDepartures.Database
                                     }
                                 }
 
-                                Console.WriteLine("4/9 CalendarDate inserted!");
+                                Console.WriteLine("INSERT: calendar_dates.txt");
                             }
 
                             if (archiveEntry.Name == "routes.txt")
@@ -263,7 +273,7 @@ namespace NextDepartures.Database
                                     }
                                 }
 
-                                Console.WriteLine("5/9 Route inserted!");
+                                Console.WriteLine("INSERT: routes.txt");
                             }
 
                             if (archiveEntry.Name == "stop_times.txt")
@@ -312,7 +322,7 @@ namespace NextDepartures.Database
                                     }
                                 }
 
-                                Console.WriteLine("6/9 StopTime inserted!");
+                                Console.WriteLine("INSERT: stop_times.txt");
                             }
 
                             if (archiveEntry.Name == "stops.txt")
@@ -365,7 +375,7 @@ namespace NextDepartures.Database
                                     }
                                 }
 
-                                Console.WriteLine("7/9 Stop inserted!");
+                                Console.WriteLine("INSERT: stops.txt");
                             }
 
                             if (archiveEntry.Name == "trips.txt")
@@ -414,7 +424,7 @@ namespace NextDepartures.Database
                                     }
                                 }
 
-                                Console.WriteLine("8/9 Trip inserted!");
+                                Console.WriteLine("INSERT: trips.txt");
                             }
                         }
                     }
@@ -423,7 +433,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteCommandAsync("CREATE NONCLUSTERED INDEX StopTimeIndexStop ON StopTime (StopID, PickupType) INCLUDE (TripID, ArrivalTime, DepartureTime, StopSequence, StopHeadsign, DropOffType, ShapeDistTraveled, Timepoint) WITH (ONLINE = ON)");
                 await connection.ExecuteCommandAsync("CREATE NONCLUSTERED INDEX StopTimeIndexTrip ON StopTime (TripID, PickupType) INCLUDE (ArrivalTime, DepartureTime, StopID, StopSequence, StopHeadsign, DropOffType, ShapeDistTraveled, Timepoint) WITH (ONLINE = ON)");
 
-                Console.WriteLine("9/9 Indexes created!");
+                Console.WriteLine("CREATE: indexes");
             }
         }
     }

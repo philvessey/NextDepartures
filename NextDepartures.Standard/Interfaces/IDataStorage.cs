@@ -44,15 +44,16 @@ namespace NextDepartures.Standard.Interfaces
         Task<List<Stop>> GetStopsAsync();
 
         /// <summary>
-        /// Gets the stops by the given area and query.
+        /// Gets the stops by the given area, query and timezone.
         /// </summary>
         /// <param name="minLon">The minimum longitude.</param>
         /// <param name="minLat">The minimum latitude.</param>
         /// <param name="maxLon">The maximum longitude.</param>
         /// <param name="maxLat">The maximum latitude.</param>
         /// <param name="query">The query.</param>
+        /// <param name="timezone">The timezone.</param>
         /// <returns>A list of stops.</returns>
-        Task<List<Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query);
+        Task<List<Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query, string timezone);
 
         /// <summary>
         /// Gets the stops in the given area.
@@ -70,5 +71,12 @@ namespace NextDepartures.Standard.Interfaces
         /// <param name="query">The query.</param>
         /// <returns>A list of stops.</returns>
         Task<List<Stop>> GetStopsByQueryAsync(string query);
+
+        /// <summary>
+        /// Gets the stops in the given timezone.
+        /// </summary>
+        /// <param name="timezone">The timezone.</param>
+        /// <returns>A list of stops.</returns>
+        Task<List<Stop>> GetStopsByTimezoneAsync(string timezone);
     }
 }

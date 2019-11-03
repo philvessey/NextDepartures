@@ -49,50 +49,50 @@ namespace NextDepartures.Standard
                 {
                     foreach (Departure departure in tempDepartures)
                     {
-                        string timeZone = "";
+                        string timezone = "";
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
                             foreach (Stop stop in workingStops)
                             {
                                 if (stop.StopID == departure.StopID)
                                 {
-                                    timeZone = stop.StopTimezone;
+                                    timezone = stop.StopTimezone;
 
                                     break;
                                 }
                             }
                         }
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
                             foreach (Agency agency in workingAgencies)
                             {
                                 if (agency.AgencyID == departure.AgencyID)
                                 {
-                                    timeZone = agency.AgencyTimezone;
+                                    timezone = agency.AgencyTimezone;
 
                                     break;
                                 }
                             }
                         }
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
                             foreach (Agency agency in workingAgencies)
                             {
-                                timeZone = agency.AgencyTimezone;
+                                timezone = agency.AgencyTimezone;
 
                                 break;
                             }
                         }
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
-                            timeZone = "Etc/UTC";
+                            timezone = "Etc/UTC";
                         }
 
-                        now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timeZone)));
+                        now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
                         yesterdayDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.AddDays(-1).Year, now.AddDays(-1).Month.ToString("00"), now.AddDays(-1).Day.ToString("00")));
 
                         DateTime departureTime = new DateTime();
@@ -493,50 +493,50 @@ namespace NextDepartures.Standard
                 {
                     foreach (Departure departure in tempDepartures)
                     {
-                        string timeZone = "";
+                        string timezone = "";
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
                             foreach (Stop stop in workingStops)
                             {
                                 if (stop.StopID == departure.StopID)
                                 {
-                                    timeZone = stop.StopTimezone;
+                                    timezone = stop.StopTimezone;
 
                                     break;
                                 }
                             }
                         }
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
                             foreach (Agency agency in workingAgencies)
                             {
                                 if (agency.AgencyID == departure.AgencyID)
                                 {
-                                    timeZone = agency.AgencyTimezone;
+                                    timezone = agency.AgencyTimezone;
 
                                     break;
                                 }
                             }
                         }
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
                             foreach (Agency agency in workingAgencies)
                             {
-                                timeZone = agency.AgencyTimezone;
+                                timezone = agency.AgencyTimezone;
 
                                 break;
                             }
                         }
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
-                            timeZone = "Etc/UTC";
+                            timezone = "Etc/UTC";
                         }
 
-                        now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timeZone)));
+                        now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
                         todayDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.Year, now.Month.ToString("00"), now.Day.ToString("00")));
 
                         DateTime departureTime = new DateTime();
@@ -937,50 +937,50 @@ namespace NextDepartures.Standard
                 {
                     foreach (Departure departure in tempDepartures)
                     {
-                        string timeZone = "";
+                        string timezone = "";
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
                             foreach (Stop stop in workingStops)
                             {
                                 if (stop.StopID == departure.StopID)
                                 {
-                                    timeZone = stop.StopTimezone;
+                                    timezone = stop.StopTimezone;
 
                                     break;
                                 }
                             }
                         }
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
                             foreach (Agency agency in workingAgencies)
                             {
                                 if (agency.AgencyID == departure.AgencyID)
                                 {
-                                    timeZone = agency.AgencyTimezone;
+                                    timezone = agency.AgencyTimezone;
 
                                     break;
                                 }
                             }
                         }
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
                             foreach (Agency agency in workingAgencies)
                             {
-                                timeZone = agency.AgencyTimezone;
+                                timezone = agency.AgencyTimezone;
 
                                 break;
                             }
                         }
 
-                        if (timeZone == "")
+                        if (timezone == "")
                         {
-                            timeZone = "Etc/UTC";
+                            timezone = "Etc/UTC";
                         }
 
-                        now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timeZone)));
+                        now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
                         tomorrowDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.AddDays(1).Year, now.AddDays(1).Month.ToString("00"), now.AddDays(1).Day.ToString("00")));
 
                         DateTime departureTime = new DateTime();

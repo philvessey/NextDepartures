@@ -20,9 +20,10 @@ List<Service> results = await feed.GetServicesByStopAsync([id]);
 List<Service> results = await feed.GetServicesByTripAsync([id]);
 
 Feed feed = new Feed(new SqlStorage([connection]));
-List<Stop> results = await feed.GetStopsByAllAsync([minLon], [minLat], [maxLon], [maxLat], [query]);
+List<Stop> results = await feed.GetStopsByAllAsync([minLon], [minLat], [maxLon], [maxLat], [query], [timezone]);
 List<Stop> results = await feed.GetStopsByLocationAsync([minLon], [minLat], [maxLon], [maxLat]);
 List<Stop> results = await feed.GetStopsByQueryAsync([query]);
+List<Stop> results = await feed.GetStopsByTimezoneAsync([timezone]);
 ```
 
 ## License

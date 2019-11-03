@@ -38,13 +38,13 @@ namespace NextDepartures.Test
         }
 
         /// <summary>
-        /// Gets the stops by the given area and query.
+        /// Gets the stops by the given area, query and timezone.
         /// </summary>
         [TestMethod]
         public async Task GetStopsByAllAsync()
         {
             Feed feed = new Feed(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByAllAsync(0, 0, 0, 0, "");
+            List<Stop> results = await feed.GetStopsByAllAsync(0, 0, 0, 0, "", "");
 
             Assert.IsNotNull(results);
         }
@@ -69,6 +69,18 @@ namespace NextDepartures.Test
         {
             Feed feed = new Feed(new EmptyStorage());
             List<Stop> results = await feed.GetStopsByQueryAsync("");
+
+            Assert.IsNotNull(results);
+        }
+
+        /// <summary>
+        /// Gets the stops in the given timezone.
+        /// </summary>
+        [TestMethod]
+        public async Task GetStopsByTimezoneAsync()
+        {
+            Feed feed = new Feed(new EmptyStorage());
+            List<Stop> results = await feed.GetStopsByTimezoneAsync("");
 
             Assert.IsNotNull(results);
         }

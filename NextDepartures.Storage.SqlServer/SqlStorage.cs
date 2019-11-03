@@ -163,8 +163,9 @@ namespace NextDepartures.Storage.SqlServer
             return new Stop()
             {
                 StopID = dataReader.GetValue(0).ToString(),
-                StopName = dataReader.GetValue(1).ToString(),
-                StopTimezone = dataReader.GetValue(2).ToString()
+                StopCode = dataReader.GetValue(1).ToString(),
+                StopName = dataReader.GetValue(2).ToString(),
+                StopTimezone = dataReader.GetValue(3).ToString()
             };
         }
 
@@ -179,8 +180,9 @@ namespace NextDepartures.Storage.SqlServer
             return new Stop()
             {
                 StopID = dataReader.GetValue(0).ToString(),
-                StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader.GetValue(1).ToString().ToLower()),
-                StopTimezone = dataReader.GetValue(2).ToString()
+                StopCode = dataReader.GetValue(1).ToString(),
+                StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader.GetValue(2).ToString().ToLower()),
+                StopTimezone = dataReader.GetValue(3).ToString()
             };
         }
 
@@ -190,21 +192,22 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsAsync()
         {
-            return ExecuteCommand("SELECT StopID, StopName, StopTimezone FROM Stop", GetStopFromDataReader);
+            return ExecuteCommand("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop", GetStopFromDataReader);
         }
 
         /// <summary>
-        /// Gets the stops by the given area and query.
+        /// Gets the stops by the given area, query and timezone.
         /// </summary>
         /// <param name="minLon">The minimum longitude.</param>
         /// <param name="minLat">The minimum latitude.</param>
         /// <param name="maxLon">The maximum longitude.</param>
         /// <param name="maxLat">The maximum latitude.</param>
         /// <param name="query">The query.</param>
+        /// <param name="timezone">The timezone.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query)
+        public Task<List<Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query, string timezone)
         {
-            return ExecuteCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE LOWER(StopID) LIKE '%{0}%' OR LOWER(StopCode) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%' AND CAST(StopLat as REAL) >= {1} AND CAST(StopLat as REAL) <= {2} AND CAST(StopLon as REAL) >= {3} AND CAST(StopLon as REAL) <= {4} AND StopLat != '0' AND StopLon != '0'", query.ToLower(), minLat, maxLat, minLon, maxLon), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (LOWER(StopID) LIKE '%{0}%' OR LOWER(StopCode) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%') AND (CAST(StopLat as REAL) >= {1} AND CAST(StopLat as REAL) <= {2} AND CAST(StopLon as REAL) >= {3} AND CAST(StopLon as REAL) <= {4}) AND (StopLat != '0' AND StopLon != '0') AND LOWER(StopTimezone) LIKE '%{5}%'", query.ToLower(), minLat, maxLat, minLon, maxLon, timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -217,7 +220,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByLocationAsync(double minLon, double minLat, double maxLon, double maxLat)
         {
-            return ExecuteCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE CAST(StopLat as REAL) >= {0} AND CAST(StopLat as REAL) <= {1} AND CAST(StopLon as REAL) >= {2} AND CAST(StopLon as REAL) <= {3} AND StopLat != '0' AND StopLon != '0'", minLat, maxLat, minLon, maxLon), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (CAST(StopLat as REAL) >= {0} AND CAST(StopLat as REAL) <= {1} AND CAST(StopLon as REAL) >= {2} AND CAST(StopLon as REAL) <= {3}) AND (StopLat != '0' AND StopLon != '0')", minLat, maxLat, minLon, maxLon), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -227,7 +230,17 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByQueryAsync(string query)
         {
-            return ExecuteCommand(string.Format("SELECT StopID, StopName, StopTimezone FROM Stop WHERE LOWER(StopID) LIKE '%{0}%' OR LOWER(StopCode) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%' AND StopLat != '0' AND StopLon != '0'", query.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (LOWER(StopID) LIKE '%{0}%' OR LOWER(StopCode) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%') AND (StopLat != '0' AND StopLon != '0')", query.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops in the given timezone.
+        /// </summary>
+        /// <param name="timezone">The timezone.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone)
+        {
+            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (StopLat != '0' AND StopLon != '0') AND LOWER(StopTimezone) LIKE '%{0}%'", timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
     }
 }
