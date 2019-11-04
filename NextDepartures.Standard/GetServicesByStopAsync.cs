@@ -1,9 +1,13 @@
-﻿using NextDepartures.Standard.Models;
+﻿using NextDepartures.Standard.Extensions;
+using NextDepartures.Standard.Models;
+using NextDepartures.Standard.Utils;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+
 using TimeZoneConverter;
 
 namespace NextDepartures.Standard
@@ -23,9 +27,9 @@ namespace NextDepartures.Standard
             try
             {
                 DateTime now = DateTime.UtcNow;
-                int yesterdayDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.AddDays(-1).Year, now.AddDays(-1).Month.ToString("00"), now.AddDays(-1).Day.ToString("00")));
-                int todayDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.Year, now.Month.ToString("00"), now.Day.ToString("00")));
-                int tomorrowDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.AddDays(1).Year, now.AddDays(1).Month.ToString("00"), now.AddDays(1).Day.ToString("00")));
+                int yesterdayDate = now.AddDays(-1).AsInteger();
+                int todayDate = now.AsInteger();
+                int tomorrowDate = now.AddDays(1).AsInteger();
 
                 List<Departure> tempDepartures = await _dataStorage.GetDeparturesForStopAsync(id);
                 List<Agency> workingAgencies = await _dataStorage.GetAgenciesAsync();
@@ -49,51 +53,10 @@ namespace NextDepartures.Standard
                 {
                     foreach (Departure departure in tempDepartures)
                     {
-                        string timezone = "";
-
-                        if (timezone == "")
-                        {
-                            foreach (Stop stop in workingStops)
-                            {
-                                if (stop.StopID == departure.StopID)
-                                {
-                                    timezone = stop.StopTimezone;
-
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (timezone == "")
-                        {
-                            foreach (Agency agency in workingAgencies)
-                            {
-                                if (agency.AgencyID == departure.AgencyID)
-                                {
-                                    timezone = agency.AgencyTimezone;
-
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (timezone == "")
-                        {
-                            foreach (Agency agency in workingAgencies)
-                            {
-                                timezone = agency.AgencyTimezone;
-
-                                break;
-                            }
-                        }
-
-                        if (timezone == "")
-                        {
-                            timezone = "Etc/UTC";
-                        }
+                        string timezone = TimezoneUtils.GetTimezoneFromEntities(workingAgencies, workingStops, departure);
 
                         now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-                        yesterdayDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.AddDays(-1).Year, now.AddDays(-1).Month.ToString("00"), now.AddDays(-1).Day.ToString("00")));
+                        yesterdayDate = now.AddDays(-1).AsInteger();
 
                         DateTime departureTime = new DateTime();
 
