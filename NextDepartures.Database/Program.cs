@@ -109,24 +109,7 @@ namespace NextDepartures.Database
                                         table.Columns.Add("AgencyFareUrl", typeof(string));
                                         table.Columns.Add("AgencyEmail", typeof(string));
 
-                                        foreach (Agency agency in workingAgencies)
-                                        {
-                                            table.Rows.Add(agency.agency_id, agency.agency_name, agency.agency_url, agency.agency_timezone, agency.agency_lang, agency.agency_phone, agency.agency_fare_url, agency.agency_email);
-
-                                            if (table.Rows.Count > 999999)
-                                            {
-                                                await connection.ExecuteCommandAsync("AgencyProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                                table.Rows.Clear();
-                                            }
-                                        }
-
-                                        if (table.Rows.Count > 0)
-                                        {
-                                            await connection.ExecuteCommandAsync("AgencyProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                            table.Rows.Clear();
-                                        }
+                                        await connection.ExecuteStoredProcedureFromTableInBatchesAsync("AgencyProcedure", table, workingAgencies, (dt, agency) => dt.Rows.Add(agency.agency_id, agency.agency_name, agency.agency_url, agency.agency_timezone, agency.agency_lang, agency.agency_phone, agency.agency_fare_url, agency.agency_email));
                                     }
                                 }
 
@@ -152,24 +135,7 @@ namespace NextDepartures.Database
                                         table.Columns.Add("StartDate", typeof(string));
                                         table.Columns.Add("EndDate", typeof(string));
 
-                                        foreach (Calendar calendar in workingCalendars)
-                                        {
-                                            table.Rows.Add(calendar.service_id, calendar.monday, calendar.tuesday, calendar.wednesday, calendar.thursday, calendar.friday, calendar.saturday, calendar.sunday, calendar.start_date, calendar.end_date);
-
-                                            if (table.Rows.Count > 999999)
-                                            {
-                                                await connection.ExecuteCommandAsync("CalendarProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                                table.Rows.Clear();
-                                            }
-                                        }
-
-                                        if (table.Rows.Count > 0)
-                                        {
-                                            await connection.ExecuteCommandAsync("CalendarProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                            table.Rows.Clear();
-                                        }
+                                        await connection.ExecuteStoredProcedureFromTableInBatchesAsync("CalendarProcedure", table, workingCalendars, (dt, calendar) => dt.Rows.Add(calendar.service_id, calendar.monday, calendar.tuesday, calendar.wednesday, calendar.thursday, calendar.friday, calendar.saturday, calendar.sunday, calendar.start_date, calendar.end_date));
                                     }
                                 }
 
@@ -188,24 +154,7 @@ namespace NextDepartures.Database
                                         table.Columns.Add("Date", typeof(string));
                                         table.Columns.Add("ExceptionType", typeof(string));
 
-                                        foreach (CalendarDate calendarDate in workingCalendarDates)
-                                        {
-                                            table.Rows.Add(calendarDate.service_id, calendarDate.date, calendarDate.exception_type);
-
-                                            if (table.Rows.Count > 999999)
-                                            {
-                                                await connection.ExecuteCommandAsync("CalendarDateProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                                table.Rows.Clear();
-                                            }
-                                        }
-
-                                        if (table.Rows.Count > 0)
-                                        {
-                                            await connection.ExecuteCommandAsync("CalendarDateProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                            table.Rows.Clear();
-                                        }
+                                        await connection.ExecuteStoredProcedureFromTableInBatchesAsync("CalendarDateProcedure", table, workingCalendarDates, (dt, calendarDate) => dt.Rows.Add(calendarDate.service_id, calendarDate.date, calendarDate.exception_type));
                                     }
                                 }
 
@@ -231,24 +180,7 @@ namespace NextDepartures.Database
                                         table.Columns.Add("RouteTextColor", typeof(string));
                                         table.Columns.Add("RouteSortOrder", typeof(string));
 
-                                        foreach (Route route in workingRoutes)
-                                        {
-                                            table.Rows.Add(route.route_id, route.agency_id, route.route_short_name, route.route_long_name, route.route_desc, route.route_type, route.route_url, route.route_color, route.route_text_color, route.route_sort_order);
-
-                                            if (table.Rows.Count > 999999)
-                                            {
-                                                await connection.ExecuteCommandAsync("RouteProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                                table.Rows.Clear();
-                                            }
-                                        }
-
-                                        if (table.Rows.Count > 0)
-                                        {
-                                            await connection.ExecuteCommandAsync("RouteProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                            table.Rows.Clear();
-                                        }
+                                        await connection.ExecuteStoredProcedureFromTableInBatchesAsync("RouteProcedure", table, workingRoutes, (dt, route) => dt.Rows.Add(route.route_id, route.agency_id, route.route_short_name, route.route_long_name, route.route_desc, route.route_type, route.route_url, route.route_color, route.route_text_color, route.route_sort_order));
                                     }
                                 }
 
@@ -274,24 +206,7 @@ namespace NextDepartures.Database
                                         table.Columns.Add("ShapeDistTraveled", typeof(string));
                                         table.Columns.Add("Timepoint", typeof(string));
 
-                                        foreach (StopTime stopTime in workingStopTimes)
-                                        {
-                                            table.Rows.Add(stopTime.trip_id, stopTime.arrival_time, stopTime.departure_time, stopTime.stop_id, stopTime.stop_sequence, stopTime.stop_headsign, stopTime.pickup_type, stopTime.drop_off_type, stopTime.shape_dist_traveled, stopTime.timepoint);
-
-                                            if (table.Rows.Count > 999999)
-                                            {
-                                                await connection.ExecuteCommandAsync("StopTimeProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                                table.Rows.Clear();
-                                            }
-                                        }
-
-                                        if (table.Rows.Count > 0)
-                                        {
-                                            await connection.ExecuteCommandAsync("StopTimeProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                            table.Rows.Clear();
-                                        }
+                                        await connection.ExecuteStoredProcedureFromTableInBatchesAsync("StopTimeProcedure", table, workingStopTimes, (dt, stopTime) => dt.Rows.Add(stopTime.trip_id, stopTime.arrival_time, stopTime.departure_time, stopTime.stop_id, stopTime.stop_sequence, stopTime.stop_headsign, stopTime.pickup_type, stopTime.drop_off_type, stopTime.shape_dist_traveled, stopTime.timepoint));
                                     }
                                 }
 
@@ -321,24 +236,7 @@ namespace NextDepartures.Database
                                         table.Columns.Add("LevelID", typeof(string));
                                         table.Columns.Add("PlatformCode", typeof(string));
 
-                                        foreach (Stop stop in workingStops)
-                                        {
-                                            table.Rows.Add(stop.stop_id, stop.stop_code, stop.stop_name, stop.stop_desc, stop.stop_lat, stop.stop_lon, stop.zone_id, stop.stop_url, stop.location_type, stop.parent_station, stop.stop_timezone, stop.wheelchair_boarding, stop.level_id, stop.platform_code);
-
-                                            if (table.Rows.Count > 999999)
-                                            {
-                                                await connection.ExecuteCommandAsync("StopProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                                table.Rows.Clear();
-                                            }
-                                        }
-
-                                        if (table.Rows.Count > 0)
-                                        {
-                                            await connection.ExecuteCommandAsync("StopProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                            table.Rows.Clear();
-                                        }
+                                        await connection.ExecuteStoredProcedureFromTableInBatchesAsync("StopProcedure", table, workingStops, (dt, stop) => dt.Rows.Add(stop.stop_id, stop.stop_code, stop.stop_name, stop.stop_desc, stop.stop_lat, stop.stop_lon, stop.zone_id, stop.stop_url, stop.location_type, stop.parent_station, stop.stop_timezone, stop.wheelchair_boarding, stop.level_id, stop.platform_code));
                                     }
                                 }
 
@@ -364,24 +262,7 @@ namespace NextDepartures.Database
                                         table.Columns.Add("WheelchairAccessible", typeof(string));
                                         table.Columns.Add("BikesAllowed", typeof(string));
 
-                                        foreach (Trip trip in workingTrips)
-                                        {
-                                            table.Rows.Add(trip.route_id, trip.service_id, trip.trip_id, trip.trip_headsign, trip.trip_short_name, trip.direction_id, trip.block_id, trip.shape_id, trip.wheelchair_accessible, trip.bikes_allowed);
-
-                                            if (table.Rows.Count > 999999)
-                                            {
-                                                await connection.ExecuteCommandAsync("TripProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                                table.Rows.Clear();
-                                            }
-                                        }
-
-                                        if (table.Rows.Count > 0)
-                                        {
-                                            await connection.ExecuteCommandAsync("TripProcedure", CommandType.StoredProcedure, (cmd) => cmd.Parameters.AddWithValue("@table", table));
-
-                                            table.Rows.Clear();
-                                        }
+                                        await connection.ExecuteStoredProcedureFromTableInBatchesAsync("TripProcedure", table, workingTrips, (dt, trip) => dt.Rows.Add(trip.route_id, trip.service_id, trip.trip_id, trip.trip_headsign, trip.trip_short_name, trip.direction_id, trip.block_id, trip.shape_id, trip.wheelchair_accessible, trip.bikes_allowed));
                                     }
                                 }
 
