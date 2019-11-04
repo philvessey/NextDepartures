@@ -1,6 +1,8 @@
 ﻿using CsvHelper;
+
 using NextDepartures.Database.Extensions;
 using NextDepartures.Database.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -30,8 +32,8 @@ namespace NextDepartures.Database
                 }
                 catch (SqlException exception)
                 {
-                    Console.WriteLine(exception.Message);
-                    Environment.Exit(0);
+                    Console.Error.WriteLine("Could not connect to database. Error: " + exception.Message);
+                    Environment.Exit(1);
                 }
 
                 await connection.ExecuteCommandAsync("DROP PROCEDURE IF EXISTS AgencyProcedure");
@@ -93,13 +95,8 @@ namespace NextDepartures.Database
                             {
                                 using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
                                 {
-                                    using (CsvReader feedReader = new CsvReader(feedInput))
+                                    using (CsvReader feedReader = feedInput.GetCsvReader())
                                     {
-                                        feedReader.Configuration.BadDataFound = null;
-                                        feedReader.Configuration.HeaderValidated = null;
-                                        feedReader.Configuration.MissingFieldFound = null;
-                                        feedReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.Replace(" ", "");
-
                                         IEnumerable<Agency> workingAgencies = feedReader.GetRecords<Agency>();
 
                                         DataTable table = new DataTable();
@@ -135,18 +132,12 @@ namespace NextDepartures.Database
 
                                 Console.WriteLine("INSERT: agency.txt");
                             }
-
-                            if (archiveEntry.Name == "calendar.txt")
+                            else if (archiveEntry.Name == "calendar.txt")
                             {
                                 using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
                                 {
-                                    using (CsvReader feedReader = new CsvReader(feedInput))
+                                    using (CsvReader feedReader = feedInput.GetCsvReader())
                                     {
-                                        feedReader.Configuration.BadDataFound = null;
-                                        feedReader.Configuration.HeaderValidated = null;
-                                        feedReader.Configuration.MissingFieldFound = null;
-                                        feedReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.Replace(" ", "");
-
                                         IEnumerable<Calendar> workingCalendars = feedReader.GetRecords<Calendar>().GroupBy(x => x.service_id).Select(x => x.First());
 
                                         DataTable table = new DataTable();
@@ -184,18 +175,12 @@ namespace NextDepartures.Database
 
                                 Console.WriteLine("INSERT: calendar.txt");
                             }
-
-                            if (archiveEntry.Name == "calendar_dates.txt")
+                            else if (archiveEntry.Name == "calendar_dates.txt")
                             {
                                 using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
                                 {
-                                    using (CsvReader feedReader = new CsvReader(feedInput))
+                                    using (CsvReader feedReader = feedInput.GetCsvReader())
                                     {
-                                        feedReader.Configuration.BadDataFound = null;
-                                        feedReader.Configuration.HeaderValidated = null;
-                                        feedReader.Configuration.MissingFieldFound = null;
-                                        feedReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.Replace(" ", "");
-
                                         IEnumerable<CalendarDate> workingCalendarDates = feedReader.GetRecords<CalendarDate>();
 
                                         DataTable table = new DataTable();
@@ -226,18 +211,12 @@ namespace NextDepartures.Database
 
                                 Console.WriteLine("INSERT: calendar_dates.txt");
                             }
-
-                            if (archiveEntry.Name == "routes.txt")
+                            else if (archiveEntry.Name == "routes.txt")
                             {
                                 using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
                                 {
-                                    using (CsvReader feedReader = new CsvReader(feedInput))
+                                    using (CsvReader feedReader = feedInput.GetCsvReader())
                                     {
-                                        feedReader.Configuration.BadDataFound = null;
-                                        feedReader.Configuration.HeaderValidated = null;
-                                        feedReader.Configuration.MissingFieldFound = null;
-                                        feedReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.Replace(" ", "");
-
                                         IEnumerable<Route> workingRoutes = feedReader.GetRecords<Route>().GroupBy(x => x.route_id).Select(x => x.First());
 
                                         DataTable table = new DataTable();
@@ -275,18 +254,12 @@ namespace NextDepartures.Database
 
                                 Console.WriteLine("INSERT: routes.txt");
                             }
-
-                            if (archiveEntry.Name == "stop_times.txt")
+                            else if (archiveEntry.Name == "stop_times.txt")
                             {
                                 using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
                                 {
-                                    using (CsvReader feedReader = new CsvReader(feedInput))
+                                    using (CsvReader feedReader = feedInput.GetCsvReader())
                                     {
-                                        feedReader.Configuration.BadDataFound = null;
-                                        feedReader.Configuration.HeaderValidated = null;
-                                        feedReader.Configuration.MissingFieldFound = null;
-                                        feedReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.Replace(" ", "");
-
                                         IEnumerable<StopTime> workingStopTimes = feedReader.GetRecords<StopTime>();
 
                                         DataTable table = new DataTable();
@@ -324,18 +297,12 @@ namespace NextDepartures.Database
 
                                 Console.WriteLine("INSERT: stop_times.txt");
                             }
-
-                            if (archiveEntry.Name == "stops.txt")
+                            else if (archiveEntry.Name == "stops.txt")
                             {
                                 using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
                                 {
-                                    using (CsvReader feedReader = new CsvReader(feedInput))
+                                    using (CsvReader feedReader = feedInput.GetCsvReader())
                                     {
-                                        feedReader.Configuration.BadDataFound = null;
-                                        feedReader.Configuration.HeaderValidated = null;
-                                        feedReader.Configuration.MissingFieldFound = null;
-                                        feedReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.Replace(" ", "");
-
                                         IEnumerable<Stop> workingStops = feedReader.GetRecords<Stop>().GroupBy(x => x.stop_id).Select(x => x.First());
 
                                         DataTable table = new DataTable();
@@ -377,18 +344,12 @@ namespace NextDepartures.Database
 
                                 Console.WriteLine("INSERT: stops.txt");
                             }
-
-                            if (archiveEntry.Name == "trips.txt")
+                            else if (archiveEntry.Name == "trips.txt")
                             {
                                 using (StreamReader feedInput = new StreamReader(archiveEntry.Open()))
                                 {
-                                    using (CsvReader feedReader = new CsvReader(feedInput))
+                                    using (CsvReader feedReader = feedInput.GetCsvReader())
                                     {
-                                        feedReader.Configuration.BadDataFound = null;
-                                        feedReader.Configuration.HeaderValidated = null;
-                                        feedReader.Configuration.MissingFieldFound = null;
-                                        feedReader.Configuration.PrepareHeaderForMatch = (string header, int index) => header.Replace(" ", "");
-
                                         IEnumerable<Trip> workingTrips = feedReader.GetRecords<Trip>().GroupBy(x => x.trip_id).Select(x => x.First());
 
                                         DataTable table = new DataTable();
