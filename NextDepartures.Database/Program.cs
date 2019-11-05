@@ -22,6 +22,16 @@ namespace NextDepartures.Database
         {
             Console.WriteLine("");
 
+            try
+            {
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(args[0]);
+            }
+            catch (Exception exception)
+            {
+                Console.Error.WriteLine(string.Format("Connection string invalid. Error: {0}", exception.Message));
+                Environment.Exit(1);
+            }
+
             using (SqlConnection connection = new SqlConnection(args[0]))
             {
                 try
@@ -30,7 +40,7 @@ namespace NextDepartures.Database
                 }
                 catch (SqlException exception)
                 {
-                    Console.Error.WriteLine("Could not connect to database. Error: " + exception.Message);
+                    Console.Error.WriteLine(string.Format("Could not connect to database. Error: {0}", exception.Message));
                     Environment.Exit(1);
                 }
 
