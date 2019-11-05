@@ -1,5 +1,4 @@
 ﻿using CsvHelper;
-
 using System.IO;
 
 namespace NextDepartures.Database.Extensions
@@ -8,7 +7,7 @@ namespace NextDepartures.Database.Extensions
     {
         public static CsvReader GetCsvReader(this StreamReader streamReader)
         {
-            var csvReader = new CsvReader(streamReader);
+            CsvReader csvReader = new CsvReader(streamReader);
 
             csvReader.Configuration.BadDataFound = null;
             csvReader.Configuration.HeaderValidated = null;

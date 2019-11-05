@@ -16,6 +16,11 @@ using NextDepartures.Standard.Models;
 using NextDepartures.Storage.SqlServer;
 
 Feed feed = new Feed(new SqlStorage([connection]));
+List<Agency> results = await feed.GetAgenciesByAllAsync([query], [timezone]);
+List<Agency> results = await feed.GetAgenciesByQueryAsync([query]);
+List<Agency> results = await feed.GetAgenciesByTimezoneAsync([timezone]);
+
+Feed feed = new Feed(new SqlStorage([connection]));
 List<Service> results = await feed.GetServicesByStopAsync([id]);
 List<Service> results = await feed.GetServicesByTripAsync([id]);
 

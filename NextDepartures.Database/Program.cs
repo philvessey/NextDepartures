@@ -1,8 +1,6 @@
 ﻿using CsvHelper;
-
 using NextDepartures.Database.Extensions;
 using NextDepartures.Database.Models;
-
 using System;
 using System.Collections.Generic;
 using System.Data;

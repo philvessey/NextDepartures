@@ -1,5 +1,4 @@
 ﻿using NextDepartures.Standard.Models;
-
 using System.Collections.Generic;
 
 namespace NextDepartures.Standard.Utils

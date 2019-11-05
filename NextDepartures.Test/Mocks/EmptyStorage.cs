@@ -20,6 +20,37 @@ namespace NextDepartures.Test.Mocks
         }
 
         /// <summary>
+        /// Gets the agencies by the given query and timezone.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="timezone">The timezone.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByAllAsync(string query, string timezone)
+        {
+            return Task.FromResult(new List<Agency>());
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given query.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByQueryAsync(string query)
+        {
+            return Task.FromResult(new List<Agency>());
+        }
+
+        /// <summary>
+        /// Gets the agencies in the given timezone.
+        /// </summary>
+        /// <param name="timezone">The timezone.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
+        {
+            return Task.FromResult(new List<Agency>());
+        }
+
+        /// <summary>
         /// Gets the departures for a specific stop.
         /// </summary>
         /// <param name="id">The id of the stop.</param>

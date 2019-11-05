@@ -14,6 +14,42 @@ namespace NextDepartures.Test
     public class Unit
     {
         /// <summary>
+        /// Gets the agencies by the given query and timezone.
+        /// </summary>
+        [TestMethod]
+        public async Task GetAgenciesByAllAsync()
+        {
+            Feed feed = new Feed(new EmptyStorage());
+            List <Agency> results = await feed.GetAgenciesByAllAsync("", "");
+
+            Assert.IsNotNull(results);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given query.
+        /// </summary>
+        [TestMethod]
+        public async Task GetAgenciesByQueryAsync()
+        {
+            Feed feed = new Feed(new EmptyStorage());
+            List<Agency> results = await feed.GetAgenciesByQueryAsync("");
+
+            Assert.IsNotNull(results);
+        }
+
+        /// <summary>
+        /// Gets the agencies in the given timezone.
+        /// </summary>
+        [TestMethod]
+        public async Task GetAgenciesByTimezoneAsync()
+        {
+            Feed feed = new Feed(new EmptyStorage());
+            List<Agency> results = await feed.GetAgenciesByTimezoneAsync("");
+
+            Assert.IsNotNull(results);
+        }
+
+        /// <summary>
         /// Gets the services for a specific stop.
         /// </summary>
         [TestMethod]

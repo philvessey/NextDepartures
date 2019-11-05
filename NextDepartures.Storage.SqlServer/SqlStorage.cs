@@ -69,12 +69,59 @@ namespace NextDepartures.Storage.SqlServer
         }
 
         /// <summary>
+        /// Gets an agency with special casing.
+        /// </summary>
+        /// <param name="dataReader">The dataReader returned from the query.</param>
+        /// <remarks>The name of the agency is converted to title case depending on the current culture.</remarks>
+        /// <returns>An agency.</returns>
+        private Agency GetAgencyFromDataReaderWithSpecialCasing(SqlDataReader dataReader)
+        {
+            return new Agency()
+            {
+                AgencyID = dataReader.GetValue(0).ToString(),
+                AgencyName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader.GetValue(1).ToString().ToLower()),
+                AgencyTimezone = dataReader.GetValue(2).ToString()
+            };
+        }
+
+        /// <summary>
         /// Gets all available agencies.
         /// </summary>
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesAsync()
         {
             return ExecuteCommand("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency", GetAgencyFromDataReader);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given query and timezone.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="timezone">The timezone.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByAllAsync(string query, string timezone)
+        {
+            return ExecuteCommand(string.Format("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency WHERE (LOWER(AgencyID) LIKE '%{0}%' OR LOWER(AgencyName) LIKE '%{0}%') AND LOWER(AgencyTimezone) LIKE '%{1}%'", query.ToLower(), timezone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given query.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByQueryAsync(string query)
+        {
+            return ExecuteCommand(string.Format("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency WHERE LOWER(AgencyID) LIKE '%{0}%' OR LOWER(AgencyName) LIKE '%{0}%'", query.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the agencies in the given timezone.
+        /// </summary>
+        /// <param name="timezone">The timezone.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
+        {
+            return ExecuteCommand(string.Format("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency WHERE LOWER(AgencyTimezone) LIKE '%{0}%'", timezone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
