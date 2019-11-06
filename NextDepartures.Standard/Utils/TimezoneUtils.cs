@@ -1,53 +1,33 @@
 ﻿using NextDepartures.Standard.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NextDepartures.Standard.Utils
 {
     public static class TimezoneUtils
     {
-        public static string GetTimezoneFromEntities(List<Agency> workingAgencies, List<Stop> workingStops, Departure departure)
+        public static string GetTimezoneFromEntities(List<Agency> workingAgencies, List<Stop> workingStops, Departure departure, string defaultTimezone = "Etc/UTC")
         {
             string timezone = "";
 
-            if (timezone == "")
+            if (string.IsNullOrEmpty(timezone))
             {
-                foreach (Stop stop in workingStops)
-                {
-                    if (stop.StopID == departure.StopID)
-                    {
-                        timezone = stop.StopTimezone;
-
-                        break;
-                    }
-                }
+                timezone = workingStops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopTimezone;
             }
 
-            if (timezone == "")
+            if (string.IsNullOrEmpty(timezone))
             {
-                foreach (Agency agency in workingAgencies)
-                {
-                    if (agency.AgencyID == departure.AgencyID)
-                    {
-                        timezone = agency.AgencyTimezone;
-
-                        break;
-                    }
-                }
+                timezone = workingAgencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyTimezone;
             }
 
-            if (timezone == "")
+            if (string.IsNullOrEmpty(timezone))
             {
-                foreach (Agency agency in workingAgencies)
-                {
-                    timezone = agency.AgencyTimezone;
-
-                    break;
-                }
+                timezone = workingAgencies.FirstOrDefault()?.AgencyTimezone;
             }
 
-            if (timezone == "")
+            if (string.IsNullOrEmpty(timezone))
             {
-                timezone = "Etc/UTC";
+                timezone = defaultTimezone;
             }
 
             return timezone;
