@@ -192,17 +192,7 @@ namespace NextDepartures.Standard
             // TODO: Refactor the if inner code
             if (dayOfWeekMapper(now.DayOfWeek, departure) == "1" && startDate <= targetDate && endDate >= targetDate)
             {
-                bool exclude = false;
-
-                foreach (var exception in _exceptions)
-                {
-                    if (departure.ServiceID == exception.ServiceID && exception.Date == targetDate.ToString() && exception.ExceptionType == "2")
-                    {
-                        exclude = true;
-
-                        break;
-                    }
-                }
+                bool exclude = _exceptions.Any(e => departure.ServiceID == e.ServiceID && e.Date == targetDate.ToString() && e.ExceptionType == "2");
 
                 if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                 {
@@ -216,17 +206,7 @@ namespace NextDepartures.Standard
             }
             else if (startDate <= targetDate && endDate >= targetDate)
             {
-                bool include = false;
-
-                foreach (var exception in _exceptions)
-                {
-                    if (departure.ServiceID == exception.ServiceID && exception.Date == targetDate.ToString() && exception.ExceptionType == "1")
-                    {
-                        include = true;
-
-                        break;
-                    }
-                }
+                bool include = _exceptions.Any(e => departure.ServiceID == e.ServiceID && e.Date == targetDate.ToString() && e.ExceptionType == "1");
 
                 if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                 {
