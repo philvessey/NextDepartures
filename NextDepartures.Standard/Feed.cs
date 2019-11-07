@@ -141,85 +141,104 @@ namespace NextDepartures.Standard
                 () => _agencies.FirstOrDefault()?.AgencyTimezone);
         }
 
-        // TODO: May be calculate the three days in one loop so that the timezone calculated and so on can be reused?
-
         private List<Departure> GetDeparturesOnDay(List<Departure> departures, int dayOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper)
         {
             List<Departure> resultForDay = new List<Departure>();
 
+            // TODO: May be calculate the three days in one loop so that the timezone calculated and so on can be reused?
             foreach (Departure departure in departures)
             {
-                string timezone = GetTimezone(departure);
-
-                DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-                int targetDate = now.AddDays(dayOffset).AsInteger();
-
-                DateTime departureTime = GetDepartureTimeFromDeparture(now, departure.DepartureTime);
-
-                int startDate = targetDate;
-                int endDate = targetDate;
-
-                if (departure.StartDate != "")
-                {
-                    startDate = int.Parse(departure.StartDate);
-                }
-
-                if (departure.EndDate != "")
-                {
-                    endDate = int.Parse(departure.EndDate);
-                }
-
-                if (dayOfWeekMapper(now.DayOfWeek, departure) == "1" && startDate <= targetDate && endDate >= targetDate)
-                {
-                    bool exclude = false;
-
-                    foreach (var exception in _exceptions)
-                    {
-                        if (departure.ServiceID == exception.ServiceID && exception.Date == targetDate.ToString() && exception.ExceptionType == "2")
-                        {
-                            exclude = true;
-
-                            break;
-                        }
-                    }
-
-                    if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                    {
-                        exclude = true;
-                    }
-
-                    if (!exclude && departureTime >= now && departureTime <= now.AddHours(toleranceInHours))
-                    {
-                        resultForDay.Add(CreateProcessedDeparture(departure, departureTime));
-                    }
-                }
-                else if (startDate <= targetDate && endDate >= targetDate)
-                {
-                    bool include = false;
-
-                    foreach (var exception in _exceptions)
-                    {
-                        if (departure.ServiceID == exception.ServiceID && exception.Date == targetDate.ToString() && exception.ExceptionType == "1")
-                        {
-                            include = true;
-
-                            break;
-                        }
-                    }
-
-                    if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                    {
-                        include = false;
-                    }
-
-                    if (include && departureTime >= now && departureTime <= now.AddHours(toleranceInHours))
-                    {
-                        resultForDay.Add(CreateProcessedDeparture(departure, departureTime));
-                    }
-                }
+                resultForDay.AddIfNotNull(TryProcessDeparture(dayOffset, toleranceInHours, id, dayOfWeekMapper, departure));
             }
 
             return resultForDay;
+        }
+
+        private Departure TryProcessDeparture(int dayOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper, Departure departure)
+        {
+            string timezone = GetTimezone(departure);
+
+            DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
+            int targetDate = now.AddDays(dayOffset).AsInteger();
+
+            DateTime departureTime = GetDepartureTimeFromDeparture(now, departure.DepartureTime);
+
+            int startDate = targetDate;
+            int endDate = targetDate;
+
+            if (departure.StartDate != "")
+            {
+                startDate = int.Parse(departure.StartDate);
+            }
+
+            if (departure.EndDate != "")
+            {
+                endDate = int.Parse(departure.EndDate);
+            }
+
+            if (IsDepartureValid(toleranceInHours, id, dayOfWeekMapper, departure, now, targetDate, departureTime, startDate, endDate))
+            {
+                return CreateProcessedDeparture(departure, departureTime);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private bool IsDepartureValid(int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper, Departure departure, DateTime now, int targetDate, DateTime departureTime, int startDate, int endDate)
+        {
+            // TODO: Refactor the if inner code
+            if (dayOfWeekMapper(now.DayOfWeek, departure) == "1" && startDate <= targetDate && endDate >= targetDate)
+            {
+                bool exclude = false;
+
+                foreach (var exception in _exceptions)
+                {
+                    if (departure.ServiceID == exception.ServiceID && exception.Date == targetDate.ToString() && exception.ExceptionType == "2")
+                    {
+                        exclude = true;
+
+                        break;
+                    }
+                }
+
+                if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                {
+                    exclude = true;
+                }
+
+                if (!exclude && departureTime >= now && departureTime <= now.AddHours(toleranceInHours))
+                {
+                    return true;
+                }
+            }
+            else if (startDate <= targetDate && endDate >= targetDate)
+            {
+                bool include = false;
+
+                foreach (var exception in _exceptions)
+                {
+                    if (departure.ServiceID == exception.ServiceID && exception.Date == targetDate.ToString() && exception.ExceptionType == "1")
+                    {
+                        include = true;
+
+                        break;
+                    }
+                }
+
+                if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                {
+                    include = false;
+                }
+
+                if (include && departureTime >= now && departureTime <= now.AddHours(toleranceInHours))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
