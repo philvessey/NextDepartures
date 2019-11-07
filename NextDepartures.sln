@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDepartures.Standard", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDepartures.Test", "NextDepartures.Test\NextDepartures.Test.csproj", "{5DA52493-AE7D-4D00-97EE-62DAF1A69A3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextDepartures.Storage.SqlServer", "NextDepartures.Storage.SqlServer\NextDepartures.Storage.SqlServer.csproj", "{F255349C-F044-437A-B6AF-6789FD2710BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDepartures.Storage.SqlServer", "NextDepartures.Storage.SqlServer\NextDepartures.Storage.SqlServer.csproj", "{F255349C-F044-437A-B6AF-6789FD2710BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F1795DF0-C1C8-4AAB-B404-C8B49EA3D67D}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
