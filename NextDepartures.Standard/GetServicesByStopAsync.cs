@@ -59,12 +59,12 @@ namespace NextDepartures.Standard
 
                 if (departure.StartDate != "")
                 {
-                    startDate = Convert.ToInt32(departure.StartDate);
+                    startDate = int.Parse(departure.StartDate);
                 }
 
                 if (departure.EndDate != "")
                 {
-                    endDate = Convert.ToInt32(departure.EndDate);
+                    endDate = int.Parse(departure.EndDate);
                 }
 
                 if (now.DayOfWeek == DayOfWeek.Monday)
@@ -433,7 +433,7 @@ namespace NextDepartures.Standard
                 string timezone = GetTimezone(workingAgencies, workingStops, departure);
 
                 now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-                todayDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.Year, now.Month.ToString("00"), now.Day.ToString("00")));
+                todayDate = int.Parse(string.Format("{0}{1}{2}", now.Year, now.Month.ToString("00"), now.Day.ToString("00")));
 
                 DateTime departureTime = GetDepartureTimeFromDeparture(now, departure.DepartureTime);
 
@@ -442,12 +442,12 @@ namespace NextDepartures.Standard
 
                 if (departure.StartDate != "")
                 {
-                    startDate = Convert.ToInt32(departure.StartDate);
+                    startDate = int.Parse(departure.StartDate);
                 }
 
                 if (departure.EndDate != "")
                 {
-                    endDate = Convert.ToInt32(departure.EndDate);
+                    endDate = int.Parse(departure.EndDate);
                 }
 
                 if (now.DayOfWeek == DayOfWeek.Monday)
@@ -816,7 +816,7 @@ namespace NextDepartures.Standard
                 string timezone = GetTimezone(workingAgencies, workingStops, departure);
 
                 now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-                tomorrowDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.AddDays(1).Year, now.AddDays(1).Month.ToString("00"), now.AddDays(1).Day.ToString("00")));
+                tomorrowDate = int.Parse(string.Format("{0}{1}{2}", now.AddDays(1).Year, now.AddDays(1).Month.ToString("00"), now.AddDays(1).Day.ToString("00")));
 
                 DateTime departureTime = GetDepartureTimeFromDeparture(now, departure.DepartureTime);
 
@@ -825,12 +825,12 @@ namespace NextDepartures.Standard
 
                 if (departure.StartDate != "")
                 {
-                    startDate = Convert.ToInt32(departure.StartDate);
+                    startDate = int.Parse(departure.StartDate);
                 }
 
                 if (departure.EndDate != "")
                 {
-                    endDate = Convert.ToInt32(departure.EndDate);
+                    endDate = int.Parse(departure.EndDate);
                 }
 
                 if (now.DayOfWeek == DayOfWeek.Monday)
