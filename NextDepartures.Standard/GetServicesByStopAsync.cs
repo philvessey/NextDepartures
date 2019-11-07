@@ -20,6 +20,8 @@ namespace NextDepartures.Standard
         /// <returns>A list of services.</returns>
         public async Task<List<Service>> GetServicesByStopAsync(string id, int count = 10)
         {
+            const int ToleranceInHours = 1;
+
             DateTime now = DateTime.UtcNow;
             int yesterdayDate = now.AddDays(-1).AsInteger();
             int todayDate = now.AsInteger();
@@ -86,7 +88,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -110,7 +112,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -137,7 +139,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -161,7 +163,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -188,7 +190,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -212,7 +214,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -239,7 +241,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -263,7 +265,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -290,7 +292,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -314,7 +316,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -341,7 +343,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -365,7 +367,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -392,7 +394,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -416,7 +418,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -469,7 +471,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -493,7 +495,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -520,7 +522,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -544,7 +546,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -571,7 +573,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -595,7 +597,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -622,7 +624,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -646,7 +648,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -673,7 +675,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -697,7 +699,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -724,7 +726,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -748,7 +750,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -775,7 +777,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -799,7 +801,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -852,7 +854,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -876,7 +878,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -903,7 +905,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -927,7 +929,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -954,7 +956,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -978,7 +980,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -1005,7 +1007,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -1029,7 +1031,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -1056,7 +1058,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -1080,7 +1082,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -1107,7 +1109,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -1131,7 +1133,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -1158,7 +1160,7 @@ namespace NextDepartures.Standard
                             exclude = true;
                         }
 
-                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
@@ -1182,7 +1184,7 @@ namespace NextDepartures.Standard
                             include = false;
                         }
 
-                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
                             workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
