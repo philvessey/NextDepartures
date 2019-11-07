@@ -2,9 +2,12 @@
 using NextDepartures.Standard.Interfaces;
 using NextDepartures.Standard.Models;
 using NextDepartures.Standard.Utils;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+
 using TimeZoneConverter;
 
 namespace NextDepartures.Standard
@@ -13,23 +16,51 @@ namespace NextDepartures.Standard
     {
         private readonly IDataStorage _dataStorage;
 
+        private List<Agency> _agencies;
+        private List<Models.Exception> _exceptions;
+        private List<Stop> _stops;
+
+        private Feed()
+        {
+        }
+
+        private Feed(IDataStorage dataStorage)
+        {
+            _dataStorage = dataStorage;
+
+            _agencies = new List<Agency>();
+            _exceptions = new List<Models.Exception>();
+            _stops = new List<Stop>();
+        }
+
         /// <summary>
         /// Creates a new feed.
         /// </summary>
         /// <param name="dataStorage">The data storage to use.</param>
-        public Feed(IDataStorage dataStorage)
+        /// <returns>A new feed instance.</returns>
+        public static async Task<Feed> Load(IDataStorage dataStorage)
         {
-            _dataStorage = dataStorage;
+            Feed feed = new Feed(dataStorage);
+            await feed.PreloadFromStorage();
+            return feed;
+        }
+
+        private async Task PreloadFromStorage()
+        {
+            // TODO: May be parallelize this if the storage is able to do so
+            _agencies = await _dataStorage.GetAgenciesAsync();
+            _exceptions = new List<Models.Exception>();
+            _stops = new List<Stop>();
         }
 
         /// <summary>
-        /// Creates a working departure.
+        /// Creates a processed departure.
         /// </summary>
         /// <param name="tempDeparture">The temporary departure.</param>
         /// <param name="departureTime">The departure time.</param>
-        /// <remarks>A working departure is a departure actually running on the date / time.</remarks>
+        /// <remarks>A processed departure is a departure actually running on the date / time.</remarks>
         /// <returns>A departure.</returns>
-        private Departure CreateWorkingDeparture(Departure tempDeparture, DateTime departureTime)
+        private Departure CreateProcessedDeparture(Departure tempDeparture, DateTime departureTime)
         {
             return new Departure()
             {
@@ -54,29 +85,29 @@ namespace NextDepartures.Standard
             };
         }
 
-        private Service CreateService(Departure departure, List<Stop> workingStops, List<Agency> workingAgencies)
+        private Service CreateService(Departure departure)
         {
             const string fallback = "Unknown";
 
             string agencyName = StringUtils.FindPossibleString(fallback,
-                                    () => workingAgencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyName,
-                                    () => workingAgencies.FirstOrDefault()?.AgencyName
+                                    () => _agencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyName,
+                                    () => _agencies.FirstOrDefault()?.AgencyName
                                     ).Trim().ToTitleCase();
 
             string destinationName = StringUtils.FindPossibleString(fallback,
-                () => workingStops.FirstOrDefault(s => departure.RouteShortName.Contains(s.StopID.WithPrefix("_")) || departure.RouteShortName.Contains(s.StopID.WithPrefix("->")))?.StopName,
+                () => _stops.FirstOrDefault(s => departure.RouteShortName.Contains(s.StopID.WithPrefix("_")) || departure.RouteShortName.Contains(s.StopID.WithPrefix("->")))?.StopName,
                 () => departure.TripHeadsign,
                 () => departure.TripShortName,
                 () => departure.RouteLongName
                 ).Trim().ToTitleCase();
 
             string routeName = StringUtils.FindPossibleString(fallback,
-                () => workingStops.FirstOrDefault(s => departure.RouteShortName.Contains(s.StopID.WithPrefix("_")) || departure.RouteShortName.Contains(s.StopID.WithPrefix("->")))?.StopName,
+                () => _stops.FirstOrDefault(s => departure.RouteShortName.Contains(s.StopID.WithPrefix("_")) || departure.RouteShortName.Contains(s.StopID.WithPrefix("->")))?.StopName,
                 () => departure.RouteShortName
                 ).Trim().ToTitleCase();
 
             string stopName = StringUtils.FindPossibleString(fallback,
-                () => workingStops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopName
+                () => _stops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopName
                 ).Trim().ToTitleCase();
 
             return new Service()
@@ -102,21 +133,23 @@ namespace NextDepartures.Standard
             return new DateTime(now.Year, now.Month, now.Day, departureHour % 24, splittedDepartureTime[1], splittedDepartureTime[2]).AddDays(((int) (departureHour / 24)) - 1);
         }
 
-        private string GetTimezone(List<Agency> workingAgencies, List<Stop> workingStops, Departure departure, string defaultTimezone = "Etc/UTC")
+        private string GetTimezone(Departure departure, string defaultTimezone = "Etc/UTC")
         {
             return StringUtils.FindPossibleString(defaultTimezone,
-                () => workingStops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopTimezone,
-                () => workingAgencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyTimezone,
-                () => workingAgencies.FirstOrDefault()?.AgencyTimezone);
+                () => _stops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopTimezone,
+                () => _agencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyTimezone,
+                () => _agencies.FirstOrDefault()?.AgencyTimezone);
         }
 
-        private List<Departure> GetDeparturesOnDay(List<Agency> agencies, List<Stop> stops, List<Models.Exception> exceptions, List<Departure> departures, int dayOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper)
+        // TODO: May be calculate the three days in one loop so that the timezone calculated and so on can be reused?
+
+        private List<Departure> GetDeparturesOnDay(List<Departure> departures, int dayOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper)
         {
             List<Departure> resultForDay = new List<Departure>();
 
             foreach (Departure departure in departures)
             {
-                string timezone = GetTimezone(agencies, stops, departure);
+                string timezone = GetTimezone(departure);
 
                 DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
                 int targetDate = now.AddDays(dayOffset).AsInteger();
@@ -140,7 +173,7 @@ namespace NextDepartures.Standard
                 {
                     bool exclude = false;
 
-                    foreach (var exception in exceptions)
+                    foreach (var exception in _exceptions)
                     {
                         if (departure.ServiceID == exception.ServiceID && exception.Date == targetDate.ToString() && exception.ExceptionType == "2")
                         {
@@ -157,14 +190,14 @@ namespace NextDepartures.Standard
 
                     if (!exclude && departureTime >= now && departureTime <= now.AddHours(toleranceInHours))
                     {
-                        resultForDay.Add(CreateWorkingDeparture(departure, departureTime));
+                        resultForDay.Add(CreateProcessedDeparture(departure, departureTime));
                     }
                 }
                 else if (startDate <= targetDate && endDate >= targetDate)
                 {
                     bool include = false;
 
-                    foreach (var exception in exceptions)
+                    foreach (var exception in _exceptions)
                     {
                         if (departure.ServiceID == exception.ServiceID && exception.Date == targetDate.ToString() && exception.ExceptionType == "1")
                         {
@@ -181,7 +214,7 @@ namespace NextDepartures.Standard
 
                     if (include && departureTime >= now && departureTime <= now.AddHours(toleranceInHours))
                     {
-                        resultForDay.Add(CreateWorkingDeparture(departure, departureTime));
+                        resultForDay.Add(CreateProcessedDeparture(departure, departureTime));
                     }
                 }
             }

@@ -6,7 +6,7 @@ namespace NextDepartures.Standard.Utils
 {
     public static class WeekdayUtils
     {
-        private static readonly Dictionary<DayOfWeek, Func<Departure, string>> previousDays = new Dictionary<DayOfWeek, Func<Departure, string>>()
+        private static readonly Dictionary<DayOfWeek, Func<Departure, string>> _previousDays = new Dictionary<DayOfWeek, Func<Departure, string>>()
         {
             { DayOfWeek.Monday, d => d.Sunday },
             { DayOfWeek.Tuesday, d => d.Monday },
@@ -17,7 +17,7 @@ namespace NextDepartures.Standard.Utils
             { DayOfWeek.Sunday, d => d.Saturday },
         };
 
-        private static readonly Dictionary<DayOfWeek, Func<Departure, string>> todayDays = new Dictionary<DayOfWeek, Func<Departure, string>>()
+        private static readonly Dictionary<DayOfWeek, Func<Departure, string>> _todayDays = new Dictionary<DayOfWeek, Func<Departure, string>>()
         {
             { DayOfWeek.Monday, d => d.Monday },
             { DayOfWeek.Tuesday, d => d.Tuesday },
@@ -28,7 +28,7 @@ namespace NextDepartures.Standard.Utils
             { DayOfWeek.Sunday, d => d.Sunday },
         };
 
-        private static readonly Dictionary<DayOfWeek, Func<Departure, string>> followingDays = new Dictionary<DayOfWeek, Func<Departure, string>>()
+        private static readonly Dictionary<DayOfWeek, Func<Departure, string>> _followingDays = new Dictionary<DayOfWeek, Func<Departure, string>>()
         {
             { DayOfWeek.Monday, d => d.Tuesday },
             { DayOfWeek.Tuesday, d => d.Wednesday },
@@ -41,17 +41,17 @@ namespace NextDepartures.Standard.Utils
 
         public static string GetPreviousDay(DayOfWeek dayOfWeek, Departure departure)
         {
-            return previousDays[dayOfWeek](departure);
+            return _previousDays[dayOfWeek](departure);
         }
 
         public static string GetTodayDay(DayOfWeek dayOfWeek, Departure departure)
         {
-            return todayDays[dayOfWeek](departure);
+            return _todayDays[dayOfWeek](departure);
         }
 
         public static string GetFollowingDay(DayOfWeek dayOfWeek, Departure departure)
         {
-            return followingDays[dayOfWeek](departure);
+            return _followingDays[dayOfWeek](departure);
         }
     }
 }

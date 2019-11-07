@@ -22,9 +22,6 @@ namespace NextDepartures.Standard
             const int ToleranceInHours = 12;
 
             List<Departure> tempDepartures = await _dataStorage.GetDeparturesForTripAsync(id);
-            List<Agency> workingAgencies = await _dataStorage.GetAgenciesAsync();
-            List<Models.Exception> workingExceptions = await _dataStorage.GetExceptionsAsync();
-            List<Stop> workingStops = await _dataStorage.GetStopsAsync();
 
             /// Process data
             /// 1. Timezone is determined - stop is checked first, if no timezone available, look at agency, if still no timezone assume Etc/UTC.
@@ -33,15 +30,15 @@ namespace NextDepartures.Standard
             /// 4. Looks for which day of the week we are on.
             /// 5. Checks to see if a service is excluded from running - if it is its ignored.
             /// 6. Checks to see if the stop is the trip destination - if it is its ignored as this is not a departure.
-            /// 7. Working Departure is created if departureTime > now and < 12 hours from now.
+            /// 7. Processed Departure is created if departureTime > now and < 12 hours from now.
             /// 8. If cant determine what day of week service runs on exceptions are checked to see if service running  - if it is its included.
             /// 9. Checks to see if the stop is the trip destination - if it is its ignored as this is not a departure.
 
-            List<Departure> workingDepartures = new List<Departure>();
+            List<Departure> processedDepartures = new List<Departure>();
 
             foreach (Departure departure in tempDepartures)
             {
-                string timezone = GetTimezone(workingAgencies, workingStops, departure);
+                string timezone = GetTimezone(departure);
 
                 DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
                 int yesterdayDate = now.AddDays(-1).AsInteger();
@@ -67,7 +64,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -84,14 +81,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -108,7 +105,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -118,7 +115,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -135,14 +132,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -159,7 +156,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -169,7 +166,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -186,14 +183,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -210,7 +207,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -220,7 +217,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -237,14 +234,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -261,7 +258,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -271,7 +268,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -288,14 +285,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -312,7 +309,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -322,7 +319,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -339,14 +336,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -363,7 +360,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -373,7 +370,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -390,14 +387,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -414,7 +411,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -422,7 +419,7 @@ namespace NextDepartures.Standard
 
             foreach (Departure departure in tempDepartures)
             {
-                string timezone = GetTimezone(workingAgencies, workingStops, departure);
+                string timezone = GetTimezone(departure);
 
                 DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
                 int todayDate = now.AsInteger();
@@ -448,7 +445,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -465,14 +462,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= todayDate && endDate >= todayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -489,7 +486,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -499,7 +496,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -516,14 +513,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= todayDate && endDate >= todayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -540,7 +537,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -550,7 +547,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -567,14 +564,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= todayDate && endDate >= todayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -591,7 +588,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -601,7 +598,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -618,14 +615,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= todayDate && endDate >= todayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -642,7 +639,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -652,7 +649,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -669,14 +666,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= todayDate && endDate >= todayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "")
                             {
@@ -693,7 +690,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -703,7 +700,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -720,14 +717,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= todayDate && endDate >= todayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -744,7 +741,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -754,7 +751,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -771,14 +768,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= todayDate && endDate >= todayDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -795,7 +792,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -803,7 +800,7 @@ namespace NextDepartures.Standard
 
             foreach (Departure departure in tempDepartures)
             {
-                string timezone = GetTimezone(workingAgencies, workingStops, departure);
+                string timezone = GetTimezone(departure);
 
                 DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
                 int tomorrowDate = now.AddDays(1).AsInteger();
@@ -829,7 +826,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -846,14 +843,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -870,7 +867,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -880,7 +877,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -897,14 +894,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -921,7 +918,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -931,7 +928,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -948,14 +945,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -972,7 +969,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -982,7 +979,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -999,14 +996,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -1023,7 +1020,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -1033,7 +1030,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -1050,14 +1047,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "")
                             {
@@ -1074,7 +1071,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -1084,7 +1081,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -1101,14 +1098,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -1125,7 +1122,7 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -1135,7 +1132,7 @@ namespace NextDepartures.Standard
                     {
                         bool exclude = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
@@ -1152,14 +1149,14 @@ namespace NextDepartures.Standard
 
                         if (!exclude && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                     else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
                         bool include = false;
 
-                        foreach (var exception in workingExceptions)
+                        foreach (var exception in _exceptions)
                         {
                             if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                             {
@@ -1176,13 +1173,13 @@ namespace NextDepartures.Standard
 
                         if (include && departureTime >= now && departureTime <= now.AddHours(ToleranceInHours))
                         {
-                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                            processedDepartures.Add(CreateProcessedDeparture(departure, departureTime));
                         }
                     }
                 }
             }
 
-            return workingDepartures.Select(d => CreateService(d, workingStops, workingAgencies)).ToList();
+            return processedDepartures.Select(d => CreateService(d)).ToList();
         }
     }
 }
