@@ -16,8 +16,9 @@ namespace NextDepartures.Standard
         /// Gets the services for a specific trip.
         /// </summary>
         /// <param name="id">The id of the trip.</param>
+        /// <param name="count">The number of results to return. Default is 10 but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public async Task<List<Service>> GetServicesByTripAsync(string id)
+        public async Task<List<Service>> GetServicesByTripAsync(string id, int count = 10)
         {
             DateTime now = DateTime.UtcNow;
             int yesterdayDate = now.AddDays(-1).AsInteger();
@@ -440,6 +441,8 @@ namespace NextDepartures.Standard
                 }
             }
 
+            workingDepartures = workingDepartures.Take(count).ToList();
+
             foreach (Departure departure in tempDepartures)
             {
                 string timezone = GetTimezone(workingAgencies, workingStops, departure);
@@ -837,6 +840,8 @@ namespace NextDepartures.Standard
                     }
                 }
             }
+
+            workingDepartures = workingDepartures.Take(count).ToList();
 
             foreach (Departure departure in tempDepartures)
             {
@@ -1236,7 +1241,7 @@ namespace NextDepartures.Standard
                 }
             }
 
-            return workingDepartures.Select(d => CreateService(d, workingStops, workingAgencies)).ToList();
+            return workingDepartures.Take(count).Select(d => CreateService(d, workingStops, workingAgencies)).ToList();
         }
     }
 }
