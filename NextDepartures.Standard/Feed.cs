@@ -49,8 +49,8 @@ namespace NextDepartures.Standard
         {
             // TODO: May be parallelize this if the storage is able to do so
             _agencies = await _dataStorage.GetAgenciesAsync();
-            _exceptions = new List<Models.Exception>();
-            _stops = new List<Stop>();
+            _exceptions = await _dataStorage.GetExceptionsAsync();
+            _stops = await _dataStorage.GetStopsAsync();
         }
 
         /// <summary>
@@ -158,6 +158,7 @@ namespace NextDepartures.Standard
         {
             string timezone = GetTimezone(departure);
 
+            // TODO: Maybe we should think about changing the UtcNow to a time settable by the user so that he can request services at a timepoint of his choice
             DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
             int targetDate = now.AddDays(dayOffset).AsInteger();
 
