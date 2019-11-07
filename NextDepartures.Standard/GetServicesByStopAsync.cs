@@ -43,402 +43,399 @@ namespace NextDepartures.Standard
 
             List<Departure> workingDepartures = new List<Departure>();
 
-            if (workingDepartures.Count < count)
+            foreach (Departure departure in tempDepartures)
             {
-                foreach (Departure departure in tempDepartures)
+                string timezone = GetTimezone(workingAgencies, workingStops, departure);
+
+                now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
+                yesterdayDate = now.AddDays(-1).AsInteger();
+
+                DateTime departureTime = new DateTime();
+
+                if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 72)
                 {
-                    string timezone = GetTimezone(workingAgencies, workingStops, departure);
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 72, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(2);
+                }
+                else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 48)
+                {
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 48, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(1);
+                }
+                else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 24)
+                {
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 24, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2]));
+                }
+                else
+                {
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(-1);
+                }
 
-                    now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-                    yesterdayDate = now.AddDays(-1).AsInteger();
+                int startDate = yesterdayDate;
+                int endDate = yesterdayDate;
 
-                    DateTime departureTime = new DateTime();
+                if (departure.StartDate != "")
+                {
+                    startDate = Convert.ToInt32(departure.StartDate);
+                }
 
-                    if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 72)
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 72, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(2);
-                    }
-                    else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 48)
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 48, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(1);
-                    }
-                    else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 24)
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 24, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2]));
-                    }
-                    else
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(-1);
-                    }
+                if (departure.EndDate != "")
+                {
+                    endDate = Convert.ToInt32(departure.EndDate);
+                }
 
-                    int startDate = yesterdayDate;
-                    int endDate = yesterdayDate;
-
-                    if (departure.StartDate != "")
+                if (now.DayOfWeek == DayOfWeek.Monday)
+                {
+                    if (departure.Sunday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
-                        startDate = Convert.ToInt32(departure.StartDate);
-                    }
+                        bool exclude = false;
 
-                    if (departure.EndDate != "")
-                    {
-                        endDate = Convert.ToInt32(departure.EndDate);
-                    }
-
-                    if (now.DayOfWeek == DayOfWeek.Monday)
-                    {
-                        if (departure.Sunday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Tuesday)
+                    else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
-                        if (departure.Monday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
+                                include = true;
 
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                exclude = true;
-                            }
-
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            include = false;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Wednesday)
+                }
+                else if (now.DayOfWeek == DayOfWeek.Tuesday)
+                {
+                    if (departure.Monday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
-                        if (departure.Tuesday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Thursday)
+                    else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
-                        if (departure.Wednesday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
+                                include = true;
 
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                exclude = true;
-                            }
-
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            include = false;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Friday)
+                }
+                else if (now.DayOfWeek == DayOfWeek.Wednesday)
+                {
+                    if (departure.Tuesday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
-                        if (departure.Thursday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Saturday)
+                    else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
-                        if (departure.Friday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
+                                include = true;
 
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                exclude = true;
-                            }
-
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            include = false;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Sunday)
+                }
+                else if (now.DayOfWeek == DayOfWeek.Thursday)
+                {
+                    if (departure.Wednesday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
                     {
-                        if (departure.Saturday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
+                                include = true;
 
-                                    break;
-                                }
+                                break;
                             }
+                        }
 
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                }
+                else if (now.DayOfWeek == DayOfWeek.Friday)
+                {
+                    if (departure.Thursday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
+                    {
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
                             {
-                                include = false;
-                            }
+                                exclude = true;
 
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            exclude = true;
+                        }
+
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
+                            {
+                                include = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                }
+                else if (now.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    if (departure.Friday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
+                    {
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
+                            {
+                                exclude = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            exclude = true;
+                        }
+
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
+                            {
+                                include = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                }
+                else if (now.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    if (departure.Saturday == "1" && startDate <= yesterdayDate && endDate >= yesterdayDate)
+                    {
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "2")
+                            {
+                                exclude = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            exclude = true;
+                        }
+
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= yesterdayDate && endDate >= yesterdayDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == yesterdayDate.ToString() && exception.ExceptionType == "1")
+                            {
+                                include = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -446,402 +443,399 @@ namespace NextDepartures.Standard
 
             workingDepartures = workingDepartures.Take(count).ToList();
 
-            if (workingDepartures.Count < count)
+            foreach (Departure departure in tempDepartures)
             {
-                foreach (Departure departure in tempDepartures)
+                string timezone = GetTimezone(workingAgencies, workingStops, departure);
+
+                now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
+                todayDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.Year, now.Month.ToString("00"), now.Day.ToString("00")));
+
+                DateTime departureTime = new DateTime();
+
+                if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 72)
                 {
-                    string timezone = GetTimezone(workingAgencies, workingStops, departure);
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 72, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(3);
+                }
+                else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 48)
+                {
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 48, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(2);
+                }
+                else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 24)
+                {
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 24, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(1);
+                }
+                else
+                {
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2]));
+                }
 
-                    now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-                    todayDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.Year, now.Month.ToString("00"), now.Day.ToString("00")));
+                int startDate = todayDate;
+                int endDate = todayDate;
 
-                    DateTime departureTime = new DateTime();
+                if (departure.StartDate != "")
+                {
+                    startDate = Convert.ToInt32(departure.StartDate);
+                }
 
-                    if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 72)
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 72, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(3);
-                    }
-                    else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 48)
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 48, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(2);
-                    }
-                    else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 24)
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 24, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(1);
-                    }
-                    else
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2]));
-                    }
+                if (departure.EndDate != "")
+                {
+                    endDate = Convert.ToInt32(departure.EndDate);
+                }
 
-                    int startDate = todayDate;
-                    int endDate = todayDate;
-
-                    if (departure.StartDate != "")
+                if (now.DayOfWeek == DayOfWeek.Monday)
+                {
+                    if (departure.Monday == "1" && startDate <= todayDate && endDate >= todayDate)
                     {
-                        startDate = Convert.ToInt32(departure.StartDate);
-                    }
+                        bool exclude = false;
 
-                    if (departure.EndDate != "")
-                    {
-                        endDate = Convert.ToInt32(departure.EndDate);
-                    }
-
-                    if (now.DayOfWeek == DayOfWeek.Monday)
-                    {
-                        if (departure.Monday == "1" && startDate <= todayDate && endDate >= todayDate)
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= todayDate && endDate >= todayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Tuesday)
+                    else if (startDate <= todayDate && endDate >= todayDate)
                     {
-                        if (departure.Tuesday == "1" && startDate <= todayDate && endDate >= todayDate)
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
+                                include = true;
 
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                exclude = true;
-                            }
-
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= todayDate && endDate >= todayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            include = false;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Wednesday)
+                }
+                else if (now.DayOfWeek == DayOfWeek.Tuesday)
+                {
+                    if (departure.Tuesday == "1" && startDate <= todayDate && endDate >= todayDate)
                     {
-                        if (departure.Wednesday == "1" && startDate <= todayDate && endDate >= todayDate)
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= todayDate && endDate >= todayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Thursday)
+                    else if (startDate <= todayDate && endDate >= todayDate)
                     {
-                        if (departure.Thursday == "1" && startDate <= todayDate && endDate >= todayDate)
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
+                                include = true;
 
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                exclude = true;
-                            }
-
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= todayDate && endDate >= todayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            include = false;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Friday)
+                }
+                else if (now.DayOfWeek == DayOfWeek.Wednesday)
+                {
+                    if (departure.Wednesday == "1" && startDate <= todayDate && endDate >= todayDate)
                     {
-                        if (departure.Friday == "1" && startDate <= todayDate && endDate >= todayDate)
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= todayDate && endDate >= todayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Saturday)
+                    else if (startDate <= todayDate && endDate >= todayDate)
                     {
-                        if (departure.Saturday == "1" && startDate <= todayDate && endDate >= todayDate)
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
+                                include = true;
 
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                exclude = true;
-                            }
-
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= todayDate && endDate >= todayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            include = false;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Sunday)
+                }
+                else if (now.DayOfWeek == DayOfWeek.Thursday)
+                {
+                    if (departure.Thursday == "1" && startDate <= todayDate && endDate >= todayDate)
                     {
-                        if (departure.Sunday == "1" && startDate <= todayDate && endDate >= todayDate)
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= todayDate && endDate >= todayDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= todayDate && endDate >= todayDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
+                                include = true;
 
-                                    break;
-                                }
+                                break;
                             }
+                        }
 
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                }
+                else if (now.DayOfWeek == DayOfWeek.Friday)
+                {
+                    if (departure.Friday == "1" && startDate <= todayDate && endDate >= todayDate)
+                    {
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
                             {
-                                include = false;
-                            }
+                                exclude = true;
 
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            exclude = true;
+                        }
+
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= todayDate && endDate >= todayDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "")
+                            {
+                                include = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                }
+                else if (now.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    if (departure.Saturday == "1" && startDate <= todayDate && endDate >= todayDate)
+                    {
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
+                            {
+                                exclude = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            exclude = true;
+                        }
+
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= todayDate && endDate >= todayDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
+                            {
+                                include = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                }
+                else if (now.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    if (departure.Sunday == "1" && startDate <= todayDate && endDate >= todayDate)
+                    {
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "2")
+                            {
+                                exclude = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            exclude = true;
+                        }
+
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= todayDate && endDate >= todayDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == todayDate.ToString() && exception.ExceptionType == "1")
+                            {
+                                include = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
                 }
@@ -849,402 +843,399 @@ namespace NextDepartures.Standard
 
             workingDepartures = workingDepartures.Take(count).ToList();
 
-            if (workingDepartures.Count < count)
+            foreach (Departure departure in tempDepartures)
             {
-                foreach (Departure departure in tempDepartures)
+                string timezone = GetTimezone(workingAgencies, workingStops, departure);
+
+                now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
+                tomorrowDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.AddDays(1).Year, now.AddDays(1).Month.ToString("00"), now.AddDays(1).Day.ToString("00")));
+
+                DateTime departureTime = new DateTime();
+
+                if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 72)
                 {
-                    string timezone = GetTimezone(workingAgencies, workingStops, departure);
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 72, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(4);
+                }
+                else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 48)
+                {
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 48, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(3);
+                }
+                else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 24)
+                {
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 24, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(2);
+                }
+                else
+                {
+                    departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(1);
+                }
 
-                    now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-                    tomorrowDate = Convert.ToInt32(string.Format("{0}{1}{2}", now.AddDays(1).Year, now.AddDays(1).Month.ToString("00"), now.AddDays(1).Day.ToString("00")));
+                int startDate = tomorrowDate;
+                int endDate = tomorrowDate;
 
-                    DateTime departureTime = new DateTime();
+                if (departure.StartDate != "")
+                {
+                    startDate = Convert.ToInt32(departure.StartDate);
+                }
 
-                    if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 72)
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 72, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(4);
-                    }
-                    else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 48)
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 48, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(3);
-                    }
-                    else if (Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) >= 24)
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, Convert.ToInt32(departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0]) - 24, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(2);
-                    }
-                    else
-                    {
-                        departureTime = Convert.ToDateTime(string.Format("{0}/{1}/{2} {3}:{4}:{5}", now.Year, now.Month, now.Day, departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[0], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[1], departure.DepartureTime.Split(new string[] { ":" }, StringSplitOptions.None)[2])).AddDays(1);
-                    }
+                if (departure.EndDate != "")
+                {
+                    endDate = Convert.ToInt32(departure.EndDate);
+                }
 
-                    int startDate = tomorrowDate;
-                    int endDate = tomorrowDate;
-
-                    if (departure.StartDate != "")
+                if (now.DayOfWeek == DayOfWeek.Monday)
+                {
+                    if (departure.Tuesday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
-                        startDate = Convert.ToInt32(departure.StartDate);
-                    }
+                        bool exclude = false;
 
-                    if (departure.EndDate != "")
-                    {
-                        endDate = Convert.ToInt32(departure.EndDate);
-                    }
-
-                    if (now.DayOfWeek == DayOfWeek.Monday)
-                    {
-                        if (departure.Tuesday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Tuesday)
+                    else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
-                        if (departure.Wednesday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
+                                include = true;
 
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                exclude = true;
-                            }
-
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            include = false;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Wednesday)
+                }
+                else if (now.DayOfWeek == DayOfWeek.Tuesday)
+                {
+                    if (departure.Wednesday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
-                        if (departure.Thursday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Thursday)
+                    else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
-                        if (departure.Friday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
+                                include = true;
 
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                exclude = true;
-                            }
-
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            include = false;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Friday)
+                }
+                else if (now.DayOfWeek == DayOfWeek.Wednesday)
+                {
+                    if (departure.Thursday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
-                        if (departure.Saturday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Saturday)
+                    else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
-                        if (departure.Sunday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
+                                include = true;
 
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                exclude = true;
-                            }
-
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            include = false;
+                        }
 
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
-                            {
-                                include = false;
-                            }
-
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
-                            }
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
-                    else if (now.DayOfWeek == DayOfWeek.Sunday)
+                }
+                else if (now.DayOfWeek == DayOfWeek.Thursday)
+                {
+                    if (departure.Friday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
                     {
-                        if (departure.Monday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
                         {
-                            bool exclude = false;
-
-                            foreach (var exception in workingExceptions)
-                            {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
-                                {
-                                    exclude = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
                                 exclude = true;
-                            }
 
-                            if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
                         }
-                        else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
                         {
-                            bool include = false;
+                            exclude = true;
+                        }
 
-                            foreach (var exception in workingExceptions)
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
                             {
-                                if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
-                                {
-                                    include = true;
+                                include = true;
 
-                                    break;
-                                }
+                                break;
                             }
+                        }
 
-                            if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                }
+                else if (now.DayOfWeek == DayOfWeek.Friday)
+                {
+                    if (departure.Saturday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
+                    {
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
                             {
-                                include = false;
-                            }
+                                exclude = true;
 
-                            if (include && departureTime >= now && departureTime <= now.AddHours(1))
-                            {
-                                workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                                break;
                             }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            exclude = true;
+                        }
+
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "")
+                            {
+                                include = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                }
+                else if (now.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    if (departure.Sunday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
+                    {
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
+                            {
+                                exclude = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            exclude = true;
+                        }
+
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
+                            {
+                                include = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                }
+                else if (now.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    if (departure.Monday == "1" && startDate <= tomorrowDate && endDate >= tomorrowDate)
+                    {
+                        bool exclude = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "2")
+                            {
+                                exclude = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            exclude = true;
+                        }
+
+                        if (!exclude && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
+                        }
+                    }
+                    else if (startDate <= tomorrowDate && endDate >= tomorrowDate)
+                    {
+                        bool include = false;
+
+                        foreach (var exception in workingExceptions)
+                        {
+                            if (departure.ServiceID == exception.ServiceID && exception.Date == tomorrowDate.ToString() && exception.ExceptionType == "1")
+                            {
+                                include = true;
+
+                                break;
+                            }
+                        }
+
+                        if (departure.RouteShortName.ToLower().Contains(string.Format("_{0}", id.ToLower())) || departure.RouteShortName.ToLower().Contains(string.Format("->{0}", id.ToLower())))
+                        {
+                            include = false;
+                        }
+
+                        if (include && departureTime >= now && departureTime <= now.AddHours(1))
+                        {
+                            workingDepartures.Add(CreateWorkingDeparture(departure, departureTime));
                         }
                     }
                 }
