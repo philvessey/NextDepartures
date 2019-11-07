@@ -22,11 +22,6 @@ namespace NextDepartures.Standard
         {
             const int ToleranceInHours = 1;
 
-            DateTime now = DateTime.UtcNow;
-            int yesterdayDate = now.AddDays(-1).AsInteger();
-            int todayDate = now.AsInteger();
-            int tomorrowDate = now.AddDays(1).AsInteger();
-
             List<Departure> tempDepartures = await _dataStorage.GetDeparturesForStopAsync(id);
             List<Agency> workingAgencies = await _dataStorage.GetAgenciesAsync();
             List<Models.Exception> workingExceptions = await _dataStorage.GetExceptionsAsync();
@@ -49,8 +44,8 @@ namespace NextDepartures.Standard
             {
                 string timezone = GetTimezone(workingAgencies, workingStops, departure);
 
-                now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-                yesterdayDate = now.AddDays(-1).AsInteger();
+                DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
+                int yesterdayDate = now.AddDays(-1).AsInteger();
 
                 DateTime departureTime = GetDepartureTimeFromDeparture(now, departure.DepartureTime);
 
@@ -432,8 +427,8 @@ namespace NextDepartures.Standard
             {
                 string timezone = GetTimezone(workingAgencies, workingStops, departure);
 
-                now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-                todayDate = int.Parse(string.Format("{0}{1}{2}", now.Year, now.Month.ToString("00"), now.Day.ToString("00")));
+                DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
+                int todayDate = now.AsInteger();
 
                 DateTime departureTime = GetDepartureTimeFromDeparture(now, departure.DepartureTime);
 
@@ -815,8 +810,8 @@ namespace NextDepartures.Standard
             {
                 string timezone = GetTimezone(workingAgencies, workingStops, departure);
 
-                now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-                tomorrowDate = int.Parse(string.Format("{0}{1}{2}", now.AddDays(1).Year, now.AddDays(1).Month.ToString("00"), now.AddDays(1).Day.ToString("00")));
+                DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
+                int tomorrowDate = now.AddDays(1).AsInteger();
 
                 DateTime departureTime = GetDepartureTimeFromDeparture(now, departure.DepartureTime);
 
