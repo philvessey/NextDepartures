@@ -106,8 +106,7 @@ namespace NextDepartures.Standard
             return StringUtils.FindPossibleString(defaultTimezone,
                 () => workingStops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopTimezone,
                 () => workingAgencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyTimezone,
-                () => workingAgencies.FirstOrDefault()?.AgencyTimezone
-                );
+                () => workingAgencies.FirstOrDefault()?.AgencyTimezone);
         }
     }
 }
