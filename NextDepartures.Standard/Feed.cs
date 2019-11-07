@@ -89,6 +89,18 @@ namespace NextDepartures.Standard
             };
         }
 
+        private DateTime GetDepartureTimeFromDeparture(DateTime now, string departureTime)
+        {
+            var splittedDepartureTime = departureTime.Split(new string[] { ":" }, StringSplitOptions.None).Select(s => int.Parse(s)).ToArray();
+            var departureHour = splittedDepartureTime[0];
+
+            // When hour >= 72 then 2 days should be added
+            // When hour >= 48 then 1 day should be added
+            // When hour >= 24 then no days should be added
+            // When hour < 24 then -1 days should be added
+            return new DateTime(now.Year, now.Month, now.Day, departureHour % 24, splittedDepartureTime[1], splittedDepartureTime[2]).AddDays(((int) (departureHour / 24)) - 1);
+        }
+
         private string GetTimezone(List<Agency> workingAgencies, List<Stop> workingStops, Departure departure, string defaultTimezone = "Etc/UTC")
         {
             return StringUtils.FindPossibleString(defaultTimezone,
