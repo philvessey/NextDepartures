@@ -1,0 +1,47 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'release'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: "Restore Packages"
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+    feedsToUse: 'select'
+
+- task: DotNetCoreCLI@2
+  displayName: "Build Solution"
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: "Pack NuGet Packages"
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/NextDepartures.Standard/*.csproj;**/NextDepartures.Storage.SqlServer/*.csproj'
+    includesymbols: true
+    versioningScheme: 'off'
+
+- task: PublishBuildArtifacts@1
+  displayName: "Publish Build Artifacts"
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'Artifacts'
+    publishLocation: 'Container'
+
+- task: NuGetCommand@2
+  displayName: "Push NuGet Packages"
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'NuGet'
