@@ -36,7 +36,7 @@ namespace NextDepartures.Standard
         }
 
         /// <summary>
-        /// Creates a new feed.
+        /// Creates a new feed with the given data storage.
         /// </summary>
         /// <param name="dataStorage">The data storage to use.</param>
         /// <returns>A new feed instance.</returns>
@@ -145,7 +145,7 @@ namespace NextDepartures.Standard
             // When hour >= 48 then 2 days should be added
             // When hour >= 24 then 1 day should be added
             // When hour < 24 then no days should be added
-            return new DateTime(now.Year, now.Month, now.Day, departureHour % 24, splittedDepartureTime[1], splittedDepartureTime[2]).AddDays(((int)(departureHour / 24)) + dayOffset);
+            return new DateTime(now.Year, now.Month, now.Day, departureHour % 24, splittedDepartureTime[1], splittedDepartureTime[2]).AddDays(((int) (departureHour / 24)) + dayOffset);
         }
 
         private string GetTimezone(Departure departure, string defaultTimezone = "Etc/UTC")
