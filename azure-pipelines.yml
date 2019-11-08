@@ -13,17 +13,20 @@ variables:
   buildConfiguration: 'release'
 
 steps:
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
+  displayName: "Restore Packages"
   inputs:
     command: 'restore'
-    restoreSolution: '**/*.sln'
+    projects: '**/*.csproj'
     feedsToUse: 'select'
 - task: DotNetCoreCLI@2
+  displayName: "Build Solution"
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: 'configuration: $(BuildConfiguration)'
+    arguments: '--configuration $(buildConfiguration)'
 - task: DotNetCoreCLI@2
+  displayName: "Pack NextDepartures.Standard"
   inputs:
     command: 'pack'
     packagesToPack: '**/NextDepartures.Standard/*.csproj'
