@@ -36,3 +36,12 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'Artifacts'
     publishLocation: 'Container'
+
+- task: NuGetCommand@2
+  displayName: "Push NuGet Packages"
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'NuGet'
