@@ -1,6 +1,6 @@
 ﻿using NextDepartures.Standard.Extensions;
-using NextDepartures.Standard.Interfaces;
 using NextDepartures.Standard.Models;
+using NextDepartures.Standard.Storage;
 using NextDepartures.Standard.Utils;
 
 using System;
@@ -15,6 +15,7 @@ namespace NextDepartures.Standard
     public partial class Feed
     {
         private readonly IDataStorage _dataStorage;
+        private readonly DataStorageProperties _dataStorageProperties;
 
         private List<Agency> _agencies;
         private List<Models.Exception> _exceptions;
@@ -27,6 +28,7 @@ namespace NextDepartures.Standard
         private Feed(IDataStorage dataStorage)
         {
             _dataStorage = dataStorage;
+            _dataStorageProperties = new DataStorageProperties(dataStorage);
 
             _agencies = new List<Agency>();
             _exceptions = new List<Models.Exception>();
@@ -47,10 +49,22 @@ namespace NextDepartures.Standard
 
         private async Task PreloadFromStorage()
         {
-            // TODO: May be parallelize this if the storage is able to do so
-            _agencies = await _dataStorage.GetAgenciesAsync();
-            _exceptions = await _dataStorage.GetExceptionsAsync();
-            _stops = await _dataStorage.GetStopsAsync();
+            if (_dataStorageProperties.DoesSupportParallelPreload)
+            {
+                var agenciesTask = _dataStorage.GetAgenciesAsync();
+                var exceptionsTask = _dataStorage.GetExceptionsAsync();
+                var stopsTask = _dataStorage.GetStopsAsync();
+
+                _agencies = await agenciesTask;
+                _exceptions = await exceptionsTask;
+                _stops = await stopsTask;
+            }
+            else
+            {
+                _agencies = await _dataStorage.GetAgenciesAsync();
+                _exceptions = await _dataStorage.GetExceptionsAsync();
+                _stops = await _dataStorage.GetStopsAsync();
+            }
         }
 
         /// <summary>

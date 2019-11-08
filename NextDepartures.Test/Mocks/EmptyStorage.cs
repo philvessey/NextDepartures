@@ -1,5 +1,5 @@
-﻿using NextDepartures.Standard.Interfaces;
-using NextDepartures.Standard.Models;
+﻿using NextDepartures.Standard.Models;
+using NextDepartures.Standard.Storage;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

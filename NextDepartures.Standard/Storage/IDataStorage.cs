@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NextDepartures.Standard.Interfaces
+namespace NextDepartures.Standard.Storage
 {
     /// <summary>
     /// Provides the abstractions for the data storage used by the departure engine.
