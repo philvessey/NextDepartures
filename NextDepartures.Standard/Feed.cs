@@ -135,16 +135,17 @@ namespace NextDepartures.Standard
             };
         }
 
-        private DateTime GetDepartureTimeFromDeparture(DateTime now, string departureTime)
+        private DateTime GetDepartureTimeFromDeparture(DateTime now, int dayOffset, string departureTime)
         {
             var splittedDepartureTime = departureTime.Split(new string[] { ":" }, StringSplitOptions.None).Select(s => int.Parse(s)).ToArray();
             var departureHour = splittedDepartureTime[0];
 
+            // Today (dayOffset = 0) calculated accordingly
             // When hour >= 72 then 3 days should be added
             // When hour >= 48 then 2 days should be added
             // When hour >= 24 then 1 day should be added
             // When hour < 24 then no days should be added
-            return new DateTime(now.Year, now.Month, now.Day, departureHour % 24, splittedDepartureTime[1], splittedDepartureTime[2]).AddDays((int) (departureHour / 24));
+            return new DateTime(now.Year, now.Month, now.Day, departureHour % 24, splittedDepartureTime[1], splittedDepartureTime[2]).AddDays(((int)(departureHour / 24)) + dayOffset);
         }
 
         private string GetTimezone(Departure departure, string defaultTimezone = "Etc/UTC")
@@ -176,7 +177,7 @@ namespace NextDepartures.Standard
             DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
             int targetDate = now.AddDays(dayOffset).AsInteger();
 
-            DateTime departureTime = GetDepartureTimeFromDeparture(now, departure.DepartureTime);
+            DateTime departureTime = GetDepartureTimeFromDeparture(now, dayOffset, departure.DepartureTime);
 
             int startDate = targetDate;
             int endDate = targetDate;
