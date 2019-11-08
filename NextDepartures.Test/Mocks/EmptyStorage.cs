@@ -1,5 +1,6 @@
 ﻿using NextDepartures.Standard.Models;
 using NextDepartures.Standard.Storage;
+using NextDepartures.Standard.Storage.Attributes;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace NextDepartures.Test.Mocks
     /// <summary>
     /// Represents an empty storage.
     /// </summary>
+    [SupportsParallelPreload]
     public class EmptyStorage : IDataStorage
     {
         /// <summary>
