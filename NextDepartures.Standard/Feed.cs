@@ -2,12 +2,10 @@
 using NextDepartures.Standard.Models;
 using NextDepartures.Standard.Storage;
 using NextDepartures.Standard.Utils;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using TimeZoneConverter;
 
 namespace NextDepartures.Standard
@@ -20,10 +18,6 @@ namespace NextDepartures.Standard
         private List<Agency> _agencies;
         private List<Models.Exception> _exceptions;
         private List<Stop> _stops;
-
-        private Feed()
-        {
-        }
 
         private Feed(IDataStorage dataStorage)
         {
@@ -44,6 +38,7 @@ namespace NextDepartures.Standard
         {
             Feed feed = new Feed(dataStorage);
             await feed.PreloadFromStorage();
+
             return feed;
         }
 
@@ -67,13 +62,6 @@ namespace NextDepartures.Standard
             }
         }
 
-        /// <summary>
-        /// Creates a processed departure.
-        /// </summary>
-        /// <param name="tempDeparture">The temporary departure.</param>
-        /// <param name="departureTime">The departure time.</param>
-        /// <remarks>A processed departure is a departure actually running on the date / time.</remarks>
-        /// <returns>A departure.</returns>
         private Departure CreateProcessedDeparture(Departure tempDeparture, DateTime departureTime)
         {
             return new Departure()
@@ -135,27 +123,6 @@ namespace NextDepartures.Standard
             };
         }
 
-        private DateTime GetDepartureTimeFromDeparture(DateTime now, int dayOffset, string departureTime)
-        {
-            var splittedDepartureTime = departureTime.Split(new string[] { ":" }, StringSplitOptions.None).Select(s => int.Parse(s)).ToArray();
-            var departureHour = splittedDepartureTime[0];
-
-            // Today (dayOffset = 0) calculated accordingly
-            // When hour >= 72 then 3 days should be added
-            // When hour >= 48 then 2 days should be added
-            // When hour >= 24 then 1 day should be added
-            // When hour < 24 then no days should be added
-            return new DateTime(now.Year, now.Month, now.Day, departureHour % 24, splittedDepartureTime[1], splittedDepartureTime[2]).AddDays(((int) (departureHour / 24)) + dayOffset);
-        }
-
-        private string GetTimezone(Departure departure, string defaultTimezone = "Etc/UTC")
-        {
-            return StringUtils.FindPossibleString(defaultTimezone,
-                () => _stops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopTimezone,
-                () => _agencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyTimezone,
-                () => _agencies.FirstOrDefault()?.AgencyTimezone);
-        }
-
         private List<Departure> GetDeparturesOnDay(List<Departure> departures, int dayOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper)
         {
             List<Departure> resultForDay = new List<Departure>();
@@ -169,37 +136,20 @@ namespace NextDepartures.Standard
             return resultForDay;
         }
 
-        private Departure TryProcessDeparture(int dayOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper, Departure departure)
+        private DateTime GetDepartureTimeFromDeparture(DateTime now, int dayOffset, string departureTime)
         {
-            string timezone = GetTimezone(departure);
+            int[] splittedDepartureTime = departureTime.Split(new string[] { ":" }, StringSplitOptions.None).Select(s => int.Parse(s)).ToArray();
+            int departureHour = splittedDepartureTime[0];
 
-            // TODO: Maybe we should think about changing the UtcNow to a time settable by the user so that he can request services at a timepoint of his choice
-            DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-            int targetDate = now.AddDays(dayOffset).AsInteger();
+            return new DateTime(now.Year, now.Month, now.Day, departureHour % 24, splittedDepartureTime[1], splittedDepartureTime[2]).AddDays(((int) (departureHour / 24)) + dayOffset);
+        }
 
-            DateTime departureTime = GetDepartureTimeFromDeparture(now, dayOffset, departure.DepartureTime);
-
-            int startDate = targetDate;
-            int endDate = targetDate;
-
-            if (departure.StartDate != "")
-            {
-                startDate = int.Parse(departure.StartDate);
-            }
-
-            if (departure.EndDate != "")
-            {
-                endDate = int.Parse(departure.EndDate);
-            }
-
-            if (IsDepartureValid(toleranceInHours, id, dayOfWeekMapper, departure, now, targetDate, departureTime, startDate, endDate))
-            {
-                return CreateProcessedDeparture(departure, departureTime);
-            }
-            else
-            {
-                return null;
-            }
+        private string GetTimezone(Departure departure, string defaultTimezone = "Etc/UTC")
+        {
+            return StringUtils.FindPossibleString(defaultTimezone,
+                () => _stops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopTimezone,
+                () => _agencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyTimezone,
+                () => _agencies.FirstOrDefault()?.AgencyTimezone);
         }
 
         private bool IsDepartureValid(int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper, Departure departure, DateTime now, int targetDate, DateTime departureTime, int startDate, int endDate)
@@ -235,6 +185,39 @@ namespace NextDepartures.Standard
             }
 
             return false;
+        }
+
+        private Departure TryProcessDeparture(int dayOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper, Departure departure)
+        {
+            string timezone = GetTimezone(departure);
+
+            // TODO: Maybe we should think about changing the UtcNow to a time settable by the user so that he can request services at a timepoint of his choice
+            DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
+            int targetDate = now.AddDays(dayOffset).AsInteger();
+
+            DateTime departureTime = GetDepartureTimeFromDeparture(now, dayOffset, departure.DepartureTime);
+
+            int startDate = targetDate;
+            int endDate = targetDate;
+
+            if (departure.StartDate != "")
+            {
+                startDate = int.Parse(departure.StartDate);
+            }
+
+            if (departure.EndDate != "")
+            {
+                endDate = int.Parse(departure.EndDate);
+            }
+
+            if (IsDepartureValid(toleranceInHours, id, dayOfWeekMapper, departure, now, targetDate, departureTime, startDate, endDate))
+            {
+                return CreateProcessedDeparture(departure, departureTime);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

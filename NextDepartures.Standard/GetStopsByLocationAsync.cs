@@ -20,9 +20,9 @@ namespace NextDepartures.Standard
         {
             try
             {
-                List<Stop> results = await _dataStorage.GetStopsByLocationAsync(minLon, minLat, maxLon, maxLat);
+                List<Stop> stopsFromStorage = await _dataStorage.GetStopsByLocationAsync(minLon, minLat, maxLon, maxLat);
 
-                return results.Take(count).ToList();
+                return stopsFromStorage.Take(count).ToList();
             }
             catch
             {

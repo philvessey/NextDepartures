@@ -17,9 +17,9 @@ namespace NextDepartures.Standard
         {
             try
             {
-                List<Agency> results = await _dataStorage.GetAgenciesByQueryAsync(query);
+                List<Agency> agenciesFromStorage = await _dataStorage.GetAgenciesByQueryAsync(query);
 
-                return results.Take(count).ToList();
+                return agenciesFromStorage.Take(count).ToList();
             }
             catch
             {

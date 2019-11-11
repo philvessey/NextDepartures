@@ -1,23 +1,15 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using NextDepartures.Standard;
 using NextDepartures.Standard.Models;
 using NextDepartures.Test.Mocks;
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NextDepartures.Test
 {
-    /// <summary>
-    /// Represents unit tests.
-    /// </summary>
     [TestClass]
     public class Unit
     {
-        /// <summary>
-        /// Gets the agencies by the given query and timezone.
-        /// </summary>
         [TestMethod]
         public async Task GetAgenciesByAllAsync()
         {
@@ -27,9 +19,6 @@ namespace NextDepartures.Test
             Assert.IsNotNull(results);
         }
 
-        /// <summary>
-        /// Gets the agencies by the given query.
-        /// </summary>
         [TestMethod]
         public async Task GetAgenciesByQueryAsync()
         {
@@ -39,9 +28,6 @@ namespace NextDepartures.Test
             Assert.IsNotNull(results);
         }
 
-        /// <summary>
-        /// Gets the agencies in the given timezone.
-        /// </summary>
         [TestMethod]
         public async Task GetAgenciesByTimezoneAsync()
         {
@@ -51,9 +37,6 @@ namespace NextDepartures.Test
             Assert.IsNotNull(results);
         }
 
-        /// <summary>
-        /// Gets the services for a specific stop.
-        /// </summary>
         [TestMethod]
         public async Task GetServicesByStopAsync()
         {
@@ -63,9 +46,6 @@ namespace NextDepartures.Test
             Assert.IsNotNull(results);
         }
 
-        /// <summary>
-        /// Gets the services for a specific trip.
-        /// </summary>
         [TestMethod]
         public async Task GetServicesByTripAsync()
         {
@@ -75,9 +55,6 @@ namespace NextDepartures.Test
             Assert.IsNotNull(results);
         }
 
-        /// <summary>
-        /// Gets the stops by the given area, query and timezone.
-        /// </summary>
         [TestMethod]
         public async Task GetStopsByAllAsync()
         {
@@ -87,9 +64,6 @@ namespace NextDepartures.Test
             Assert.IsNotNull(results);
         }
 
-        /// <summary>
-        /// Gets the stops in the given area.
-        /// </summary>
         [TestMethod]
         public async Task GetStopsByLocationAsync()
         {
@@ -99,9 +73,6 @@ namespace NextDepartures.Test
             Assert.IsNotNull(results);
         }
 
-        /// <summary>
-        /// Gets the stops by the given query.
-        /// </summary>
         [TestMethod]
         public async Task GetStopsByQueryAsync()
         {
@@ -111,9 +82,6 @@ namespace NextDepartures.Test
             Assert.IsNotNull(results);
         }
 
-        /// <summary>
-        /// Gets the stops in the given timezone.
-        /// </summary>
         [TestMethod]
         public async Task GetStopsByTimezoneAsync()
         {

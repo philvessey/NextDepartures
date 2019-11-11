@@ -53,11 +53,6 @@ namespace NextDepartures.Storage.SqlServer
             return results;
         }
 
-        /// <summary>
-        /// Gets an agency.
-        /// </summary>
-        /// <param name="dataReader">The dataReader returned from the query.</param>
-        /// <returns>An agency.</returns>
         private Agency GetAgencyFromDataReader(SqlDataReader dataReader)
         {
             return new Agency()
@@ -68,12 +63,6 @@ namespace NextDepartures.Storage.SqlServer
             };
         }
 
-        /// <summary>
-        /// Gets an agency with special casing.
-        /// </summary>
-        /// <param name="dataReader">The dataReader returned from the query.</param>
-        /// <remarks>The name of the agency is converted to title case depending on the current culture.</remarks>
-        /// <returns>An agency.</returns>
         private Agency GetAgencyFromDataReaderWithSpecialCasing(SqlDataReader dataReader)
         {
             return new Agency()
@@ -124,11 +113,6 @@ namespace NextDepartures.Storage.SqlServer
             return ExecuteCommand(string.Format("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency WHERE LOWER(AgencyTimezone) LIKE '%{0}%'", timezone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
         }
 
-        /// <summary>
-        /// Gets a departure.
-        /// </summary>
-        /// <param name="dataReader">The dataReader returned from the query.</param>
-        /// <returns>A departure.</returns>
         private Departure GetDepartureFromDataReader(SqlDataReader dataReader)
         {
             return new Departure()
@@ -176,11 +160,6 @@ namespace NextDepartures.Storage.SqlServer
             return ExecuteCommand(string.Format("SELECT s.DepartureTime, s.StopID, t.ServiceID, t.TripID, t.TripHeadsign, t.TripShortName, r.AgencyID, r.RouteShortName, r.RouteLongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM StopTime s LEFT JOIN Trip t ON (s.TripID = t.TripID) LEFT JOIN Route r ON (t.RouteID = r.RouteID) LEFT JOIN Calendar c ON (t.ServiceID = c.ServiceID) WHERE LOWER(s.TripID) = '{0}' AND s.PickupType != '1' ORDER BY s.DepartureTime ASC", id.ToLower()), GetDepartureFromDataReader);
         }
 
-        /// <summary>
-        /// Gets an exception.
-        /// </summary>
-        /// <param name="dataReader">The dataReader returned from the query.</param>
-        /// <returns>An exception.</returns>
         private Standard.Models.Exception GetExceptionFromDataReader(SqlDataReader dataReader)
         {
             return new Standard.Models.Exception()
@@ -200,11 +179,6 @@ namespace NextDepartures.Storage.SqlServer
             return ExecuteCommand("SELECT Date, ExceptionType, ServiceID FROM CalendarDate", GetExceptionFromDataReader);
         }
 
-        /// <summary>
-        /// Gets a stop.
-        /// </summary>
-        /// <param name="dataReader">The dataReader returned from the query.</param>
-        /// <returns>A stop.</returns>
         private Stop GetStopFromDataReader(SqlDataReader dataReader)
         {
             return new Stop()
@@ -216,12 +190,6 @@ namespace NextDepartures.Storage.SqlServer
             };
         }
 
-        /// <summary>
-        /// Gets a stop with special casing.
-        /// </summary>
-        /// <param name="dataReader">The dataReader returned from the query.</param>
-        /// <remarks>The name of the stop is converted to title case depending on the current culture.</remarks>
-        /// <returns>A stop.</returns>
         private Stop GetStopFromDataReaderWithSpecialCasing(SqlDataReader dataReader)
         {
             return new Stop()

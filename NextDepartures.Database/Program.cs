@@ -177,7 +177,7 @@ namespace NextDepartures.Database
                                 {
                                     using (CsvReader feedReader = feedInput.GetCsvReader())
                                     {
-                                        IEnumerable<Calendar> workingCalendars = feedReader.GetRecords<Calendar>().GroupBy(x => x.service_id).Select(x => x.First());
+                                        IEnumerable<Calendar> workingCalendars = feedReader.GetRecords<Calendar>().GroupBy(c => c.service_id).Select(c => c.First());
 
                                         DataTable table = new DataTable();
                                         table.Columns.Add("ServiceID", typeof(string));
@@ -358,7 +358,7 @@ namespace NextDepartures.Database
                                 {
                                     using (CsvReader feedReader = feedInput.GetCsvReader())
                                     {
-                                        IEnumerable<Route> workingRoutes = feedReader.GetRecords<Route>().GroupBy(x => x.route_id).Select(x => x.First());
+                                        IEnumerable<Route> workingRoutes = feedReader.GetRecords<Route>().GroupBy(r => r.route_id).Select(r => r.First());
 
                                         DataTable table = new DataTable();
                                         table.Columns.Add("RouteID", typeof(string));
@@ -431,7 +431,7 @@ namespace NextDepartures.Database
                                 {
                                     using (CsvReader feedReader = feedInput.GetCsvReader())
                                     {
-                                        IEnumerable<Stop> workingStops = feedReader.GetRecords<Stop>().GroupBy(x => x.stop_id).Select(x => x.First());
+                                        IEnumerable<Stop> workingStops = feedReader.GetRecords<Stop>().GroupBy(s => s.stop_id).Select(s => s.First());
 
                                         DataTable table = new DataTable();
                                         table.Columns.Add("StopID", typeof(string));
@@ -481,7 +481,7 @@ namespace NextDepartures.Database
                                 {
                                     using (CsvReader feedReader = feedInput.GetCsvReader())
                                     {
-                                        IEnumerable<Trip> workingTrips = feedReader.GetRecords<Trip>().GroupBy(x => x.trip_id).Select(x => x.First());
+                                        IEnumerable<Trip> workingTrips = feedReader.GetRecords<Trip>().GroupBy(t => t.trip_id).Select(t => t.First());
 
                                         DataTable table = new DataTable();
                                         table.Columns.Add("RouteID", typeof(string));

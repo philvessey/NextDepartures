@@ -5,6 +5,8 @@ namespace NextDepartures.Standard.Storage
 {
     public class DataStorageProperties
     {
+        public bool DoesSupportParallelPreload { get; set; }
+
         public DataStorageProperties()
         {
             this.DoesSupportParallelPreload = false;
@@ -14,7 +16,5 @@ namespace NextDepartures.Standard.Storage
         {
             this.DoesSupportParallelPreload = dataStorage.GetType().GetCustomAttribute<SupportsParallelPreloadAttribute>() != null;
         }
-
-        public bool DoesSupportParallelPreload { get; set; }
     }
 }

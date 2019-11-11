@@ -17,9 +17,9 @@ namespace NextDepartures.Standard
         {
             try
             {
-                List<Stop> results = await _dataStorage.GetStopsByQueryAsync(query);
+                List<Stop> stopsFromStorage = await _dataStorage.GetStopsByQueryAsync(query);
 
-                return results.Take(count).ToList();
+                return stopsFromStorage.Take(count).ToList();
             }
             catch
             {
