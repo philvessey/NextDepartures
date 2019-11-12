@@ -23,8 +23,8 @@ List<Agency> results = await feed.GetAgenciesByQueryAsync([query]);
 List<Agency> results = await feed.GetAgenciesByTimezoneAsync([timezone]);
 
 Feed feed = await Feed.Load(new SqlStorage([connection]));
-List<Service> results = await feed.GetServicesByStopAsync([id]);
-List<Service> results = await feed.GetServicesByTripAsync([id]);
+List<Service> results = await feed.GetServicesByStopAsync([id], [now]);
+List<Service> results = await feed.GetServicesByTripAsync([id], [now]);
 
 Feed feed = await Feed.Load(new SqlStorage([connection]));
 List<Stop> results = await feed.GetStopsByAllAsync([minLon], [minLat], [maxLon], [maxLat], [query], [timezone]);

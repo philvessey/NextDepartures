@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
 using NextDepartures.Standard.Models;
 using NextDepartures.Test.Mocks;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace NextDepartures.Test
         public async Task GetServicesByStopAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Service> results = await feed.GetServicesByStopAsync("");
+            List<Service> results = await feed.GetServicesByStopAsync("", DateTime.Now);
 
             Assert.IsNotNull(results);
         }
@@ -50,7 +51,7 @@ namespace NextDepartures.Test
         public async Task GetServicesByTripAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Service> results = await feed.GetServicesByTripAsync("");
+            List<Service> results = await feed.GetServicesByTripAsync("", DateTime.Now);
 
             Assert.IsNotNull(results);
         }
