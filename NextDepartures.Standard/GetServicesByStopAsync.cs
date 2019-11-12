@@ -17,7 +17,7 @@ namespace NextDepartures.Standard
         /// <returns>A list of services.</returns>
         public Task<List<Service>> GetServicesByStopAsync(string id, int count = 10)
         {
-            return GetServicesByStopAsync(id, DateTime.UtcNow, count);
+            return GetServicesByStopAsync(id, DateTime.Now, count);
         }
 
         /// <summary>

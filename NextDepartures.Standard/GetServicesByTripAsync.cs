@@ -16,7 +16,7 @@ namespace NextDepartures.Standard
         /// <returns>A list of services.</returns>
         public Task<List<Service>> GetServicesByTripAsync(string id)
         {
-            return GetServicesByTripAsync(id, DateTime.UtcNow);
+            return GetServicesByTripAsync(id, DateTime.Now);
         }
 
         /// <summary>
