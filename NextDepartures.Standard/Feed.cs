@@ -154,24 +154,18 @@ namespace NextDepartures.Standard
 
         private bool IsDepartureValid(int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper, Departure departure, DateTime targetDateTime, int targetDate, DateTime departureTime, int startDate, int endDate)
         {
-            // TODO: Refactor the if inner code
-            if (dayOfWeekMapper(targetDateTime.DayOfWeek, departure) == "1" && startDate <= targetDate && endDate >= targetDate)
+            if (startDate <= targetDate && endDate >= targetDate)
             {
-                bool exclude = _exceptions.Any(e => departure.ServiceID == e.ServiceID && e.Date == targetDate.ToString() && e.ExceptionType == "2");
+                bool include;
 
-                if (departure.RouteShortName.ToLower().Contains(id.WithPrefix("_")) || departure.RouteShortName.ToLower().Contains(id.WithPrefix("->")))
+                if (dayOfWeekMapper(targetDateTime.DayOfWeek, departure) == "1")
                 {
-                    exclude = true;
+                    include = !_exceptions.Any(e => departure.ServiceID == e.ServiceID && e.Date == targetDate.ToString() && e.ExceptionType == "2");
                 }
-
-                if (!exclude && departureTime >= targetDateTime && departureTime <= targetDateTime.AddHours(toleranceInHours))
+                else
                 {
-                    return true;
+                    include = _exceptions.Any(e => departure.ServiceID == e.ServiceID && e.Date == targetDate.ToString() && e.ExceptionType == "1");
                 }
-            }
-            else if (startDate <= targetDate && endDate >= targetDate)
-            {
-                bool include = _exceptions.Any(e => departure.ServiceID == e.ServiceID && e.Date == targetDate.ToString() && e.ExceptionType == "1");
 
                 if (departure.RouteShortName.ToLower().Contains(id.WithPrefix("_")) || departure.RouteShortName.ToLower().Contains(id.WithPrefix("->")))
                 {
