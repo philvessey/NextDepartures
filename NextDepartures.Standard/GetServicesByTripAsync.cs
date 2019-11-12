@@ -13,6 +13,16 @@ namespace NextDepartures.Standard
         /// Gets the services for a specific trip.
         /// </summary>
         /// <param name="id">The id of the trip.</param>
+        /// <returns>A list of services.</returns>
+        public Task<List<Service>> GetServicesByTripAsync(string id)
+        {
+            return GetServicesByTripAsync(id, DateTime.UtcNow);
+        }
+
+        /// <summary>
+        /// Gets the services for a specific trip.
+        /// </summary>
+        /// <param name="id">The id of the trip.</param>
         /// <param name="now">The DateTime target to search from.</param>
         /// <returns>A list of services.</returns>
         public async Task<List<Service>> GetServicesByTripAsync(string id, DateTime now)

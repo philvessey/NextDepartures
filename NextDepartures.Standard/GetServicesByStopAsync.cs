@@ -13,6 +13,17 @@ namespace NextDepartures.Standard
         /// Gets the services for a specific stop.
         /// </summary>
         /// <param name="id">The id of the stop.</param>
+        /// <param name="count">The number of results to return. Default is 10 but can be overridden.</param>
+        /// <returns>A list of services.</returns>
+        public Task<List<Service>> GetServicesByStopAsync(string id, int count = 10)
+        {
+            return GetServicesByStopAsync(id, DateTime.UtcNow, count);
+        }
+
+        /// <summary>
+        /// Gets the services for a specific stop.
+        /// </summary>
+        /// <param name="id">The id of the stop.</param>
         /// <param name="now">The DateTime target to search from.</param>
         /// <param name="count">The number of results to return. Default is 10 but can be overridden.</param>
         /// <returns>A list of services.</returns>
