@@ -1,6 +1,5 @@
 ﻿using NextDepartures.Standard.Extensions;
 using NextDepartures.Standard.Models;
-using NextDepartures.Standard.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +25,11 @@ namespace NextDepartures.Standard
                 List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(id);
 
                 return new List<Departure>()
-                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, now, -1, ToleranceInHours, id, WeekdayUtils.GetPreviousDay))
+                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, id))
                     .Take(count)
-                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, now, 0, ToleranceInHours, id, WeekdayUtils.GetTodayDay))
+                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, id))
                     .Take(count)
-                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, now, 1, ToleranceInHours, id, WeekdayUtils.GetFollowingDay))
+                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, id))
                     .Take(count)
                     .Select(CreateService)
                     .ToList();

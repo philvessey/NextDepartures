@@ -123,14 +123,14 @@ namespace NextDepartures.Standard
             };
         }
 
-        private List<Departure> GetDeparturesOnDay(List<Departure> departures, DateTime now, int dayOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper)
+        private List<Departure> GetDeparturesOnDay(List<Departure> departures, DateTime now, DayOffsetType dayOffset, int toleranceInHours, string id)
         {
             List<Departure> resultForDay = new List<Departure>();
 
             // TODO: May be calculate the three days in one loop so that the timezone calculated and so on can be reused?
             foreach (Departure departure in departures)
             {
-                resultForDay.AddIfNotNull(TryProcessDeparture(now, dayOffset, toleranceInHours, id, dayOfWeekMapper, departure));
+                resultForDay.AddIfNotNull(TryProcessDeparture(now, dayOffset, toleranceInHours, id, departure));
             }
 
             return resultForDay;
@@ -181,12 +181,12 @@ namespace NextDepartures.Standard
             return false;
         }
 
-        private Departure TryProcessDeparture(DateTime now, int dayOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper, Departure departure)
+        private Departure TryProcessDeparture(DateTime now, DayOffsetType dayOffset, int toleranceInHours, string id, Departure departure)
         {
             DateTime targetDateTime = TimeZoneInfo.ConvertTime(now, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(GetTimezone(departure))));
-            DateTime departureTime = GetDepartureTimeFromDeparture(targetDateTime, dayOffset, departure.DepartureTime);
-            
-            int targetDate = targetDateTime.AddDays(dayOffset).AsInteger();
+            DateTime departureTime = GetDepartureTimeFromDeparture(targetDateTime, dayOffset.GetNumeric(), departure.DepartureTime);
+
+            int targetDate = targetDateTime.AddDays(dayOffset.GetNumeric()).AsInteger();
             int startDate = targetDate;
             int endDate = targetDate;
 
@@ -200,7 +200,7 @@ namespace NextDepartures.Standard
                 endDate = int.Parse(departure.EndDate);
             }
 
-            if (IsDepartureValid(toleranceInHours, id, dayOfWeekMapper, departure, targetDateTime, targetDate, departureTime, startDate, endDate))
+            if (IsDepartureValid(toleranceInHours, id, WeekdayUtils.GetUtilByDayType(dayOffset), departure, targetDateTime, targetDate, departureTime, startDate, endDate))
             {
                 return CreateProcessedDeparture(departure, departureTime);
             }

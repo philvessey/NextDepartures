@@ -53,5 +53,21 @@ namespace NextDepartures.Standard.Utils
         {
             return _todayDays[dayOfWeek](departure);
         }
+
+        public static Func<DayOfWeek, Departure, string> GetUtilByDayType(DayOffsetType dayOffsetType)
+        {
+            if (dayOffsetType == DayOffsetType.Yesterday)
+            {
+                return GetPreviousDay;
+            }
+            else if (dayOffsetType == DayOffsetType.Today)
+            {
+                return GetTodayDay;
+            }
+            else
+            {
+                return GetFollowingDay;
+            }
+        }
     }
 }
