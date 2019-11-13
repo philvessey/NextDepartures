@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TimeZoneConverter;
 
 namespace NextDepartures.Standard
 {
@@ -183,7 +182,7 @@ namespace NextDepartures.Standard
 
         private Departure TryProcessDeparture(DateTime now, DayOffsetType dayOffset, int toleranceInHours, string id, Departure departure)
         {
-            DateTime targetDateTime = TimeZoneInfo.ConvertTime(now, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(GetTimezone(departure))));
+            DateTime targetDateTime = now.AsZonedDateTime(GetTimezone(departure));
             DateTime departureTime = GetDepartureTimeFromDeparture(targetDateTime, dayOffset.GetNumeric(), departure.DepartureTime);
 
             int targetDate = targetDateTime.AddDays(dayOffset.GetNumeric()).AsInteger();
