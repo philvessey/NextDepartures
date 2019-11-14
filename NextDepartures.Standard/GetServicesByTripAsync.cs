@@ -33,11 +33,15 @@ namespace NextDepartures.Standard
             {
                 List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForTripAsync(id);
 
+                List<Agency> agencies = await _dataStorage.GetAgenciesAsync();
+                List<Stop> stops = await _dataStorage.GetStopsAsync();
+                List<Models.Exception> exceptions = await _dataStorage.GetExceptionsAsync();
+
                 return new List<Departure>()
-                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, id))
-                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, id))
-                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, id))
-                    .Select(CreateService)
+                    .AddMultiple(GetDeparturesOnDay(agencies, stops, exceptions, departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, stops, exceptions, departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, stops, exceptions, departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, id))
+                    .Select(d => CreateService(agencies, stops, d))
                     .ToList();
             }
             catch
