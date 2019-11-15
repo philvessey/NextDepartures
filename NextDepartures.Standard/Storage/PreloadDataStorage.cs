@@ -7,16 +7,14 @@ namespace NextDepartures.Standard.Storage
     public class PreloadDataStorage : IDataStorage
     {
         private readonly IDataStorage _dataStorage;
-        private readonly DataStorageProperties _dataStorageProperties;
 
         private List<Agency> _agencies;
         private List<Exception> _exceptions;
         private List<Stop> _stops;
 
-        private PreloadDataStorage(IDataStorage dataStorage, DataStorageProperties dataStorageProperties)
+        private PreloadDataStorage(IDataStorage dataStorage)
         {
             _dataStorage = dataStorage;
-            _dataStorageProperties = dataStorageProperties;
 
             _agencies = new List<Agency>();
             _exceptions = new List<Models.Exception>();
@@ -25,8 +23,8 @@ namespace NextDepartures.Standard.Storage
 
         public static async Task<IDataStorage> LoadAsync(IDataStorage dataStorage, DataStorageProperties dataStorageProperties)
         {
-            // TODO: Pass them with into the constructor here until everything can be preloaded and they are only needed within the preload process and not after that
-            PreloadDataStorage preloaded = new PreloadDataStorage(dataStorage, dataStorageProperties);
+            // TODO: Pass the original storage with into the constructor here until everything can be preloaded and it is only needed within the preload process and not after that
+            PreloadDataStorage preloaded = new PreloadDataStorage(dataStorage);
             await preloaded.PreloadAsync(dataStorage, dataStorageProperties);
             return preloaded;
         }
