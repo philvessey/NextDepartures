@@ -34,13 +34,13 @@ namespace NextDepartures.Standard
                 List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForTripAsync(id);
 
                 List<Agency> agencies = await _dataStorage.GetAgenciesAsync();
-                List<Stop> stops = await _dataStorage.GetStopsAsync();
                 List<Models.Exception> exceptions = await _dataStorage.GetExceptionsAsync();
+                List<Stop> stops = await _dataStorage.GetStopsAsync();
 
                 return new List<Departure>()
-                    .AddMultiple(GetDeparturesOnDay(agencies, stops, exceptions, departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, id))
-                    .AddMultiple(GetDeparturesOnDay(agencies, stops, exceptions, departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, id))
-                    .AddMultiple(GetDeparturesOnDay(agencies, stops, exceptions, departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, exceptions, stops, departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, exceptions, stops, departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, exceptions, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, id))
                     .Select(d => CreateService(agencies, stops, d))
                     .ToList();
             }

@@ -102,14 +102,14 @@ namespace NextDepartures.Standard
             };
         }
 
-        private List<Departure> GetDeparturesOnDay(List<Agency> agencies, List<Stop> stops, List<Models.Exception> exceptions, List<Departure> departures, DateTime now, DayOffsetType dayOffset, int toleranceInHours, string id)
+        private List<Departure> GetDeparturesOnDay(List<Agency> agencies, List<Models.Exception> exceptions, List<Stop> stops, List<Departure> departures, DateTime now, DayOffsetType dayOffset, int toleranceInHours, string id)
         {
             List<Departure> resultForDay = new List<Departure>();
 
             // TODO: May be calculate the three days in one loop so that the timezone calculated and so on can be reused?
             foreach (Departure departure in departures)
             {
-                resultForDay.AddIfNotNull(TryProcessDeparture(agencies, stops, exceptions, now, dayOffset, toleranceInHours, id, departure));
+                resultForDay.AddIfNotNull(TryProcessDeparture(agencies, exceptions, stops, now, dayOffset, toleranceInHours, id, departure));
             }
 
             return resultForDay;
@@ -160,7 +160,7 @@ namespace NextDepartures.Standard
             return false;
         }
 
-        private Departure TryProcessDeparture(List<Agency> agencies, List<Stop> stops, List<Models.Exception> exceptions, DateTime now, DayOffsetType dayOffset, int toleranceInHours, string id, Departure departure)
+        private Departure TryProcessDeparture(List<Agency> agencies, List<Models.Exception> exceptions, List<Stop> stops, DateTime now, DayOffsetType dayOffset, int toleranceInHours, string id, Departure departure)
         {
             DateTime targetDateTime = now.AsZonedDateTime(GetTimezone(agencies, stops, departure));
             DateTime departureTime = GetDepartureTimeFromDeparture(targetDateTime, dayOffset.GetNumeric(), departure.DepartureTime);
