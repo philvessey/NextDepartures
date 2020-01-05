@@ -36,8 +36,6 @@ namespace NextDepartures.Standard
                 storage = await PreloadDataStorage.LoadAsync(storage, storageProperties);
             }
 
-            // TODO: Jump in here with custom queries via LINQ or similar (when the data storage properties tell us the data storage does not support sorting or similar)
-
             return new Feed(storage, storageProperties);
         }
 

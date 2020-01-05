@@ -29,7 +29,7 @@ namespace NextDepartures.Standard
         /// <returns>A list of services.</returns>
         public async Task<List<Service>> GetServicesByStopAsync(string id, DateTime now, int count = 10)
         {
-            const int ToleranceInHours = 1;
+            const int ToleranceInHours = 12;
 
             try
             {

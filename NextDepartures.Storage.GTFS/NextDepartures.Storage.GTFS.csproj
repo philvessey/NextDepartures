@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Authors>Phil Vessey</Authors>
+    <Copyright>Copyright © 2019 Phil Vessey and Contributors</Copyright>
+    <Description>An extension to enable work based on GTFS.NET</Description>
+    <PackageId>NextDepartures.Storage.GTFS</PackageId>
+    <PackageLicense>MIT</PackageLicense>
+    <PackageProjectUrl>http://nextdepartures.net</PackageProjectUrl>
+    <Product>NextDepartures.Storage.GTFS</Product>
+    <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>1.2.1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GTFS" Version="3.0.0-pre001" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NextDepartures.Standard\NextDepartures.Standard.csproj" />
+  </ItemGroup>
+
+</Project>
