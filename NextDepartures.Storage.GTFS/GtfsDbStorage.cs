@@ -1,4 +1,5 @@
 ﻿using GTFS;
+using GTFS.Entities;
 using GTFS.Entities.Enumerations;
 using NextDepartures.Standard.Extensions;
 using NextDepartures.Standard.Models;
@@ -69,45 +70,21 @@ namespace NextDepartures.Storage.GTFS
 
         public Task<List<Departure>> GetDeparturesForStopAsync(string id)
         {
-            var departures = feed.StopTimes
-                .Join(feed.Trips, s => s.TripId, t => t.Id, (s, t) => (s, t))
-                .Join(feed.Routes, e => e.t.RouteId, r => r.Id, (e, r) => (e.s, e.t, r))
-                .Join(feed.Calendars, e => e.t.ServiceId, c => c.ServiceId, (e, c) => (e.s, e.t, e.r, c))
-                .Where(e => e.s.StopId.Equals(id, StringComparison.OrdinalIgnoreCase) && e.s.PickupType != PickupType.NoPickup)
-                .OrderBy(e => e.s.DepartureTime)
-                .Select(e => new Departure()
-                {
-                    AgencyID = e.r.AgencyId,
-                    DepartureTime = e.s.DepartureTime?.ToString(),
-                    TripID = e.t.Id,
-                    TripHeadsign = e.t.Headsign,
-                    TripShortName = e.t.ShortName,
-                    RouteLongName = e.r.LongName,
-                    RouteShortName = e.r.ShortName,
-                    StopID = e.s.StopId,
-                    ServiceID = e.t.ServiceId,
-                    StartDate = e.c.StartDate.AsInteger().ToString(),
-                    EndDate = e.c.EndDate.AsInteger().ToString(),
-                    Monday = e.c.Monday ? "1" : "",
-                    Tuesday = e.c.Tuesday ? "1" : "",
-                    Wednesday = e.c.Wednesday ? "1" : "",
-                    Thursday = e.c.Thursday ? "1" : "",
-                    Friday = e.c.Friday ? "1" : "",
-                    Saturday = e.c.Saturday ? "1" : "",
-                    Sunday = e.c.Sunday ? "1" : ""
-                })
-                .ToList();
-
-            return Task.FromResult(departures);
+            return Task.FromResult(GetDeparturesByCondition(s => s.StopId.Equals(id, StringComparison.OrdinalIgnoreCase)));
         }
 
         public Task<List<Departure>> GetDeparturesForTripAsync(string id)
         {
-            var departures = feed.StopTimes
+            return Task.FromResult(GetDeparturesByCondition(s => s.TripId.Equals(id, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        private List<Departure> GetDeparturesByCondition(Func<StopTime, bool> condition)
+        {
+            return feed.StopTimes
+                .Where(s => condition(s) && s.PickupType != PickupType.NoPickup)
                 .Join(feed.Trips, s => s.TripId, t => t.Id, (s, t) => (s, t))
                 .Join(feed.Routes, e => e.t.RouteId, r => r.Id, (e, r) => (e.s, e.t, r))
                 .Join(feed.Calendars, e => e.t.ServiceId, c => c.ServiceId, (e, c) => (e.s, e.t, e.r, c))
-                .Where(e => e.s.TripId.Equals(id, StringComparison.OrdinalIgnoreCase) && e.s.PickupType != PickupType.NoPickup)
                 .OrderBy(e => e.s.DepartureTime)
                 .Select(e => new Departure()
                 {
@@ -131,8 +108,6 @@ namespace NextDepartures.Storage.GTFS
                     Sunday = e.c.Sunday ? "1" : ""
                 })
                 .ToList();
-
-            return Task.FromResult(departures);
         }
 
         public Task<List<Exception>> GetExceptionsAsync()
