@@ -33,7 +33,7 @@ steps:
   displayName: "Pack NuGet Packages"
   inputs:
     command: 'pack'
-    packagesToPack: '**/NextDepartures.Standard/*.csproj;**/NextDepartures.Storage.SqlServer/*.csproj'
+    packagesToPack: '**/NextDepartures.Standard/*.csproj;**/NextDepartures.Storage.GTFS/*.csproj;**/NextDepartures.Storage.SqlServer/*.csproj'
     includesymbols: true
     versioningScheme: 'off'
 
