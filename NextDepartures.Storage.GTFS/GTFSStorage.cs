@@ -18,29 +18,29 @@ namespace NextDepartures.Storage.GTFS
     /// <summary>
     /// Implements the data storage for the GTFS library
     /// </summary>
-    public class GtfsDbStorage : IDataStorage
+    public class GTFSStorage : IDataStorage
     {
         private readonly GTFSFeed _feed;
 
         /// <summary>
-        /// Creates a new instance of <see cref="GtfsDbStorage"/> based on the given feed.
+        /// Creates a new GTFS storage.
         /// </summary>
         /// <param name="feed">The GTFSFeed to use.</param>
-        public GtfsDbStorage(GTFSFeed feed)
+        public GTFSStorage(GTFSFeed feed)
         {
             _feed = feed;
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="GtfsDbStorage"/>.
+        /// Loads a GTFS data set.
         /// </summary>
         /// <param name="path">The directory path of the directory containing the feed or the path to the zip file.</param>
-        public static GtfsDbStorage Load(string path)
+        public static GTFSStorage Load(string path)
         {
             GTFSReader<GTFSFeed> gtfsReader = new GTFSReader<GTFSFeed>();
             GTFSFeed feed = gtfsReader.Read(path);
 
-            return new GtfsDbStorage(feed);
+            return new GTFSStorage(feed);
         }
 
         /// <summary>
