@@ -30,7 +30,7 @@ namespace NextDepartures.Storage.GTFS
         /// <summary>
         /// Loads a GTFS data set.
         /// </summary>
-        /// <param name="path">The directory path of the directory containing the feed or the path to the zip file.</param>
+        /// <param name="path">The path of the directory containing the feed or the path to the zip file.</param>
         public static GTFSStorage Load(string path)
         {
             GTFSReader<GTFSFeed> reader = new GTFSReader<GTFSFeed>();
@@ -81,7 +81,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of agencies.</returns>
         public Task<List<Standard.Models.Agency>> GetAgenciesByAllAsync(string query, string timezone)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.Id.ToLower().Contains(query.ToLower()) || a.Name.ToLower().Contains(query.ToLower()) && a.Timezone.ToLower().Contains(timezone.ToLower())));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.Id.ToLower().Contains(query.ToLower()) || a.Name.ToLower().Contains(query.ToLower())) && a.Timezone.ToLower().Contains(timezone.ToLower())));
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Standard.Models.Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query, string timezone)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Id.ToLower().Contains(query.ToLower()) || s.Code.ToLower().Contains(query.ToLower()) || s.Name.ToLower().Contains(query.ToLower()) && s.Latitude >= minLat && s.Latitude <= maxLat && s.Longitude >= minLon && s.Longitude <= maxLon && s.Timezone.ToLower().Contains(timezone.ToLower())));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Id.ToLower().Contains(query.ToLower()) || s.Code.ToLower().Contains(query.ToLower()) || s.Name.ToLower().Contains(query.ToLower())) && s.Latitude >= minLat && s.Latitude <= maxLat && s.Longitude >= minLon && s.Longitude <= maxLon && s.Timezone.ToLower().Contains(timezone.ToLower())));
         }
 
         /// <summary>

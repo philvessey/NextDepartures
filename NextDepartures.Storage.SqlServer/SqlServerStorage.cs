@@ -11,15 +11,15 @@ namespace NextDepartures.Storage.SqlServer
     /// <summary>
     /// Implements the data storage for the SQL Server
     /// </summary>
-    public class SqlStorage : IDataStorage
+    public class SqlServerStorage : IDataStorage
     {
         private readonly string _connection;
 
         /// <summary>
-        /// Creates a new sql storage.
+        /// Creates a new sql server storage.
         /// </summary>
         /// <param name="connection">The connection string to use when connecting to a database.</param>
-        public SqlStorage(string connection)
+        public SqlServerStorage(string connection)
         {
             _connection = connection;
         }
@@ -28,9 +28,9 @@ namespace NextDepartures.Storage.SqlServer
         /// Loads a sql server connection.
         /// </summary>
         /// <param name="connection">The connection string to use when connecting to a database.</param>
-        public static SqlStorage Load(string connection)
+        public static SqlServerStorage Load(string connection)
         {
-            return new SqlStorage(connection);
+            return new SqlServerStorage(connection);
         }
 
         private async Task<List<T>> ExecuteCommand<T>(string sql, Func<SqlDataReader, T> entryProcessor) where T : class
@@ -230,7 +230,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Standard.Models.Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query, string timezone)
         {
-            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (LOWER(StopID) LIKE '%{0}%' OR LOWER(StopCode) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%') AND (CAST(StopLat as REAL) >= {1} AND CAST(StopLat as REAL) <= {2} AND CAST(StopLon as REAL) >= {3} AND CAST(StopLon as REAL) <= {4}) AND (StopLat != '0' AND StopLon != '0') AND LOWER(StopTimezone) LIKE '%{5}%'", query.ToLower(), minLat, maxLat, minLon, maxLon, timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (LOWER(StopID) LIKE '%{0}%' OR LOWER(StopCode) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%') AND CAST(StopLat as REAL) >= {1} AND CAST(StopLat as REAL) <= {2} AND CAST(StopLon as REAL) >= {3} AND CAST(StopLon as REAL) <= {4} AND StopLat != '0' AND StopLon != '0' AND LOWER(StopTimezone) LIKE '%{5}%'", query.ToLower(), minLat, maxLat, minLon, maxLon, timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Standard.Models.Stop>> GetStopsByLocationAsync(double minLon, double minLat, double maxLon, double maxLat)
         {
-            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (CAST(StopLat as REAL) >= {0} AND CAST(StopLat as REAL) <= {1} AND CAST(StopLon as REAL) >= {2} AND CAST(StopLon as REAL) <= {3}) AND (StopLat != '0' AND StopLon != '0')", minLat, maxLat, minLon, maxLon), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE CAST(StopLat as REAL) >= {0} AND CAST(StopLat as REAL) <= {1} AND CAST(StopLon as REAL) >= {2} AND CAST(StopLon as REAL) <= {3} AND StopLat != '0' AND StopLon != '0'", minLat, maxLat, minLon, maxLon), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Standard.Models.Stop>> GetStopsByQueryAsync(string query)
         {
-            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (LOWER(StopID) LIKE '%{0}%' OR LOWER(StopCode) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%') AND (StopLat != '0' AND StopLon != '0')", query.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (LOWER(StopID) LIKE '%{0}%' OR LOWER(StopCode) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%') AND StopLat != '0' AND StopLon != '0'", query.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Standard.Models.Stop>> GetStopsByTimezoneAsync(string timezone)
         {
-            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (StopLat != '0' AND StopLon != '0') AND LOWER(StopTimezone) LIKE '%{0}%'", timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE StopLat != '0' AND StopLon != '0' AND LOWER(StopTimezone) LIKE '%{0}%'", timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
     }
 }

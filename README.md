@@ -20,7 +20,7 @@ using NextDepartures.Storage.GTFS;
 using NextDepartures.Storage.SqlServer;
 
 Feed feed = await Feed.Load(GTFSStorage.Load([path]));
-Feed feed = await Feed.Load(SqlStorage.Load([connection]));
+Feed feed = await Feed.Load(SqlServerStorage.Load([connection]));
 
 List<Agency> results = await feed.GetAgenciesByAllAsync([query], [timezone]);
 List<Agency> results = await feed.GetAgenciesByQueryAsync([query]);
