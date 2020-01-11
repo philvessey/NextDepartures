@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TimeZoneConverter;
 
 namespace NextDepartures.Standard
 {
@@ -15,51 +14,29 @@ namespace NextDepartures.Standard
         private readonly IDataStorage _dataStorage;
         private readonly DataStorageProperties _dataStorageProperties;
 
-        private List<Agency> _agencies;
-        private List<Models.Exception> _exceptions;
-        private List<Stop> _stops;
-
-        private Feed(IDataStorage dataStorage)
+        private Feed(IDataStorage dataStorage, DataStorageProperties dataStorageProperties)
         {
             _dataStorage = dataStorage;
-            _dataStorageProperties = new DataStorageProperties(dataStorage);
-
-            _agencies = new List<Agency>();
-            _exceptions = new List<Models.Exception>();
-            _stops = new List<Stop>();
+            _dataStorageProperties = dataStorageProperties;
         }
 
         /// <summary>
         /// Creates a new feed with the given data storage.
         /// </summary>
         /// <param name="dataStorage">The data storage to use.</param>
+        /// <param name="preload">Whether to preload the data.</param>
         /// <returns>A new feed instance.</returns>
-        public static async Task<Feed> Load(IDataStorage dataStorage)
+        public static async Task<Feed> Load(IDataStorage dataStorage, bool preload = true)
         {
-            Feed feed = new Feed(dataStorage);
-            await feed.PreloadFromStorage();
+            DataStorageProperties storageProperties = new DataStorageProperties(dataStorage);
+            IDataStorage storage = dataStorage;
 
-            return feed;
-        }
-
-        private async Task PreloadFromStorage()
-        {
-            if (_dataStorageProperties.DoesSupportParallelPreload)
+            if (preload)
             {
-                var agenciesTask = _dataStorage.GetAgenciesAsync();
-                var exceptionsTask = _dataStorage.GetExceptionsAsync();
-                var stopsTask = _dataStorage.GetStopsAsync();
+                storage = await PreloadDataStorage.LoadAsync(storage, storageProperties);
+            }
 
-                _agencies = await agenciesTask;
-                _exceptions = await exceptionsTask;
-                _stops = await stopsTask;
-            }
-            else
-            {
-                _agencies = await _dataStorage.GetAgenciesAsync();
-                _exceptions = await _dataStorage.GetExceptionsAsync();
-                _stops = await _dataStorage.GetStopsAsync();
-            }
+            return new Feed(storage, storageProperties);
         }
 
         private Departure CreateProcessedDeparture(Departure tempDeparture, DateTime departureTime)
@@ -87,29 +64,29 @@ namespace NextDepartures.Standard
             };
         }
 
-        private Service CreateService(Departure departure)
+        private Service CreateService(List<Agency> agencies, List<Stop> stops, Departure departure)
         {
             const string fallback = "Unknown";
 
             string agencyName = StringUtils.FindPossibleString(fallback,
-                                    () => _agencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyName,
-                                    () => _agencies.FirstOrDefault()?.AgencyName
+                                    () => agencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyName,
+                                    () => agencies.FirstOrDefault()?.AgencyName
                                     ).Trim().ToTitleCase();
 
             string destinationName = StringUtils.FindPossibleString(fallback,
-                () => _stops.FirstOrDefault(s => departure.RouteShortName.Contains(s.StopID.WithPrefix("_")) || departure.RouteShortName.Contains(s.StopID.WithPrefix("->")))?.StopName,
+                () => stops.FirstOrDefault(s => departure.RouteShortName.Contains(s.StopID.WithPrefix("_")) || departure.RouteShortName.Contains(s.StopID.WithPrefix("->")))?.StopName,
                 () => departure.TripHeadsign,
                 () => departure.TripShortName,
                 () => departure.RouteLongName
                 ).Trim().ToTitleCase();
 
             string routeName = StringUtils.FindPossibleString(fallback,
-                () => _stops.FirstOrDefault(s => departure.RouteShortName.Contains(s.StopID.WithPrefix("_")) || departure.RouteShortName.Contains(s.StopID.WithPrefix("->")))?.StopName,
+                () => stops.FirstOrDefault(s => departure.RouteShortName.Contains(s.StopID.WithPrefix("_")) || departure.RouteShortName.Contains(s.StopID.WithPrefix("->")))?.StopName,
                 () => departure.RouteShortName
                 ).Trim().ToTitleCase();
 
             string stopName = StringUtils.FindPossibleString(fallback,
-                () => _stops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopName
+                () => stops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopName
                 ).Trim().ToTitleCase();
 
             return new Service()
@@ -123,62 +100,56 @@ namespace NextDepartures.Standard
             };
         }
 
-        private List<Departure> GetDeparturesOnDay(List<Departure> departures, int dayOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper)
+        private List<Departure> GetDeparturesOnDay(List<Agency> agencies, List<Models.Exception> exceptions, List<Stop> stops, List<Departure> departures, DateTime now, DayOffsetType dayOffset, int toleranceInHours, string id)
         {
             List<Departure> resultForDay = new List<Departure>();
 
             // TODO: May be calculate the three days in one loop so that the timezone calculated and so on can be reused?
             foreach (Departure departure in departures)
             {
-                resultForDay.AddIfNotNull(TryProcessDeparture(dayOffset, toleranceInHours, id, dayOfWeekMapper, departure));
+                resultForDay.AddIfNotNull(TryProcessDeparture(agencies, exceptions, stops, now, dayOffset, toleranceInHours, id, departure));
             }
 
             return resultForDay;
         }
 
-        private DateTime GetDepartureTimeFromDeparture(DateTime now, int dayOffset, string departureTime)
+        private DateTime GetDepartureTimeFromDeparture(DateTime targetDateTime, int dayOffset, string departureTime)
         {
             int[] splittedDepartureTime = departureTime.Split(new string[] { ":" }, StringSplitOptions.None).Select(s => int.Parse(s)).ToArray();
             int departureHour = splittedDepartureTime[0];
 
-            return new DateTime(now.Year, now.Month, now.Day, departureHour % 24, splittedDepartureTime[1], splittedDepartureTime[2]).AddDays(((int) (departureHour / 24)) + dayOffset);
+            return new DateTime(targetDateTime.Year, targetDateTime.Month, targetDateTime.Day, departureHour % 24, splittedDepartureTime[1], splittedDepartureTime[2]).AddDays(((int) (departureHour / 24)) + dayOffset);
         }
 
-        private string GetTimezone(Departure departure, string defaultTimezone = "Etc/UTC")
+        private string GetTimezone(List<Agency> agencies, List<Stop> stops, Departure departure, string defaultTimezone = "Etc/UTC")
         {
             return StringUtils.FindPossibleString(defaultTimezone,
-                () => _stops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopTimezone,
-                () => _agencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyTimezone,
-                () => _agencies.FirstOrDefault()?.AgencyTimezone);
+                () => stops.FirstOrDefault(s => s.StopID == departure.StopID)?.StopTimezone,
+                () => agencies.FirstOrDefault(a => a.AgencyID == departure.AgencyID)?.AgencyTimezone,
+                () => agencies.FirstOrDefault()?.AgencyTimezone);
         }
 
-        private bool IsDepartureValid(int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper, Departure departure, DateTime now, int targetDate, DateTime departureTime, int startDate, int endDate)
+        private bool IsDepartureValid(List<Models.Exception> exceptions, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper, Departure departure, DateTime targetDateTime, int targetDate, DateTime departureTime, int startDate, int endDate)
         {
-            // TODO: Refactor the if inner code
-            if (dayOfWeekMapper(now.DayOfWeek, departure) == "1" && startDate <= targetDate && endDate >= targetDate)
+            if (startDate <= targetDate && endDate >= targetDate)
             {
-                bool exclude = _exceptions.Any(e => departure.ServiceID == e.ServiceID && e.Date == targetDate.ToString() && e.ExceptionType == "2");
+                bool include;
 
-                if (departure.RouteShortName.ToLower().Contains(id.WithPrefix("_")) || departure.RouteShortName.ToLower().Contains(id.WithPrefix("->")))
+                if (dayOfWeekMapper(targetDateTime.DayOfWeek, departure) == "1")
                 {
-                    exclude = true;
+                    include = !exceptions.Any(e => departure.ServiceID == e.ServiceID && e.Date == targetDate.ToString() && e.ExceptionType == "2");
                 }
-
-                if (!exclude && departureTime >= now && departureTime <= now.AddHours(toleranceInHours))
+                else
                 {
-                    return true;
+                    include = exceptions.Any(e => departure.ServiceID == e.ServiceID && e.Date == targetDate.ToString() && e.ExceptionType == "1");
                 }
-            }
-            else if (startDate <= targetDate && endDate >= targetDate)
-            {
-                bool include = _exceptions.Any(e => departure.ServiceID == e.ServiceID && e.Date == targetDate.ToString() && e.ExceptionType == "1");
 
                 if (departure.RouteShortName.ToLower().Contains(id.WithPrefix("_")) || departure.RouteShortName.ToLower().Contains(id.WithPrefix("->")))
                 {
                     include = false;
                 }
 
-                if (include && departureTime >= now && departureTime <= now.AddHours(toleranceInHours))
+                if (include && departureTime >= targetDateTime && departureTime <= targetDateTime.AddHours(toleranceInHours))
                 {
                     return true;
                 }
@@ -187,16 +158,12 @@ namespace NextDepartures.Standard
             return false;
         }
 
-        private Departure TryProcessDeparture(int dayOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, string> dayOfWeekMapper, Departure departure)
+        private Departure TryProcessDeparture(List<Agency> agencies, List<Models.Exception> exceptions, List<Stop> stops, DateTime now, DayOffsetType dayOffset, int toleranceInHours, string id, Departure departure)
         {
-            string timezone = GetTimezone(departure);
+            DateTime targetDateTime = now.AsZonedDateTime(GetTimezone(agencies, stops, departure));
+            DateTime departureTime = GetDepartureTimeFromDeparture(targetDateTime, dayOffset.GetNumeric(), departure.DepartureTime);
 
-            // TODO: Maybe we should think about changing the UtcNow to a time settable by the user so that he can request services at a timepoint of his choice
-            DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(TZConvert.IanaToWindows(timezone)));
-            int targetDate = now.AddDays(dayOffset).AsInteger();
-
-            DateTime departureTime = GetDepartureTimeFromDeparture(now, dayOffset, departure.DepartureTime);
-
+            int targetDate = targetDateTime.AddDays(dayOffset.GetNumeric()).AsInteger();
             int startDate = targetDate;
             int endDate = targetDate;
 
@@ -210,7 +177,7 @@ namespace NextDepartures.Standard
                 endDate = int.Parse(departure.EndDate);
             }
 
-            if (IsDepartureValid(toleranceInHours, id, dayOfWeekMapper, departure, now, targetDate, departureTime, startDate, endDate))
+            if (IsDepartureValid(exceptions, toleranceInHours, id, WeekdayUtils.GetUtilByDayType(dayOffset), departure, targetDateTime, targetDate, departureTime, startDate, endDate))
             {
                 return CreateProcessedDeparture(departure, departureTime);
             }

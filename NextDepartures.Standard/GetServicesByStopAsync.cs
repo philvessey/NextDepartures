@@ -1,6 +1,6 @@
 ﻿using NextDepartures.Standard.Extensions;
 using NextDepartures.Standard.Models;
-using NextDepartures.Standard.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,22 +15,38 @@ namespace NextDepartures.Standard
         /// <param name="id">The id of the stop.</param>
         /// <param name="count">The number of results to return. Default is 10 but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public async Task<List<Service>> GetServicesByStopAsync(string id, int count = 10)
+        public Task<List<Service>> GetServicesByStopAsync(string id, int count = 10)
         {
-            const int ToleranceInHours = 1;
+            return GetServicesByStopAsync(id, DateTime.Now, count);
+        }
+
+        /// <summary>
+        /// Gets the services for a specific stop.
+        /// </summary>
+        /// <param name="id">The id of the stop.</param>
+        /// <param name="now">The DateTime target to search from.</param>
+        /// <param name="count">The number of results to return. Default is 10 but can be overridden.</param>
+        /// <returns>A list of services.</returns>
+        public async Task<List<Service>> GetServicesByStopAsync(string id, DateTime now, int count = 10)
+        {
+            const int ToleranceInHours = 12;
 
             try
             {
                 List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(id);
 
+                List<Agency> agencies = await _dataStorage.GetAgenciesAsync();
+                List<Models.Exception> exceptions = await _dataStorage.GetExceptionsAsync();
+                List<Stop> stops = await _dataStorage.GetStopsAsync();
+
                 return new List<Departure>()
-                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, -1, ToleranceInHours, id, WeekdayUtils.GetPreviousDay))
+                    .AddMultiple(GetDeparturesOnDay(agencies, exceptions, stops, departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, id))
                     .Take(count)
-                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, 0, ToleranceInHours, id, WeekdayUtils.GetTodayDay))
+                    .AddMultiple(GetDeparturesOnDay(agencies, exceptions, stops, departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, id))
                     .Take(count)
-                    .AddMultiple(GetDeparturesOnDay(departuresFromStorage, 1, ToleranceInHours, id, WeekdayUtils.GetFollowingDay))
+                    .AddMultiple(GetDeparturesOnDay(agencies, exceptions, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, id))
                     .Take(count)
-                    .Select(CreateService)
+                    .Select(d => CreateService(agencies, stops, d))
                     .ToList();
             }
             catch

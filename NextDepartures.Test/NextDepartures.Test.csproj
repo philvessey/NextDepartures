@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NextDepartures.Standard\NextDepartures.Standard.csproj" />
+    <ProjectReference Include="..\NextDepartures.Storage.GTFS\NextDepartures.Storage.GTFS.csproj" />
     <ProjectReference Include="..\NextDepartures.Storage.SqlServer\NextDepartures.Storage.SqlServer.csproj" />
   </ItemGroup>
 
