@@ -104,7 +104,6 @@ namespace NextDepartures.Standard
         {
             List<Departure> resultForDay = new List<Departure>();
 
-            // TODO: May be calculate the three days in one loop so that the timezone calculated and so on can be reused?
             foreach (Departure departure in departures)
             {
                 resultForDay.AddIfNotNull(TryProcessDeparture(agencies, exceptions, stops, now, dayOffset, toleranceInHours, id, departure));
