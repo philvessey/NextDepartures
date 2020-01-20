@@ -34,11 +34,11 @@ namespace NextDepartures.Standard
 
             try
             {
-                List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(id);
-
                 List<Agency> agencies = await _dataStorage.GetAgenciesAsync();
                 List<CalendarDate> calendarDates = await _dataStorage.GetCalendarDatesAsync();
                 List<Stop> stops = await _dataStorage.GetStopsAsync();
+
+                List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(id);
 
                 return new List<Departure>()
                     .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, id))

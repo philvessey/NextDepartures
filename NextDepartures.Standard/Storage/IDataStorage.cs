@@ -69,6 +69,13 @@ namespace NextDepartures.Standard.Storage
         Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude);
 
         /// <summary>
+        /// Gets the stops by the given parent station.
+        /// </summary>
+        /// <param name="id">The id of the station.</param>
+        /// <returns>A list of stops.</returns>
+        Task<List<Stop>> GetStopsByParentStationAsync(string id);
+
+        /// <summary>
         /// Gets the stops by the given query.
         /// </summary>
         /// <param name="query">The query.</param>

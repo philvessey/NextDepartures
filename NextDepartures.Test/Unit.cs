@@ -57,6 +57,15 @@ namespace NextDepartures.Test
         }
 
         [TestMethod]
+        public async Task GetStopsByParentStationAsync()
+        {
+            Feed feed = await Feed.Load(new EmptyStorage());
+            List<Stop> results = await feed.GetStopsByParentStationAsync("");
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
         public async Task GetStopsByQueryAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());

@@ -248,6 +248,16 @@ namespace NextDepartures.Storage.GTFS
         }
 
         /// <summary>
+        /// Gets the stops by the given parent station.
+        /// </summary>
+        /// <param name="id">The id of the station.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByParentStationAsync(string id)
+        {
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.ParentStation.ToLower().Equals(id.ToLower())));
+        }
+
+        /// <summary>
         /// Gets the stops by the given query.
         /// </summary>
         /// <param name="query">The query.</param>

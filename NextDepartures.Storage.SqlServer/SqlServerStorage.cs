@@ -254,6 +254,16 @@ namespace NextDepartures.Storage.SqlServer
         }
 
         /// <summary>
+        /// Gets the stops by the given parent station.
+        /// </summary>
+        /// <param name="id">The id of the station.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByParentStationAsync(string id)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ParentStation) = '{0}'", id.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
         /// Gets the stops by the given query.
         /// </summary>
         /// <param name="query">The query.</param>

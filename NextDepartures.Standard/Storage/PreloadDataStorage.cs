@@ -134,6 +134,16 @@ namespace NextDepartures.Standard.Storage
         }
 
         /// <summary>
+        /// Gets the stops by the given parent station.
+        /// </summary>
+        /// <param name="id">The id of the station.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByParentStationAsync(string id)
+        {
+            return _dataStorage.GetStopsByParentStationAsync(id);
+        }
+
+        /// <summary>
         /// Gets the stops by the given query.
         /// </summary>
         /// <param name="query">The query.</param>
