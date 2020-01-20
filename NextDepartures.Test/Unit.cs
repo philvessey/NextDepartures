@@ -1,3 +1,4 @@
+using GTFS.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
 using NextDepartures.Standard.Models;
@@ -10,15 +11,6 @@ namespace NextDepartures.Test
     [TestClass]
     public class Unit
     {
-        [TestMethod]
-        public async Task GetAgenciesByAllAsync()
-        {
-            Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByAllAsync("", "");
-
-            Assert.IsNotNull(results);
-        }
-
         [TestMethod]
         public async Task GetAgenciesByQueryAsync()
         {
@@ -51,15 +43,6 @@ namespace NextDepartures.Test
         {
             Feed feed = await Feed.Load(new EmptyStorage());
             List<Service> results = await feed.GetServicesByTripAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public async Task GetStopsByAllAsync()
-        {
-            Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByAllAsync(0, 0, 0, 0, "", "");
 
             Assert.IsNotNull(results);
         }

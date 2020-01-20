@@ -7,6 +7,6 @@
         public string DestinationName { get; set; }
         public string RouteName { get; set; }
         public string StopName { get; set; }
-        public string TripID { get; set; }
+        public string TripId { get; set; }
     }
 }

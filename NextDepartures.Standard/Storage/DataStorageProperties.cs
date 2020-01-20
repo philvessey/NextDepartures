@@ -9,12 +9,12 @@ namespace NextDepartures.Standard.Storage
 
         public DataStorageProperties()
         {
-            this.DoesSupportParallelPreload = false;
+            DoesSupportParallelPreload = false;
         }
 
         public DataStorageProperties(IDataStorage dataStorage) : this()
         {
-            this.DoesSupportParallelPreload = dataStorage.GetType().GetCustomAttribute<SupportsParallelPreloadAttribute>() != null;
+            DoesSupportParallelPreload = dataStorage.GetType().GetCustomAttribute<SupportsParallelPreloadAttribute>() != null;
         }
     }
 }

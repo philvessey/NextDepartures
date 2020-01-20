@@ -10,31 +10,16 @@ NextDepartures is a .NET Standard Library that queries GTFS (General Transit Fee
 ## Usage
 
 ```
-NextDepartures.Database > dotnet run "[connection]" "[url]"
+NextDepartures.Database > dotnet run "[connection]" "[path]"
 ```
 
 ```csharp
 using NextDepartures.Standard;
-using NextDepartures.Standard.Models;
 using NextDepartures.Storage.GTFS;
 using NextDepartures.Storage.SqlServer;
 
 Feed feed = await Feed.Load(GTFSStorage.Load([path]));
 Feed feed = await Feed.Load(SqlServerStorage.Load([connection]));
-
-List<Agency> results = await feed.GetAgenciesByAllAsync([query], [timezone]);
-List<Agency> results = await feed.GetAgenciesByQueryAsync([query]);
-List<Agency> results = await feed.GetAgenciesByTimezoneAsync([timezone]);
-
-List<Service> results = await feed.GetServicesByStopAsync([id]);
-List<Service> results = await feed.GetServicesByStopAsync([id], [now]);
-List<Service> results = await feed.GetServicesByTripAsync([id]);
-List<Service> results = await feed.GetServicesByTripAsync([id], [now]);
-
-List<Stop> results = await feed.GetStopsByAllAsync([minLon], [minLat], [maxLon], [maxLat], [query], [timezone]);
-List<Stop> results = await feed.GetStopsByLocationAsync([minLon], [minLat], [maxLon], [maxLat]);
-List<Stop> results = await feed.GetStopsByQueryAsync([query]);
-List<Stop> results = await feed.GetStopsByTimezoneAsync([timezone]);
 ```
 
 ## License

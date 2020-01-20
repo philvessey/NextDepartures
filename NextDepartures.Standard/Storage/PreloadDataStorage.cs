@@ -1,4 +1,5 @@
-﻿using NextDepartures.Standard.Models;
+﻿using GTFS.Entities;
+using NextDepartures.Standard.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace NextDepartures.Standard.Storage
         private readonly IDataStorage _dataStorage;
 
         private List<Agency> _agencies;
-        private List<Exception> _exceptions;
+        private List<CalendarDate> _calendarDates;
         private List<Stop> _stops;
 
         private PreloadDataStorage(IDataStorage dataStorage)
@@ -17,7 +18,7 @@ namespace NextDepartures.Standard.Storage
             _dataStorage = dataStorage;
 
             _agencies = new List<Agency>();
-            _exceptions = new List<Models.Exception>();
+            _calendarDates = new List<CalendarDate>();
             _stops = new List<Stop>();
         }
 
@@ -35,17 +36,17 @@ namespace NextDepartures.Standard.Storage
             if (dataStorageProperties.DoesSupportParallelPreload)
             {
                 var agenciesTask = dataStorage.GetAgenciesAsync();
-                var exceptionsTask = dataStorage.GetExceptionsAsync();
+                var calendarDatesTask = dataStorage.GetCalendarDatesAsync();
                 var stopsTask = dataStorage.GetStopsAsync();
 
                 _agencies = await agenciesTask;
-                _exceptions = await exceptionsTask;
+                _calendarDates = await calendarDatesTask;
                 _stops = await stopsTask;
             }
             else
             {
                 _agencies = await _dataStorage.GetAgenciesAsync();
-                _exceptions = await _dataStorage.GetExceptionsAsync();
+                _calendarDates = await _dataStorage.GetCalendarDatesAsync();
                 _stops = await _dataStorage.GetStopsAsync();
             }
         }
@@ -57,17 +58,6 @@ namespace NextDepartures.Standard.Storage
         public Task<List<Agency>> GetAgenciesAsync()
         {
             return Task.FromResult(_agencies);
-        }
-
-        /// <summary>
-        /// Gets the agencies by the given query and timezone.
-        /// </summary>
-        /// <param name="query">The query.</param>
-        /// <param name="timezone">The timezone.</param>
-        /// <returns>A list of agencies.</returns>
-        public Task<List<Agency>> GetAgenciesByAllAsync(string query, string timezone)
-        {
-            return _dataStorage.GetAgenciesByAllAsync(query, timezone);
         }
 
         /// <summary>
@@ -88,6 +78,15 @@ namespace NextDepartures.Standard.Storage
         public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
         {
             return _dataStorage.GetAgenciesByTimezoneAsync(timezone);
+        }
+
+        /// <summary>
+        /// Gets all available calendar dates.
+        /// </summary>
+        /// <returns>A list of calendar dates.</returns>
+        public Task<List<CalendarDate>> GetCalendarDatesAsync()
+        {
+            return Task.FromResult(_calendarDates);
         }
 
         /// <summary>
@@ -113,15 +112,6 @@ namespace NextDepartures.Standard.Storage
         }
 
         /// <summary>
-        /// Gets all available exceptions.
-        /// </summary>
-        /// <returns>A list of exceptions.</returns>
-        public Task<List<Exception>> GetExceptionsAsync()
-        {
-            return Task.FromResult(_exceptions);
-        }
-
-        /// <summary>
         /// Gets all available stops.
         /// </summary>
         /// <returns>A list of stops.</returns>
@@ -131,31 +121,16 @@ namespace NextDepartures.Standard.Storage
         }
 
         /// <summary>
-        /// Gets the stops by the given area, query and timezone.
-        /// </summary>
-        /// <param name="minLon">The minimum longitude.</param>
-        /// <param name="minLat">The minimum latitude.</param>
-        /// <param name="maxLon">The maximum longitude.</param>
-        /// <param name="maxLat">The maximum latitude.</param>
-        /// <param name="query">The query.</param>
-        /// <param name="timezone">The timezone.</param>
-        /// <returns>A list of stops.</returns>
-        public Task<List<Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query, string timezone)
-        {
-            return _dataStorage.GetStopsByAllAsync(minLon, minLat, maxLon, maxLat, query, timezone);
-        }
-
-        /// <summary>
         /// Gets the stops in the given area.
         /// </summary>
-        /// <param name="minLon">The minimum longitude.</param>
-        /// <param name="minLat">The minimum latitude.</param>
-        /// <param name="maxLon">The maximum longitude.</param>
-        /// <param name="maxLat">The maximum latitude.</param>
+        /// <param name="minimumLongitude">The minimum longitude.</param>
+        /// <param name="minimumLatitude">The minimum latitude.</param>
+        /// <param name="maximumLongitude">The maximum longitude.</param>
+        /// <param name="maximumLatitude">The maximum latitude.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Stop>> GetStopsByLocationAsync(double minLon, double minLat, double maxLon, double maxLat)
+        public Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude)
         {
-            return _dataStorage.GetStopsByLocationAsync(minLon, minLat, maxLon, maxLat);
+            return _dataStorage.GetStopsByLocationAsync(minimumLongitude, minimumLatitude, maximumLongitude, maximumLatitude);
         }
 
         /// <summary>

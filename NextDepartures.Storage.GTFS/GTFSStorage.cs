@@ -1,7 +1,7 @@
 ﻿using GTFS;
 using GTFS.Entities;
 using GTFS.Entities.Enumerations;
-using NextDepartures.Standard.Extensions;
+using NextDepartures.Standard.Models;
 using NextDepartures.Standard.Storage;
 using System;
 using System.Collections.Generic;
@@ -39,27 +39,37 @@ namespace NextDepartures.Storage.GTFS
             return new GTFSStorage(feed);
         }
 
-        private List<Standard.Models.Agency> GetAgenciesFromFeed()
+        private List<Agency> GetAgenciesFromFeed()
         {
             return _feed.Agencies
-                .Select(a => new Standard.Models.Agency()
+                .Select(a => new Agency()
                 {
-                    AgencyID = a.Id,
-                    AgencyName = a.Name,
-                    AgencyTimezone = a.Timezone
+                    Id = a.Id,
+                    Name = a.Name,
+                    URL = a.URL,
+                    Timezone = a.Timezone,
+                    LanguageCode = a.LanguageCode,
+                    Phone = a.Phone,
+                    FareURL = a.FareURL,
+                    Email = a.Email
                 })
                 .ToList();
         }
 
-        private List<Standard.Models.Agency> GetAgenciesFromFeedByConditionWithSpecialCasing(Func<Agency, bool> condition)
+        private List<Agency> GetAgenciesFromFeedByConditionWithSpecialCasing(Func<Agency, bool> condition)
         {
             return _feed.Agencies
                 .Where(a => condition(a))
-                .Select(e => new Standard.Models.Agency()
+                .Select(e => new Agency()
                 {
-                    AgencyID = e.Id,
-                    AgencyName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(e.Name.ToLower()),
-                    AgencyTimezone = e.Timezone
+                    Id = e.Id,
+                    Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(e.Name.ToLower()),
+                    URL = e.URL,
+                    Timezone = e.Timezone,
+                    LanguageCode = e.LanguageCode,
+                    Phone = e.Phone,
+                    FareURL = e.FareURL,
+                    Email = e.Email
                 })
                 .ToList();
         }
@@ -68,20 +78,9 @@ namespace NextDepartures.Storage.GTFS
         /// Gets all available agencies.
         /// </summary>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Standard.Models.Agency>> GetAgenciesAsync()
+        public Task<List<Agency>> GetAgenciesAsync()
         {
             return Task.FromResult(GetAgenciesFromFeed());
-        }
-
-        /// <summary>
-        /// Gets the agencies by the given query and timezone.
-        /// </summary>
-        /// <param name="query">The query.</param>
-        /// <param name="timezone">The timezone.</param>
-        /// <returns>A list of agencies.</returns>
-        public Task<List<Standard.Models.Agency>> GetAgenciesByAllAsync(string query, string timezone)
-        {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.Id.ToLower().Contains(query.ToLower()) || a.Name.ToLower().Contains(query.ToLower())) && a.Timezone.ToLower().Contains(timezone.ToLower())));
         }
 
         /// <summary>
@@ -89,7 +88,7 @@ namespace NextDepartures.Storage.GTFS
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Standard.Models.Agency>> GetAgenciesByQueryAsync(string query)
+        public Task<List<Agency>> GetAgenciesByQueryAsync(string query)
         {
             return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.Id.ToLower().Contains(query.ToLower()) || a.Name.ToLower().Contains(query.ToLower())));
         }
@@ -99,12 +98,33 @@ namespace NextDepartures.Storage.GTFS
         /// </summary>
         /// <param name="timezone">The timezone.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Standard.Models.Agency>> GetAgenciesByTimezoneAsync(string timezone)
+        public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
         {
             return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.Timezone.ToLower().Contains(timezone.ToLower())));
         }
 
-        private List<Standard.Models.Departure> GetDeparturesFromFeedByCondition(Func<StopTime, bool> condition)
+        private List<CalendarDate> GetCalendarDatesFromFeed()
+        {
+            return _feed.CalendarDates
+                .Select(d => new CalendarDate()
+                {
+                    Date = d.Date,
+                    ExceptionType = d.ExceptionType,
+                    ServiceId = d.ServiceId
+                })
+                .ToList();
+        }
+
+        /// <summary>
+        /// Gets all available calendar dates.
+        /// </summary>
+        /// <returns>A list of calendar dates.</returns>
+        public Task<List<CalendarDate>> GetCalendarDatesAsync()
+        {
+            return Task.FromResult(GetCalendarDatesFromFeed());
+        }
+
+        private List<Departure> GetDeparturesFromFeedByCondition(Func<StopTime, bool> condition)
         {
             return _feed.StopTimes
                 .Where(s => condition(s) && s.PickupType != PickupType.NoPickup)
@@ -112,26 +132,26 @@ namespace NextDepartures.Storage.GTFS
                 .Join(_feed.Routes, e => e.t.RouteId, r => r.Id, (e, r) => (e.s, e.t, r))
                 .Join(_feed.Calendars, e => e.t.ServiceId, c => c.ServiceId, (e, c) => (e.s, e.t, e.r, c))
                 .OrderBy(e => e.s.DepartureTime)
-                .Select(e => new Standard.Models.Departure()
+                .Select(e => new Departure()
                 {
-                    DepartureTime = e.s.DepartureTime?.ToString(),
-                    StopID = e.s.StopId,
-                    ServiceID = e.t.ServiceId,
-                    TripID = e.t.Id,
+                    DepartureTime = e.s.DepartureTime.ToString(),
+                    StopId = e.s.StopId,
+                    TripId = e.t.Id,
+                    ServiceId = e.t.ServiceId,
                     TripHeadsign = e.t.Headsign,
                     TripShortName = e.t.ShortName,
-                    AgencyID = e.r.AgencyId,
+                    AgencyId = e.r.AgencyId,
                     RouteShortName = e.r.ShortName,
                     RouteLongName = e.r.LongName,
-                    Monday = e.c.Monday ? "1" : "",
-                    Tuesday = e.c.Tuesday ? "1" : "",
-                    Wednesday = e.c.Wednesday ? "1" : "",
-                    Thursday = e.c.Thursday ? "1" : "",
-                    Friday = e.c.Friday ? "1" : "",
-                    Saturday = e.c.Saturday ? "1" : "",
-                    Sunday = e.c.Sunday ? "1" : "",
-                    StartDate = e.c.StartDate.AsInteger().ToString(),
-                    EndDate = e.c.EndDate.AsInteger().ToString()
+                    Monday = e.c.Monday,
+                    Tuesday = e.c.Tuesday,
+                    Wednesday = e.c.Wednesday,
+                    Thursday = e.c.Thursday,
+                    Friday = e.c.Friday,
+                    Saturday = e.c.Saturday,
+                    Sunday = e.c.Sunday,
+                    StartDate = e.c.StartDate,
+                    EndDate = e.c.EndDate
                 })
                 .ToList();
         }
@@ -142,7 +162,7 @@ namespace NextDepartures.Storage.GTFS
         /// <param name="id">The id of the stop.</param>
         /// <remarks>The list should be ordered ascending by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
         /// <returns>A list of departures.</returns>
-        public Task<List<Standard.Models.Departure>> GetDeparturesForStopAsync(string id)
+        public Task<List<Departure>> GetDeparturesForStopAsync(string id)
         {
             return Task.FromResult(GetDeparturesFromFeedByCondition(s => s.StopId.ToLower().Equals(id.ToLower())));
         }
@@ -153,55 +173,54 @@ namespace NextDepartures.Storage.GTFS
         /// <param name="id">The id of the trip.</param>
         /// <remarks>The list should be ordered ascending by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
         /// <returns>A list of departures.</returns>
-        public Task<List<Standard.Models.Departure>> GetDeparturesForTripAsync(string id)
+        public Task<List<Departure>> GetDeparturesForTripAsync(string id)
         {
             return Task.FromResult(GetDeparturesFromFeedByCondition(s => s.TripId.ToLower().Equals(id.ToLower())));
         }
 
-        private List<Standard.Models.Exception> GetExceptionsFromFeed()
+        private List<Stop> GetStopsFromFeed()
         {
-            return _feed.CalendarDates
-                .Select(d => new Standard.Models.Exception()
+            return _feed.Stops
+                .Select(s => new Stop()
                 {
-                    Date = d.Date.AsInteger().ToString(),
-                    ExceptionType = ((int)d.ExceptionType).ToString(),
-                    ServiceID = d.ServiceId
+                    Id = s.Id,
+                    Code = s.Code,
+                    Name = s.Name,
+                    Description = s.Description,
+                    Latitude = s.Latitude,
+                    Longitude = s.Longitude,
+                    Zone = s.Zone,
+                    Url = s.Url,
+                    LocationType = s.LocationType,
+                    ParentStation = s.ParentStation,
+                    Timezone = s.Timezone,
+                    WheelchairBoarding = s.WheelchairBoarding,
+                    LevelId = s.LevelId,
+                    PlatformCode = s.PlatformCode
                 })
                 .ToList();
         }
 
-        /// <summary>
-        /// Gets all available exceptions.
-        /// </summary>
-        /// <returns>A list of exceptions.</returns>
-        public Task<List<Standard.Models.Exception>> GetExceptionsAsync()
-        {
-            return Task.FromResult(GetExceptionsFromFeed());
-        }
-
-        private List<Standard.Models.Stop> GetStopsFromFeed()
+        private List<Stop> GetStopsFromFeedByConditionWithSpecialCasing(Func<Stop, bool> condition)
         {
             return _feed.Stops
-                .Select(s => new Standard.Models.Stop()
+                .Where(s => condition(s))
+                .Select(e => new Stop()
                 {
-                    StopID = s.Id,
-                    StopCode = s.Code,
-                    StopName = s.Name,
-                    StopTimezone = s.Timezone
-                })
-                .ToList();
-        }
-
-        private List<Standard.Models.Stop> GetStopsFromFeedByConditionWithSpecialCasing(Func<Stop, bool> condition)
-        {
-            return _feed.Stops
-                .Where(s => condition(s) && s.Latitude != 0 && s.Longitude != 0)
-                .Select(e => new Standard.Models.Stop()
-                {
-                    StopID = e.Id,
-                    StopCode = e.Code,
-                    StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(e.Name.ToLower()),
-                    StopTimezone = e.Timezone
+                    Id = e.Id,
+                    Code = e.Code,
+                    Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(e.Name.ToLower()),
+                    Description = e.Description,
+                    Latitude = e.Latitude,
+                    Longitude = e.Longitude,
+                    Zone = e.Zone,
+                    Url = e.Url,
+                    LocationType = e.LocationType,
+                    ParentStation = e.ParentStation,
+                    Timezone = e.Timezone,
+                    WheelchairBoarding = e.WheelchairBoarding,
+                    LevelId = e.LevelId,
+                    PlatformCode = e.PlatformCode
                 })
                 .ToList();
         }
@@ -210,37 +229,22 @@ namespace NextDepartures.Storage.GTFS
         /// Gets all available stops.
         /// </summary>
         /// <returns>A list of stops.</returns>
-        public Task<List<Standard.Models.Stop>> GetStopsAsync()
+        public Task<List<Stop>> GetStopsAsync()
         {
             return Task.FromResult(GetStopsFromFeed());
         }
 
         /// <summary>
-        /// Gets the stops by the given area, query and timezone.
-        /// </summary>
-        /// <param name="minLon">The minimum longitude.</param>
-        /// <param name="minLat">The minimum latitude.</param>
-        /// <param name="maxLon">The maximum longitude.</param>
-        /// <param name="maxLat">The maximum latitude.</param>
-        /// <param name="query">The query.</param>
-        /// <param name="timezone">The timezone.</param>
-        /// <returns>A list of stops.</returns>
-        public Task<List<Standard.Models.Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query, string timezone)
-        {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Id.ToLower().Contains(query.ToLower()) || s.Code.ToLower().Contains(query.ToLower()) || s.Name.ToLower().Contains(query.ToLower())) && s.Latitude >= minLat && s.Latitude <= maxLat && s.Longitude >= minLon && s.Longitude <= maxLon && s.Timezone.ToLower().Contains(timezone.ToLower())));
-        }
-
-        /// <summary>
         /// Gets the stops in the given area.
         /// </summary>
-        /// <param name="minLon">The minimum longitude.</param>
-        /// <param name="minLat">The minimum latitude.</param>
-        /// <param name="maxLon">The maximum longitude.</param>
-        /// <param name="maxLat">The maximum latitude.</param>
+        /// <param name="minimumLongitude">The minimum longitude.</param>
+        /// <param name="minimumLatitude">The minimum latitude.</param>
+        /// <param name="maximumLongitude">The maximum longitude.</param>
+        /// <param name="maximumLatitude">The maximum latitude.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Standard.Models.Stop>> GetStopsByLocationAsync(double minLon, double minLat, double maxLon, double maxLat)
+        public Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Latitude >= minLat && s.Latitude <= maxLat && s.Longitude >= minLon && s.Longitude <= maxLon));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Latitude >= minimumLatitude && s.Latitude <= maximumLatitude && s.Longitude >= minimumLongitude && s.Longitude <= maximumLongitude));
         }
 
         /// <summary>
@@ -248,9 +252,9 @@ namespace NextDepartures.Storage.GTFS
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Standard.Models.Stop>> GetStopsByQueryAsync(string query)
+        public Task<List<Stop>> GetStopsByQueryAsync(string query)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Id.ToLower().Contains(query.ToLower()) || s.Code.ToLower().Contains(query.ToLower()) || s.Name.ToLower().Contains(query.ToLower())));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Id.ToLower().Contains(query.ToLower()) || s.Name.ToLower().Contains(query.ToLower())));
         }
 
         /// <summary>
@@ -258,7 +262,7 @@ namespace NextDepartures.Storage.GTFS
         /// </summary>
         /// <param name="timezone">The timezone.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Standard.Models.Stop>> GetStopsByTimezoneAsync(string timezone)
+        public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone)
         {
             return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Timezone.ToLower().Contains(timezone.ToLower())));
         }

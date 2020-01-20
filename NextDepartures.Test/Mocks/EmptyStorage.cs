@@ -1,4 +1,5 @@
-﻿using NextDepartures.Standard.Models;
+﻿using GTFS.Entities;
+using NextDepartures.Standard.Models;
 using NextDepartures.Standard.Storage;
 using NextDepartures.Standard.Storage.Attributes;
 using System.Collections.Generic;
@@ -17,17 +18,6 @@ namespace NextDepartures.Test.Mocks
         /// </summary>
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesAsync()
-        {
-            return Task.FromResult(new List<Agency>());
-        }
-
-        /// <summary>
-        /// Gets the agencies by the given query and timezone.
-        /// </summary>
-        /// <param name="query">The query.</param>
-        /// <param name="timezone">The timezone.</param>
-        /// <returns>A list of agencies.</returns>
-        public Task<List<Agency>> GetAgenciesByAllAsync(string query, string timezone)
         {
             return Task.FromResult(new List<Agency>());
         }
@@ -53,6 +43,15 @@ namespace NextDepartures.Test.Mocks
         }
 
         /// <summary>
+        /// Gets all available calendar dates.
+        /// </summary>
+        /// <returns>A list of calendar dates.</returns>
+        public Task<List<CalendarDate>> GetCalendarDatesAsync()
+        {
+            return Task.FromResult(new List<CalendarDate>());
+        }
+
+        /// <summary>
         /// Gets the departures for a specific stop.
         /// </summary>
         /// <param name="id">The id of the stop.</param>
@@ -75,15 +74,6 @@ namespace NextDepartures.Test.Mocks
         }
 
         /// <summary>
-        /// Gets all available exceptions.
-        /// </summary>
-        /// <returns>A list of exceptions.</returns>
-        public Task<List<Exception>> GetExceptionsAsync()
-        {
-            return Task.FromResult(new List<Exception>());
-        }
-
-        /// <summary>
         /// Gets all available stops.
         /// </summary>
         /// <returns>A list of stops.</returns>
@@ -93,29 +83,14 @@ namespace NextDepartures.Test.Mocks
         }
 
         /// <summary>
-        /// Gets the stops by the given area, query and timezone.
-        /// </summary>
-        /// <param name="minLon">The minimum longitude.</param>
-        /// <param name="minLat">The minimum latitude.</param>
-        /// <param name="maxLon">The maximum longitude.</param>
-        /// <param name="maxLat">The maximum latitude.</param>
-        /// <param name="query">The query.</param>
-        /// <param name="timezone">The timezone.</param>
-        /// <returns>A list of stops.</returns>
-        public Task<List<Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query, string timezone)
-        {
-            return Task.FromResult(new List<Stop>());
-        }
-
-        /// <summary>
         /// Gets the stops in the given area.
         /// </summary>
-        /// <param name="minLon">The minimum longitude.</param>
-        /// <param name="minLat">The minimum latitude.</param>
-        /// <param name="maxLon">The maximum longitude.</param>
-        /// <param name="maxLat">The maximum latitude.</param>
+        /// <param name="minimumLongitude">The minimum longitude.</param>
+        /// <param name="minimumLatitude">The minimum latitude.</param>
+        /// <param name="maximumLongitude">The maximum longitude.</param>
+        /// <param name="maximumLatitude">The maximum latitude.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Stop>> GetStopsByLocationAsync(double minLon, double minLat, double maxLon, double maxLat)
+        public Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude)
         {
             return Task.FromResult(new List<Stop>());
         }
