@@ -146,7 +146,7 @@ namespace NextDepartures.Storage.SqlServer
         {
             return new Departure()
             {
-                DepartureTime = dataReader.GetString(0),
+                DepartureTime = dataReader.IsDBNull(0) ? null : dataReader.GetString(0).ToTimeOfDay(),
                 StopId = dataReader.GetString(1),
                 TripId = dataReader.GetString(2),
                 ServiceId = dataReader.GetString(3),

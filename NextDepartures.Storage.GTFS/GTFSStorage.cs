@@ -134,7 +134,7 @@ namespace NextDepartures.Storage.GTFS
                 .OrderBy(e => e.s.DepartureTime)
                 .Select(e => new Departure()
                 {
-                    DepartureTime = e.s.DepartureTime.ToString(),
+                    DepartureTime = e.s.DepartureTime,
                     StopId = e.s.StopId,
                     TripId = e.t.Id,
                     ServiceId = e.t.ServiceId,

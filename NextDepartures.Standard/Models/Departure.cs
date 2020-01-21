@@ -1,10 +1,12 @@
-﻿using System;
+﻿using GTFS.Entities;
+using System;
 
 namespace NextDepartures.Standard.Models
 {
     public class Departure
     {
-        public string DepartureTime { get; set; }
+        public TimeOfDay? DepartureTime { get; set; }
+        public DateTime DepartureDateTime { get; set; }
         public string StopId { get; set; }
         public string TripId { get; set; }
         public string ServiceId { get; set; }
