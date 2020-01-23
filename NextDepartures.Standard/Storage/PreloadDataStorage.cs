@@ -61,6 +61,46 @@ namespace NextDepartures.Standard.Storage
         }
 
         /// <summary>
+        /// Gets the agencies by the given email.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByEmailAsync(string email)
+        {
+            return _dataStorage.GetAgenciesByEmailAsync(email);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given fare URL.
+        /// </summary>
+        /// <param name="fareURL">The fare URL.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareURL)
+        {
+            return _dataStorage.GetAgenciesByFareURLAsync(fareURL);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given language code.
+        /// </summary>
+        /// <param name="languageCode">The language code.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode)
+        {
+            return _dataStorage.GetAgenciesByLanguageCodeAsync(languageCode);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given phone.
+        /// </summary>
+        /// <param name="phone">The phone.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByPhoneAsync(string phone)
+        {
+            return _dataStorage.GetAgenciesByPhoneAsync(phone);
+        }
+
+        /// <summary>
         /// Gets the agencies by the given query.
         /// </summary>
         /// <param name="query">The query.</param>
@@ -78,6 +118,16 @@ namespace NextDepartures.Standard.Storage
         public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
         {
             return _dataStorage.GetAgenciesByTimezoneAsync(timezone);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByURLAsync(string url)
+        {
+            return _dataStorage.GetAgenciesByURLAsync(url);
         }
 
         /// <summary>

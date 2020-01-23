@@ -84,6 +84,46 @@ namespace NextDepartures.Storage.GTFS
         }
 
         /// <summary>
+        /// Gets the agencies by the given email.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByEmailAsync(string email)
+        {
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.Email.ToLower().Contains(email.ToLower())));
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given fare URL.
+        /// </summary>
+        /// <param name="fareURL">The fare URL.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareURL)
+        {
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.FareURL.ToLower().Contains(fareURL.ToLower())));
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given language code.
+        /// </summary>
+        /// <param name="languageCode">The language code.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode)
+        {
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.LanguageCode.ToLower().Contains(languageCode.ToLower())));
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given phone.
+        /// </summary>
+        /// <param name="phone">The phone.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByPhoneAsync(string phone)
+        {
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.Phone.ToLower().Contains(phone.ToLower())));
+        }
+
+        /// <summary>
         /// Gets the agencies by the given query.
         /// </summary>
         /// <param name="query">The query.</param>
@@ -101,6 +141,16 @@ namespace NextDepartures.Storage.GTFS
         public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
         {
             return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.Timezone.ToLower().Contains(timezone.ToLower())));
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByURLAsync(string url)
+        {
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.URL.ToLower().Contains(url.ToLower())));
         }
 
         private List<CalendarDate> GetCalendarDatesFromFeed()

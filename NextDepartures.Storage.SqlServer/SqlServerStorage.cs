@@ -104,6 +104,46 @@ namespace NextDepartures.Storage.SqlServer
         }
 
         /// <summary>
+        /// Gets the agencies by the given email.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByEmailAsync(string email)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(Email) LIKE '%{0}%'", email.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given fare URL.
+        /// </summary>
+        /// <param name="fareURL">The fare URL.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareURL)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(FareURL) LIKE '%{0}%'", fareURL.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given language code.
+        /// </summary>
+        /// <param name="languageCode">The language code.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(LanguageCode) LIKE '%{0}%'", languageCode.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given phone.
+        /// </summary>
+        /// <param name="phone">The phone.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByPhoneAsync(string phone)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(Phone) LIKE '%{0}%'", phone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
         /// Gets the agencies by the given query.
         /// </summary>
         /// <param name="query">The query.</param>
@@ -121,6 +161,16 @@ namespace NextDepartures.Storage.SqlServer
         public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
         {
             return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(Timezone) LIKE '%{0}%'", timezone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByURLAsync(string url)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(URL) LIKE '%{0}%'", url.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         private CalendarDate GetCalendarDatesFromDataReader(SqlDataReader dataReader)

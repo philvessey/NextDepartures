@@ -12,6 +12,42 @@ namespace NextDepartures.Test
     public class Unit
     {
         [TestMethod]
+        public async Task GetAgenciesByEmailAsync()
+        {
+            Feed feed = await Feed.Load(new EmptyStorage());
+            List<Agency> results = await feed.GetAgenciesByEmailAsync("");
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
+        public async Task GetAgenciesByFareURLAsync()
+        {
+            Feed feed = await Feed.Load(new EmptyStorage());
+            List<Agency> results = await feed.GetAgenciesByFareURLAsync("");
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
+        public async Task GetAgenciesByLanguageCodeAsync()
+        {
+            Feed feed = await Feed.Load(new EmptyStorage());
+            List<Agency> results = await feed.GetAgenciesByLanguageCodeAsync("");
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
+        public async Task GetAgenciesByPhoneAsync()
+        {
+            Feed feed = await Feed.Load(new EmptyStorage());
+            List<Agency> results = await feed.GetAgenciesByPhoneAsync("");
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
         public async Task GetAgenciesByQueryAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
@@ -25,6 +61,15 @@ namespace NextDepartures.Test
         {
             Feed feed = await Feed.Load(new EmptyStorage());
             List<Agency> results = await feed.GetAgenciesByTimezoneAsync("");
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
+        public async Task GetAgenciesByURLAsync()
+        {
+            Feed feed = await Feed.Load(new EmptyStorage());
+            List<Agency> results = await feed.GetAgenciesByURLAsync("");
 
             Assert.IsNotNull(results);
         }
