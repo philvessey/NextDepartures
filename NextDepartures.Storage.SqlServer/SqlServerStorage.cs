@@ -1,4 +1,5 @@
 ﻿using GTFS.Entities;
+using GTFS.Entities.Enumerations;
 using Microsoft.Data.SqlClient;
 using NextDepartures.Standard.Extensions;
 using NextDepartures.Standard.Models;
@@ -291,7 +292,27 @@ namespace NextDepartures.Storage.SqlServer
         }
 
         /// <summary>
-        /// Gets the stops in the given area.
+        /// Gets the stops by the given description.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByDescriptionAsync(string description)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(Description) LIKE '%{0}%'", description.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given level.
+        /// </summary>
+        /// <param name="id">The id of the level.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByLevelAsync(string id)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(LevelId) = '{0}'", id.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops in the given location.
         /// </summary>
         /// <param name="minimumLongitude">The minimum longitude.</param>
         /// <param name="minimumLatitude">The minimum latitude.</param>
@@ -304,6 +325,16 @@ namespace NextDepartures.Storage.SqlServer
         }
 
         /// <summary>
+        /// Gets the stops by the given location type.
+        /// </summary>
+        /// <param name="locationType">The location type.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LocationType = {0}", locationType.ToInt32()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
         /// Gets the stops by the given parent station.
         /// </summary>
         /// <param name="id">The id of the station.</param>
@@ -311,6 +342,16 @@ namespace NextDepartures.Storage.SqlServer
         public Task<List<Stop>> GetStopsByParentStationAsync(string id)
         {
             return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ParentStation) = '{0}'", id.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given platform code.
+        /// </summary>
+        /// <param name="platformCode">The platform code.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(PlatformCode) = '{0}'", platformCode.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -331,6 +372,36 @@ namespace NextDepartures.Storage.SqlServer
         public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone)
         {
             return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(Timezone) LIKE '%{0}%'", timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByURLAsync(string url)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(Url) LIKE '%{0}%'", url.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given wheelchair boarding.
+        /// </summary>
+        /// <param name="wheelchairBoarding">The wheelchair boarding.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(WheelchairBoarding) = '{0}'", wheelchairBoarding.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given zone.
+        /// </summary>
+        /// <param name="zone">The zone.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByZoneAsync(string zone)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(Zone) = '{0}'", zone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
     }
 }

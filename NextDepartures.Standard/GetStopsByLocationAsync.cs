@@ -8,7 +8,7 @@ namespace NextDepartures.Standard
     public partial class Feed
     {
         /// <summary>
-        /// Gets the stops in the given area.
+        /// Gets the stops in the given location.
         /// </summary>
         /// <param name="minimumLongitude">The minimum longitude.</param>
         /// <param name="minimumLatitude">The minimum latitude.</param>

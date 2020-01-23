@@ -1,4 +1,5 @@
 ﻿using GTFS.Entities;
+using GTFS.Entities.Enumerations;
 using NextDepartures.Standard.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -171,7 +172,27 @@ namespace NextDepartures.Standard.Storage
         }
 
         /// <summary>
-        /// Gets the stops in the given area.
+        /// Gets the stops by the given description.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByDescriptionAsync(string description)
+        {
+            return _dataStorage.GetStopsByDescriptionAsync(description);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given level.
+        /// </summary>
+        /// <param name="id">The id of the level.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByLevelAsync(string id)
+        {
+            return _dataStorage.GetStopsByLevelAsync(id);
+        }
+
+        /// <summary>
+        /// Gets the stops in the given location.
         /// </summary>
         /// <param name="minimumLongitude">The minimum longitude.</param>
         /// <param name="minimumLatitude">The minimum latitude.</param>
@@ -184,6 +205,16 @@ namespace NextDepartures.Standard.Storage
         }
 
         /// <summary>
+        /// Gets the stops by the given location type.
+        /// </summary>
+        /// <param name="locationType">The location type.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType)
+        {
+            return _dataStorage.GetStopsByLocationTypeAsync(locationType);
+        }
+
+        /// <summary>
         /// Gets the stops by the given parent station.
         /// </summary>
         /// <param name="id">The id of the station.</param>
@@ -191,6 +222,16 @@ namespace NextDepartures.Standard.Storage
         public Task<List<Stop>> GetStopsByParentStationAsync(string id)
         {
             return _dataStorage.GetStopsByParentStationAsync(id);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given platform code.
+        /// </summary>
+        /// <param name="platformCode">The platform code.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode)
+        {
+            return _dataStorage.GetStopsByPlatformCodeAsync(platformCode);
         }
 
         /// <summary>
@@ -211,6 +252,36 @@ namespace NextDepartures.Standard.Storage
         public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone)
         {
             return _dataStorage.GetStopsByTimezoneAsync(timezone);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByURLAsync(string url)
+        {
+            return _dataStorage.GetStopsByURLAsync(url);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given wheelchair boarding.
+        /// </summary>
+        /// <param name="wheelchairBoarding">The wheelchair boarding.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding)
+        {
+            return _dataStorage.GetStopsByWheelchairBoardingAsync(wheelchairBoarding);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given zone.
+        /// </summary>
+        /// <param name="zone">The zone.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByZoneAsync(string zone)
+        {
+            return _dataStorage.GetStopsByZoneAsync(zone);
         }
     }
 }

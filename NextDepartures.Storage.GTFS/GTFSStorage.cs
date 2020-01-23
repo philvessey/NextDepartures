@@ -285,7 +285,27 @@ namespace NextDepartures.Storage.GTFS
         }
 
         /// <summary>
-        /// Gets the stops in the given area.
+        /// Gets the stops by the given description.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByDescriptionAsync(string description)
+        {
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Description.ToLower().Contains(description.ToLower())));
+        }
+
+        /// <summary>
+        /// Gets the stops by the given level.
+        /// </summary>
+        /// <param name="id">The id of the level.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByLevelAsync(string id)
+        {
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.LevelId.ToLower().Equals(id.ToLower())));
+        }
+
+        /// <summary>
+        /// Gets the stops in the given location.
         /// </summary>
         /// <param name="minimumLongitude">The minimum longitude.</param>
         /// <param name="minimumLatitude">The minimum latitude.</param>
@@ -298,6 +318,16 @@ namespace NextDepartures.Storage.GTFS
         }
 
         /// <summary>
+        /// Gets the stops by the given location type.
+        /// </summary>
+        /// <param name="locationType">The location type.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType)
+        {
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.LocationType.Equals(locationType)));
+        }
+
+        /// <summary>
         /// Gets the stops by the given parent station.
         /// </summary>
         /// <param name="id">The id of the station.</param>
@@ -305,6 +335,16 @@ namespace NextDepartures.Storage.GTFS
         public Task<List<Stop>> GetStopsByParentStationAsync(string id)
         {
             return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.ParentStation.ToLower().Equals(id.ToLower())));
+        }
+
+        /// <summary>
+        /// Gets the stops by the given platform code.
+        /// </summary>
+        /// <param name="platformCode">The platform code.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode)
+        {
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.PlatformCode.ToLower().Equals(platformCode.ToLower())));
         }
 
         /// <summary>
@@ -325,6 +365,36 @@ namespace NextDepartures.Storage.GTFS
         public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone)
         {
             return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Timezone.ToLower().Contains(timezone.ToLower())));
+        }
+
+        /// <summary>
+        /// Gets the stops by the given URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByURLAsync(string url)
+        {
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Url.ToLower().Contains(url.ToLower())));
+        }
+
+        /// <summary>
+        /// Gets the stops by the given wheelchair boarding.
+        /// </summary>
+        /// <param name="wheelchairBoarding">The wheelchair boarding.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding)
+        {
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.WheelchairBoarding.ToLower().Equals(wheelchairBoarding.ToLower())));
+        }
+
+        /// <summary>
+        /// Gets the stops by the given zone.
+        /// </summary>
+        /// <param name="zone">The zone.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByZoneAsync(string zone)
+        {
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Zone.ToLower().Equals(zone.ToLower())));
         }
     }
 }
