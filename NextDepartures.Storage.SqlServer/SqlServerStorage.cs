@@ -111,7 +111,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByEmailAsync(string email)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(Email) LIKE '%{0}%'", email.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(ISNULL(Email, '')) LIKE '%{0}%'", email.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareURL)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(FareURL) LIKE '%{0}%'", fareURL.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(ISNULL(FareURL, '')) LIKE '%{0}%'", fareURL.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(LanguageCode) LIKE '%{0}%'", languageCode.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(ISNULL(LanguageCode, '')) LIKE '%{0}%'", languageCode.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByPhoneAsync(string phone)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(Phone) LIKE '%{0}%'", phone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(ISNULL(Phone, '')) LIKE '%{0}%'", phone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByQueryAsync(string query)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(Id) LIKE '%{0}%' OR LOWER(Name) LIKE '%{0}%'", query.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(ISNULL(Id, '')) LIKE '%{0}%' OR LOWER(Name) LIKE '%{0}%'", query.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByDescriptionAsync(string description)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(Description) LIKE '%{0}%'", description.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(Description, '')) LIKE '%{0}%'", description.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByLevelAsync(string id)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(LevelId) = '{0}'", id.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(LevelId, '')) = '{0}'", id.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByParentStationAsync(string id)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ParentStation) = '{0}'", id.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(ParentStation, '')) = '{0}'", id.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(PlatformCode) = '{0}'", platformCode.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(PlatformCode, '')) = '{0}'", platformCode.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByQueryAsync(string query)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(Id) LIKE '%{0}%' OR LOWER(Code) LIKE '%{0}%' OR LOWER(Name) LIKE '%{0}%'", query.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(Id) LIKE '%{0}%' OR LOWER(ISNULL(Code, '')) LIKE '%{0}%' OR LOWER(ISNULL(Name, '')) LIKE '%{0}%'", query.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -371,7 +371,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(Timezone) LIKE '%{0}%'", timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(Timezone, '')) LIKE '%{0}%'", timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByURLAsync(string url)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(Url) LIKE '%{0}%'", url.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(Url, '')) LIKE '%{0}%'", url.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -391,7 +391,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(WheelchairBoarding) = '{0}'", wheelchairBoarding.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(WheelchairBoarding, '')) = '{0}'", wheelchairBoarding.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByZoneAsync(string zone)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(Zone) = '{0}'", zone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(Zone, '')) = '{0}'", zone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
     }
 }

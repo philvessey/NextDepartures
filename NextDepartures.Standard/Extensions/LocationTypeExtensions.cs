@@ -4,7 +4,7 @@ namespace NextDepartures.Standard.Extensions
 {
     public static class LocationTypeExtensions
     {
-        public static int ToInt32(this LocationType locationType)
+        public static int? ToInt32(this LocationType locationType)
         {
             if (locationType == LocationType.Stop)
             {
@@ -22,9 +22,13 @@ namespace NextDepartures.Standard.Extensions
             {
                 return 3;
             }
-            else
+            else if (locationType == LocationType.BoardingArea)
             {
                 return 4;
+            }
+            else
+            {
+                return null;
             }
         }
     }

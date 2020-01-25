@@ -90,7 +90,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByEmailAsync(string email)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.Email.ToLower().Contains(email.ToLower())));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.Email ?? "").ToLower().Contains(email.ToLower())));
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareURL)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.FareURL.ToLower().Contains(fareURL.ToLower())));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.FareURL ?? "").ToLower().Contains(fareURL.ToLower())));
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.LanguageCode.ToLower().Contains(languageCode.ToLower())));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.LanguageCode ?? "").ToLower().Contains(languageCode.ToLower())));
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByPhoneAsync(string phone)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.Phone.ToLower().Contains(phone.ToLower())));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.Phone ?? "").ToLower().Contains(phone.ToLower())));
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByQueryAsync(string query)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.Id.ToLower().Contains(query.ToLower()) || a.Name.ToLower().Contains(query.ToLower())));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.Id ?? "").ToLower().Contains(query.ToLower()) || a.Name.ToLower().Contains(query.ToLower())));
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByDescriptionAsync(string description)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Description.ToLower().Contains(description.ToLower())));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Description ?? "").ToLower().Contains(description.ToLower())));
         }
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByLevelAsync(string id)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.LevelId.ToLower().Equals(id.ToLower())));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.LevelId ?? "").ToLower().Equals(id.ToLower())));
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByParentStationAsync(string id)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.ParentStation.ToLower().Equals(id.ToLower())));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.ParentStation ?? "").ToLower().Equals(id.ToLower())));
         }
 
         /// <summary>
@@ -344,7 +344,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.PlatformCode.ToLower().Equals(platformCode.ToLower())));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.PlatformCode ?? "").ToLower().Equals(platformCode.ToLower())));
         }
 
         /// <summary>
@@ -354,7 +354,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByQueryAsync(string query)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Id.ToLower().Contains(query.ToLower()) || s.Name.ToLower().Contains(query.ToLower())));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Id.ToLower().Contains(query.ToLower()) || (s.Code ?? "").ToLower().Contains(query.ToLower()) || (s.Name ?? "").ToLower().Contains(query.ToLower())));
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Timezone.ToLower().Contains(timezone.ToLower())));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Timezone ?? "").ToLower().Contains(timezone.ToLower())));
         }
 
         /// <summary>
@@ -374,7 +374,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByURLAsync(string url)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Url.ToLower().Contains(url.ToLower())));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Url ?? "").ToLower().Contains(url.ToLower())));
         }
 
         /// <summary>
@@ -384,7 +384,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.WheelchairBoarding.ToLower().Equals(wheelchairBoarding.ToLower())));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.WheelchairBoarding ?? "").ToLower().Equals(wheelchairBoarding.ToLower())));
         }
 
         /// <summary>
@@ -394,7 +394,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByZoneAsync(string zone)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Zone.ToLower().Equals(zone.ToLower())));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Zone ?? "").ToLower().Equals(zone.ToLower())));
         }
     }
 }

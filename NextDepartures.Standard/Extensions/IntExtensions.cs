@@ -34,9 +34,13 @@ namespace NextDepartures.Standard.Extensions
             {
                 return LocationType.GenericNode;
             }
-            else
+            else if (baseInt == 4)
             {
                 return LocationType.BoardingArea;
+            }
+            else
+            {
+                return null;
             }
         }
     }
