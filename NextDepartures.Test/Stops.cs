@@ -2,7 +2,6 @@ using GTFS.Entities;
 using GTFS.Entities.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
-using NextDepartures.Standard.Models;
 using NextDepartures.Test.Mocks;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,89 +9,8 @@ using System.Threading.Tasks;
 namespace NextDepartures.Test
 {
     [TestClass]
-    public class Unit
+    public class Stops
     {
-        [TestMethod]
-        public async Task GetAgenciesByEmailAsync()
-        {
-            Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByEmailAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public async Task GetAgenciesByFareURLAsync()
-        {
-            Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByFareURLAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public async Task GetAgenciesByLanguageCodeAsync()
-        {
-            Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByLanguageCodeAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public async Task GetAgenciesByPhoneAsync()
-        {
-            Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByPhoneAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public async Task GetAgenciesByQueryAsync()
-        {
-            Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByQueryAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public async Task GetAgenciesByTimezoneAsync()
-        {
-            Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByTimezoneAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public async Task GetAgenciesByURLAsync()
-        {
-            Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByURLAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public async Task GetServicesByStopAsync()
-        {
-            Feed feed = await Feed.Load(new EmptyStorage());
-            List<Service> results = await feed.GetServicesByStopAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
-        [TestMethod]
-        public async Task GetServicesByTripAsync()
-        {
-            Feed feed = await Feed.Load(new EmptyStorage());
-            List<Service> results = await feed.GetServicesByTripAsync("");
-
-            Assert.IsNotNull(results);
-        }
-
         [TestMethod]
         public async Task GetStopsByDescriptionAsync()
         {

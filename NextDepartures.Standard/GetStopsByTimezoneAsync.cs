@@ -11,15 +11,22 @@ namespace NextDepartures.Standard
         /// Gets the stops in the given timezone.
         /// </summary>
         /// <param name="timezone">The timezone.</param>
-        /// <param name="count">The number of results to return. Default is 10 but can be overridden.</param>
+        /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of stops.</returns>
-        public async Task<List<Stop>> GetStopsByTimezoneAsync(string timezone, int count = 10)
+        public async Task<List<Stop>> GetStopsByTimezoneAsync(string timezone, int count = 0)
         {
             try
             {
                 List<Stop> stopsFromStorage = await _dataStorage.GetStopsByTimezoneAsync(timezone);
 
-                return stopsFromStorage.Take(count).ToList();
+                if (count > 0)
+                {
+                    return stopsFromStorage.Take(count).ToList();
+                }
+                else
+                {
+                    return stopsFromStorage;
+                }
             }
             catch
             {

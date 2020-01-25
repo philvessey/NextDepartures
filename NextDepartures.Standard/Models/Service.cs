@@ -12,5 +12,10 @@ namespace NextDepartures.Standard.Models
         public string RouteName { get; set; }
         public string StopName { get; set; }
         public string TripId { get; set; }
+        
+        public override string ToString()
+        {
+            return string.Format("[{0}] {1}", DepartureTime, DestinationName);
+        }
     }
 }

@@ -24,5 +24,10 @@ namespace NextDepartures.Standard.Models
         public bool Sunday { get; set; }
         public DateTime EndDate { get; set; }
         public DateTime StartDate { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("[{0}] {1}", DepartureTime, ServiceId);
+        }
     }
 }
