@@ -137,11 +137,11 @@ namespace NextDepartures.Standard
 
                 if (dayOfWeekMapper(zonedDateTime.DayOfWeek, departure))
                 {
-                    include = !calendarDates.Any(c => departure.ServiceId == c.ServiceId && c.Date == targetDateTime && c.ExceptionType == ExceptionType.Removed);
+                    include = !calendarDates.Any(c => c.ServiceId == departure.ServiceId && c.Date == targetDateTime.Date && c.ExceptionType == ExceptionType.Removed);
                 }
                 else
                 {
-                    include = calendarDates.Any(c => departure.ServiceId == c.ServiceId && c.Date == targetDateTime && c.ExceptionType == ExceptionType.Added);
+                    include = calendarDates.Any(c => c.ServiceId == departure.ServiceId && c.Date == targetDateTime.Date && c.ExceptionType == ExceptionType.Added);
                 }
 
                 if (departure.RouteShortName.ToLower().Contains(id.WithPrefix("_")) || departure.RouteShortName.ToLower().Contains(id.WithPrefix("->")))
