@@ -25,7 +25,6 @@ namespace NextDepartures.Standard.Storage
 
         public static async Task<IDataStorage> LoadAsync(IDataStorage dataStorage, DataStorageProperties dataStorageProperties)
         {
-            // TODO: Pass the original storage with into the constructor here until everything can be preloaded and it is only needed within the preload process and not after that
             PreloadDataStorage preloaded = new PreloadDataStorage(dataStorage);
             await preloaded.PreloadAsync(dataStorage, dataStorageProperties);
 
