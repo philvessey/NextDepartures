@@ -1,4 +1,6 @@
-﻿using NextDepartures.Standard.Models;
+﻿using GTFS.Entities;
+using GTFS.Entities.Enumerations;
+using NextDepartures.Standard.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,12 +18,32 @@ namespace NextDepartures.Standard.Storage
         Task<List<Agency>> GetAgenciesAsync();
 
         /// <summary>
-        /// Gets the agencies by the given query and timezone.
+        /// Gets the agencies by the given email.
         /// </summary>
-        /// <param name="query">The query.</param>
-        /// <param name="timezone">The timezone.</param>
+        /// <param name="email">The email.</param>
         /// <returns>A list of agencies.</returns>
-        Task<List<Agency>> GetAgenciesByAllAsync(string query, string timezone);
+        Task<List<Agency>> GetAgenciesByEmailAsync(string email);
+
+        /// <summary>
+        /// Gets the agencies by the given fare URL.
+        /// </summary>
+        /// <param name="fareURL">The fare URL.</param>
+        /// <returns>A list of agencies.</returns>
+        Task<List<Agency>> GetAgenciesByFareURLAsync(string fareURL);
+
+        /// <summary>
+        /// Gets the agencies by the given language code.
+        /// </summary>
+        /// <param name="languageCode">The language code.</param>
+        /// <returns>A list of agencies.</returns>
+        Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode);
+
+        /// <summary>
+        /// Gets the agencies by the given phone.
+        /// </summary>
+        /// <param name="phone">The phone.</param>
+        /// <returns>A list of agencies.</returns>
+        Task<List<Agency>> GetAgenciesByPhoneAsync(string phone);
 
         /// <summary>
         /// Gets the agencies by the given query.
@@ -36,6 +58,19 @@ namespace NextDepartures.Standard.Storage
         /// <param name="timezone">The timezone.</param>
         /// <returns>A list of agencies.</returns>
         Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone);
+
+        /// <summary>
+        /// Gets the agencies by the given URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>A list of agencies.</returns>
+        Task<List<Agency>> GetAgenciesByURLAsync(string url);
+
+        /// <summary>
+        /// Gets all available calendar dates.
+        /// </summary>
+        /// <returns>A list of calendar dates.</returns>
+        Task<List<CalendarDate>> GetCalendarDatesAsync();
 
         /// <summary>
         /// Gets the departures for a specific stop.
@@ -54,38 +89,55 @@ namespace NextDepartures.Standard.Storage
         Task<List<Departure>> GetDeparturesForTripAsync(string id);
 
         /// <summary>
-        /// Gets all available exceptions.
-        /// </summary>
-        /// <returns>A list of exceptions.</returns>
-        Task<List<Exception>> GetExceptionsAsync();
-
-        /// <summary>
         /// Gets all available stops.
         /// </summary>
         /// <returns>A list of stops.</returns>
         Task<List<Stop>> GetStopsAsync();
 
         /// <summary>
-        /// Gets the stops by the given area, query and timezone.
+        /// Gets the stops by the given description.
         /// </summary>
-        /// <param name="minLon">The minimum longitude.</param>
-        /// <param name="minLat">The minimum latitude.</param>
-        /// <param name="maxLon">The maximum longitude.</param>
-        /// <param name="maxLat">The maximum latitude.</param>
-        /// <param name="query">The query.</param>
-        /// <param name="timezone">The timezone.</param>
+        /// <param name="description">The description.</param>
         /// <returns>A list of stops.</returns>
-        Task<List<Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query, string timezone);
+        Task<List<Stop>> GetStopsByDescriptionAsync(string description);
 
         /// <summary>
-        /// Gets the stops in the given area.
+        /// Gets the stops by the given level.
         /// </summary>
-        /// <param name="minLon">The minimum longitude.</param>
-        /// <param name="minLat">The minimum latitude.</param>
-        /// <param name="maxLon">The maximum longitude.</param>
-        /// <param name="maxLat">The maximum latitude.</param>
+        /// <param name="id">The id of the level.</param>
         /// <returns>A list of stops.</returns>
-        Task<List<Stop>> GetStopsByLocationAsync(double minLon, double minLat, double maxLon, double maxLat);
+        Task<List<Stop>> GetStopsByLevelAsync(string id);
+
+        /// <summary>
+        /// Gets the stops in the given location.
+        /// </summary>
+        /// <param name="minimumLongitude">The minimum longitude.</param>
+        /// <param name="minimumLatitude">The minimum latitude.</param>
+        /// <param name="maximumLongitude">The maximum longitude.</param>
+        /// <param name="maximumLatitude">The maximum latitude.</param>
+        /// <returns>A list of stops.</returns>
+        Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude);
+
+        /// <summary>
+        /// Gets the stops by the given location type.
+        /// </summary>
+        /// <param name="locationType">The location type.</param>
+        /// <returns>A list of stops.</returns>
+        Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType);
+
+        /// <summary>
+        /// Gets the stops by the given parent station.
+        /// </summary>
+        /// <param name="id">The id of the station.</param>
+        /// <returns>A list of stops.</returns>
+        Task<List<Stop>> GetStopsByParentStationAsync(string id);
+
+        /// <summary>
+        /// Gets the stops by the given platform code.
+        /// </summary>
+        /// <param name="platformCode">The platform code.</param>
+        /// <returns>A list of stops.</returns>
+        Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode);
 
         /// <summary>
         /// Gets the stops by the given query.
@@ -100,5 +152,26 @@ namespace NextDepartures.Standard.Storage
         /// <param name="timezone">The timezone.</param>
         /// <returns>A list of stops.</returns>
         Task<List<Stop>> GetStopsByTimezoneAsync(string timezone);
+
+        /// <summary>
+        /// Gets the stops by the given URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>A list of stops.</returns>
+        Task<List<Stop>> GetStopsByURLAsync(string url);
+
+        /// <summary>
+        /// Gets the stops by the given wheelchair boarding.
+        /// </summary>
+        /// <param name="wheelchairBoarding">The wheelchair boarding.</param>
+        /// <returns>A list of stops.</returns>
+        Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding);
+
+        /// <summary>
+        /// Gets the stops by the given zone.
+        /// </summary>
+        /// <param name="zone">The zone.</param>
+        /// <returns>A list of stops.</returns>
+        Task<List<Stop>> GetStopsByZoneAsync(string zone);
     }
 }

@@ -1,8 +1,12 @@
-﻿using NextDepartures.Standard.Storage;
+﻿using GTFS.Entities;
+using GTFS.Entities.Enumerations;
+using Microsoft.Data.SqlClient;
+using NextDepartures.Standard.Extensions;
+using NextDepartures.Standard.Models;
+using NextDepartures.Standard.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Globalization;
 using System.Threading.Tasks;
 
@@ -61,23 +65,33 @@ namespace NextDepartures.Storage.SqlServer
             return results;
         }
 
-        private Standard.Models.Agency GetAgencyFromDataReader(SqlDataReader dataReader)
+        private Agency GetAgencyFromDataReader(SqlDataReader dataReader)
         {
-            return new Standard.Models.Agency()
+            return new Agency()
             {
-                AgencyID = dataReader.GetValue(0).ToString(),
-                AgencyName = dataReader.GetValue(1).ToString(),
-                AgencyTimezone = dataReader.GetValue(2).ToString()
+                Id = dataReader.IsDBNull(0) ? null : dataReader.GetString(0),
+                Name = dataReader.GetString(1),
+                URL = dataReader.GetString(2),
+                Timezone = dataReader.GetString(3),
+                LanguageCode = dataReader.IsDBNull(4) ? null : dataReader.GetString(4),
+                Phone = dataReader.IsDBNull(5) ? null : dataReader.GetString(5),
+                FareURL = dataReader.IsDBNull(6) ? null : dataReader.GetString(6),
+                Email = dataReader.IsDBNull(7) ? null : dataReader.GetString(7)
             };
         }
 
-        private Standard.Models.Agency GetAgencyFromDataReaderWithSpecialCasing(SqlDataReader dataReader)
+        private Agency GetAgencyFromDataReaderWithSpecialCasing(SqlDataReader dataReader)
         {
-            return new Standard.Models.Agency()
+            return new Agency()
             {
-                AgencyID = dataReader.GetValue(0).ToString(),
-                AgencyName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader.GetValue(1).ToString().ToLower()),
-                AgencyTimezone = dataReader.GetValue(2).ToString()
+                Id = dataReader.IsDBNull(0) ? null : dataReader.GetString(0),
+                Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader.GetString(1).ToLower()),
+                URL = dataReader.GetString(2),
+                Timezone = dataReader.GetString(3),
+                LanguageCode = dataReader.IsDBNull(4) ? null : dataReader.GetString(4),
+                Phone = dataReader.IsDBNull(5) ? null : dataReader.GetString(5),
+                FareURL = dataReader.IsDBNull(6) ? null : dataReader.GetString(6),
+                Email = dataReader.IsDBNull(7) ? null : dataReader.GetString(7)
             };
         }
 
@@ -85,20 +99,49 @@ namespace NextDepartures.Storage.SqlServer
         /// Gets all available agencies.
         /// </summary>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Standard.Models.Agency>> GetAgenciesAsync()
+        public Task<List<Agency>> GetAgenciesAsync()
         {
-            return ExecuteCommand("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency", GetAgencyFromDataReader);
+            return ExecuteCommand("SELECT * FROM Agency", GetAgencyFromDataReader);
         }
 
         /// <summary>
-        /// Gets the agencies by the given query and timezone.
+        /// Gets the agencies by the given email.
         /// </summary>
-        /// <param name="query">The query.</param>
-        /// <param name="timezone">The timezone.</param>
+        /// <param name="email">The email.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Standard.Models.Agency>> GetAgenciesByAllAsync(string query, string timezone)
+        public Task<List<Agency>> GetAgenciesByEmailAsync(string email)
         {
-            return ExecuteCommand(string.Format("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency WHERE (LOWER(AgencyID) LIKE '%{0}%' OR LOWER(AgencyName) LIKE '%{0}%') AND LOWER(AgencyTimezone) LIKE '%{1}%'", query.ToLower(), timezone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(ISNULL(Email, '')) LIKE '%{0}%'", email.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given fare URL.
+        /// </summary>
+        /// <param name="fareURL">The fare URL.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareURL)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(ISNULL(FareURL, '')) LIKE '%{0}%'", fareURL.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given language code.
+        /// </summary>
+        /// <param name="languageCode">The language code.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(ISNULL(LanguageCode, '')) LIKE '%{0}%'", languageCode.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the agencies by the given phone.
+        /// </summary>
+        /// <param name="phone">The phone.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByPhoneAsync(string phone)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(ISNULL(Phone, '')) LIKE '%{0}%'", phone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -106,9 +149,9 @@ namespace NextDepartures.Storage.SqlServer
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Standard.Models.Agency>> GetAgenciesByQueryAsync(string query)
+        public Task<List<Agency>> GetAgenciesByQueryAsync(string query)
         {
-            return ExecuteCommand(string.Format("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency WHERE LOWER(AgencyID) LIKE '%{0}%' OR LOWER(AgencyName) LIKE '%{0}%'", query.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(ISNULL(Id, '')) LIKE '%{0}%' OR LOWER(Name) LIKE '%{0}%'", query.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -116,33 +159,62 @@ namespace NextDepartures.Storage.SqlServer
         /// </summary>
         /// <param name="timezone">The timezone.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Standard.Models.Agency>> GetAgenciesByTimezoneAsync(string timezone)
+        public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
         {
-            return ExecuteCommand(string.Format("SELECT AgencyID, AgencyName, AgencyTimezone FROM Agency WHERE LOWER(AgencyTimezone) LIKE '%{0}%'", timezone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(Timezone) LIKE '%{0}%'", timezone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
         }
 
-        private Standard.Models.Departure GetDepartureFromDataReader(SqlDataReader dataReader)
+        /// <summary>
+        /// Gets the agencies by the given URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>A list of agencies.</returns>
+        public Task<List<Agency>> GetAgenciesByURLAsync(string url)
         {
-            return new Standard.Models.Departure()
+            return ExecuteCommand(string.Format("SELECT * FROM Agency WHERE LOWER(URL) LIKE '%{0}%'", url.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+        }
+
+        private CalendarDate GetCalendarDatesFromDataReader(SqlDataReader dataReader)
+        {
+            return new CalendarDate()
             {
-                DepartureTime = dataReader.GetValue(0).ToString(),
-                StopID = dataReader.GetValue(1).ToString(),
-                ServiceID = dataReader.GetValue(2).ToString(),
-                TripID = dataReader.GetValue(3).ToString(),
-                TripHeadsign = dataReader.GetValue(4).ToString(),
-                TripShortName = dataReader.GetValue(5).ToString(),
-                AgencyID = dataReader.GetValue(6).ToString(),
-                RouteShortName = dataReader.GetValue(7).ToString(),
-                RouteLongName = dataReader.GetValue(8).ToString(),
-                Monday = dataReader.GetValue(9).ToString(),
-                Tuesday = dataReader.GetValue(10).ToString(),
-                Wednesday = dataReader.GetValue(11).ToString(),
-                Thursday = dataReader.GetValue(12).ToString(),
-                Friday = dataReader.GetValue(13).ToString(),
-                Saturday = dataReader.GetValue(14).ToString(),
-                Sunday = dataReader.GetValue(15).ToString(),
-                StartDate = dataReader.GetValue(16).ToString(),
-                EndDate = dataReader.GetValue(17).ToString()
+                ServiceId = dataReader.GetString(0),
+                Date = dataReader.GetDateTime(1),
+                ExceptionType = dataReader.GetInt32(2).ToExceptionType()
+            };
+        }
+
+        /// <summary>
+        /// Gets all available calendar dates.
+        /// </summary>
+        /// <returns>A list of calendar dates.</returns>
+        public Task<List<CalendarDate>> GetCalendarDatesAsync()
+        {
+            return ExecuteCommand("SELECT * FROM CalendarDate", GetCalendarDatesFromDataReader);
+        }
+
+        private Departure GetDepartureFromDataReader(SqlDataReader dataReader)
+        {
+            return new Departure()
+            {
+                DepartureTime = dataReader.IsDBNull(0) ? null : dataReader.GetString(0).ToTimeOfDay(),
+                StopId = dataReader.GetString(1),
+                TripId = dataReader.GetString(2),
+                ServiceId = dataReader.GetString(3),
+                TripHeadsign = dataReader.IsDBNull(4) ? null : dataReader.GetString(4),
+                TripShortName = dataReader.IsDBNull(5) ? null : dataReader.GetString(5),
+                AgencyId = dataReader.IsDBNull(6) ? null : dataReader.GetString(6),
+                RouteShortName = dataReader.IsDBNull(7) ? null : dataReader.GetString(7),
+                RouteLongName = dataReader.IsDBNull(8) ? null : dataReader.GetString(8),
+                Monday = dataReader.GetBoolean(9),
+                Tuesday = dataReader.GetBoolean(10),
+                Wednesday = dataReader.GetBoolean(11),
+                Thursday = dataReader.GetBoolean(12),
+                Friday = dataReader.GetBoolean(13),
+                Saturday = dataReader.GetBoolean(14),
+                Sunday = dataReader.GetBoolean(15),
+                StartDate = dataReader.GetDateTime(16),
+                EndDate = dataReader.GetDateTime(17)
             };
         }
 
@@ -152,9 +224,9 @@ namespace NextDepartures.Storage.SqlServer
         /// <param name="id">The id of the stop.</param>
         /// <remarks>The list should be ordered ascending by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
         /// <returns>A list of departures.</returns>
-        public Task<List<Standard.Models.Departure>> GetDeparturesForStopAsync(string id)
+        public Task<List<Departure>> GetDeparturesForStopAsync(string id)
         {
-            return ExecuteCommand(string.Format("SELECT s.DepartureTime, s.StopID, t.ServiceID, t.TripID, t.TripHeadsign, t.TripShortName, r.AgencyID, r.RouteShortName, r.RouteLongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM StopTime s LEFT JOIN Trip t ON (s.TripID = t.TripID) LEFT JOIN Route r ON (t.RouteID = r.RouteID) LEFT JOIN Calendar c ON (t.ServiceID = c.ServiceID) WHERE LOWER(s.StopID) = '{0}' AND s.PickupType != '1' ORDER BY s.DepartureTime ASC", id.ToLower()), GetDepartureFromDataReader);
+            return ExecuteCommand(string.Format("SELECT s.DepartureTime, s.StopId, t.Id, t.ServiceId, t.Headsign, t.ShortName, r.AgencyId, r.ShortName, r.LongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM StopTime s LEFT JOIN Trip t ON (s.TripId = t.Id) LEFT JOIN Route r ON (t.RouteId = r.Id) LEFT JOIN Calendar c ON (t.ServiceId = c.ServiceId) WHERE LOWER(s.StopId) = '{0}' AND s.PickupType != 1 ORDER BY s.DepartureTime ASC", id.ToLower()), GetDepartureFromDataReader);
         }
 
         /// <summary>
@@ -163,49 +235,50 @@ namespace NextDepartures.Storage.SqlServer
         /// <param name="id">The id of the trip.</param>
         /// <remarks>The list should be ordered ascending by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
         /// <returns>A list of departures.</returns>
-        public Task<List<Standard.Models.Departure>> GetDeparturesForTripAsync(string id)
+        public Task<List<Departure>> GetDeparturesForTripAsync(string id)
         {
-            return ExecuteCommand(string.Format("SELECT s.DepartureTime, s.StopID, t.ServiceID, t.TripID, t.TripHeadsign, t.TripShortName, r.AgencyID, r.RouteShortName, r.RouteLongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM StopTime s LEFT JOIN Trip t ON (s.TripID = t.TripID) LEFT JOIN Route r ON (t.RouteID = r.RouteID) LEFT JOIN Calendar c ON (t.ServiceID = c.ServiceID) WHERE LOWER(s.TripID) = '{0}' AND s.PickupType != '1' ORDER BY s.DepartureTime ASC", id.ToLower()), GetDepartureFromDataReader);
+            return ExecuteCommand(string.Format("SELECT s.DepartureTime, s.StopId, t.Id, t.ServiceId, t.Headsign, t.ShortName, r.AgencyId, r.ShortName, r.LongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM StopTime s LEFT JOIN Trip t ON (s.TripId = t.Id) LEFT JOIN Route r ON (t.RouteId = r.Id) LEFT JOIN Calendar c ON (t.ServiceId = c.ServiceId) WHERE LOWER(s.TripId) = '{0}' AND s.PickupType != 1 ORDER BY s.DepartureTime ASC", id.ToLower()), GetDepartureFromDataReader);
         }
 
-        private Standard.Models.Exception GetExceptionFromDataReader(SqlDataReader dataReader)
+        private Stop GetStopFromDataReader(SqlDataReader dataReader)
         {
-            return new Standard.Models.Exception()
+            return new Stop()
             {
-                Date = dataReader.GetValue(0).ToString(),
-                ExceptionType = dataReader.GetValue(1).ToString(),
-                ServiceID = dataReader.GetValue(2).ToString()
+                Id = dataReader.GetString(0),
+                Code = dataReader.IsDBNull(1) ? null : dataReader.GetString(1),
+                Name = dataReader.IsDBNull(2) ? null : dataReader.GetString(2),
+                Description = dataReader.IsDBNull(3) ? null : dataReader.GetString(3),
+                Latitude = dataReader.GetDouble(4),
+                Longitude = dataReader.GetDouble(5),
+                Zone = dataReader.IsDBNull(6) ? null : dataReader.GetString(6),
+                Url = dataReader.IsDBNull(7) ? null : dataReader.GetString(7),
+                LocationType = dataReader.IsDBNull(8) ? null : dataReader.GetInt32(8).ToLocationType(),
+                ParentStation = dataReader.IsDBNull(9) ? null : dataReader.GetString(9),
+                Timezone = dataReader.IsDBNull(10) ? null : dataReader.GetString(10),
+                WheelchairBoarding = dataReader.IsDBNull(11) ? null : dataReader.GetString(11),
+                LevelId = dataReader.IsDBNull(12) ? null : dataReader.GetString(12),
+                PlatformCode = dataReader.IsDBNull(13) ? null : dataReader.GetString(13)
             };
         }
 
-        /// <summary>
-        /// Gets all available exceptions.
-        /// </summary>
-        /// <returns>A list of exceptions.</returns>
-        public Task<List<Standard.Models.Exception>> GetExceptionsAsync()
+        private Stop GetStopFromDataReaderWithSpecialCasing(SqlDataReader dataReader)
         {
-            return ExecuteCommand("SELECT Date, ExceptionType, ServiceID FROM CalendarDate", GetExceptionFromDataReader);
-        }
-
-        private Standard.Models.Stop GetStopFromDataReader(SqlDataReader dataReader)
-        {
-            return new Standard.Models.Stop()
+            return new Stop()
             {
-                StopID = dataReader.GetValue(0).ToString(),
-                StopCode = dataReader.GetValue(1).ToString(),
-                StopName = dataReader.GetValue(2).ToString(),
-                StopTimezone = dataReader.GetValue(3).ToString()
-            };
-        }
-
-        private Standard.Models.Stop GetStopFromDataReaderWithSpecialCasing(SqlDataReader dataReader)
-        {
-            return new Standard.Models.Stop()
-            {
-                StopID = dataReader.GetValue(0).ToString(),
-                StopCode = dataReader.GetValue(1).ToString(),
-                StopName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader.GetValue(2).ToString().ToLower()),
-                StopTimezone = dataReader.GetValue(3).ToString()
+                Id = dataReader.GetString(0),
+                Code = dataReader.IsDBNull(1) ? null : dataReader.GetString(1),
+                Name = dataReader.IsDBNull(2) ? null : CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader.GetString(2).ToLower()),
+                Description = dataReader.IsDBNull(3) ? null : dataReader.GetString(3),
+                Latitude = dataReader.GetDouble(4),
+                Longitude = dataReader.GetDouble(5),
+                Zone = dataReader.IsDBNull(6) ? null : dataReader.GetString(6),
+                Url = dataReader.IsDBNull(7) ? null : dataReader.GetString(7),
+                LocationType = dataReader.IsDBNull(8) ? null : dataReader.GetInt32(8).ToLocationType(),
+                ParentStation = dataReader.IsDBNull(9) ? null : dataReader.GetString(9),
+                Timezone = dataReader.IsDBNull(10) ? null : dataReader.GetString(10),
+                WheelchairBoarding = dataReader.IsDBNull(11) ? null : dataReader.GetString(11),
+                LevelId = dataReader.IsDBNull(12) ? null : dataReader.GetString(12),
+                PlatformCode = dataReader.IsDBNull(13) ? null : dataReader.GetString(13)
             };
         }
 
@@ -213,37 +286,72 @@ namespace NextDepartures.Storage.SqlServer
         /// Gets all available stops.
         /// </summary>
         /// <returns>A list of stops.</returns>
-        public Task<List<Standard.Models.Stop>> GetStopsAsync()
+        public Task<List<Stop>> GetStopsAsync()
         {
-            return ExecuteCommand("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop", GetStopFromDataReader);
+            return ExecuteCommand("SELECT * FROM Stop", GetStopFromDataReader);
         }
 
         /// <summary>
-        /// Gets the stops by the given area, query and timezone.
+        /// Gets the stops by the given description.
         /// </summary>
-        /// <param name="minLon">The minimum longitude.</param>
-        /// <param name="minLat">The minimum latitude.</param>
-        /// <param name="maxLon">The maximum longitude.</param>
-        /// <param name="maxLat">The maximum latitude.</param>
-        /// <param name="query">The query.</param>
-        /// <param name="timezone">The timezone.</param>
+        /// <param name="description">The description.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Standard.Models.Stop>> GetStopsByAllAsync(double minLon, double minLat, double maxLon, double maxLat, string query, string timezone)
+        public Task<List<Stop>> GetStopsByDescriptionAsync(string description)
         {
-            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (LOWER(StopID) LIKE '%{0}%' OR LOWER(StopCode) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%') AND CAST(StopLat as REAL) >= {1} AND CAST(StopLat as REAL) <= {2} AND CAST(StopLon as REAL) >= {3} AND CAST(StopLon as REAL) <= {4} AND StopLat != '0' AND StopLon != '0' AND LOWER(StopTimezone) LIKE '%{5}%'", query.ToLower(), minLat, maxLat, minLon, maxLon, timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(Description, '')) LIKE '%{0}%'", description.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
-        /// Gets the stops in the given area.
+        /// Gets the stops by the given level.
         /// </summary>
-        /// <param name="minLon">The minimum longitude.</param>
-        /// <param name="minLat">The minimum latitude.</param>
-        /// <param name="maxLon">The maximum longitude.</param>
-        /// <param name="maxLat">The maximum latitude.</param>
+        /// <param name="id">The id of the level.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Standard.Models.Stop>> GetStopsByLocationAsync(double minLon, double minLat, double maxLon, double maxLat)
+        public Task<List<Stop>> GetStopsByLevelAsync(string id)
         {
-            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE CAST(StopLat as REAL) >= {0} AND CAST(StopLat as REAL) <= {1} AND CAST(StopLon as REAL) >= {2} AND CAST(StopLon as REAL) <= {3} AND StopLat != '0' AND StopLon != '0'", minLat, maxLat, minLon, maxLon), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(LevelId, '')) = '{0}'", id.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops in the given location.
+        /// </summary>
+        /// <param name="minimumLongitude">The minimum longitude.</param>
+        /// <param name="minimumLatitude">The minimum latitude.</param>
+        /// <param name="maximumLongitude">The maximum longitude.</param>
+        /// <param name="maximumLatitude">The maximum latitude.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE Latitude >= {0} AND Latitude <= {1} AND Longitude >= {2} AND Longitude <= {3}", minimumLatitude, maximumLatitude, minimumLongitude, maximumLongitude), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given location type.
+        /// </summary>
+        /// <param name="locationType">The location type.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LocationType = {0}", locationType.ToInt32()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given parent station.
+        /// </summary>
+        /// <param name="id">The id of the station.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByParentStationAsync(string id)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(ParentStation, '')) = '{0}'", id.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given platform code.
+        /// </summary>
+        /// <param name="platformCode">The platform code.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(PlatformCode, '')) = '{0}'", platformCode.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -251,9 +359,9 @@ namespace NextDepartures.Storage.SqlServer
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Standard.Models.Stop>> GetStopsByQueryAsync(string query)
+        public Task<List<Stop>> GetStopsByQueryAsync(string query)
         {
-            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE (LOWER(StopID) LIKE '%{0}%' OR LOWER(StopCode) LIKE '%{0}%' OR LOWER(StopName) LIKE '%{0}%') AND StopLat != '0' AND StopLon != '0'", query.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(Id) LIKE '%{0}%' OR LOWER(ISNULL(Code, '')) LIKE '%{0}%' OR LOWER(ISNULL(Name, '')) LIKE '%{0}%'", query.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -261,9 +369,39 @@ namespace NextDepartures.Storage.SqlServer
         /// </summary>
         /// <param name="timezone">The timezone.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Standard.Models.Stop>> GetStopsByTimezoneAsync(string timezone)
+        public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone)
         {
-            return ExecuteCommand(string.Format("SELECT StopID, StopCode, StopName, StopTimezone FROM Stop WHERE StopLat != '0' AND StopLon != '0' AND LOWER(StopTimezone) LIKE '%{0}%'", timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(Timezone, '')) LIKE '%{0}%'", timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByURLAsync(string url)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(Url, '')) LIKE '%{0}%'", url.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given wheelchair boarding.
+        /// </summary>
+        /// <param name="wheelchairBoarding">The wheelchair boarding.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(WheelchairBoarding, '')) = '{0}'", wheelchairBoarding.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+        }
+
+        /// <summary>
+        /// Gets the stops by the given zone.
+        /// </summary>
+        /// <param name="zone">The zone.</param>
+        /// <returns>A list of stops.</returns>
+        public Task<List<Stop>> GetStopsByZoneAsync(string zone)
+        {
+            return ExecuteCommand(string.Format("SELECT * FROM Stop WHERE LOWER(ISNULL(Zone, '')) = '{0}'", zone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
         }
     }
 }

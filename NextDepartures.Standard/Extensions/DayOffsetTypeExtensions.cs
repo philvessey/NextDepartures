@@ -6,7 +6,7 @@ namespace NextDepartures.Standard.Extensions
     {
         public static int GetNumeric(this DayOffsetType dayOffsetType)
         {
-            return (int) dayOffsetType;
+            return (int)dayOffsetType;
         }
     }
 }

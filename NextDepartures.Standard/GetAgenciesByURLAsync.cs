@@ -8,24 +8,24 @@ namespace NextDepartures.Standard
     public partial class Feed
     {
         /// <summary>
-        /// Gets the stops by the given query.
+        /// Gets the agencies by the given URL.
         /// </summary>
-        /// <param name="query">The query.</param>
+        /// <param name="url">The URL.</param>
         /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
-        /// <returns>A list of stops.</returns>
-        public async Task<List<Stop>> GetStopsByQueryAsync(string query, int count = 0)
+        /// <returns>A list of agencies.</returns>
+        public async Task<List<Agency>> GetAgenciesByURLAsync(string url, int count = 0)
         {
             try
             {
-                List<Stop> stopsFromStorage = await _dataStorage.GetStopsByQueryAsync(query);
+                List<Agency> agenciesFromStorage = await _dataStorage.GetAgenciesByURLAsync(url);
 
                 if (count > 0)
                 {
-                    return stopsFromStorage.Take(count).ToList();
+                    return agenciesFromStorage.Take(count).ToList();
                 }
                 else
                 {
-                    return stopsFromStorage;
+                    return agenciesFromStorage;
                 }
             }
             catch
