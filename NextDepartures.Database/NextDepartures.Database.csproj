@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="GTFS" Version="3.0.0-pre001" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.1" />
   </ItemGroup>
 
 </Project>
