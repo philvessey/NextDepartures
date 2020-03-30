@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GTFS" Version="3.0.0-pre001" />
+    <PackageReference Include="GTFS" Version="3.0.0-pre002" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.1" />
   </ItemGroup>
 
