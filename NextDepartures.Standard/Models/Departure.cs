@@ -27,7 +27,7 @@ namespace NextDepartures.Standard.Models
 
         public override string ToString()
         {
-            return string.Format("[{0}] {1}", DepartureTime, ServiceId);
+            return string.Format("[{0}] {1}", DepartureDateTime, ServiceId);
         }
     }
 }
