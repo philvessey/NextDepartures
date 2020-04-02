@@ -34,14 +34,18 @@ namespace NextDepartures.Standard
             {
                 List<Agency> agencies = await _dataStorage.GetAgenciesAsync();
                 List<CalendarDate> calendarDates = await _dataStorage.GetCalendarDatesAsync();
+                List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForTripAsync(id);
                 List<Stop> stops = await _dataStorage.GetStopsAsync();
 
-                List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForTripAsync(id);
+                List<Departure> departuresForTrip = new List<Departure>();
 
-                return new List<Departure>()
+                departuresForTrip.AddRange(new List<Departure>()
                     .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, id))
                     .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, id))
                     .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, id))
+                    );
+
+                return departuresForTrip
                     .Select(d => CreateService(agencies, stops, d))
                     .ToList();
             }

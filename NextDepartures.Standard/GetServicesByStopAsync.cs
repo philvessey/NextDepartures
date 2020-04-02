@@ -36,26 +36,27 @@ namespace NextDepartures.Standard
             {
                 List<Agency> agencies = await _dataStorage.GetAgenciesAsync();
                 List<CalendarDate> calendarDates = await _dataStorage.GetCalendarDatesAsync();
+                List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(id);
                 List<Stop> stops = await _dataStorage.GetStopsAsync();
 
-                List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(id);
+                List<Departure> departuresForStop = new List<Departure>();
+
+                departuresForStop.AddRange(new List<Departure>()
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, id))
+                    );
 
                 if (count > 0)
                 {
-                    return new List<Departure>()
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, id))
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, id))
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, id))
+                    return departuresForStop
                         .Take(count)
                         .Select(d => CreateService(agencies, stops, d))
                         .ToList();
                 }
                 else
                 {
-                    return new List<Departure>()
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, id))
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, id))
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, id))
+                    return departuresForStop
                         .Select(d => CreateService(agencies, stops, d))
                         .ToList();
                 }
