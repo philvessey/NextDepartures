@@ -45,12 +45,8 @@ stages:
         includesymbols: true
         versioningScheme: 'off'
 
-    - task: PublishBuildArtifacts@1
-      displayName: "Publish Build Artifacts"
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'Artifacts'
-        publishLocation: 'Container'
+    - publish: $(Build.ArtifactStagingDirectory)
+      artifact: drop
 
 - stage: Deploy
   displayName: Deploy Stage
@@ -72,6 +68,6 @@ stages:
             displayName: "Push NuGet Packages"
             inputs:
               command: 'push'
-              packagesToPush: '$(Pipeline.Workspace)/Artifacts/*.nupkg;!$(Pipeline.Workspace)/Artifacts/*.symbols.nupkg'
+              packagesToPush: '$(Pipeline.Workspace)/drop/*.nupkg;!$(Pipeline.Workspace)/drop/*.symbols.nupkg'
               nuGetFeedType: 'external'
               publishFeedCredentials: 'NuGet'
