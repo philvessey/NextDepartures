@@ -46,6 +46,7 @@ stages:
         versioningScheme: 'off'
 
     - publish: $(Build.ArtifactStagingDirectory)
+      displayName: "Publish Pipeline Artifact"
       artifact: drop
 
 - stage: Deploy
