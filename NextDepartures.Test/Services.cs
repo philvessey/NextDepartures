@@ -11,6 +11,15 @@ namespace NextDepartures.Test
     public class Services
     {
         [TestMethod]
+        public async Task GetServicesByParentStationAsync()
+        {
+            Feed feed = await Feed.Load(new EmptyStorage());
+            List<Service> results = await feed.GetServicesByParentStationAsync("");
+
+            Assert.IsNotNull(results);
+        }
+
+        [TestMethod]
         public async Task GetServicesByStopAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
