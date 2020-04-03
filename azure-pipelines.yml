@@ -17,13 +17,6 @@ stages:
 
     steps:
     - task: DotNetCoreCLI@2
-      displayName: "Restore Packages"
-      inputs:
-        command: 'restore'
-        projects: '**/*.csproj'
-        feedsToUse: 'select'
-
-    - task: DotNetCoreCLI@2
       displayName: "Build Solution"
       inputs:
         command: 'build'
