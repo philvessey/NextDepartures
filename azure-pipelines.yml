@@ -72,6 +72,6 @@ stages:
             displayName: "Push NuGet Packages"
             inputs:
               command: 'push'
-              packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+              packagesToPush: '$(Pipeline.Workspace)/Artifacts/*.nupkg;!$(Pipeline.Workspace)/Artifacts/*.symbols.nupkg'
               nuGetFeedType: 'external'
               publishFeedCredentials: 'NuGet'
