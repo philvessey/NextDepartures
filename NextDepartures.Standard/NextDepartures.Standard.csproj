@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GTFS" Version="3.0.0-pre002" />
+    <PackageReference Include="GTFS" Version="3.0.0-pre003" />
     <PackageReference Include="NodaTime" Version="2.4.7" />
   </ItemGroup>
 
