@@ -45,7 +45,7 @@ namespace NextDepartures.Standard
         {
             return new Departure()
             {
-                DepartureTime = tempDeparture.DepartureTime,
+                DepartureTime = new TimeOfDay() { Hours = departureDateTime.Hour, Minutes = departureDateTime.Minute, Seconds = departureDateTime.Second },
                 DepartureDateTime = departureDateTime,
                 StopId = tempDeparture.StopId,
                 TripId = tempDeparture.TripId,
