@@ -11,6 +11,7 @@ namespace NextDepartures.Standard.Models
         public TimeOfDay? DepartureTime { get; set; }
         public string DestinationName { get; set; }
         public string RouteName { get; set; }
+        public string StopId { get; set; }
         public string StopName { get; set; }
         public string TripId { get; set; }
         

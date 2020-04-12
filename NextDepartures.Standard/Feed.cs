@@ -100,6 +100,7 @@ namespace NextDepartures.Standard
                 DepartureTime = departure.DepartureTime,
                 DestinationName = destinationName,
                 RouteName = routeName,
+                StopId = departure.StopId,
                 StopName = stopName,
                 TripId = departure.TripId
             };
