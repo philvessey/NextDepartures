@@ -94,11 +94,13 @@ namespace NextDepartures.Standard
 
             return new Service()
             {
+                AgencyId = departure.AgencyId,
                 AgencyName = agencyName,
                 DepartureDateTime = departure.DepartureDateTime,
                 DepartureTime = departure.DepartureTime,
                 DestinationName = destinationName,
                 RouteName = routeName,
+                StopId = departure.StopId,
                 StopName = stopName,
                 TripId = departure.TripId
             };
