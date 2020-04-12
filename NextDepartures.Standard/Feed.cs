@@ -94,6 +94,7 @@ namespace NextDepartures.Standard
 
             return new Service()
             {
+                AgencyId = departure.AgencyId,
                 AgencyName = agencyName,
                 DepartureDateTime = departure.DepartureDateTime,
                 DepartureTime = departure.DepartureTime,

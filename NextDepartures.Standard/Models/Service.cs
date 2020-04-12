@@ -5,6 +5,7 @@ namespace NextDepartures.Standard.Models
 {
     public class Service
     {
+        public string AgencyId { get; set; }
         public string AgencyName { get; set; }
         public DateTime DepartureDateTime { get; set; }
         public TimeOfDay? DepartureTime { get; set; }
