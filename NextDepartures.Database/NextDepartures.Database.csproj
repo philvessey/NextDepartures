@@ -9,5 +9,9 @@
     <PackageReference Include="GTFS" Version="3.0.0-pre003" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.1" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
 
 </Project>
