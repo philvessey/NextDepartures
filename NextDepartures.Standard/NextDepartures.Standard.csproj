@@ -11,12 +11,19 @@
     <Product>NextDepartures.Standard</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.5</Version>
+    <Version>2.0.6</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GTFS" Version="3.0.0-pre003" />
+    <PackageReference Include="GTFS" Version="3.0.0-pre004" />
     <PackageReference Include="NodaTime" Version="2.4.7" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Models\" />
+    <Folder Include="Storage\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 
 </Project>

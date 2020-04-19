@@ -1,8 +1,5 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29001.49
-MinimumVisualStudioVersion = 10.0.40219.1
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDepartures.Database", "NextDepartures.Database\NextDepartures.Database.csproj", "{2FAD17C6-5687-42C8-98B2-A0FBB5223873}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDepartures.Standard", "NextDepartures.Standard\NextDepartures.Standard.csproj", "{2605B71D-3B48-4915-B87B-B270CDB89339}"
