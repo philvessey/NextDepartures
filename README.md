@@ -32,7 +32,7 @@ Feed feed = await Feed.Load(GTFSStorage.Load([path]));
 Feed feed = await Feed.Load(SqlServerStorage.Load([database]));
 ```
 
-If you are working with a UNIX based system and using the NextDepartures.Storage.SqlServer library you may need to include the following setting in your database connection string:
+* If you are working with a UNIX based system and using the NextDepartures.Storage.SqlServer library you may need to include the following setting in your database connection string:
 
 ```
 MultipleActiveResultSets=True;
