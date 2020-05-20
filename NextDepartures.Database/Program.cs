@@ -1,32 +1,51 @@
-﻿using GTFS;
+﻿using CommandLine;
+using CommandLine.Text;
+using GTFS;
 using Microsoft.Data.SqlClient;
 using NextDepartures.Database.Extensions;
+using NextDepartures.Database.Models;
 using System;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace NextDepartures.Database
 {
     internal class Program
     {
-        static void Main(string[] args) => new Program().RunAsync(args).GetAwaiter().GetResult();
+        static void Main(string[] args) => new Program().ParseAsync(args).GetAwaiter().GetResult();
 
-        public async Task RunAsync(string[] args)
+        public async Task ParseAsync(string[] args)
         {
+            Console.WriteLine("");
+
+            await Parser.Default.ParseArguments<Option>(args).WithParsedAsync(RunAsync);
+        }
+
+        private async Task RunAsync(Option option)
+        {
+            Console.WriteLine(HeadingInfo.Default);
+            Console.WriteLine(CopyrightInfo.Default);
             Console.WriteLine("");
 
             try
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(args[0]);
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(option.Database);
             }
             catch (Exception exception)
             {
                 Console.Error.WriteLine(string.Format("Connection string invalid. Error: {0}", exception.Message));
+
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    Console.WriteLine("");
+                }
+
                 Environment.Exit(1);
             }
 
-            using (SqlConnection connection = new SqlConnection(args[0]))
+            using (SqlConnection connection = new SqlConnection(option.Database))
             {
                 try
                 {
@@ -35,6 +54,12 @@ namespace NextDepartures.Database
                 catch (SqlException exception)
                 {
                     Console.Error.WriteLine(string.Format("Could not connect to database. Error: {0}", exception.Message));
+
+                    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        Console.WriteLine("");
+                    }
+
                     Environment.Exit(1);
                 }
 
@@ -126,7 +151,7 @@ namespace NextDepartures.Database
                 Console.WriteLine("CREATE: tables");
 
                 GTFSReader<GTFSFeed> reader = new GTFSReader<GTFSFeed>();
-                GTFSFeed feed = reader.Read(args[1]);
+                GTFSFeed feed = reader.Read(option.Path);
 
                 DataTable agency = new DataTable();
                 agency.Columns.Add("Id", typeof(string));
@@ -320,6 +345,11 @@ namespace NextDepartures.Database
                 await connection.ExecuteCommandAsync("CREATE NONCLUSTERED INDEX StopTimeIndexTrip ON StopTime (TripId, PickupType) INCLUDE (ArrivalTime, DepartureTime, StopId, StopSequence, StopHeadsign, DropOffType, ShapeDistTravelled, TimepointType) WITH (ONLINE = ON)");
 
                 Console.WriteLine("CREATE: indexes");
+
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    Console.WriteLine("");
+                }
             }
         }
     }
