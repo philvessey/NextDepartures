@@ -7,7 +7,6 @@ using NextDepartures.Database.Models;
 using System;
 using System.Data;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace NextDepartures.Database
@@ -19,8 +18,8 @@ namespace NextDepartures.Database
         public async Task ParseAsync(string[] args)
         {
             Console.WriteLine("");
-
             await Parser.Default.ParseArguments<Option>(args).WithParsedAsync(RunAsync);
+            Console.WriteLine("");
         }
 
         private async Task RunAsync(Option option)
@@ -36,11 +35,7 @@ namespace NextDepartures.Database
             catch (Exception exception)
             {
                 Console.Error.WriteLine(string.Format("Connection string invalid. Error: {0}", exception.Message));
-
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    Console.WriteLine("");
-                }
+                Console.WriteLine("");
 
                 Environment.Exit(1);
             }
@@ -54,11 +49,7 @@ namespace NextDepartures.Database
                 catch (SqlException exception)
                 {
                     Console.Error.WriteLine(string.Format("Could not connect to database. Error: {0}", exception.Message));
-
-                    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        Console.WriteLine("");
-                    }
+                    Console.WriteLine("");
 
                     Environment.Exit(1);
                 }
@@ -345,11 +336,6 @@ namespace NextDepartures.Database
                 await connection.ExecuteCommandAsync("CREATE NONCLUSTERED INDEX StopTimeIndexTrip ON StopTime (TripId, PickupType) INCLUDE (ArrivalTime, DepartureTime, StopId, StopSequence, StopHeadsign, DropOffType, ShapeDistTravelled, TimepointType) WITH (ONLINE = ON)");
 
                 Console.WriteLine("CREATE: indexes");
-
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    Console.WriteLine("");
-                }
             }
         }
     }
