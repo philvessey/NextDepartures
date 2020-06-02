@@ -1,3 +1,5 @@
+name: '2.1.0'
+
 trigger:
 - master
 
@@ -65,3 +67,14 @@ stages:
               packagesToPush: '$(Pipeline.Workspace)/drop/*.nupkg;!$(Pipeline.Workspace)/drop/*.symbols.nupkg'
               nuGetFeedType: 'external'
               publishFeedCredentials: 'NuGet'
+
+          - task: GitHubRelease@1
+            displayName: 'Publish GitHub Release'
+            inputs:
+              gitHubConnection: 'GitHub'
+              repositoryName: 'philvessey/NextDepartures'
+              tagSource: 'userSpecifiedTag'
+              tag: '$(Build.BuildNumber)'  
+              title: '$(Build.BuildNumber)'
+              changeLogCompareToRelease: 'lastNonDraftRelease'
+              isDraft: true
