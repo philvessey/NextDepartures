@@ -1,3 +1,5 @@
+name: '2.1.0'
+
 trigger:
 - master
 
@@ -7,51 +9,51 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build Stage
+  displayName: 'Build Stage'
 
   jobs:
   - job: Build
-    displayName: Build
+    displayName: 'Build'
     pool:
-      vmImage: $(vmImageName)
+      vmImage: '$(vmImageName)'
 
     steps:
     - task: DotNetCoreCLI@2
-      displayName: "Build Solution"
+      displayName: 'Build Solution'
       inputs:
         command: 'build'
         projects: '**/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
 
     - task: DotNetCoreCLI@2
-      displayName: "Run Tests"
+      displayName: 'Run Tests'
       inputs:
-        command: test
+        command: 'test'
         projects: '**/NextDepartures.Test/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
 
     - task: DotNetCoreCLI@2
-      displayName: "Pack NuGet Packages"
+      displayName: 'Pack NuGet Packages'
       inputs:
         command: 'pack'
         packagesToPack: '**/NextDepartures.Standard/*.csproj;**/NextDepartures.Storage.GTFS/*.csproj;**/NextDepartures.Storage.SqlServer/*.csproj'
         includesymbols: true
         versioningScheme: 'off'
 
-    - publish: $(Build.ArtifactStagingDirectory)
-      displayName: "Publish Pipeline Artifact"
-      artifact: drop
+    - publish: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Publish Pipeline Artifact'
+      artifact: 'drop'
 
 - stage: Deploy
-  displayName: Deploy Stage
+  displayName: 'Deploy Stage'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   jobs:
   - deployment: Deploy
-    displayName: Deploy
+    displayName: 'Deploy'
     environment: 'development'
     pool:
-      vmImage: $(vmImageName)
+      vmImage: '$(vmImageName)'
 
     strategy:
       runOnce:
@@ -59,9 +61,20 @@ stages:
 
           steps:
           - task: NuGetCommand@2
-            displayName: "Push NuGet Packages"
+            displayName: 'Push NuGet Packages'
             inputs:
               command: 'push'
               packagesToPush: '$(Pipeline.Workspace)/drop/*.nupkg;!$(Pipeline.Workspace)/drop/*.symbols.nupkg'
               nuGetFeedType: 'external'
               publishFeedCredentials: 'NuGet'
+
+          - task: GitHubRelease@1
+            displayName: 'Publish GitHub Release'
+            inputs:
+              gitHubConnection: 'GitHub'
+              repositoryName: 'philvessey/NextDepartures'
+              tagSource: 'userSpecifiedTag'
+              tag: '$(Build.BuildNumber)'  
+              title: '$(Build.BuildNumber)'
+              changeLogCompareToRelease: 'lastNonDraftRelease'
+              isDraft: true

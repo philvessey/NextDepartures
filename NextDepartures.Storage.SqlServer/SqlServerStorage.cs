@@ -41,26 +41,24 @@ namespace NextDepartures.Storage.SqlServer
         {
             List<T> results = new List<T>();
 
-            using (SqlConnection connection = new SqlConnection(_connection))
+            using SqlConnection connection = new SqlConnection(_connection);
+            connection.Open();
+
+            SqlCommand command = new SqlCommand(sql, connection)
             {
-                connection.Open();
+                CommandTimeout = 0,
+                CommandType = CommandType.Text
+            };
 
-                SqlCommand command = new SqlCommand(sql, connection)
-                {
-                    CommandTimeout = 0,
-                    CommandType = CommandType.Text
-                };
+            SqlDataReader dataReader = await command.ExecuteReaderAsync();
 
-                SqlDataReader dataReader = await command.ExecuteReaderAsync();
-
-                while (await dataReader.ReadAsync())
-                {
-                    results.Add(entryProcessor(dataReader));
-                }
-
-                dataReader.Close();
-                command.Dispose();
+            while (await dataReader.ReadAsync())
+            {
+                results.Add(entryProcessor(dataReader));
             }
+
+            dataReader.Close();
+            command.Dispose();
 
             return results;
         }
