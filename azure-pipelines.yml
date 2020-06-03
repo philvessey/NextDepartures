@@ -75,7 +75,7 @@ stages:
               gitHubConnection: 'GitHub'
               repositoryName: 'philvessey/NextDepartures'
               tagSource: 'userSpecifiedTag'
-              tag: '$(tagPrefix)$(Build.BuildNumber)'  
+              tag: '$(tagPrefix)$(Build.BuildNumber)'
               title: '$(tagPrefix)$(Build.BuildNumber)'
               changeLogCompareToRelease: 'lastNonDraftRelease'
               isDraft: true
