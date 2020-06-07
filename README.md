@@ -38,6 +38,50 @@ Feed feed = await Feed.Load(SqlServerStorage.Load([database]));
 MultipleActiveResultSets=True;
 ```
 
+## Endpoints
+
+```csharp
+using NextDepartures.Standard;
+using NextDepartures.Storage.GTFS;
+using NextDepartures.Storage.SqlServer;
+
+List<Agency> results = await feed.GetAgenciesByEmailAsync();
+List<Agency> results = await feed.GetAgenciesByFareURLAsync();
+List<Agency> results = await feed.GetAgenciesByLanguageCodeAsync();
+List<Agency> results = await feed.GetAgenciesByPhoneAsync();
+List<Agency> results = await feed.GetAgenciesByQueryAsync();
+List<Agency> results = await feed.GetAgenciesByTimezoneAsync();
+List<Agency> results = await feed.GetAgenciesByURLAsync();
+```
+
+```csharp
+using NextDepartures.Standard;
+using NextDepartures.Storage.GTFS;
+using NextDepartures.Storage.SqlServer;
+
+List<Service> results = await feed.GetServicesByParentStationAsync();
+List<Service> results = await feed.GetServicesByStopAsync();
+List<Service> results = await feed.GetServicesByTripAsync();
+```
+
+```csharp
+using NextDepartures.Standard;
+using NextDepartures.Storage.GTFS;
+using NextDepartures.Storage.SqlServer;
+
+List<Stop> results = await feed.GetStopsByDescriptionAsync();
+List<Stop> results = await feed.GetStopsByLevelAsync();
+List<Stop> results = await feed.GetStopsByLocationAsync();
+List<Stop> results = await feed.GetStopsByLocationTypeAsync();
+List<Stop> results = await feed.GetStopsByParentStationAsync();
+List<Stop> results = await feed.GetStopsByPlatformCodeAsync();
+List<Stop> results = await feed.GetStopsByQueryAsync();
+List<Stop> results = await feed.GetStopsByTimezoneAsync();
+List<Stop> results = await feed.GetStopsByURLAsync();
+List<Stop> results = await feed.GetStopsByWheelchairBoardingAsync();
+List<Stop> results = await feed.GetStopsByZoneAsync();
+```
+
 ## License
 
 Licensed under the [MIT License](./LICENSE).
