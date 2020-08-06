@@ -1,10 +1,11 @@
-name: '2.1.0'
+name: '2.1.1'
 
 trigger:
 - master
 
 variables:
   buildConfiguration: 'release'
+  tagPrefix: 'v'
   vmImageName: 'windows-latest'
 
 stages:
@@ -74,7 +75,7 @@ stages:
               gitHubConnection: 'GitHub'
               repositoryName: 'philvessey/NextDepartures'
               tagSource: 'userSpecifiedTag'
-              tag: '$(Build.BuildNumber)'  
-              title: '$(Build.BuildNumber)'
+              tag: '$(tagPrefix)$(Build.BuildNumber)'
+              title: '$(tagPrefix)$(Build.BuildNumber)'
               changeLogCompareToRelease: 'lastNonDraftRelease'
               isDraft: true
