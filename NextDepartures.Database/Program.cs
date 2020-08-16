@@ -142,7 +142,7 @@ namespace NextDepartures.Database
             Console.WriteLine("CREATE: tables");
 
             GTFSReader<GTFSFeed> reader = new GTFSReader<GTFSFeed>();
-            GTFSFeed feed = reader.Read(option.Path);
+            GTFSFeed feed = reader.Read(option.Gtfs);
 
             DataTable agency = new DataTable();
             agency.Columns.Add("Id", typeof(string));

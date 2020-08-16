@@ -7,7 +7,7 @@ namespace NextDepartures.Database.Models
         [Option('d', "database", Required = true, HelpText = "Database connection string.")]
         public string Database { get; set; }
 
-        [Option('p', "path", Required = true, HelpText = "Path to GTFS data set .zip or directory.")]
-        public string Path { get; set; }
+        [Option('g', "gtfs", Required = true, HelpText = "Path to GTFS data set .zip or directory.")]
+        public string Gtfs { get; set; }
     }
 }
