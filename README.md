@@ -17,11 +17,11 @@ Ensure you already have:
 ## Usage
 
 ```
-NextDepartures.Database > dotnet run -d [database] -p [path]
+NextDepartures.Database > dotnet run -d [--database] -g [--gtfs]
 ```
 
 * [database] > Database connection string. Required.
-* [path] > Path to GTFS data set .zip or directory. Required.
+* [gtfs] > Path to GTFS data set .zip or directory. Required.
 
 ```csharp
 using NextDepartures.Standard;
