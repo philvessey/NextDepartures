@@ -9,25 +9,25 @@ variables:
   vmImageName: 'windows-latest'
 
 stages:
-- stage: Build
-  displayName: 'Build Stage'
+- stage: 'Build Solution'
+  displayName: 'Build Solution Stage'
 
   jobs:
-  - job: Build
-    displayName: 'Build Job'
+  - job: 'Build Solution'
+    displayName: 'Build Solution Job'
     pool:
       vmImage: '$(vmImageName)'
 
     steps:
     - task: DotNetCoreCLI@2
-      displayName: 'Build Solution'
+      displayName: 'Build All Projects'
       inputs:
         command: 'build'
         projects: '**/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
 
     - task: DotNetCoreCLI@2
-      displayName: 'Run Tests'
+      displayName: 'Run All Tests'
       inputs:
         command: 'test'
         projects: '**/NextDepartures.Test/*.csproj'
@@ -45,13 +45,13 @@ stages:
       displayName: 'Publish Pipeline Artifact'
       artifact: 'drop'
 
-- stage: Deploy
-  displayName: 'Deploy Stage'
+- stage: 'Deploy Packages'
+  displayName: 'Deploy Packages Stage'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   jobs:
-  - deployment: Deploy
-    displayName: 'Deploy Job'
+  - deployment: 'Deploy Packages'
+    displayName: 'Deploy Packages Job'
     environment: 'development'
     pool:
       vmImage: '$(vmImageName)'
