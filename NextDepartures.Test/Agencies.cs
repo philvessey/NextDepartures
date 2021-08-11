@@ -14,7 +14,7 @@ namespace NextDepartures.Test
         public async Task GetAgenciesByEmailAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByEmailAsync("");
+            List<Agency> results = await feed.GetAgenciesByEmailAsync();
 
             Assert.IsNotNull(results);
         }
@@ -23,7 +23,7 @@ namespace NextDepartures.Test
         public async Task GetAgenciesByFareURLAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByFareURLAsync("");
+            List<Agency> results = await feed.GetAgenciesByFareURLAsync();
 
             Assert.IsNotNull(results);
         }
@@ -32,7 +32,7 @@ namespace NextDepartures.Test
         public async Task GetAgenciesByLanguageCodeAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByLanguageCodeAsync("");
+            List<Agency> results = await feed.GetAgenciesByLanguageCodeAsync();
 
             Assert.IsNotNull(results);
         }
@@ -41,7 +41,7 @@ namespace NextDepartures.Test
         public async Task GetAgenciesByPhoneAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByPhoneAsync("");
+            List<Agency> results = await feed.GetAgenciesByPhoneAsync();
 
             Assert.IsNotNull(results);
         }
@@ -50,7 +50,7 @@ namespace NextDepartures.Test
         public async Task GetAgenciesByQueryAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByQueryAsync("");
+            List<Agency> results = await feed.GetAgenciesByQueryAsync();
 
             Assert.IsNotNull(results);
         }
@@ -59,7 +59,7 @@ namespace NextDepartures.Test
         public async Task GetAgenciesByTimezoneAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByTimezoneAsync("");
+            List<Agency> results = await feed.GetAgenciesByTimezoneAsync();
 
             Assert.IsNotNull(results);
         }
@@ -68,7 +68,7 @@ namespace NextDepartures.Test
         public async Task GetAgenciesByURLAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Agency> results = await feed.GetAgenciesByURLAsync("");
+            List<Agency> results = await feed.GetAgenciesByURLAsync();
 
             Assert.IsNotNull(results);
         }

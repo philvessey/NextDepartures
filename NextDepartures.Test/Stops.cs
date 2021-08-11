@@ -1,5 +1,4 @@
 using GTFS.Entities;
-using GTFS.Entities.Enumerations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
 using NextDepartures.Test.Mocks;
@@ -15,7 +14,7 @@ namespace NextDepartures.Test
         public async Task GetStopsByDescriptionAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByDescriptionAsync("");
+            List<Stop> results = await feed.GetStopsByDescriptionAsync();
 
             Assert.IsNotNull(results);
         }
@@ -24,7 +23,7 @@ namespace NextDepartures.Test
         public async Task GetStopsByLevelAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByLevelAsync("");
+            List<Stop> results = await feed.GetStopsByLevelAsync();
 
             Assert.IsNotNull(results);
         }
@@ -33,7 +32,7 @@ namespace NextDepartures.Test
         public async Task GetStopsByLocationAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByLocationAsync(0, 0, 0, 0);
+            List<Stop> results = await feed.GetStopsByLocationAsync();
 
             Assert.IsNotNull(results);
         }
@@ -42,7 +41,7 @@ namespace NextDepartures.Test
         public async Task GetStopsByLocationTypeAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByLocationTypeAsync(LocationType.Stop);
+            List<Stop> results = await feed.GetStopsByLocationTypeAsync();
 
             Assert.IsNotNull(results);
         }
@@ -51,7 +50,7 @@ namespace NextDepartures.Test
         public async Task GetStopsByParentStationAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByParentStationAsync("");
+            List<Stop> results = await feed.GetStopsByParentStationAsync();
 
             Assert.IsNotNull(results);
         }
@@ -60,7 +59,7 @@ namespace NextDepartures.Test
         public async Task GetStopsByPlatformCodeAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByPlatformCodeAsync("");
+            List<Stop> results = await feed.GetStopsByPlatformCodeAsync();
 
             Assert.IsNotNull(results);
         }
@@ -69,7 +68,7 @@ namespace NextDepartures.Test
         public async Task GetStopsByQueryAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByQueryAsync("");
+            List<Stop> results = await feed.GetStopsByQueryAsync();
 
             Assert.IsNotNull(results);
         }
@@ -78,7 +77,7 @@ namespace NextDepartures.Test
         public async Task GetStopsByTimezoneAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByTimezoneAsync("");
+            List<Stop> results = await feed.GetStopsByTimezoneAsync();
 
             Assert.IsNotNull(results);
         }
@@ -87,7 +86,7 @@ namespace NextDepartures.Test
         public async Task GetStopsByURLAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByURLAsync("");
+            List<Stop> results = await feed.GetStopsByURLAsync();
 
             Assert.IsNotNull(results);
         }
@@ -96,7 +95,7 @@ namespace NextDepartures.Test
         public async Task GetStopsByWheelchairBoardingAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByWheelchairBoardingAsync("");
+            List<Stop> results = await feed.GetStopsByWheelchairBoardingAsync();
 
             Assert.IsNotNull(results);
         }
@@ -105,7 +104,7 @@ namespace NextDepartures.Test
         public async Task GetStopsByZoneAsync()
         {
             Feed feed = await Feed.Load(new EmptyStorage());
-            List<Stop> results = await feed.GetStopsByZoneAsync("");
+            List<Stop> results = await feed.GetStopsByZoneAsync();
 
             Assert.IsNotNull(results);
         }

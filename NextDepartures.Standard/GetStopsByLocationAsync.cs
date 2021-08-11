@@ -10,13 +10,13 @@ namespace NextDepartures.Standard
         /// <summary>
         /// Gets the stops in the given location.
         /// </summary>
-        /// <param name="minimumLongitude">The minimum longitude.</param>
-        /// <param name="minimumLatitude">The minimum latitude.</param>
-        /// <param name="maximumLongitude">The maximum longitude.</param>
-        /// <param name="maximumLatitude">The maximum latitude.</param>
+        /// <param name="minimumLongitude">The minimum longitude. Default is -180 but can be overridden.</param>
+        /// <param name="minimumLatitude">The minimum latitude. Default is -90 but can be overridden.</param>
+        /// <param name="maximumLongitude">The maximum longitude. Default is 180 but can be overridden.</param>
+        /// <param name="maximumLatitude">The maximum latitude. Default is 90 but can be overridden.</param>
         /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of stops.</returns>
-        public async Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude, int count = 0)
+        public async Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude = -180, double minimumLatitude = -90, double maximumLongitude = 180, double maximumLatitude = 90, int count = 0)
         {
             try
             {
