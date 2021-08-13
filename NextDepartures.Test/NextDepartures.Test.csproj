@@ -24,7 +24,14 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Folder Include="Data\" />
     <Folder Include="Mocks\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\gtfs.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
