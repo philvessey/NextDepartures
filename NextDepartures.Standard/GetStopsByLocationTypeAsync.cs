@@ -11,10 +11,10 @@ namespace NextDepartures.Standard
         /// <summary>
         /// Gets the stops by the given location type.
         /// </summary>
-        /// <param name="locationType">The location type.</param>
-        /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
+        /// <param name="locationType">The location type. Default is LocationType.Stop but can be overridden.</param>
+        /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of stops.</returns>
-        public async Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType, int count = 0)
+        public async Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType = LocationType.Stop, int count = 0)
         {
             try
             {

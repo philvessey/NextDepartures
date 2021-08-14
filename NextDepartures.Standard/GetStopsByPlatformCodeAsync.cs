@@ -10,10 +10,10 @@ namespace NextDepartures.Standard
         /// <summary>
         /// Gets the stops by the given platform code.
         /// </summary>
-        /// <param name="platformCode">The platform code.</param>
-        /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
+        /// <param name="platformCode">The platform code. Default is all but can be overridden.</param>
+        /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of stops.</returns>
-        public async Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode, int count = 0)
+        public async Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode = "", int count = 0)
         {
             try
             {

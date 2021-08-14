@@ -10,10 +10,10 @@ namespace NextDepartures.Standard
         /// <summary>
         /// Gets the agencies by the given URL.
         /// </summary>
-        /// <param name="url">The URL.</param>
-        /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
+        /// <param name="url">The URL. Default is all but can be overridden.</param>
+        /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of agencies.</returns>
-        public async Task<List<Agency>> GetAgenciesByURLAsync(string url, int count = 0)
+        public async Task<List<Agency>> GetAgenciesByURLAsync(string url = "", int count = 0)
         {
             try
             {
