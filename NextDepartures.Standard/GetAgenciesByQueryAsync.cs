@@ -11,7 +11,7 @@ namespace NextDepartures.Standard
         /// Gets the agencies by the given query.
         /// </summary>
         /// <param name="query">The query. Default is all but can be overridden.</param>
-        /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
+        /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of agencies.</returns>
         public async Task<List<Agency>> GetAgenciesByQueryAsync(string query = "", int count = 0)
         {

@@ -34,7 +34,7 @@ namespace NextDepartures.Test
         {
             Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
             List<Service> resultsByStop = await feed.GetServicesByStopAsync("370040413", new DateTime(2021, 8, 12, 12, 0, 0));
-            List<Service> resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop[0].TripId);
+            List<Service> resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop[0].TripId, new DateTime(2021, 8, 12, 12, 0, 0));
 
             Assert.IsNotNull(resultsByTrip);
         }

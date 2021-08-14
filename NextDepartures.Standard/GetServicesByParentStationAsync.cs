@@ -14,11 +14,12 @@ namespace NextDepartures.Standard
         /// Gets the services for a parent station.
         /// </summary>
         /// <param name="id">The id of the parent station.</param>
-        /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is 2 but can be overridden.</param>
+        /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public Task<List<Service>> GetServicesByParentStationAsync(string id, int count = 0)
+        public Task<List<Service>> GetServicesByParentStationAsync(string id, int hours = 2, int count = 0)
         {
-            return GetServicesByParentStationAsync(id, DateTime.Now, count);
+            return GetServicesByParentStationAsync(id, DateTime.Now, hours, count);
         }
 
         /// <summary>
@@ -26,29 +27,28 @@ namespace NextDepartures.Standard
         /// </summary>
         /// <param name="id">The id of the parent station.</param>
         /// <param name="now">The DateTime target to search from.</param>
-        /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is 2 but can be overridden.</param>
+        /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public async Task<List<Service>> GetServicesByParentStationAsync(string id, DateTime now, int count = 0)
+        public async Task<List<Service>> GetServicesByParentStationAsync(string id, DateTime now, int hours = 2, int count = 0)
         {
-            const int ToleranceInHours = 12;
-
             try
             {
                 List<Agency> agencies = await _dataStorage.GetAgenciesAsync();
                 List<CalendarDate> calendarDates = await _dataStorage.GetCalendarDatesAsync();
                 List<Stop> stops = await _dataStorage.GetStopsAsync();
-                List<Stop> stopsByParentStation = await _dataStorage.GetStopsByParentStationAsync(id);
+                List<Stop> station = await _dataStorage.GetStopsByParentStationAsync(id);
 
                 List<Departure> departuresForStation = new List<Departure>();
 
-                foreach (Stop stop in stopsByParentStation)
+                foreach (Stop stop in station)
                 {
                     List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(stop.Id);
 
                     departuresForStation.AddRange(new List<Departure>()
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, stop.Id))
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, stop.Id))
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, stop.Id))
+                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, hours, stop.Id))
+                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, hours, stop.Id))
+                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, hours, stop.Id))
                         );
                 }
 
@@ -77,25 +77,25 @@ namespace NextDepartures.Standard
         /// <summary>
         /// Gets the services for a parent station.
         /// </summary>
-        /// <param name="stopsByParentStation">A list of stops to group as a parent station.</param>
-        /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
+        /// <param name="station">A list of stops to group as a parent station.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is 2 but can be overridden.</param>
+        /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public Task<List<Service>> GetServicesByParentStationAsync(List<Stop> stopsByParentStation, int count = 0)
+        public Task<List<Service>> GetServicesByParentStationAsync(List<Stop> station, int hours = 2, int count = 0)
         {
-            return GetServicesByParentStationAsync(stopsByParentStation, DateTime.Now, count);
+            return GetServicesByParentStationAsync(station, DateTime.Now, hours, count);
         }
 
         /// <summary>
         /// Gets the services for a parent station.
         /// </summary>
-        /// <param name="stopsByParentStation">A list of stops to group as a parent station.</param>
+        /// <param name="station">A list of stops to group as a parent station.</param>
         /// <param name="now">The DateTime target to search from.</param>
-        /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is 2 but can be overridden.</param>
+        /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public async Task<List<Service>> GetServicesByParentStationAsync(List<Stop> stopsByParentStation, DateTime now, int count = 0)
+        public async Task<List<Service>> GetServicesByParentStationAsync(List<Stop> station, DateTime now, int hours = 2, int count = 0)
         {
-            const int ToleranceInHours = 12;
-
             try
             {
                 List<Agency> agencies = await _dataStorage.GetAgenciesAsync();
@@ -104,14 +104,14 @@ namespace NextDepartures.Standard
 
                 List<Departure> departuresForStation = new List<Departure>();
 
-                foreach (Stop stop in stopsByParentStation)
+                foreach (Stop stop in station)
                 {
                     List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(stop.Id);
 
                     departuresForStation.AddRange(new List<Departure>()
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, ToleranceInHours, stop.Id))
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, ToleranceInHours, stop.Id))
-                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, ToleranceInHours, stop.Id))
+                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, hours, stop.Id))
+                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, hours, stop.Id))
+                        .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, hours, stop.Id))
                         );
                 }
 

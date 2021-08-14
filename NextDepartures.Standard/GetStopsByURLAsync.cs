@@ -11,7 +11,7 @@ namespace NextDepartures.Standard
         /// Gets the stops by the given URL.
         /// </summary>
         /// <param name="url">The URL. Default is all but can be overridden.</param>
-        /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
+        /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of stops.</returns>
         public async Task<List<Stop>> GetStopsByURLAsync(string url = "", int count = 0)
         {

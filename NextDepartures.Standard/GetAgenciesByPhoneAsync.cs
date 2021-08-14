@@ -11,7 +11,7 @@ namespace NextDepartures.Standard
         /// Gets the agencies by the given phone.
         /// </summary>
         /// <param name="phone">The phone. Default is all but can be overridden.</param>
-        /// <param name="count">The number of results to return. Default is all (0) but can be overridden.</param>
+        /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of agencies.</returns>
         public async Task<List<Agency>> GetAgenciesByPhoneAsync(string phone = "", int count = 0)
         {
