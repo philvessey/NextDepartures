@@ -44,7 +44,7 @@ namespace NextDepartures.Database
 
             try
             {
-                connection.Open();
+                await connection.OpenAsync();
             }
             catch (SqlException exception)
             {
