@@ -14,10 +14,10 @@ namespace NextDepartures.Standard
         /// Gets the services for a parent station.
         /// </summary>
         /// <param name="id">The id of the parent station.</param>
-        /// <param name="hours">The maximum number of hours to search over. Default is 2 but can be overridden.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is 12 but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public Task<List<Service>> GetServicesByParentStationAsync(string id, int hours = 2, int count = 0)
+        public Task<List<Service>> GetServicesByParentStationAsync(string id, int hours = 12, int count = 0)
         {
             return GetServicesByParentStationAsync(id, DateTime.Now, hours, count);
         }
@@ -27,10 +27,10 @@ namespace NextDepartures.Standard
         /// </summary>
         /// <param name="id">The id of the parent station.</param>
         /// <param name="now">The DateTime target to search from.</param>
-        /// <param name="hours">The maximum number of hours to search over. Default is 2 but can be overridden.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is 12 but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public async Task<List<Service>> GetServicesByParentStationAsync(string id, DateTime now, int hours = 2, int count = 0)
+        public async Task<List<Service>> GetServicesByParentStationAsync(string id, DateTime now, int hours = 12, int count = 0)
         {
             try
             {
@@ -78,10 +78,10 @@ namespace NextDepartures.Standard
         /// Gets the services for a parent station.
         /// </summary>
         /// <param name="station">A list of stops to group as a parent station.</param>
-        /// <param name="hours">The maximum number of hours to search over. Default is 2 but can be overridden.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is 12 but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public Task<List<Service>> GetServicesByParentStationAsync(List<Stop> station, int hours = 2, int count = 0)
+        public Task<List<Service>> GetServicesByParentStationAsync(List<Stop> station, int hours = 12, int count = 0)
         {
             return GetServicesByParentStationAsync(station, DateTime.Now, hours, count);
         }
@@ -91,10 +91,10 @@ namespace NextDepartures.Standard
         /// </summary>
         /// <param name="station">A list of stops to group as a parent station.</param>
         /// <param name="now">The DateTime target to search from.</param>
-        /// <param name="hours">The maximum number of hours to search over. Default is 2 but can be overridden.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is 12 but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public async Task<List<Service>> GetServicesByParentStationAsync(List<Stop> station, DateTime now, int hours = 2, int count = 0)
+        public async Task<List<Service>> GetServicesByParentStationAsync(List<Stop> station, DateTime now, int hours = 12, int count = 0)
         {
             try
             {
