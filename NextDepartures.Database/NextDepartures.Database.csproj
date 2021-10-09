@@ -8,13 +8,13 @@
     <Product>NextDepartures.Database</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>2.2.1</Version>
+    <Version>2.2.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="GTFS" Version="3.0.0-pre005" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.1" />
   </ItemGroup>
   
   <ItemGroup>
