@@ -14,10 +14,10 @@ namespace NextDepartures.Standard
         /// Gets the services for a specific stop.
         /// </summary>
         /// <param name="id">The id of the stop.</param>
-        /// <param name="hours">The maximum number of hours to search over. Default is 12 but can be overridden.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is all (0) but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public Task<List<Service>> GetServicesByStopAsync(string id, int hours = 12, int count = 0)
+        public Task<List<Service>> GetServicesByStopAsync(string id, int hours = 0, int count = 0)
         {
             return GetServicesByStopAsync(id, DateTime.Now, hours, count);
         }
@@ -27,10 +27,10 @@ namespace NextDepartures.Standard
         /// </summary>
         /// <param name="id">The id of the stop.</param>
         /// <param name="now">The DateTime target to search from.</param>
-        /// <param name="hours">The maximum number of hours to search over. Default is 12 but can be overridden.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is all (0) but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public async Task<List<Service>> GetServicesByStopAsync(string id, DateTime now, int hours = 12, int count = 0)
+        public async Task<List<Service>> GetServicesByStopAsync(string id, DateTime now, int hours = 0, int count = 0)
         {
             try
             {
@@ -71,10 +71,10 @@ namespace NextDepartures.Standard
         /// Gets the services for a specific stop.
         /// </summary>
         /// <param name="stop">The stop.</param>
-        /// <param name="hours">The maximum number of hours to search over. Default is 12 but can be overridden.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is all (0) but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public Task<List<Service>> GetServicesByStopAsync(Stop stop, int hours = 12, int count = 0)
+        public Task<List<Service>> GetServicesByStopAsync(Stop stop, int hours = 0, int count = 0)
         {
             return GetServicesByStopAsync(stop, DateTime.Now, hours, count);
         }
@@ -84,10 +84,10 @@ namespace NextDepartures.Standard
         /// </summary>
         /// <param name="stop">The stop.</param>
         /// <param name="now">The DateTime target to search from.</param>
-        /// <param name="hours">The maximum number of hours to search over. Default is 12 but can be overridden.</param>
+        /// <param name="hours">The maximum number of hours to search over. Default is all (0) but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public async Task<List<Service>> GetServicesByStopAsync(Stop stop, DateTime now, int hours = 12, int count = 0)
+        public async Task<List<Service>> GetServicesByStopAsync(Stop stop, DateTime now, int hours = 0, int count = 0)
         {
             try
             {
