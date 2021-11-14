@@ -15,7 +15,7 @@ namespace NextDepartures.Test
         public async Task GetServicesByParentStationAsync()
         {
             Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByParentStation = await feed.GetServicesByParentStationAsync("370G105120", new DateTime(2021, 8, 29, 12, 0, 0));
+            List<Service> resultsByParentStation = await feed.GetServicesByParentStationAsync("370G105120", new DateTime(2021, 8, 29, 12, 0, 0), 12);
 
             Assert.IsNotNull(resultsByParentStation);
         }
@@ -24,7 +24,7 @@ namespace NextDepartures.Test
         public async Task GetServicesByStopAsync()
         {
             Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByStop = await feed.GetServicesByStopAsync("370040413", new DateTime(2021, 8, 29, 12, 0, 0));
+            List<Service> resultsByStop = await feed.GetServicesByStopAsync("370040413", new DateTime(2021, 8, 29, 12, 0, 0), 12);
 
             Assert.IsNotNull(resultsByStop);
         }
@@ -33,7 +33,7 @@ namespace NextDepartures.Test
         public async Task GetServicesByTripAsync()
         {
             Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByStop = await feed.GetServicesByStopAsync("370040413", new DateTime(2021, 8, 29, 12, 0, 0));
+            List<Service> resultsByStop = await feed.GetServicesByStopAsync("370040413", new DateTime(2021, 8, 29, 12, 0, 0), 12);
             List<Service> resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop[0].TripId, new DateTime(2021, 8, 29, 12, 0, 0));
 
             Assert.IsNotNull(resultsByTrip);

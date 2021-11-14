@@ -151,9 +151,19 @@ namespace NextDepartures.Standard
                     include = false;
                 }
 
-                if (include && departureDateTime >= zonedDateTime && departureDateTime <= zonedDateTime.AddHours(toleranceInHours))
+                if (toleranceInHours > 0)
                 {
-                    return true;
+                    if (include && departureDateTime >= zonedDateTime && departureDateTime <= zonedDateTime.AddHours(toleranceInHours))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (include && departureDateTime >= zonedDateTime)
+                    {
+                        return true;
+                    }
                 }
             }
 
