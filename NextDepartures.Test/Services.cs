@@ -4,6 +4,7 @@ using NextDepartures.Standard.Models;
 using NextDepartures.Storage.GTFS;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NextDepartures.Test
@@ -34,7 +35,7 @@ namespace NextDepartures.Test
         {
             Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
             List<Service> resultsByStop = await feed.GetServicesByStopAsync("370040413", new DateTime(2021, 8, 29, 12, 0, 0), 12);
-            List<Service> resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop[0].TripId, new DateTime(2021, 8, 29, 12, 0, 0));
+            List<Service> resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop.FirstOrDefault().TripId, new DateTime(2021, 8, 29, 12, 0, 0));
 
             Assert.IsNotNull(resultsByTrip);
         }
