@@ -10,7 +10,7 @@
     <PackageProjectUrl>http://nextdepartures.net</PackageProjectUrl>
     <Product>NextDepartures.Storage.GTFS</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>net6.0;netstandard2.1</TargetFrameworks>
     <Version>2.3.0</Version>
   </PropertyGroup>
 
