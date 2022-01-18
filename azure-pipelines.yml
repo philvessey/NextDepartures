@@ -72,7 +72,12 @@ stages:
         deploy:
 
           steps:
-          - task: DotNetCoreCLI@2
+          - task: NuGetToolInstaller@1
+            displayName: 'Install NuGet Version'
+            inputs:
+              versionSpec: '5.8.x'
+
+          - task: NuGetCommand@2
             displayName: 'Push NuGet Packages'
             inputs:
               command: 'push'
