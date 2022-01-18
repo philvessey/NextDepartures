@@ -176,20 +176,7 @@ namespace NextDepartures.Standard
             DateTime departureDateTime = GetDateTimeFromDeparture(zonedDateTime, dayOffset.GetNumeric(), departure.DepartureTime);
             DateTime targetDateTime = zonedDateTime.AddDays(dayOffset.GetNumeric());
 
-            DateTime startDate = targetDateTime;
-            DateTime endDate = targetDateTime;
-
-            if (departure.StartDate != null)
-            {
-                startDate = departure.StartDate;
-            }
-
-            if (departure.StartDate != null)
-            {
-                endDate = departure.EndDate;
-            }
-
-            if (IsDepartureValid(calendarDates, toleranceInHours, id, WeekdayUtils.GetUtilByDayType(dayOffset), departure, zonedDateTime, departureDateTime, targetDateTime, startDate, endDate))
+            if (IsDepartureValid(calendarDates, toleranceInHours, id, WeekdayUtils.GetUtilByDayType(dayOffset), departure, zonedDateTime, departureDateTime, targetDateTime, departure.StartDate, departure.EndDate))
             {
                 return CreateProcessedDeparture(departure, departureDateTime);
             }
