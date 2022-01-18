@@ -7,10 +7,6 @@ NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specifi
 * NextDepartures.Storage.GTFS: [![NuGet Version](https://img.shields.io/nuget/v/NextDepartures.Storage.GTFS.svg?style=flat)](https://www.nuget.org/packages/NextDepartures.Storage.GTFS/) [![NextDepartures.Storage.GTFS on fuget.org](https://www.fuget.org/packages/NextDepartures.Storage.GTFS/badge.svg)](https://www.fuget.org/packages/NextDepartures.Storage.GTFS)
 * NextDepartures.Storage.SqlServer: [![NuGet Version](https://img.shields.io/nuget/v/NextDepartures.Storage.SqlServer.svg?style=flat)](https://www.nuget.org/packages/NextDepartures.Storage.SqlServer/) [![NextDepartures.Storage.SqlServer on fuget.org](https://www.fuget.org/packages/NextDepartures.Storage.SqlServer/badge.svg)](https://www.fuget.org/packages/NextDepartures.Storage.SqlServer)
 
-## Prerequisites
-
-* GTFS (General Transit Feed Specification) data sets can be downloaded from [here](https://transitfeeds.com).
-
 ## Local GTFS Usage
 
 Connect the library:
@@ -48,6 +44,8 @@ Feed feed = await Feed.Load(SqlServerStorage.Load([database]));
 
 ## Agencies Endpoints
 
+Once connected to the library:
+
 ```csharp
 List<Agency> results = await feed.GetAgenciesByEmailAsync();
 List<Agency> results = await feed.GetAgenciesByFareURLAsync();
@@ -60,6 +58,8 @@ List<Agency> results = await feed.GetAgenciesByURLAsync();
 
 ## Services Endpoints
 
+Once connected to the library:
+
 ```csharp
 List<Service> results = await feed.GetServicesByParentStationAsync();
 List<Service> results = await feed.GetServicesByStopAsync();
@@ -67,6 +67,8 @@ List<Service> results = await feed.GetServicesByTripAsync();
 ```
 
 ## Stops Endpoints
+
+Once connected to the library:
 
 ```csharp
 List<Stop> results = await feed.GetStopsByDescriptionAsync();
