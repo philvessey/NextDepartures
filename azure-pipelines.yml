@@ -1,4 +1,4 @@
-name: '2.3.2'
+name: '2.3.3'
 
 trigger:
 - master
@@ -72,7 +72,7 @@ stages:
         deploy:
 
           steps:
-          - task: NuGetCommand@2
+          - task: DotNetCoreCLI@2
             displayName: 'Push NuGet Packages'
             inputs:
               command: 'push'
