@@ -9,7 +9,7 @@ NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specifi
 
 ## Local GTFS Usage
 
-Connect the library:
+Connect to the library:
 
 ```csharp
 using NextDepartures.Standard;
@@ -31,7 +31,7 @@ dotnet run -d [--database] -g [--gtfs]
 * [database] > Database connection string. Required.
 * [gtfs] > Path to GTFS data set .zip or directory. Required.
 
-Connect the library:
+Connect to the library:
 
 ```csharp
 using NextDepartures.Standard;
