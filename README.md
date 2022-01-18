@@ -32,7 +32,7 @@ Build the database from the database project:
 dotnet run -d [--database] -g [--gtfs]
 ```
 
-* [database] > Database connection string. Required. If you are working with a UNIX based system you may need to include MultipleActiveResultSets=True;
+* [database] > Database connection string. Required. Include MultipleActiveResultSets=True; on UNIX based systems.
 * [gtfs] > Path to GTFS data set .zip or directory. Required.
 
 Connect the library:
@@ -44,7 +44,7 @@ using NextDepartures.Storage.SqlServer;
 Feed feed = await Feed.Load(SqlServerStorage.Load([database]));
 ```
 
-* [database] > Database connection string. Required. If you are working with a UNIX based system you may need to include MultipleActiveResultSets=True;
+* [database] > Database connection string. Required. Include MultipleActiveResultSets=True; on UNIX based systems.
 
 ## Agencies Endpoints
 
