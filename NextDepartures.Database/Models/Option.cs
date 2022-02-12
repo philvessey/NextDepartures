@@ -9,5 +9,8 @@ namespace NextDepartures.Database.Models
 
         [Option('g', "gtfs", Required = true, HelpText = "Path to GTFS data set .zip or directory.")]
         public string Gtfs { get; set; }
+
+        [Option("prefix", Default = "GTFS", HelpText = "Specify database table prefix.")]
+        public string Prefix { get; set; }
     }
 }
