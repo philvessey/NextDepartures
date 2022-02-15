@@ -192,7 +192,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of calendar dates.</returns>
         public Task<List<CalendarDate>> GetCalendarDatesAsync()
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0).CalendarDate", _prefix.ToUpper()), GetCalendarDatesFromDataReader);
+            return ExecuteCommand(string.Format("SELECT * FROM {0}.CalendarDate", _prefix.ToUpper()), GetCalendarDatesFromDataReader);
         }
 
         private Departure GetDepartureFromDataReader(SqlDataReader dataReader)
