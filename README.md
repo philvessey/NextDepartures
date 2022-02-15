@@ -38,10 +38,11 @@ Connect to the library:
 using NextDepartures.Standard;
 using NextDepartures.Storage.SqlServer;
 
-Feed feed = await Feed.Load(SqlServerStorage.Load([database]));
+Feed feed = await Feed.Load(SqlServerStorage.Load([database], (prefix)));
 ```
 
 * [database] > Database connection string. Required.
+* (prefix) > Specify database table prefix. Default (GTFS). Optional.
 
 ## Agencies Endpoints
 
