@@ -25,11 +25,12 @@ Feed feed = await Feed.Load(GTFSStorage.Load([path]));
 Build the data from the database project:
 
 ```
-dotnet run -d [--database] -g [--gtfs]
+dotnet run -d [--database] -g [--gtfs] (--prefix)
 ```
 
 * [database] > Database connection string. Required.
 * [gtfs] > Path to GTFS data set .zip or directory. Required.
+* (prefix) > Specify database table prefix. Default (GTFS). Optional.
 
 Connect to the library:
 
@@ -37,10 +38,11 @@ Connect to the library:
 using NextDepartures.Standard;
 using NextDepartures.Storage.SqlServer;
 
-Feed feed = await Feed.Load(SqlServerStorage.Load([database]));
+Feed feed = await Feed.Load(SqlServerStorage.Load([database], (prefix)));
 ```
 
 * [database] > Database connection string. Required.
+* (prefix) > Specify database table prefix. Default (GTFS). Optional.
 
 ## Agencies Endpoints
 
