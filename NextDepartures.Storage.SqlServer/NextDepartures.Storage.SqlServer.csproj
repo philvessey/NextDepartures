@@ -10,7 +10,7 @@
     <PackageProjectUrl>http://nextdepartures.net</PackageProjectUrl>
     <Product>NextDepartures.Storage.SqlServer</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Version>3.2.0</Version>
   </PropertyGroup>
 
