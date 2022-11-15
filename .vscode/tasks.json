@@ -1,42 +1,18 @@
 {
     "version": "2.0.0",
     "tasks": [
-        {
-            "label": "build",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/NextDepartures.Database/NextDepartures.Database.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "publish",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/NextDepartures.Database/NextDepartures.Database.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "${workspaceFolder}/NextDepartures.Database/NextDepartures.Database.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
+        { 
+            "label": "net7.0 Test", 
+            "type": "process", 
+            "args": [ "test" ], 
+            "isBackground": true, 
+            "command": "dotnet", 
+            "options": 
+            { 
+                "cwd": "${workspaceFolder}/NextDepartures.Test", 
+                "env": { "VSTEST_HOST_DEBUG": "1" }
+            },
+            "problemMatcher": [] 
         }
     ]
 }
