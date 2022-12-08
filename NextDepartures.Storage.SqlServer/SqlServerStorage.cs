@@ -250,8 +250,8 @@ namespace NextDepartures.Storage.SqlServer
                 Code = dataReader.IsDBNull(1) ? null : dataReader.GetString(1),
                 Name = dataReader.IsDBNull(2) ? null : dataReader.GetString(2),
                 Description = dataReader.IsDBNull(3) ? null : dataReader.GetString(3),
-                Latitude = dataReader.GetDouble(4),
-                Longitude = dataReader.GetDouble(5),
+                Longitude = dataReader.GetDouble(4),
+                Latitude = dataReader.GetDouble(5),
                 Zone = dataReader.IsDBNull(6) ? null : dataReader.GetString(6),
                 Url = dataReader.IsDBNull(7) ? null : dataReader.GetString(7),
                 LocationType = dataReader.IsDBNull(8) ? null : dataReader.GetInt32(8).ToLocationType(),
@@ -271,8 +271,8 @@ namespace NextDepartures.Storage.SqlServer
                 Code = dataReader.IsDBNull(1) ? null : dataReader.GetString(1),
                 Name = dataReader.IsDBNull(2) ? null : CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dataReader.GetString(2).ToLower()),
                 Description = dataReader.IsDBNull(3) ? null : dataReader.GetString(3),
-                Latitude = dataReader.GetDouble(4),
-                Longitude = dataReader.GetDouble(5),
+                Longitude = dataReader.GetDouble(4),
+                Latitude = dataReader.GetDouble(5),
                 Zone = dataReader.IsDBNull(6) ? null : dataReader.GetString(6),
                 Url = dataReader.IsDBNull(7) ? null : dataReader.GetString(7),
                 LocationType = dataReader.IsDBNull(8) ? null : dataReader.GetInt32(8).ToLocationType(),
@@ -323,7 +323,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE Latitude >= {1} AND Latitude <= {2} AND Longitude >= {3} AND Longitude <= {4}", _prefix.ToUpper(), minimumLatitude, maximumLatitude, minimumLongitude, maximumLongitude), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE Longitude >= {1} AND Latitude >= {2} AND Longitude <= {3} AND Latitude <= {4}", _prefix.ToUpper(), minimumLongitude, minimumLatitude, maximumLongitude, maximumLatitude), GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
