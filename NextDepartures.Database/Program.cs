@@ -209,10 +209,10 @@ namespace NextDepartures.Database
                 await connection.ExecuteCommandAsync(string.Format("CREATE TABLE {0}_ROUTE (Id nvarchar(255) PRIMARY KEY, AgencyId nvarchar(255), ShortName nvarchar(255), LongName nvarchar(255), Description nvarchar(255), Type int, Url nvarchar(255), Color int, TextColor int)", option.Prefix.ToUpper()));
                 Console.WriteLine(string.Format("CREATE: {0}_ROUTE", option.Prefix.ToUpper()));
 
-                await connection.ExecuteCommandAsync(string.Format("CREATE TABLE {0}_SHAPE (Id nvarchar(255), Latitude float, Longitude float, Sequence int, DistanceTravelled float)", option.Prefix.ToUpper()));
+                await connection.ExecuteCommandAsync(string.Format("CREATE TABLE {0}_SHAPE (Id nvarchar(255), Longitude float, Latitude float, Sequence int, DistanceTravelled float)", option.Prefix.ToUpper()));
                 Console.WriteLine(string.Format("CREATE: {0}_SHAPE", option.Prefix.ToUpper()));
 
-                await connection.ExecuteCommandAsync(string.Format("CREATE TABLE {0}_STOP (Id nvarchar(255) PRIMARY KEY, Code nvarchar(255), Name nvarchar(255), Description nvarchar(255), Latitude float, Longitude float, Zone nvarchar(255), Url nvarchar(255), LocationType int, ParentStation nvarchar(255), Timezone nvarchar(255), WheelchairBoarding nvarchar(255), LevelId nvarchar(255), PlatformCode nvarchar(255))", option.Prefix.ToUpper()));
+                await connection.ExecuteCommandAsync(string.Format("CREATE TABLE {0}_STOP (Id nvarchar(255) PRIMARY KEY, Code nvarchar(255), Name nvarchar(255), Description nvarchar(255), Longitude float, Latitude float, Zone nvarchar(255), Url nvarchar(255), LocationType int, ParentStation nvarchar(255), Timezone nvarchar(255), WheelchairBoarding nvarchar(255), LevelId nvarchar(255), PlatformCode nvarchar(255))", option.Prefix.ToUpper()));
                 Console.WriteLine(string.Format("CREATE: {0}_STOP", option.Prefix.ToUpper()));
 
                 await connection.ExecuteCommandAsync(string.Format("CREATE TABLE {0}_STOP_TIME (TripId nvarchar(255), ArrivalTime nvarchar(255), DepartureTime nvarchar(255), StopId nvarchar(255), StopSequence int, StopHeadsign nvarchar(255), PickupType int, DropOffType int, ShapeDistTravelled float, TimepointType int)", option.Prefix.ToUpper()));
@@ -251,10 +251,10 @@ namespace NextDepartures.Database
                 await connection.ExecuteCommandAsync(string.Format("CREATE TYPE {0}_ROUTE_TYPE AS TABLE (Id nvarchar(255), AgencyId nvarchar(255), ShortName nvarchar(255), LongName nvarchar(255), Description nvarchar(255), Type int, Url nvarchar(255), Color int, TextColor int)", option.Prefix.ToUpper()));
                 Console.WriteLine(string.Format("CREATE: {0}_ROUTE_TYPE", option.Prefix.ToUpper()));
 
-                await connection.ExecuteCommandAsync(string.Format("CREATE TYPE {0}_SHAPE_TYPE AS TABLE (Id nvarchar(255), Latitude float, Longitude float, Sequence int, DistanceTravelled float)", option.Prefix.ToUpper()));
+                await connection.ExecuteCommandAsync(string.Format("CREATE TYPE {0}_SHAPE_TYPE AS TABLE (Id nvarchar(255), Longitude float, Latitude float, Sequence int, DistanceTravelled float)", option.Prefix.ToUpper()));
                 Console.WriteLine(string.Format("CREATE: {0}_SHAPE_TYPE", option.Prefix.ToUpper()));
 
-                await connection.ExecuteCommandAsync(string.Format("CREATE TYPE {0}_STOP_TYPE AS TABLE (Id nvarchar(255), Code nvarchar(255), Name nvarchar(255), Description nvarchar(255), Latitude float, Longitude float, Zone nvarchar(255), Url nvarchar(255), LocationType int, ParentStation nvarchar(255), Timezone nvarchar(255), WheelchairBoarding nvarchar(255), LevelId nvarchar(255), PlatformCode nvarchar(255))", option.Prefix.ToUpper()));
+                await connection.ExecuteCommandAsync(string.Format("CREATE TYPE {0}_STOP_TYPE AS TABLE (Id nvarchar(255), Code nvarchar(255), Name nvarchar(255), Description nvarchar(255), Longitude float, Latitude float, Zone nvarchar(255), Url nvarchar(255), LocationType int, ParentStation nvarchar(255), Timezone nvarchar(255), WheelchairBoarding nvarchar(255), LevelId nvarchar(255), PlatformCode nvarchar(255))", option.Prefix.ToUpper()));
                 Console.WriteLine(string.Format("CREATE: {0}_STOP_TYPE", option.Prefix.ToUpper()));
 
                 await connection.ExecuteCommandAsync(string.Format("CREATE TYPE {0}_STOP_TIME_TYPE AS TABLE (TripId nvarchar(255), ArrivalTime nvarchar(255), DepartureTime nvarchar(255), StopId nvarchar(255), StopSequence int, StopHeadsign nvarchar(255), PickupType int, DropOffType int, ShapeDistTravelled float, TimepointType int)", option.Prefix.ToUpper()));
@@ -293,10 +293,10 @@ namespace NextDepartures.Database
                 await connection.ExecuteCommandAsync(string.Format("CREATE PROCEDURE {0}_ROUTE_PROCEDURE (@table {0}_ROUTE_TYPE READONLY) AS INSERT INTO {0}_ROUTE (Id, AgencyId, ShortName, LongName, Description, Type, Url, Color, TextColor) SELECT Id, AgencyId, ShortName, LongName, Description, Type, Url, Color, TextColor FROM @table", option.Prefix.ToUpper()));
                 Console.WriteLine(string.Format("CREATE: {0}_ROUTE_PROCEDURE", option.Prefix.ToUpper()));
 
-                await connection.ExecuteCommandAsync(string.Format("CREATE PROCEDURE {0}_SHAPE_PROCEDURE (@table {0}_SHAPE_TYPE READONLY) AS INSERT INTO {0}_SHAPE (Id, Latitude, Longitude, Sequence, DistanceTravelled) SELECT Id, Latitude, Longitude, Sequence, DistanceTravelled FROM @table", option.Prefix.ToUpper()));
+                await connection.ExecuteCommandAsync(string.Format("CREATE PROCEDURE {0}_SHAPE_PROCEDURE (@table {0}_SHAPE_TYPE READONLY) AS INSERT INTO {0}_SHAPE (Id, Longitude, Latitude, Sequence, DistanceTravelled) SELECT Id, Longitude, Latitude, Sequence, DistanceTravelled FROM @table", option.Prefix.ToUpper()));
                 Console.WriteLine(string.Format("CREATE: {0}_SHAPE_PROCEDURE", option.Prefix.ToUpper()));
 
-                await connection.ExecuteCommandAsync(string.Format("CREATE PROCEDURE {0}_STOP_PROCEDURE (@table {0}_STOP_TYPE READONLY) AS INSERT INTO {0}_STOP (Id, Code, Name, Description, Latitude, Longitude, Zone, Url, LocationType, ParentStation, Timezone, WheelchairBoarding, LevelId, PlatformCode) SELECT Id, Code, Name, Description, Latitude, Longitude, Zone, Url, LocationType, ParentStation, Timezone, WheelchairBoarding, LevelId, PlatformCode FROM @table", option.Prefix.ToUpper()));
+                await connection.ExecuteCommandAsync(string.Format("CREATE PROCEDURE {0}_STOP_PROCEDURE (@table {0}_STOP_TYPE READONLY) AS INSERT INTO {0}_STOP (Id, Code, Name, Description, Longitude, Latitude, Zone, Url, LocationType, ParentStation, Timezone, WheelchairBoarding, LevelId, PlatformCode) SELECT Id, Code, Name, Description, Longitude, Latitude, Zone, Url, LocationType, ParentStation, Timezone, WheelchairBoarding, LevelId, PlatformCode FROM @table", option.Prefix.ToUpper()));
                 Console.WriteLine(string.Format("CREATE: {0}_STOP_PROCEDURE", option.Prefix.ToUpper()));
 
                 await connection.ExecuteCommandAsync(string.Format("CREATE PROCEDURE {0}_STOP_TIME_PROCEDURE (@table {0}_STOP_TIME_TYPE READONLY) AS INSERT INTO {0}_STOP_TIME (TripId, ArrivalTime, DepartureTime, StopId, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTravelled, TimepointType) SELECT TripId, ArrivalTime, DepartureTime, StopId, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTravelled, TimepointType FROM @table", option.Prefix.ToUpper()));
@@ -420,12 +420,12 @@ namespace NextDepartures.Database
 
                 DataTable shape = new DataTable();
                 shape.Columns.Add("Id", typeof(string));
-                shape.Columns.Add("Latitude", typeof(double));
                 shape.Columns.Add("Longitude", typeof(double));
+                shape.Columns.Add("Latitude", typeof(double));
                 shape.Columns.Add("Sequence", typeof(int));
                 shape.Columns.Add("DistanceTravelled", typeof(double));
 
-                await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_SHAPE_PROCEDURE", option.Prefix.ToUpper()), shape, feed.Shapes, (dt, shape) => dt.Rows.Add(shape.Id, shape.Latitude, shape.Longitude, shape.Sequence, shape.DistanceTravelled));
+                await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_SHAPE_PROCEDURE", option.Prefix.ToUpper()), shape, feed.Shapes, (dt, shape) => dt.Rows.Add(shape.Id, shape.Longitude, shape.Latitude, shape.Sequence, shape.DistanceTravelled));
                 Console.WriteLine(string.Format("INSERT: {0}_SHAPE_PROCEDURE", option.Prefix.ToUpper()));
 
                 DataTable stop = new DataTable();
@@ -433,8 +433,8 @@ namespace NextDepartures.Database
                 stop.Columns.Add("Code", typeof(string));
                 stop.Columns.Add("Name", typeof(string));
                 stop.Columns.Add("Description", typeof(string));
-                stop.Columns.Add("Latitude", typeof(double));
                 stop.Columns.Add("Longitude", typeof(double));
+                stop.Columns.Add("Latitude", typeof(double));
                 stop.Columns.Add("Zone", typeof(string));
                 stop.Columns.Add("Url", typeof(string));
                 stop.Columns.Add("LocationType", typeof(int));
@@ -444,7 +444,7 @@ namespace NextDepartures.Database
                 stop.Columns.Add("LevelId", typeof(string));
                 stop.Columns.Add("PlatformCode", typeof(string));
 
-                await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_STOP_PROCEDURE", option.Prefix.ToUpper()), stop, feed.Stops.GroupBy(s => s.Id).Select(s => s.First()), (dt, stop) => dt.Rows.Add(stop.Id, stop.Code, stop.Name, stop.Description, stop.Latitude, stop.Longitude, stop.Zone, stop.Url, stop.LocationType, stop.ParentStation, stop.Timezone, stop.WheelchairBoarding, stop.LevelId, stop.PlatformCode));
+                await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_STOP_PROCEDURE", option.Prefix.ToUpper()), stop, feed.Stops.GroupBy(s => s.Id).Select(s => s.First()), (dt, stop) => dt.Rows.Add(stop.Id, stop.Code, stop.Name, stop.Description, stop.Longitude, stop.Latitude, stop.Zone, stop.Url, stop.LocationType, stop.ParentStation, stop.Timezone, stop.WheelchairBoarding, stop.LevelId, stop.PlatformCode));
                 Console.WriteLine(string.Format("INSERT: {0}_STOP_PROCEDURE", option.Prefix.ToUpper()));
 
                 DataTable stopTime = new DataTable();

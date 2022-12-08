@@ -237,8 +237,8 @@ namespace NextDepartures.Storage.GTFS
                     Code = s.Code,
                     Name = s.Name,
                     Description = s.Description,
-                    Latitude = s.Latitude,
                     Longitude = s.Longitude,
+                    Latitude = s.Latitude,
                     Zone = s.Zone,
                     Url = s.Url,
                     LocationType = s.LocationType,
@@ -261,8 +261,8 @@ namespace NextDepartures.Storage.GTFS
                     Code = e.Code,
                     Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(e.Name.ToLower()),
                     Description = e.Description,
-                    Latitude = e.Latitude,
                     Longitude = e.Longitude,
+                    Latitude = e.Latitude,
                     Zone = e.Zone,
                     Url = e.Url,
                     LocationType = e.LocationType,
@@ -314,7 +314,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Latitude >= minimumLatitude && s.Latitude <= maximumLatitude && s.Longitude >= minimumLongitude && s.Longitude <= maximumLongitude));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Longitude >= minimumLongitude && s.Latitude >= minimumLatitude && s.Longitude <= maximumLongitude && s.Latitude <= maximumLatitude));
         }
 
         /// <summary>
