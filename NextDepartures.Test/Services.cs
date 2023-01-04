@@ -4,6 +4,7 @@ using NextDepartures.Standard.Models;
 using NextDepartures.Storage.GTFS;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace NextDepartures.Test
         public async Task GetServicesByParentStationAsync()
         {
             Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByParentStation = await feed.GetServicesByParentStationAsync("CIVC", new DateTime(2022, 11, 14, 18, 0, 0), 12);
+            List<Service> resultsByParentStation = await feed.GetServicesByParentStationAsync("CIVC", DateTime.Parse("01/04/2023 18:00:00", CultureInfo.InvariantCulture), 12);
 
             Assert.IsNotNull(resultsByParentStation);
         }
@@ -25,7 +26,7 @@ namespace NextDepartures.Test
         public async Task GetServicesByStopAsync()
         {
             Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByStop = await feed.GetServicesByStopAsync("CIVC", new DateTime(2022, 11, 14, 18, 0, 0), 12);
+            List<Service> resultsByStop = await feed.GetServicesByStopAsync("CIVC", DateTime.Parse("01/04/2023 18:00:00", CultureInfo.InvariantCulture), 12);
 
             Assert.IsNotNull(resultsByStop);
         }
@@ -34,8 +35,8 @@ namespace NextDepartures.Test
         public async Task GetServicesByTripAsync()
         {
             Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByStop = await feed.GetServicesByStopAsync("CIVC", new DateTime(2022, 11, 14, 18, 0, 0), 12);
-            List<Service> resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop.FirstOrDefault().TripId, new DateTime(2022, 11, 14, 18, 0, 0));
+            List<Service> resultsByStop = await feed.GetServicesByStopAsync("CIVC", DateTime.Parse("01/04/2023 18:00:00", CultureInfo.InvariantCulture), 12);
+            List<Service> resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop.FirstOrDefault().TripId, DateTime.Parse("01/04/2023 18:00:00", CultureInfo.InvariantCulture));
 
             Assert.IsNotNull(resultsByTrip);
         }
