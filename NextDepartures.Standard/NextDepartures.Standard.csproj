@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="GTFS" Version="3.0.0-pre006" />
-    <PackageReference Include="NodaTime" Version="3.1.5" />
+    <PackageReference Include="NodaTime" Version="3.1.6" />
   </ItemGroup>
   
   <ItemGroup>
