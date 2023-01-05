@@ -6,7 +6,7 @@ namespace NextDepartures.Standard.Extensions
 {
     public static class DateTimeExtensions
     {
-        public static DateTime AsZonedDateTime(this DateTime dateTime, string timezone)
+        public static DateTime ToZonedDateTime(this DateTime dateTime, string timezone)
         {
             Instant instant = dateTime.ToUniversalTime().ToInstant();
             ZonedDateTime zoned = instant.InZone(DateTimeZoneProviders.Tzdb[timezone]);

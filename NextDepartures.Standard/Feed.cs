@@ -172,7 +172,7 @@ namespace NextDepartures.Standard
 
         private Departure TryProcessDeparture(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, DateTime now, DayOffsetType dayOffset, int toleranceInHours, string id, Departure departure)
         {
-            DateTime zonedDateTime = now.AsZonedDateTime(GetTimezone(agencies, stops, departure));
+            DateTime zonedDateTime = now.ToZonedDateTime(GetTimezone(agencies, stops, departure));
             DateTime departureDateTime = GetDateTimeFromDeparture(zonedDateTime, dayOffset.GetNumeric(), departure.DepartureTime);
             DateTime targetDateTime = zonedDateTime.AddDays(dayOffset.GetNumeric());
 
