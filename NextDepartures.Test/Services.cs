@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
-using NextDepartures.Standard.Extensions;
 using NextDepartures.Standard.Models;
 using NextDepartures.Storage.GTFS;
 using System;
@@ -17,7 +16,7 @@ namespace NextDepartures.Test
         public async Task GetServicesByParentStationAsync()
         {
             Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByParentStation = await feed.GetServicesByParentStationAsync("CIVC", DateTime.Parse("04/01/2023 18:00:00").ToZonedDateTime("Europe/London"), 12);
+            List<Service> resultsByParentStation = await feed.GetServicesByParentStationAsync("CIVC", new DateTime(2023, 1, 4, 18, 0, 0), 1);
 
             Assert.IsNotNull(resultsByParentStation);
         }
@@ -26,7 +25,7 @@ namespace NextDepartures.Test
         public async Task GetServicesByStopAsync()
         {
             Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByStop = await feed.GetServicesByStopAsync("CIVC", DateTime.Parse("04/01/2023 18:00:00").ToZonedDateTime("Europe/London"), 12);
+            List<Service> resultsByStop = await feed.GetServicesByStopAsync("CIVC", new DateTime(2023, 1, 4, 18, 0, 0), 1);
 
             Assert.IsNotNull(resultsByStop);
         }
@@ -35,8 +34,8 @@ namespace NextDepartures.Test
         public async Task GetServicesByTripAsync()
         {
             Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByStop = await feed.GetServicesByStopAsync("CIVC", DateTime.Parse("04/01/2023 18:00:00").ToZonedDateTime("Europe/London"), 12);
-            List<Service> resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop.FirstOrDefault().TripId, DateTime.Parse("04/01/2023 18:00:00").ToZonedDateTime("Europe/London"));
+            List<Service> resultsByStop = await feed.GetServicesByStopAsync("CIVC", new DateTime(2023, 1, 4, 18, 0, 0), 1);
+            List<Service> resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop.FirstOrDefault().TripId, new DateTime(2023, 1, 4, 18, 0, 0), 1);
 
             Assert.IsNotNull(resultsByTrip);
         }
