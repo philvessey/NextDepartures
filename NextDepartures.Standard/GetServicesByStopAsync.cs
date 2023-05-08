@@ -19,7 +19,7 @@ namespace NextDepartures.Standard
         /// <returns>A list of services.</returns>
         public Task<List<Service>> GetServicesByStopAsync(string id, int hours = 0, int count = 0)
         {
-            return GetServicesByStopAsync(id, DateTime.Now, hours, count);
+            return GetServicesByStopAsync(id, DateTime.Now, TimeSpan.Zero, hours, count);
         }
 
         /// <summary>
@@ -27,10 +27,11 @@ namespace NextDepartures.Standard
         /// </summary>
         /// <param name="id">The id of the stop.</param>
         /// <param name="now">The DateTime target to search from.</param>
+        /// <param name="offset">The TimeSpan offset to filter by.</param>
         /// <param name="hours">The maximum number of hours to search over. Default is all (0) but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public async Task<List<Service>> GetServicesByStopAsync(string id, DateTime now, int hours = 0, int count = 0)
+        public async Task<List<Service>> GetServicesByStopAsync(string id, DateTime now, TimeSpan offset, int hours = 0, int count = 0)
         {
             try
             {
@@ -42,9 +43,9 @@ namespace NextDepartures.Standard
                 List<Departure> departuresForStop = new List<Departure>();
 
                 departuresForStop.AddRange(new List<Departure>()
-                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, hours, id))
-                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, hours, id))
-                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, hours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, offset, hours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, offset, hours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, offset, hours, id))
                     );
 
                 if (count > 0)
@@ -76,7 +77,7 @@ namespace NextDepartures.Standard
         /// <returns>A list of services.</returns>
         public Task<List<Service>> GetServicesByStopAsync(Stop stop, int hours = 0, int count = 0)
         {
-            return GetServicesByStopAsync(stop, DateTime.Now, hours, count);
+            return GetServicesByStopAsync(stop, DateTime.Now, TimeSpan.Zero, hours, count);
         }
 
         /// <summary>
@@ -84,10 +85,11 @@ namespace NextDepartures.Standard
         /// </summary>
         /// <param name="stop">The stop.</param>
         /// <param name="now">The DateTime target to search from.</param>
+        /// <param name="offset">The TimeSpan offset to filter by.</param>
         /// <param name="hours">The maximum number of hours to search over. Default is all (0) but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public async Task<List<Service>> GetServicesByStopAsync(Stop stop, DateTime now, int hours = 0, int count = 0)
+        public async Task<List<Service>> GetServicesByStopAsync(Stop stop, DateTime now, TimeSpan offset, int hours = 0, int count = 0)
         {
             try
             {
@@ -99,9 +101,9 @@ namespace NextDepartures.Standard
                 List<Departure> departuresForStop = new List<Departure>();
 
                 departuresForStop.AddRange(new List<Departure>()
-                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, hours, stop.Id))
-                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, hours, stop.Id))
-                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, hours, stop.Id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, offset, hours, stop.Id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Today, offset, hours, stop.Id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Tomorrow, offset, hours, stop.Id))
                     );
 
                 if (count > 0)
