@@ -7,14 +7,14 @@
     <OutputType>Exe</OutputType>
     <Product>NextDepartures.Database</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
     <Version>3.2.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="GTFS" Version="3.0.0-pre006" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+    <PackageReference Include="CommandLineParser" Version="$(CommandClientVersion)" />
+    <PackageReference Include="GTFS" Version="$(TransitLibraryVersion)" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(DatabaseClientVersion)" />
   </ItemGroup>
   
   <ItemGroup>

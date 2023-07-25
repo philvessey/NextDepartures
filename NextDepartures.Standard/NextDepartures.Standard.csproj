@@ -10,13 +10,13 @@
     <PackageProjectUrl>http://nextdepartures.net</PackageProjectUrl>
     <Product>NextDepartures.Standard</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
     <Version>3.2.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GTFS" Version="3.0.0-pre006" />
-    <PackageReference Include="NodaTime" Version="3.1.9" />
+    <PackageReference Include="GTFS" Version="$(TransitLibraryVersion)" />
+    <PackageReference Include="NodaTime" Version="$(DateLibraryVersion)" />
   </ItemGroup>
   
   <ItemGroup>
