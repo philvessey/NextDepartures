@@ -7,14 +7,14 @@
     <IsPackable>false</IsPackable>
     <Product>NextDepartures.Test</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
-    <TargetFramework>net7.0</TargetFramework>
-    <Version>3.2.4</Version>
+    <TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
+    <Version>3.2.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestDevelopmentVersion)" />
+    <PackageReference Include="MSTest.TestAdapter" Version="$(TestFrameworkVersion)" />
+    <PackageReference Include="MSTest.TestFramework" Version="$(TestFrameworkVersion)" />
   </ItemGroup>
 
   <ItemGroup>
