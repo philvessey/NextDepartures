@@ -69,7 +69,12 @@ namespace NextDepartures.Standard
 
         private Service CreateService(List<Agency> agencies, List<Stop> stops, Departure departure)
         {
-            const string fallback = "Unknown";
+            const string fallback = "unknown";
+
+            string agencyId = StringUtils.FindPossibleString(fallback,
+                                    () => agencies.FirstOrDefault(a => a.Id == departure.AgencyId)?.Id,
+                                    () => agencies.FirstOrDefault()?.Id
+                                    ).Trim();
 
             string agencyName = StringUtils.FindPossibleString(fallback,
                                     () => agencies.FirstOrDefault(a => a.Id == departure.AgencyId)?.Name,
@@ -94,7 +99,7 @@ namespace NextDepartures.Standard
 
             return new Service()
             {
-                AgencyId = departure.AgencyId,
+                AgencyId = agencyId,
                 AgencyName = agencyName,
                 DepartureDateTime = departure.DepartureDateTime,
                 DepartureTime = departure.DepartureTime,
