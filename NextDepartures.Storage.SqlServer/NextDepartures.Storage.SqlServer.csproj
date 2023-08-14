@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(DatabaseClientVersion)" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(DatabaseLibraryVersion)" />
   </ItemGroup>
 
   <ItemGroup>

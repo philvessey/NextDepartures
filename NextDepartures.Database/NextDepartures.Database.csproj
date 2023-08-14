@@ -12,9 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="$(CommandClientVersion)" />
+    <PackageReference Include="CommandLineParser" Version="$(CommandLibraryVersion)" />
     <PackageReference Include="GTFS" Version="$(TransitLibraryVersion)" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(DatabaseClientVersion)" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(DatabaseLibraryVersion)" />
   </ItemGroup>
   
   <ItemGroup>

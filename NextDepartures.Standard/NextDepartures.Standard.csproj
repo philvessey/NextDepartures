@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="GTFS" Version="$(TransitLibraryVersion)" />
-    <PackageReference Include="NodaTime" Version="$(DateLibraryVersion)" />
+    <PackageReference Include="NodaTime" Version="$(TimeLibraryVersion)" />
   </ItemGroup>
   
   <ItemGroup>
