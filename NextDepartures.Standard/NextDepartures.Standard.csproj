@@ -11,12 +11,12 @@
     <Product>NextDepartures.Standard</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
-    <Version>3.2.5</Version>
+    <Version>3.2.6</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="GTFS" Version="$(TransitLibraryVersion)" />
-    <PackageReference Include="NodaTime" Version="$(DateLibraryVersion)" />
+    <PackageReference Include="NodaTime" Version="$(TimeLibraryVersion)" />
   </ItemGroup>
   
   <ItemGroup>

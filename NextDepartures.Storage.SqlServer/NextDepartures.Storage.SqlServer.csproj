@@ -11,11 +11,11 @@
     <Product>NextDepartures.Storage.SqlServer</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
-    <Version>3.2.5</Version>
+    <Version>3.2.6</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(DatabaseClientVersion)" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(DatabaseLibraryVersion)" />
   </ItemGroup>
 
   <ItemGroup>
