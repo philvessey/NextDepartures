@@ -8,7 +8,7 @@
     <Product>NextDepartures.Database</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
-    <Version>3.2.5</Version>
+    <Version>3.2.6</Version>
   </PropertyGroup>
 
   <ItemGroup>
