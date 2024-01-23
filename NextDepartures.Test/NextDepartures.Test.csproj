@@ -8,7 +8,7 @@
     <Product>NextDepartures.Test</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
-    <Version>3.2.7</Version>
+    <Version>3.2.8</Version>
   </PropertyGroup>
 
   <ItemGroup>
