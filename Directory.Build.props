@@ -5,8 +5,8 @@
         <TestFrameworkVersion>3.1.1</TestFrameworkVersion> <!-- MSTest.Test -->
 
         <CommandLibraryVersion>2.9.1</CommandLibraryVersion> <!-- CommandLineParser -->
-        <DatabaseLibraryVersion>5.1.2</DatabaseLibraryVersion> <!-- Microsoft.Data.SqlClient -->
-        <TimeLibraryVersion>3.1.9</TimeLibraryVersion> <!-- NodaTime -->
+        <DatabaseLibraryVersion>5.1.4</DatabaseLibraryVersion> <!-- Microsoft.Data.SqlClient -->
+        <TimeLibraryVersion>3.1.10</TimeLibraryVersion> <!-- NodaTime -->
         <TransitLibraryVersion>3.0.0-pre006</TransitLibraryVersion> <!-- GTFS -->
     </PropertyGroup>
 </Project>
