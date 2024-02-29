@@ -14,10 +14,11 @@ namespace NextDepartures.Standard.Models
         public string StopId { get; set; }
         public string StopName { get; set; }
         public string TripId { get; set; }
+        public string Type { get; set; }
         
         public override string ToString()
         {
-            return string.Format("[{0}] {1}", DepartureDateTime, DestinationName);
+            return Type != "trip" ? string.Format("[{0}] {1}", DepartureDateTime, DestinationName) : string.Format("[{0}] {1}", DepartureDateTime, StopName);
         }
     }
 }

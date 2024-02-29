@@ -58,14 +58,14 @@ namespace NextDepartures.Standard
                     return departuresForStation
                         .OrderBy(d => d.DepartureDateTime)
                         .Take(count)
-                        .Select(d => CreateService(agencies, stops, d))
+                        .Select(d => CreateService(agencies, stops, d, "station"))
                         .ToList();
                 }
                 else
                 {
                     return departuresForStation
                         .OrderBy(d => d.DepartureDateTime)
-                        .Select(d => CreateService(agencies, stops, d))
+                        .Select(d => CreateService(agencies, stops, d, "station"))
                         .ToList();
                 }
             }
@@ -122,14 +122,14 @@ namespace NextDepartures.Standard
                     return departuresForStation
                         .OrderBy(d => d.DepartureDateTime)
                         .Take(count)
-                        .Select(d => CreateService(agencies, stops, d))
+                        .Select(d => CreateService(agencies, stops, d, "station"))
                         .ToList();
                 }
                 else
                 {
                     return departuresForStation
                         .OrderBy(d => d.DepartureDateTime)
-                        .Select(d => CreateService(agencies, stops, d))
+                        .Select(d => CreateService(agencies, stops, d, "station"))
                         .ToList();
                 }
             }
