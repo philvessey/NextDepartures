@@ -7,7 +7,7 @@
     <OutputType>Exe</OutputType>
     <Product>NextDepartures.Database</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
-    <TargetFramework>$(TargetFrameworkVersion)</TargetFramework>
+    <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
     <Version>3.3.0</Version>
   </PropertyGroup>
 
