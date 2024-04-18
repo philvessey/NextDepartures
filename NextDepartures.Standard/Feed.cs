@@ -67,7 +67,7 @@ namespace NextDepartures.Standard
             };
         }
 
-        private Service CreateService(List<Agency> agencies, List<Stop> stops, Departure departure)
+        private Service CreateService(List<Agency> agencies, List<Stop> stops, Departure departure, string type)
         {
             const string fallback = "unknown";
 
@@ -107,7 +107,8 @@ namespace NextDepartures.Standard
                 RouteName = routeName,
                 StopId = departure.StopId,
                 StopName = stopName,
-                TripId = departure.TripId
+                TripId = departure.TripId,
+                Type = type
             };
         }
 
