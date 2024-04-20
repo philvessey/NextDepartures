@@ -1,12 +1,12 @@
 <Project>
     <PropertyGroup>
-        <TargetFrameworkVersion>net7.0</TargetFrameworkVersion> <!-- net7.0 | net6.0 -->
-        <TestDevelopmentVersion>17.8.0</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
-        <TestFrameworkVersion>3.1.1</TestFrameworkVersion> <!-- MSTest.Test -->
+        <TargetFrameworks>netstandard2.1;net6.0;net8.0</TargetFrameworks> <!-- netstandard2.1 | LTS -->
+        <TestDevelopmentVersion>17.9.0</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
+        <TestFrameworkVersion>3.3.1</TestFrameworkVersion> <!-- MSTest.Test -->
 
         <CommandLibraryVersion>2.9.1</CommandLibraryVersion> <!-- CommandLineParser -->
-        <DatabaseLibraryVersion>5.1.4</DatabaseLibraryVersion> <!-- Microsoft.Data.SqlClient -->
-        <TimeLibraryVersion>3.1.10</TimeLibraryVersion> <!-- NodaTime -->
+        <DatabaseLibraryVersion>5.2.0</DatabaseLibraryVersion> <!-- Microsoft.Data.SqlClient -->
+        <TimeLibraryVersion>3.1.11</TimeLibraryVersion> <!-- NodaTime -->
         <TransitLibraryVersion>3.0.0-pre006</TransitLibraryVersion> <!-- GTFS -->
     </PropertyGroup>
 </Project>

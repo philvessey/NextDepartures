@@ -2,7 +2,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "net7.0 Attach",
+            "name": "net8.0 Attach",
+            "type": "coreclr",
+            "request": "attach"
+        },
+        {
+            "name": "net6.0 Attach",
             "type": "coreclr",
             "request": "attach"
         }
