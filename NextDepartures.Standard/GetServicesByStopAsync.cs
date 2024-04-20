@@ -52,13 +52,13 @@ namespace NextDepartures.Standard
                 {
                     return departuresForStop
                         .Take(count)
-                        .Select(d => CreateService(agencies, stops, d, "stop"))
+                        .Select(d => Feed.CreateService(agencies, stops, d, "stop"))
                         .ToList();
                 }
                 else
                 {
                     return departuresForStop
-                        .Select(d => CreateService(agencies, stops, d, "stop"))
+                        .Select(d => Feed.CreateService(agencies, stops, d, "stop"))
                         .ToList();
                 }
             }
@@ -110,13 +110,13 @@ namespace NextDepartures.Standard
                 {
                     return departuresForStop
                         .Take(count)
-                        .Select(d => CreateService(agencies, stops, d, "stop"))
+                        .Select(d => Feed.CreateService(agencies, stops, d, "stop"))
                         .ToList();
                 }
                 else
                 {
                     return departuresForStop
-                        .Select(d => CreateService(agencies, stops, d, "stop"))
+                        .Select(d => Feed.CreateService(agencies, stops, d, "stop"))
                         .ToList();
                 }
             }

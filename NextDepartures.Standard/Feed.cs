@@ -41,7 +41,7 @@ namespace NextDepartures.Standard
             return new Feed(storage, storageProperties);
         }
 
-        private Departure CreateProcessedDeparture(Departure tempDeparture, DateTime departureDateTime)
+        private static Departure CreateProcessedDeparture(Departure tempDeparture, DateTime departureDateTime)
         {
             return new Departure()
             {
@@ -67,7 +67,7 @@ namespace NextDepartures.Standard
             };
         }
 
-        private Service CreateService(List<Agency> agencies, List<Stop> stops, Departure departure, string type)
+        private static Service CreateService(List<Agency> agencies, List<Stop> stops, Departure departure, string type)
         {
             const string fallback = "unknown";
 
@@ -112,7 +112,7 @@ namespace NextDepartures.Standard
             };
         }
 
-        private DateTime GetDateTimeFromDeparture(DateTime zonedDateTime, int dayOffset, TimeOfDay? departureTime)
+        private static DateTime GetDateTimeFromDeparture(DateTime zonedDateTime, int dayOffset, TimeOfDay? departureTime)
         {
             return new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Value.Hours % 24, departureTime.Value.Minutes, departureTime.Value.Seconds).AddDays((departureTime.Value.Hours / 24) + dayOffset);
         }
@@ -123,13 +123,13 @@ namespace NextDepartures.Standard
 
             foreach (Departure departure in departures)
             {
-                resultForDay.AddIfNotNull(TryProcessDeparture(agencies, calendarDates, stops, now, dayOffset, timeOffset, toleranceInHours, id, departure));
+                resultForDay.AddIfNotNull(Feed.TryProcessDeparture(agencies, calendarDates, stops, now, dayOffset, timeOffset, toleranceInHours, id, departure));
             }
 
             return resultForDay;
         }
 
-        private string GetTimezone(List<Agency> agencies, List<Stop> stops, Departure departure, string defaultTimezone = "Etc/UTC")
+        private static string GetTimezone(List<Agency> agencies, List<Stop> stops, Departure departure, string defaultTimezone = "Etc/UTC")
         {
             return StringUtils.FindPossibleString(defaultTimezone,
                 () => stops.FirstOrDefault(s => s.Id == departure.StopId)?.Timezone,
@@ -137,7 +137,7 @@ namespace NextDepartures.Standard
                 () => agencies.FirstOrDefault()?.Timezone);
         }
 
-        private bool IsDepartureValid(List<CalendarDate> calendarDates, TimeSpan timeOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, bool> dayOfWeekMapper, Departure departure, DateTime zonedDateTime, DateTime departureDateTime, DateTime targetDateTime, DateTime startDate, DateTime endDate)
+        private static bool IsDepartureValid(List<CalendarDate> calendarDates, TimeSpan timeOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, bool> dayOfWeekMapper, Departure departure, DateTime zonedDateTime, DateTime departureDateTime, DateTime targetDateTime, DateTime startDate, DateTime endDate)
         {
             if (startDate <= targetDateTime && endDate >= targetDateTime)
             {
@@ -190,15 +190,15 @@ namespace NextDepartures.Standard
             return false;
         }
 
-        private Departure TryProcessDeparture(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, DateTime now, DayOffsetType dayOffset, TimeSpan timeOffset, int toleranceInHours, string id, Departure departure)
+        private static Departure TryProcessDeparture(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, DateTime now, DayOffsetType dayOffset, TimeSpan timeOffset, int toleranceInHours, string id, Departure departure)
         {
-            DateTime zonedDateTime = now.ToZonedDateTime(GetTimezone(agencies, stops, departure));
-            DateTime departureDateTime = GetDateTimeFromDeparture(zonedDateTime, dayOffset.GetNumeric(), departure.DepartureTime);
+            DateTime zonedDateTime = now.ToZonedDateTime(Feed.GetTimezone(agencies, stops, departure));
+            DateTime departureDateTime = Feed.GetDateTimeFromDeparture(zonedDateTime, dayOffset.GetNumeric(), departure.DepartureTime);
             DateTime targetDateTime = zonedDateTime.AddDays(dayOffset.GetNumeric());
 
-            if (IsDepartureValid(calendarDates, timeOffset, toleranceInHours, id, WeekdayUtils.GetUtilByDayType(dayOffset), departure, zonedDateTime, departureDateTime, targetDateTime, departure.StartDate, departure.EndDate))
+            if (Feed.IsDepartureValid(calendarDates, timeOffset, toleranceInHours, id, WeekdayUtils.GetUtilByDayType(dayOffset), departure, zonedDateTime, departureDateTime, targetDateTime, departure.StartDate, departure.EndDate))
             {
-                return CreateProcessedDeparture(departure, departureDateTime);
+                return Feed.CreateProcessedDeparture(departure, departureDateTime);
             }
             else
             {
