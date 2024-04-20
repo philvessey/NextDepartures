@@ -33,7 +33,7 @@ namespace NextDepartures.Storage.GTFS
         /// <param name="path">The path of the directory containing the feed or the path to the zip file.</param>
         public static GTFSStorage Load(string path)
         {
-            GTFSReader<GTFSFeed> reader = new GTFSReader<GTFSFeed>();
+            GTFSReader<GTFSFeed> reader = new();
             GTFSFeed feed = reader.Read(path);
 
             return new GTFSStorage(feed);

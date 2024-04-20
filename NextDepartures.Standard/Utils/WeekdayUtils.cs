@@ -6,7 +6,7 @@ namespace NextDepartures.Standard.Utils
 {
     public static class WeekdayUtils
     {
-        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> _previousDays = new Dictionary<DayOfWeek, Func<Departure, bool>>()
+        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> _previousDays = new()
         {
             { DayOfWeek.Monday, d => d.Sunday },
             { DayOfWeek.Tuesday, d => d.Monday },
@@ -17,7 +17,7 @@ namespace NextDepartures.Standard.Utils
             { DayOfWeek.Sunday, d => d.Saturday },
         };
 
-        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> _todayDays = new Dictionary<DayOfWeek, Func<Departure, bool>>()
+        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> _todayDays = new()
         {
             { DayOfWeek.Monday, d => d.Monday },
             { DayOfWeek.Tuesday, d => d.Tuesday },
@@ -28,7 +28,7 @@ namespace NextDepartures.Standard.Utils
             { DayOfWeek.Sunday, d => d.Sunday },
         };
 
-        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> _followingDays = new Dictionary<DayOfWeek, Func<Departure, bool>>()
+        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> _followingDays = new()
         {
             { DayOfWeek.Monday, d => d.Tuesday },
             { DayOfWeek.Tuesday, d => d.Wednesday },

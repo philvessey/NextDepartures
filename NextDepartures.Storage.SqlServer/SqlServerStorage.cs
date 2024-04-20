@@ -43,12 +43,12 @@ namespace NextDepartures.Storage.SqlServer
 
         private async Task<List<T>> ExecuteCommand<T>(string sql, Func<SqlDataReader, T> entryProcessor) where T : class
         {
-            List<T> results = new List<T>();
+            List<T> results = new();
 
-            using SqlConnection connection = new SqlConnection(_connection);
+            using SqlConnection connection = new(_connection);
             connection.Open();
 
-            SqlCommand command = new SqlCommand(sql, connection)
+            SqlCommand command = new(sql, connection)
             {
                 CommandTimeout = 0,
                 CommandType = CommandType.Text

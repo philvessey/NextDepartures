@@ -31,7 +31,7 @@ namespace NextDepartures.Standard
         public static async Task<Feed> Load(IDataStorage dataStorage, bool preload = true)
         {
             IDataStorage storage = dataStorage;
-            DataStorageProperties storageProperties = new DataStorageProperties(dataStorage);
+            DataStorageProperties storageProperties = new(dataStorage);
 
             if (preload)
             {
@@ -119,7 +119,7 @@ namespace NextDepartures.Standard
 
         private List<Departure> GetDeparturesOnDay(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, List<Departure> departures, DateTime now, DayOffsetType dayOffset, TimeSpan timeOffset, int toleranceInHours, string id)
         {
-            List<Departure> resultForDay = new List<Departure>();
+            List<Departure> resultForDay = new();
 
             foreach (Departure departure in departures)
             {

@@ -40,7 +40,7 @@ namespace NextDepartures.Standard
                 List<Stop> stops = await _dataStorage.GetStopsAsync();
                 List<Stop> station = await _dataStorage.GetStopsByParentStationAsync(id);
 
-                List<Departure> departuresForStation = new List<Departure>();
+                List<Departure> departuresForStation = new();
 
                 foreach (Stop stop in station)
                 {
@@ -104,7 +104,7 @@ namespace NextDepartures.Standard
                 List<CalendarDate> calendarDates = await _dataStorage.GetCalendarDatesAsync();
                 List<Stop> stops = await _dataStorage.GetStopsAsync();
 
-                List<Departure> departuresForStation = new List<Departure>();
+                List<Departure> departuresForStation = new();
 
                 foreach (Stop stop in station)
                 {
