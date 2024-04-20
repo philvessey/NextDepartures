@@ -13,6 +13,19 @@
                 "env": { "VSTEST_HOST_DEBUG": "1" }
             },
             "problemMatcher": [] 
+        },
+        { 
+            "label": "net6.0 Test", 
+            "type": "process", 
+            "args": [ "test" ], 
+            "isBackground": true, 
+            "command": "dotnet", 
+            "options": 
+            { 
+                "cwd": "${workspaceFolder}/NextDepartures.Test", 
+                "env": { "VSTEST_HOST_DEBUG": "1" }
+            },
+            "problemMatcher": [] 
         }
     ]
 }

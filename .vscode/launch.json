@@ -5,6 +5,11 @@
             "name": "net8.0 Attach",
             "type": "coreclr",
             "request": "attach"
+        },
+        {
+            "name": "net6.0 Attach",
+            "type": "coreclr",
+            "request": "attach"
         }
     ]
 }
