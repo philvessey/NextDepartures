@@ -117,13 +117,13 @@ namespace NextDepartures.Standard
             return new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Value.Hours % 24, departureTime.Value.Minutes, departureTime.Value.Seconds).AddDays((departureTime.Value.Hours / 24) + dayOffset);
         }
 
-        private List<Departure> GetDeparturesOnDay(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, List<Departure> departures, DateTime now, DayOffsetType dayOffset, TimeSpan timeOffset, int toleranceInHours, string id)
+        private static List<Departure> GetDeparturesOnDay(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, List<Departure> departures, DateTime now, DayOffsetType dayOffset, TimeSpan timeOffset, int toleranceInHours, string id)
         {
             List<Departure> resultForDay = new();
 
             foreach (Departure departure in departures)
             {
-                resultForDay.AddIfNotNull(Feed.TryProcessDeparture(agencies, calendarDates, stops, now, dayOffset, timeOffset, toleranceInHours, id, departure));
+                resultForDay.AddIfNotNull(TryProcessDeparture(agencies, calendarDates, stops, now, dayOffset, timeOffset, toleranceInHours, id, departure));
             }
 
             return resultForDay;
@@ -192,13 +192,13 @@ namespace NextDepartures.Standard
 
         private static Departure TryProcessDeparture(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, DateTime now, DayOffsetType dayOffset, TimeSpan timeOffset, int toleranceInHours, string id, Departure departure)
         {
-            DateTime zonedDateTime = now.ToZonedDateTime(Feed.GetTimezone(agencies, stops, departure));
-            DateTime departureDateTime = Feed.GetDateTimeFromDeparture(zonedDateTime, dayOffset.GetNumeric(), departure.DepartureTime);
+            DateTime zonedDateTime = now.ToZonedDateTime(GetTimezone(agencies, stops, departure));
+            DateTime departureDateTime = GetDateTimeFromDeparture(zonedDateTime, dayOffset.GetNumeric(), departure.DepartureTime);
             DateTime targetDateTime = zonedDateTime.AddDays(dayOffset.GetNumeric());
 
-            if (Feed.IsDepartureValid(calendarDates, timeOffset, toleranceInHours, id, WeekdayUtils.GetUtilByDayType(dayOffset), departure, zonedDateTime, departureDateTime, targetDateTime, departure.StartDate, departure.EndDate))
+            if (IsDepartureValid(calendarDates, timeOffset, toleranceInHours, id, WeekdayUtils.GetUtilByDayType(dayOffset), departure, zonedDateTime, departureDateTime, targetDateTime, departure.StartDate, departure.EndDate))
             {
-                return Feed.CreateProcessedDeparture(departure, departureDateTime);
+                return CreateProcessedDeparture(departure, departureDateTime);
             }
             else
             {
