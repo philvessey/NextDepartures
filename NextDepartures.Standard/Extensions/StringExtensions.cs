@@ -7,9 +7,11 @@ namespace NextDepartures.Standard.Extensions
 {
     public static class StringExtensions
     {
+        private static readonly string[] separator = new string[] { ":" };
+
         public static TimeOfDay? ToTimeOfDay(this string baseString)
         {
-            int[] splittedString = baseString.Split(new string[] { ":" }, StringSplitOptions.None).Select(s => int.Parse(s)).ToArray();
+            int[] splittedString = baseString.Split(separator, StringSplitOptions.None).Select(s => int.Parse(s)).ToArray();
 
             return new TimeOfDay()
             {

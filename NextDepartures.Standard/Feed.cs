@@ -152,7 +152,7 @@ namespace NextDepartures.Standard
                     include = calendarDates.Any(c => c.ServiceId == departure.ServiceId && c.Date == targetDateTime.Date && c.ExceptionType == ExceptionType.Added);
                 }
 
-                if (include && (departure.RouteShortName.ToLower().Contains(id.WithPrefix("_")) || departure.RouteShortName.ToLower().Contains(id.WithPrefix("->"))))
+                if (include && (departure.RouteShortName.Contains(id.WithPrefix("_"), StringComparison.CurrentCultureIgnoreCase) || departure.RouteShortName.Contains(id.WithPrefix("->"), StringComparison.CurrentCultureIgnoreCase)))
                 {
                     return false;
                 }
