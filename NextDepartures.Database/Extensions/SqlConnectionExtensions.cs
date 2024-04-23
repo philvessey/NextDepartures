@@ -10,7 +10,7 @@ namespace NextDepartures.Database.Extensions
     {
         public static async Task ExecuteCommandAsync(this SqlConnection connection, string sql, CommandType commandType = CommandType.Text, Action<SqlCommand> commandHandler = null)
         {
-            SqlCommand command = new SqlCommand(sql, connection)
+            SqlCommand command = new(sql, connection)
             {
                 CommandTimeout = 0,
                 CommandType = commandType

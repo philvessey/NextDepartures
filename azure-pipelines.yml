@@ -1,4 +1,4 @@
-name: '3.3.0'
+name: '3.5.0'
 
 trigger:
 - master
@@ -25,6 +25,12 @@ stages:
         packageType: 'sdk'
         version: '6.0.x'
     
+    - task: UseDotNet@2
+      displayName: 'Use Required SDKs'
+      inputs:
+        packageType: 'sdk'
+        version: '7.0.x'
+
     - task: UseDotNet@2
       displayName: 'Use Required SDKs'
       inputs:

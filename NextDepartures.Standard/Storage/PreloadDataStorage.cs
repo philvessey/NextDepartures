@@ -18,14 +18,14 @@ namespace NextDepartures.Standard.Storage
         {
             _dataStorage = dataStorage;
 
-            _agencies = new List<Agency>();
-            _calendarDates = new List<CalendarDate>();
-            _stops = new List<Stop>();
+            _agencies = new();
+            _calendarDates = new();
+            _stops = new();
         }
 
         public static async Task<IDataStorage> LoadAsync(IDataStorage dataStorage, DataStorageProperties dataStorageProperties)
         {
-            PreloadDataStorage preloaded = new PreloadDataStorage(dataStorage);
+            PreloadDataStorage preloaded = new(dataStorage);
             await preloaded.PreloadAsync(dataStorage, dataStorageProperties);
 
             return preloaded;

@@ -30,7 +30,7 @@ namespace NextDepartures.Database
 
             try
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(option.Database);
+                SqlConnectionStringBuilder builder = new(option.Database);
             }
             catch (Exception exception)
             {
@@ -40,7 +40,7 @@ namespace NextDepartures.Database
                 Environment.Exit(1);
             }
 
-            SqlConnection connection = new SqlConnection(option.Database);
+            SqlConnection connection = new(option.Database);
 
             try
             {
@@ -308,10 +308,10 @@ namespace NextDepartures.Database
                 await connection.ExecuteCommandAsync(string.Format("CREATE PROCEDURE {0}_TRIP_PROCEDURE (@table {0}_TRIP_TYPE READONLY) AS INSERT INTO {0}_TRIP (Id, RouteId, ServiceId, Headsign, ShortName, Direction, BlockId, ShapeId, AccessibilityType) SELECT Id, RouteId, ServiceId, Headsign, ShortName, Direction, BlockId, ShapeId, AccessibilityType FROM @table", option.Prefix.ToUpper()));
                 Console.WriteLine(string.Format("CREATE: {0}_TRIP_PROCEDURE", option.Prefix.ToUpper()));
 
-                GTFSReader<GTFSFeed> reader = new GTFSReader<GTFSFeed>();
+                GTFSReader<GTFSFeed> reader = new();
                 GTFSFeed feed = reader.Read(option.Gtfs);
 
-                DataTable agency = new DataTable();
+                DataTable agency = new();
                 agency.Columns.Add("Id", typeof(string));
                 agency.Columns.Add("Name", typeof(string));
                 agency.Columns.Add("URL", typeof(string));
@@ -324,7 +324,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_AGENCY_PROCEDURE", option.Prefix.ToUpper()), agency, feed.Agencies, (dt, agency) => dt.Rows.Add(agency.Id, agency.Name, agency.URL, agency.Timezone, agency.LanguageCode, agency.Phone, agency.FareURL, agency.Email));
                 Console.WriteLine(string.Format("INSERT: {0}_AGENCY_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable calendar = new DataTable();
+                DataTable calendar = new();
                 calendar.Columns.Add("ServiceId", typeof(string));
                 calendar.Columns.Add("Monday", typeof(bool));
                 calendar.Columns.Add("Tuesday", typeof(bool));
@@ -339,7 +339,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_CALENDAR_PROCEDURE", option.Prefix.ToUpper()), calendar, feed.Calendars.GroupBy(c => c.ServiceId).Select(c => c.First()), (dt, calendar) => dt.Rows.Add(calendar.ServiceId, calendar.Monday, calendar.Tuesday, calendar.Wednesday, calendar.Thursday, calendar.Friday, calendar.Saturday, calendar.Sunday, calendar.StartDate, calendar.EndDate));
                 Console.WriteLine(string.Format("INSERT: {0}_CALENDAR_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable calendarDate = new DataTable();
+                DataTable calendarDate = new();
                 calendarDate.Columns.Add("ServiceId", typeof(string));
                 calendarDate.Columns.Add("Date", typeof(DateTime));
                 calendarDate.Columns.Add("ExceptionType", typeof(int));
@@ -347,7 +347,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_CALENDAR_DATE_PROCEDURE", option.Prefix.ToUpper()), calendarDate, feed.CalendarDates, (dt, calendarDate) => dt.Rows.Add(calendarDate.ServiceId, calendarDate.Date, calendarDate.ExceptionType));
                 Console.WriteLine(string.Format("INSERT: {0}_CALENDAR_DATE_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable fareAttribute = new DataTable();
+                DataTable fareAttribute = new();
                 fareAttribute.Columns.Add("FareId", typeof(string));
                 fareAttribute.Columns.Add("Price", typeof(string));
                 fareAttribute.Columns.Add("CurrencyType", typeof(string));
@@ -359,7 +359,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_FARE_ATTRIBUTE_PROCEDURE", option.Prefix.ToUpper()), fareAttribute, feed.FareAttributes, (dt, fareAttribute) => dt.Rows.Add(fareAttribute.FareId, fareAttribute.Price, fareAttribute.CurrencyType, fareAttribute.PaymentMethod, fareAttribute.Transfers, fareAttribute.AgencyId, fareAttribute.TransferDuration));
                 Console.WriteLine(string.Format("INSERT: {0}_FARE_ATTRIBUTE_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable fareRule = new DataTable();
+                DataTable fareRule = new();
                 fareRule.Columns.Add("FareId", typeof(string));
                 fareRule.Columns.Add("RouteId", typeof(string));
                 fareRule.Columns.Add("OriginId", typeof(string));
@@ -369,7 +369,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_FARE_RULE_PROCEDURE", option.Prefix.ToUpper()), fareRule, feed.FareRules, (dt, fareRule) => dt.Rows.Add(fareRule.FareId, fareRule.RouteId, fareRule.OriginId, fareRule.DestinationId, fareRule.ContainsId));
                 Console.WriteLine(string.Format("INSERT: {0}_FARE_RULE_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable frequency = new DataTable();
+                DataTable frequency = new();
                 frequency.Columns.Add("TripId", typeof(string));
                 frequency.Columns.Add("StartTime", typeof(string));
                 frequency.Columns.Add("EndTime", typeof(string));
@@ -379,7 +379,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_FREQUENCY_PROCEDURE", option.Prefix.ToUpper()), frequency, feed.Frequencies, (dt, frequency) => dt.Rows.Add(frequency.TripId, frequency.StartTime, frequency.EndTime, frequency.HeadwaySecs, frequency.ExactTimes));
                 Console.WriteLine(string.Format("INSERT: {0}_FREQUENCY_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable level = new DataTable();
+                DataTable level = new();
                 level.Columns.Add("Id", typeof(string));
                 level.Columns.Add("Indexes", typeof(double));
                 level.Columns.Add("Name", typeof(string));
@@ -387,7 +387,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_LEVEL_PROCEDURE", option.Prefix.ToUpper()), level, feed.Levels, (dt, level) => dt.Rows.Add(level.Id, level.Index, level.Name));
                 Console.WriteLine(string.Format("INSERT: {0}_LEVEL_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable pathway = new DataTable();
+                DataTable pathway = new();
                 pathway.Columns.Add("Id", typeof(string));
                 pathway.Columns.Add("FromStopId", typeof(string));
                 pathway.Columns.Add("ToStopId", typeof(string));
@@ -404,7 +404,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_PATHWAY_PROCEDURE", option.Prefix.ToUpper()), pathway, feed.Pathways, (dt, pathway) => dt.Rows.Add(pathway.Id, pathway.FromStopId, pathway.ToStopId, pathway.PathwayMode, pathway.IsBidirectional, pathway.Length, pathway.TraversalTime, pathway.StairCount, pathway.MaxSlope, pathway.MinWidth, pathway.SignpostedAs, pathway.ReversedSignpostedAs));
                 Console.WriteLine(string.Format("INSERT: {0}_PATHWAY_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable route = new DataTable();
+                DataTable route = new();
                 route.Columns.Add("Id", typeof(string));
                 route.Columns.Add("AgencyId", typeof(string));
                 route.Columns.Add("ShortName", typeof(string));
@@ -418,7 +418,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_ROUTE_PROCEDURE", option.Prefix.ToUpper()), route, feed.Routes.GroupBy(r => r.Id).Select(r => r.First()), (dt, route) => dt.Rows.Add(route.Id, route.AgencyId, route.ShortName, route.LongName, route.Description, route.Type, route.Url, route.Color, route.TextColor));
                 Console.WriteLine(string.Format("INSERT: {0}_ROUTE_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable shape = new DataTable();
+                DataTable shape = new();
                 shape.Columns.Add("Id", typeof(string));
                 shape.Columns.Add("Longitude", typeof(double));
                 shape.Columns.Add("Latitude", typeof(double));
@@ -428,7 +428,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_SHAPE_PROCEDURE", option.Prefix.ToUpper()), shape, feed.Shapes, (dt, shape) => dt.Rows.Add(shape.Id, shape.Longitude, shape.Latitude, shape.Sequence, shape.DistanceTravelled));
                 Console.WriteLine(string.Format("INSERT: {0}_SHAPE_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable stop = new DataTable();
+                DataTable stop = new();
                 stop.Columns.Add("Id", typeof(string));
                 stop.Columns.Add("Code", typeof(string));
                 stop.Columns.Add("Name", typeof(string));
@@ -447,7 +447,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_STOP_PROCEDURE", option.Prefix.ToUpper()), stop, feed.Stops.GroupBy(s => s.Id).Select(s => s.First()), (dt, stop) => dt.Rows.Add(stop.Id, stop.Code, stop.Name, stop.Description, stop.Longitude, stop.Latitude, stop.Zone, stop.Url, stop.LocationType, stop.ParentStation, stop.Timezone, stop.WheelchairBoarding, stop.LevelId, stop.PlatformCode));
                 Console.WriteLine(string.Format("INSERT: {0}_STOP_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable stopTime = new DataTable();
+                DataTable stopTime = new();
                 stopTime.Columns.Add("TripId", typeof(string));
                 stopTime.Columns.Add("ArrivalTime", typeof(string));
                 stopTime.Columns.Add("DepartureTime", typeof(string));
@@ -462,7 +462,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_STOP_TIME_PROCEDURE", option.Prefix.ToUpper()), stopTime, feed.StopTimes, (dt, stopTime) => dt.Rows.Add(stopTime.TripId, stopTime.ArrivalTime, stopTime.DepartureTime, stopTime.StopId, stopTime.StopSequence, stopTime.StopHeadsign, stopTime.PickupType, stopTime.DropOffType, stopTime.ShapeDistTravelled, stopTime.TimepointType));
                 Console.WriteLine(string.Format("INSERT: {0}_STOP_TIME_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable transfer = new DataTable();
+                DataTable transfer = new();
                 transfer.Columns.Add("FromStopId", typeof(string));
                 transfer.Columns.Add("ToStopId", typeof(string));
                 transfer.Columns.Add("TransferType", typeof(int));
@@ -471,7 +471,7 @@ namespace NextDepartures.Database
                 await connection.ExecuteStoredProcedureFromTableInBatchesAsync(string.Format("{0}_TRANSFER_PROCEDURE", option.Prefix.ToUpper()), transfer, feed.Transfers, (dt, transfer) => dt.Rows.Add(transfer.FromStopId, transfer.ToStopId, transfer.TransferType, transfer.MinimumTransferTime));
                 Console.WriteLine(string.Format("INSERT: {0}_TRANSFER_PROCEDURE", option.Prefix.ToUpper()));
 
-                DataTable trip = new DataTable();
+                DataTable trip = new();
                 trip.Columns.Add("Id", typeof(string));
                 trip.Columns.Add("RouteId", typeof(string));
                 trip.Columns.Add("ServiceId", typeof(string));

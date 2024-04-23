@@ -40,7 +40,7 @@ namespace NextDepartures.Standard
                 List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForTripAsync(id);
                 List<Stop> stops = await _dataStorage.GetStopsAsync();
 
-                List<Departure> departuresForTrip = new List<Departure>();
+                List<Departure> departuresForTrip = new();
 
                 departuresForTrip.AddRange(new List<Departure>()
                     .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, offset, hours, id))
