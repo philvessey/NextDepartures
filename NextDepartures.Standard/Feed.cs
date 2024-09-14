@@ -139,7 +139,7 @@ namespace NextDepartures.Standard
 
         private static bool IsDepartureValid(List<CalendarDate> calendarDates, TimeSpan timeOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, bool> dayOfWeekMapper, Departure departure, DateTime zonedDateTime, DateTime departureDateTime, DateTime targetDateTime, DateTime startDate, DateTime endDate)
         {
-            if (startDate <= targetDateTime && endDate >= targetDateTime)
+            if (startDate <= targetDateTime.Date && endDate >= targetDateTime.Date)
             {
                 bool include = false;
 
