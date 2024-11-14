@@ -1,9 +1,9 @@
 <Project>
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 
         <TestDevelopmentVersion>17.11.1</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
-        <TestFrameworkVersion>3.6.2</TestFrameworkVersion> <!-- MSTest.Test -->
+        <TestFrameworkVersion>3.6.3</TestFrameworkVersion> <!-- MSTest.Test -->
 
         <CommandLibraryVersion>2.9.1</CommandLibraryVersion> <!-- CommandLineParser -->
         <DatabaseLibraryVersion>5.2.2</DatabaseLibraryVersion> <!-- Microsoft.Data.SqlClient -->
