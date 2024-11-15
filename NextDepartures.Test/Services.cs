@@ -1,9 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
-using NextDepartures.Standard.Models;
 using NextDepartures.Storage.GTFS;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,8 +13,8 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetServicesByParentStationAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByParentStation = await feed.GetServicesByParentStationAsync("CIVC", new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.Zero, 1, 10);
+            var feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
+            var resultsByParentStation = await feed.GetServicesByParentStationAsync("CIVC", new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.Zero, 1, 10);
 
             Assert.IsNotNull(resultsByParentStation);
         }
@@ -24,8 +22,8 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetServicesByStopAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByStop = await feed.GetServicesByStopAsync("CIVC", new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.Zero, 1, 10);
+            var feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
+            var resultsByStop = await feed.GetServicesByStopAsync("CIVC", new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.Zero, 1, 10);
 
             Assert.IsNotNull(resultsByStop);
         }
@@ -33,9 +31,9 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetServicesByTripAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Service> resultsByStop = await feed.GetServicesByStopAsync("CIVC", new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.Zero, 1, 10);
-            List<Service> resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop.First().TripId, new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.FromMinutes(10), 1, 10);
+            var feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
+            var resultsByStop = await feed.GetServicesByStopAsync("CIVC", new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.Zero, 1, 10);
+            var resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop.First().TripId, new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.FromMinutes(10), 1, 10);
 
             Assert.IsNotNull(resultsByTrip);
         }

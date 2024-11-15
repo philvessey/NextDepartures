@@ -1,8 +1,6 @@
-using GTFS.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
 using NextDepartures.Storage.GTFS;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NextDepartures.Test
@@ -13,17 +11,17 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetAgenciesByEmailAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Agency> results = await feed.GetAgenciesByEmailAsync();
+            var feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetAgenciesByEmailAsync();
 
             Assert.IsNotNull(results);
         }
 
         [TestMethod]
-        public async Task GetAgenciesByFareURLAsync()
+        public async Task GetAgenciesByFareUrlAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Agency> results = await feed.GetAgenciesByFareURLAsync();
+            var feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetAgenciesByFareURLAsync();
 
             Assert.IsNotNull(results);
         }
@@ -31,8 +29,8 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetAgenciesByLanguageCodeAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Agency> results = await feed.GetAgenciesByLanguageCodeAsync();
+            var feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetAgenciesByLanguageCodeAsync();
 
             Assert.IsNotNull(results);
         }
@@ -40,8 +38,8 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetAgenciesByPhoneAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Agency> results = await feed.GetAgenciesByPhoneAsync();
+            var feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetAgenciesByPhoneAsync();
 
             Assert.IsNotNull(results);
         }
@@ -49,8 +47,8 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetAgenciesByQueryAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Agency> results = await feed.GetAgenciesByQueryAsync();
+            var feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetAgenciesByQueryAsync();
 
             Assert.IsNotNull(results);
         }
@@ -58,17 +56,17 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetAgenciesByTimezoneAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Agency> results = await feed.GetAgenciesByTimezoneAsync();
+            var feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetAgenciesByTimezoneAsync();
 
             Assert.IsNotNull(results);
         }
 
         [TestMethod]
-        public async Task GetAgenciesByURLAsync()
+        public async Task GetAgenciesByUrlAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Agency> results = await feed.GetAgenciesByURLAsync();
+            var feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetAgenciesByURLAsync();
 
             Assert.IsNotNull(results);
         }
