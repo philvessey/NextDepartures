@@ -19,13 +19,8 @@ namespace NextDepartures.Storage.SqlServer
     {
         private readonly string _connection;
         private readonly string _prefix;
-
-        /// <summary>
-        /// Creates a new sql server storage.
-        /// </summary>
-        /// <param name="connection">The connection string to use when connecting to a database.</param>
-        /// <param name="prefix">The table prefix to select.</param>
-        public SqlServerStorage(string connection, string prefix)
+        
+        private SqlServerStorage(string connection, string prefix)
         {
             _connection = connection;
             _prefix = prefix;
@@ -43,9 +38,9 @@ namespace NextDepartures.Storage.SqlServer
 
         private async Task<List<T>> ExecuteCommand<T>(string sql, Func<SqlDataReader, T> entryProcessor) where T : class
         {
-            List<T> results = new();
+            List<T> results = [];
 
-            using SqlConnection connection = new(_connection);
+            await using SqlConnection connection = new(_connection);
             connection.Open();
 
             SqlCommand command = new(sql, connection)
@@ -54,7 +49,7 @@ namespace NextDepartures.Storage.SqlServer
                 CommandType = CommandType.Text
             };
 
-            SqlDataReader dataReader = await command.ExecuteReaderAsync();
+            var dataReader = await command.ExecuteReaderAsync();
 
             while (await dataReader.ReadAsync())
             {
@@ -67,7 +62,7 @@ namespace NextDepartures.Storage.SqlServer
             return results;
         }
 
-        private Agency GetAgencyFromDataReader(SqlDataReader dataReader)
+        private static Agency GetAgencyFromDataReader(SqlDataReader dataReader)
         {
             return new Agency()
             {
@@ -82,7 +77,7 @@ namespace NextDepartures.Storage.SqlServer
             };
         }
 
-        private Agency GetAgencyFromDataReaderWithSpecialCasing(SqlDataReader dataReader)
+        private static Agency GetAgencyFromDataReaderWithSpecialCasing(SqlDataReader dataReader)
         {
             return new Agency()
             {
@@ -103,7 +98,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesAsync()
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_AGENCY", _prefix.ToUpper()), GetAgencyFromDataReader);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY", GetAgencyFromDataReader);
         }
 
         /// <summary>
@@ -113,17 +108,17 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByEmailAsync(string email)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_AGENCY WHERE LOWER(ISNULL(Email, '')) LIKE '%{1}%'", _prefix.ToUpper(), email.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(ISNULL(Email, '')) LIKE '%{email.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
         /// Gets the agencies by the given fare URL.
         /// </summary>
-        /// <param name="fareURL">The fare URL.</param>
+        /// <param name="fareUrl">The fare URL.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareURL)
+        public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareUrl)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_AGENCY WHERE LOWER(ISNULL(FareURL, '')) LIKE '%{1}%'", _prefix.ToUpper(), fareURL.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(ISNULL(FareURL, '')) LIKE '%{fareUrl.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -133,7 +128,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_AGENCY WHERE LOWER(ISNULL(LanguageCode, '')) LIKE '%{1}%'", _prefix.ToUpper(), languageCode.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(ISNULL(LanguageCode, '')) LIKE '%{languageCode.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -143,7 +138,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByPhoneAsync(string phone)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_AGENCY WHERE LOWER(ISNULL(Phone, '')) LIKE '%{1}%'", _prefix.ToUpper(), phone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(ISNULL(Phone, '')) LIKE '%{phone.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -153,7 +148,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByQueryAsync(string query)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_AGENCY WHERE LOWER(ISNULL(Id, '')) LIKE '%{1}%' OR LOWER(Name) LIKE '%{1}%'", _prefix.ToUpper(), query.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(ISNULL(Id, '')) LIKE '%{query.ToLower()}%' OR LOWER(Name) LIKE '%{query.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -163,7 +158,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_AGENCY WHERE LOWER(Timezone) LIKE '%{1}%'", _prefix.ToUpper(), timezone.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(Timezone) LIKE '%{timezone.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -173,10 +168,10 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByURLAsync(string url)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_AGENCY WHERE LOWER(URL) LIKE '%{1}%'", _prefix.ToUpper(), url.ToLower()), GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(URL) LIKE '%{url.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
 
-        private CalendarDate GetCalendarDatesFromDataReader(SqlDataReader dataReader)
+        private static CalendarDate GetCalendarDatesFromDataReader(SqlDataReader dataReader)
         {
             return new CalendarDate()
             {
@@ -192,10 +187,10 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of calendar dates.</returns>
         public Task<List<CalendarDate>> GetCalendarDatesAsync()
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_CALENDAR_DATE", _prefix.ToUpper()), GetCalendarDatesFromDataReader);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_CALENDAR_DATE", GetCalendarDatesFromDataReader);
         }
 
-        private Departure GetDepartureFromDataReader(SqlDataReader dataReader)
+        private static Departure GetDepartureFromDataReader(SqlDataReader dataReader)
         {
             return new Departure()
             {
@@ -228,7 +223,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of departures.</returns>
         public Task<List<Departure>> GetDeparturesForStopAsync(string id)
         {
-            return ExecuteCommand(string.Format("SELECT s.DepartureTime, s.StopId, t.Id, t.ServiceId, t.Headsign, t.ShortName, r.AgencyId, r.ShortName, r.LongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM {0}_STOP_TIME s LEFT JOIN {0}_TRIP t ON (s.TripId = t.Id) LEFT JOIN {0}_ROUTE r ON (t.RouteId = r.Id) LEFT JOIN {0}_CALENDAR c ON (t.ServiceId = c.ServiceId) WHERE LOWER(s.StopId) = '{1}' AND s.PickupType != 1 ORDER BY s.DepartureTime ASC", _prefix.ToUpper(), id.ToLower()), GetDepartureFromDataReader);
+            return ExecuteCommand($"SELECT s.DepartureTime, s.StopId, t.Id, t.ServiceId, t.Headsign, t.ShortName, r.AgencyId, r.ShortName, r.LongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM {_prefix.ToUpper()}_STOP_TIME s LEFT JOIN {_prefix.ToUpper()}_TRIP t ON (s.TripId = t.Id) LEFT JOIN {_prefix.ToUpper()}_ROUTE r ON (t.RouteId = r.Id) LEFT JOIN {_prefix.ToUpper()}_CALENDAR c ON (t.ServiceId = c.ServiceId) WHERE LOWER(s.StopId) = '{id.ToLower()}' AND s.PickupType != 1 ORDER BY s.DepartureTime ASC", GetDepartureFromDataReader);
         }
 
         /// <summary>
@@ -239,10 +234,10 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of departures.</returns>
         public Task<List<Departure>> GetDeparturesForTripAsync(string id)
         {
-            return ExecuteCommand(string.Format("SELECT s.DepartureTime, s.StopId, t.Id, t.ServiceId, t.Headsign, t.ShortName, r.AgencyId, r.ShortName, r.LongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM {0}_STOP_TIME s LEFT JOIN {0}_TRIP t ON (s.TripId = t.Id) LEFT JOIN {0}_ROUTE r ON (t.RouteId = r.Id) LEFT JOIN {0}_CALENDAR c ON (t.ServiceId = c.ServiceId) WHERE LOWER(s.TripId) = '{1}' AND s.PickupType != 1 ORDER BY s.DepartureTime ASC", _prefix.ToUpper(), id.ToLower()), GetDepartureFromDataReader);
+            return ExecuteCommand($"SELECT s.DepartureTime, s.StopId, t.Id, t.ServiceId, t.Headsign, t.ShortName, r.AgencyId, r.ShortName, r.LongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM {_prefix.ToUpper()}_STOP_TIME s LEFT JOIN {_prefix.ToUpper()}_TRIP t ON (s.TripId = t.Id) LEFT JOIN {_prefix.ToUpper()}_ROUTE r ON (t.RouteId = r.Id) LEFT JOIN {_prefix.ToUpper()}_CALENDAR c ON (t.ServiceId = c.ServiceId) WHERE LOWER(s.TripId) = '{id.ToLower()}' AND s.PickupType != 1 ORDER BY s.DepartureTime ASC", GetDepartureFromDataReader);
         }
 
-        private Stop GetStopFromDataReader(SqlDataReader dataReader)
+        private static Stop GetStopFromDataReader(SqlDataReader dataReader)
         {
             return new Stop()
             {
@@ -263,7 +258,7 @@ namespace NextDepartures.Storage.SqlServer
             };
         }
 
-        private Stop GetStopFromDataReaderWithSpecialCasing(SqlDataReader dataReader)
+        private static Stop GetStopFromDataReaderWithSpecialCasing(SqlDataReader dataReader)
         {
             return new Stop()
             {
@@ -290,7 +285,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsAsync()
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP", _prefix.ToUpper()), GetStopFromDataReader);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP", GetStopFromDataReader);
         }
 
         /// <summary>
@@ -300,7 +295,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByDescriptionAsync(string description)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE LOWER(ISNULL(Description, '')) LIKE '%{1}%'", _prefix.ToUpper(), description.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(Description, '')) LIKE '%{description.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -310,7 +305,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByLevelAsync(string id)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE LOWER(ISNULL(LevelId, '')) = '{1}'", _prefix.ToUpper(), id.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(LevelId, '')) = '{id.ToLower()}'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -323,7 +318,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE Longitude >= {1} AND Latitude >= {2} AND Longitude <= {3} AND Latitude <= {4}", _prefix.ToUpper(), minimumLongitude, minimumLatitude, maximumLongitude, maximumLatitude), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE Longitude >= {minimumLongitude} AND Latitude >= {minimumLatitude} AND Longitude <= {maximumLongitude} AND Latitude <= {maximumLatitude}", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -333,7 +328,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE LocationType = {1}", _prefix.ToUpper(), locationType.ToInt32()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LocationType = {locationType.ToInt32()}", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -343,7 +338,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByParentStationAsync(string id)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE LOWER(ISNULL(ParentStation, '')) = '{1}'", _prefix.ToUpper(), id.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(ParentStation, '')) = '{id.ToLower()}'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -353,7 +348,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE LOWER(ISNULL(PlatformCode, '')) = '{1}'", _prefix.ToUpper(), platformCode.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(PlatformCode, '')) = '{platformCode.ToLower()}'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -363,7 +358,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByQueryAsync(string query)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE LOWER(Id) LIKE '%{1}%' OR LOWER(ISNULL(Code, '')) LIKE '%{1}%' OR LOWER(ISNULL(Name, '')) LIKE '%{1}%'", _prefix.ToUpper(), query.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(Id) LIKE '%{query.ToLower()}%' OR LOWER(ISNULL(Code, '')) LIKE '%{query.ToLower()}%' OR LOWER(ISNULL(Name, '')) LIKE '%{query.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -373,7 +368,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE LOWER(ISNULL(Timezone, '')) LIKE '%{1}%'", _prefix.ToUpper(), timezone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(Timezone, '')) LIKE '%{timezone.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -383,7 +378,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByURLAsync(string url)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE LOWER(ISNULL(Url, '')) LIKE '%{1}%'", _prefix.ToUpper(), url.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(Url, '')) LIKE '%{url.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -393,7 +388,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE LOWER(ISNULL(WheelchairBoarding, '')) = '{1}'", _prefix.ToUpper(), wheelchairBoarding.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(WheelchairBoarding, '')) = '{wheelchairBoarding.ToLower()}'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -403,7 +398,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByZoneAsync(string zone)
         {
-            return ExecuteCommand(string.Format("SELECT * FROM {0}_STOP WHERE LOWER(ISNULL(Zone, '')) = '{1}'", _prefix.ToUpper(), zone.ToLower()), GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(Zone, '')) = '{zone.ToLower()}'", GetStopFromDataReaderWithSpecialCasing);
         }
     }
 }
