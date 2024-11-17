@@ -15,15 +15,17 @@ namespace NextDepartures.Test
             var results = await feed.GetAgenciesByEmailAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetAgenciesByFareUrlAsync()
         {
             var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
-            var results = await feed.GetAgenciesByFareURLAsync();
+            var results = await feed.GetAgenciesByFareUrlAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -33,6 +35,7 @@ namespace NextDepartures.Test
             var results = await feed.GetAgenciesByLanguageCodeAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -42,6 +45,7 @@ namespace NextDepartures.Test
             var results = await feed.GetAgenciesByPhoneAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -51,6 +55,7 @@ namespace NextDepartures.Test
             var results = await feed.GetAgenciesByQueryAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -60,15 +65,17 @@ namespace NextDepartures.Test
             var results = await feed.GetAgenciesByTimezoneAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetAgenciesByUrlAsync()
         {
             var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
-            var results = await feed.GetAgenciesByURLAsync();
+            var results = await feed.GetAgenciesByUrlAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
     }
 }

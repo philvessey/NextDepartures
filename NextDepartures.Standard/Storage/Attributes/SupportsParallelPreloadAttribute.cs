@@ -2,8 +2,6 @@
 
 namespace NextDepartures.Standard.Storage.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class SupportsParallelPreloadAttribute : Attribute
-    {
-    }
+    [AttributeUsage(AttributeTargets.Class)]
+    public abstract class SupportsParallelPreloadAttribute : Attribute { }
 }

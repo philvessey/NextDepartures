@@ -112,11 +112,11 @@ namespace NextDepartures.Storage.SqlServer
         }
 
         /// <summary>
-        /// Gets the agencies by the given fare URL.
+        /// Gets the agencies by the given fare url.
         /// </summary>
-        /// <param name="fareUrl">The fare URL.</param>
+        /// <param name="fareUrl">The fare url.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareUrl)
+        public Task<List<Agency>> GetAgenciesByFareUrlAsync(string fareUrl)
         {
             return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(ISNULL(FareURL, '')) LIKE '%{fareUrl.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
@@ -162,11 +162,11 @@ namespace NextDepartures.Storage.SqlServer
         }
 
         /// <summary>
-        /// Gets the agencies by the given URL.
+        /// Gets the agencies by the given url.
         /// </summary>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The url.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Agency>> GetAgenciesByURLAsync(string url)
+        public Task<List<Agency>> GetAgenciesByUrlAsync(string url)
         {
             return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(URL) LIKE '%{url.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
@@ -305,7 +305,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByLevelAsync(string id)
         {
-            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(LevelId, '')) = '{id.ToLower()}'", GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(LevelId, '')) LIKE '%{id.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByParentStationAsync(string id)
         {
-            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(ParentStation, '')) = '{id.ToLower()}'", GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(ParentStation, '')) LIKE '%{id.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -348,7 +348,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode)
         {
-            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(PlatformCode, '')) = '{platformCode.ToLower()}'", GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(PlatformCode, '')) LIKE '%{platformCode.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -372,11 +372,11 @@ namespace NextDepartures.Storage.SqlServer
         }
 
         /// <summary>
-        /// Gets the stops by the given URL.
+        /// Gets the stops by the given url.
         /// </summary>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The url.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Stop>> GetStopsByURLAsync(string url)
+        public Task<List<Stop>> GetStopsByUrlAsync(string url)
         {
             return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(Url, '')) LIKE '%{url.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
         }
@@ -388,7 +388,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding)
         {
-            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(WheelchairBoarding, '')) = '{wheelchairBoarding.ToLower()}'", GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(WheelchairBoarding, '')) LIKE '%{wheelchairBoarding.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -398,7 +398,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByZoneAsync(string zone)
         {
-            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(Zone, '')) = '{zone.ToLower()}'", GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(Zone, '')) LIKE '%{zone.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
         }
     }
 }

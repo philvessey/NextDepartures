@@ -30,7 +30,6 @@ namespace NextDepartures.Storage.GTFS
         public static GtfsStorage Load(string path)
         {
             GTFSReader<GTFSFeed> reader = new();
-            
             return new GtfsStorage(reader.Read(path));
         }
 
@@ -89,11 +88,11 @@ namespace NextDepartures.Storage.GTFS
         }
 
         /// <summary>
-        /// Gets the agencies by the given fare URL.
+        /// Gets the agencies by the given fare url.
         /// </summary>
-        /// <param name="fareUrl">The fare URL.</param>
+        /// <param name="fareUrl">The fare url.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareUrl)
+        public Task<List<Agency>> GetAgenciesByFareUrlAsync(string fareUrl)
         {
             return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.FareURL ?? "").Contains(fareUrl, StringComparison.CurrentCultureIgnoreCase)));
         }
@@ -139,11 +138,11 @@ namespace NextDepartures.Storage.GTFS
         }
 
         /// <summary>
-        /// Gets the agencies by the given URL.
+        /// Gets the agencies by the given url.
         /// </summary>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The url.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Agency>> GetAgenciesByURLAsync(string url)
+        public Task<List<Agency>> GetAgenciesByUrlAsync(string url)
         {
             return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.URL.Contains(url, StringComparison.CurrentCultureIgnoreCase)));
         }
@@ -296,7 +295,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByLevelAsync(string id)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.LevelId ?? "").Equals(id, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.LevelId ?? "").Contains(id, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -329,7 +328,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByParentStationAsync(string id)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.ParentStation ?? "").Equals(id, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.ParentStation ?? "").Contains(id, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -339,7 +338,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.PlatformCode ?? "").Equals(platformCode, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.PlatformCode ?? "").Contains(platformCode, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -363,11 +362,11 @@ namespace NextDepartures.Storage.GTFS
         }
 
         /// <summary>
-        /// Gets the stops by the given URL.
+        /// Gets the stops by the given url.
         /// </summary>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The url.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Stop>> GetStopsByURLAsync(string url)
+        public Task<List<Stop>> GetStopsByUrlAsync(string url)
         {
             return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Url ?? "").Contains(url, StringComparison.CurrentCultureIgnoreCase)));
         }
@@ -379,7 +378,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.WheelchairBoarding ?? "").Equals(wheelchairBoarding, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.WheelchairBoarding ?? "").Contains(wheelchairBoarding, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -389,7 +388,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByZoneAsync(string zone)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Zone ?? "").Equals(zone, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Zone ?? "").Contains(zone, StringComparison.CurrentCultureIgnoreCase)));
         }
     }
 }

@@ -15,6 +15,7 @@ namespace NextDepartures.Test
             var results = await feed.GetStopsByDescriptionAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -24,6 +25,7 @@ namespace NextDepartures.Test
             var results = await feed.GetStopsByLevelAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -33,6 +35,7 @@ namespace NextDepartures.Test
             var results = await feed.GetStopsByLocationAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -42,6 +45,7 @@ namespace NextDepartures.Test
             var results = await feed.GetStopsByLocationTypeAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -51,6 +55,7 @@ namespace NextDepartures.Test
             var results = await feed.GetStopsByParentStationAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -60,6 +65,7 @@ namespace NextDepartures.Test
             var results = await feed.GetStopsByPlatformCodeAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -69,6 +75,7 @@ namespace NextDepartures.Test
             var results = await feed.GetStopsByQueryAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -78,15 +85,17 @@ namespace NextDepartures.Test
             var results = await feed.GetStopsByTimezoneAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetStopsByUrlAsync()
         {
             var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
-            var results = await feed.GetStopsByURLAsync();
+            var results = await feed.GetStopsByUrlAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -96,6 +105,7 @@ namespace NextDepartures.Test
             var results = await feed.GetStopsByWheelchairBoardingAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
@@ -105,6 +115,7 @@ namespace NextDepartures.Test
             var results = await feed.GetStopsByZoneAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
     }
 }

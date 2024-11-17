@@ -50,12 +50,12 @@ Once connected to the library:
 
 ```csharp
 var results = await feed.GetAgenciesByEmailAsync();
-var results = await feed.GetAgenciesByFareURLAsync();
+var results = await feed.GetAgenciesByFareUrlAsync();
 var results = await feed.GetAgenciesByLanguageCodeAsync();
 var results = await feed.GetAgenciesByPhoneAsync();
 var results = await feed.GetAgenciesByQueryAsync();
 var results = await feed.GetAgenciesByTimezoneAsync();
-var results = await feed.GetAgenciesByURLAsync();
+var results = await feed.GetAgenciesByUrlAsync();
 ```
 
 ## Services Endpoints
@@ -81,7 +81,7 @@ var results = await feed.GetStopsByParentStationAsync();
 var results = await feed.GetStopsByPlatformCodeAsync();
 var results = await feed.GetStopsByQueryAsync();
 var results = await feed.GetStopsByTimezoneAsync();
-var results = await feed.GetStopsByURLAsync();
+var results = await feed.GetStopsByUrlAsync();
 var results = await feed.GetStopsByWheelchairBoardingAsync();
 var results = await feed.GetStopsByZoneAsync();
 ```

@@ -8,17 +8,17 @@ namespace NextDepartures.Standard
     public partial class Feed
     {
         /// <summary>
-        /// Gets the agencies by the given email.
+        /// Gets the stops by the given url.
         /// </summary>
-        /// <param name="email">The email. Default is all but can be overridden.</param>
+        /// <param name="url">The url. Default is all but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
-        /// <returns>A list of agencies.</returns>
-        public async Task<List<Agency>> GetAgenciesByEmailAsync(string email = "", int count = 0)
+        /// <returns>A list of stops.</returns>
+        public async Task<List<Stop>> GetStopsByUrlAsync(string url = "", int count = 0)
         {
             try
             {
-                var agenciesFromStorage = await _dataStorage.GetAgenciesByEmailAsync(email);
-                return count > 0 ? agenciesFromStorage.Take(count).ToList() : agenciesFromStorage;
+                var stopsFromStorage = await _dataStorage.GetStopsByUrlAsync(url);
+                return count > 0 ? stopsFromStorage.Take(count).ToList() : stopsFromStorage;
             }
             catch
             {

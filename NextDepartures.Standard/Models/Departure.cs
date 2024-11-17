@@ -5,29 +5,29 @@ namespace NextDepartures.Standard.Models
 {
     public class Departure
     {
-        public TimeOfDay? DepartureTime { get; set; }
-        public DateTime DepartureDateTime { get; set; }
-        public string StopId { get; set; }
-        public string TripId { get; set; }
-        public string ServiceId { get; set; }
-        public string TripHeadsign { get; set; }
-        public string TripShortName { get; set; }
-        public string AgencyId { get; set; }
-        public string RouteLongName { get; set; }
-        public string RouteShortName { get; set; }
-        public bool Monday { get; set; }
-        public bool Tuesday { get; set; }
-        public bool Wednesday { get; set; }
-        public bool Thursday { get; set; }
-        public bool Friday { get; set; }
-        public bool Saturday { get; set; }
-        public bool Sunday { get; set; }
-        public DateTime EndDate { get; set; }
-        public DateTime StartDate { get; set; }
+        public TimeOfDay? DepartureTime { get; init; }
+        public DateTime DepartureDateTime { get; init; }
+        public string StopId { get; init; }
+        public string TripId { get; init; }
+        public string ServiceId { get; init; }
+        public string TripHeadsign { get; init; }
+        public string TripShortName { get; init; }
+        public string AgencyId { get; init; }
+        public string RouteLongName { get; init; }
+        public string RouteShortName { get; init; }
+        public bool Monday { get; init; }
+        public bool Tuesday { get; init; }
+        public bool Wednesday { get; init; }
+        public bool Thursday { get; init; }
+        public bool Friday { get; init; }
+        public bool Saturday { get; init; }
+        public bool Sunday { get; init; }
+        public DateTime EndDate { get; init; }
+        public DateTime StartDate { get; init; }
 
         public override string ToString()
         {
-            return string.Format("[{0}] {1}", DepartureDateTime, ServiceId);
+            return $"[{DepartureDateTime}] {ServiceId}";
         }
     }
 }

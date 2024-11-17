@@ -17,16 +17,8 @@ namespace NextDepartures.Standard
         {
             try
             {
-                List<Agency> agenciesFromStorage = await _dataStorage.GetAgenciesByPhoneAsync(phone);
-
-                if (count > 0)
-                {
-                    return agenciesFromStorage.Take(count).ToList();
-                }
-                else
-                {
-                    return agenciesFromStorage;
-                }
+                var agenciesFromStorage = await _dataStorage.GetAgenciesByPhoneAsync(phone);
+                return count > 0 ? agenciesFromStorage.Take(count).ToList() : agenciesFromStorage;
             }
             catch
             {

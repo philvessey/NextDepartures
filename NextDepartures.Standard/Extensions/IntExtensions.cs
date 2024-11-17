@@ -6,42 +6,20 @@ namespace NextDepartures.Standard.Extensions
     {
         public static ExceptionType ToExceptionType(this int baseInt)
         {
-            if (baseInt == 0)
-            {
-                return ExceptionType.Added;
-            }
-            else
-            {
-                return ExceptionType.Removed;
-            }
+            return baseInt == 0 ? ExceptionType.Added : ExceptionType.Removed;
         }
 
         public static LocationType? ToLocationType(this int baseInt)
         {
-            if (baseInt == 0)
+            return baseInt switch
             {
-                return LocationType.Stop;
-            }
-            else if (baseInt == 1)
-            {
-                return LocationType.Station;
-            }
-            else if (baseInt == 2)
-            {
-                return LocationType.EntranceExit;
-            }
-            else if (baseInt == 3)
-            {
-                return LocationType.GenericNode;
-            }
-            else if (baseInt == 4)
-            {
-                return LocationType.BoardingArea;
-            }
-            else
-            {
-                return null;
-            }
+                0 => LocationType.Stop,
+                1 => LocationType.Station,
+                2 => LocationType.EntranceExit,
+                3 => LocationType.GenericNode,
+                4 => LocationType.BoardingArea,
+                _ => null
+            };
         }
     }
 }

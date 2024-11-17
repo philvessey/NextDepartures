@@ -18,9 +18,9 @@ namespace NextDepartures.Standard.Storage
         {
             _dataStorage = dataStorage;
 
-            _agencies = new();
-            _calendarDates = new();
-            _stops = new();
+            _agencies = [];
+            _calendarDates = [];
+            _stops = [];
         }
 
         public static async Task<IDataStorage> LoadAsync(IDataStorage dataStorage, DataStorageProperties dataStorageProperties)
@@ -71,13 +71,13 @@ namespace NextDepartures.Standard.Storage
         }
 
         /// <summary>
-        /// Gets the agencies by the given fare URL.
+        /// Gets the agencies by the given fare url.
         /// </summary>
-        /// <param name="fareURL">The fare URL.</param>
+        /// <param name="fareUrl">The fare url.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareURL)
+        public Task<List<Agency>> GetAgenciesByFareUrlAsync(string fareUrl)
         {
-            return _dataStorage.GetAgenciesByFareURLAsync(fareURL);
+            return _dataStorage.GetAgenciesByFareUrlAsync(fareUrl);
         }
 
         /// <summary>
@@ -121,13 +121,13 @@ namespace NextDepartures.Standard.Storage
         }
 
         /// <summary>
-        /// Gets the agencies by the given URL.
+        /// Gets the agencies by the given url.
         /// </summary>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The url.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Agency>> GetAgenciesByURLAsync(string url)
+        public Task<List<Agency>> GetAgenciesByUrlAsync(string url)
         {
-            return _dataStorage.GetAgenciesByURLAsync(url);
+            return _dataStorage.GetAgenciesByUrlAsync(url);
         }
 
         /// <summary>
@@ -254,13 +254,13 @@ namespace NextDepartures.Standard.Storage
         }
 
         /// <summary>
-        /// Gets the stops by the given URL.
+        /// Gets the stops by the given url.
         /// </summary>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The url.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Stop>> GetStopsByURLAsync(string url)
+        public Task<List<Stop>> GetStopsByUrlAsync(string url)
         {
-            return _dataStorage.GetStopsByURLAsync(url);
+            return _dataStorage.GetStopsByUrlAsync(url);
         }
 
         /// <summary>
