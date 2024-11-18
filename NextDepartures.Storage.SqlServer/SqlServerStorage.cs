@@ -148,7 +148,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByQueryAsync(string query)
         {
-            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(ISNULL(Id, '')) LIKE '%{query.ToLower()}%' OR LOWER(Name) LIKE '%{query.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(ISNULL(Id, '')) LIKE '%{query.ToLower()}%' OR LOWER(ISNULL(Name, '')) LIKE '%{query.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
         {
-            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(Timezone) LIKE '%{timezone.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(ISNULL(Timezone, '')) LIKE '%{timezone.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByUrlAsync(string url)
         {
-            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(URL) LIKE '%{url.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_AGENCY WHERE LOWER(ISNULL(URL, '')) LIKE '%{url.ToLower()}%'", GetAgencyFromDataReaderWithSpecialCasing);
         }
 
         private static CalendarDate GetCalendarDatesFromDataReader(SqlDataReader dataReader)
@@ -358,7 +358,7 @@ namespace NextDepartures.Storage.SqlServer
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByQueryAsync(string query)
         {
-            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(Id) LIKE '%{query.ToLower()}%' OR LOWER(ISNULL(Code, '')) LIKE '%{query.ToLower()}%' OR LOWER(ISNULL(Name, '')) LIKE '%{query.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
+            return ExecuteCommand($"SELECT * FROM {_prefix.ToUpper()}_STOP WHERE LOWER(ISNULL(Id, '')) LIKE '%{query.ToLower()}%' OR LOWER(ISNULL(Code, '')) LIKE '%{query.ToLower()}%' OR LOWER(ISNULL(Name, '')) LIKE '%{query.ToLower()}%'", GetStopFromDataReaderWithSpecialCasing);
         }
 
         /// <summary>

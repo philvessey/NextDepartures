@@ -40,12 +40,10 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "trip"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForTrip
-                        .Select(d => CreateService(agencies, stops, d, "trip"))
-                        .ToList();
-                }
+
+                return departuresForTrip
+                    .Select(d => CreateService(agencies, stops, d, "trip"))
+                    .ToList();
             }
             catch
             {
@@ -86,12 +84,10 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "trip"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForTrip
-                        .Select(d => CreateService(agencies, stops, d, "trip"))
-                        .ToList();
-                }
+
+                return departuresForTrip
+                    .Select(d => CreateService(agencies, stops, d, "trip"))
+                    .ToList();
             }
             catch
             {

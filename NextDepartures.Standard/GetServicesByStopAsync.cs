@@ -41,12 +41,10 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "stop"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForStop
-                        .Select(d => CreateService(agencies, stops, d, "stop"))
-                        .ToList();
-                }
+
+                return departuresForStop
+                    .Select(d => CreateService(agencies, stops, d, "stop"))
+                    .ToList();
             }
             catch
             {
@@ -87,12 +85,10 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "stop"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForStop
-                        .Select(d => CreateService(agencies, stops, d, "stop"))
-                        .ToList();
-                }
+
+                return departuresForStop
+                    .Select(d => CreateService(agencies, stops, d, "stop"))
+                    .ToList();
             }
             catch
             {
@@ -131,12 +127,10 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "stop"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForStop
-                        .Select(d => CreateService(agencies, stops, d, "stop"))
-                        .ToList();
-                }
+
+                return departuresForStop
+                    .Select(d => CreateService(agencies, stops, d, "stop"))
+                    .ToList();
             }
             catch
             {
@@ -177,12 +171,10 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "stop"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForStop
-                        .Select(d => CreateService(agencies, stops, d, "stop"))
-                        .ToList();
-                }
+
+                return departuresForStop
+                    .Select(d => CreateService(agencies, stops, d, "stop"))
+                    .ToList();
             }
             catch
             {

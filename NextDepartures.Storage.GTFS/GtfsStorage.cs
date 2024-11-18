@@ -124,7 +124,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByQueryAsync(string query)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.Id ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase) || a.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.Id ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase) || (a.Name ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.Timezone.Contains(timezone, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.Timezone ?? "").Contains(timezone, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByUrlAsync(string url)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.URL.Contains(url, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.URL ?? "").Contains(url, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         private List<CalendarDate> GetCalendarDatesFromFeed()
@@ -348,7 +348,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByQueryAsync(string query)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Id.Contains(query, StringComparison.CurrentCultureIgnoreCase) || (s.Code ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase) || (s.Name ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Id ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase) || (s.Code ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase) || (s.Name ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>

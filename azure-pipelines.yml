@@ -55,7 +55,6 @@ stages:
       inputs:
         command: 'pack'
         packagesToPack: '**/NextDepartures.Standard/*.csproj;**/NextDepartures.Storage.GTFS/*.csproj;**/NextDepartures.Storage.SqlServer/*.csproj'
-        includesymbols: true
         versioningScheme: 'off'
 
     - publish: '$(Build.ArtifactStagingDirectory)'
@@ -87,7 +86,7 @@ stages:
             displayName: 'Push NuGet Packages'
             inputs:
               command: 'push'
-              packagesToPush: '$(Pipeline.Workspace)/drop/*.nupkg;!$(Pipeline.Workspace)/drop/*.symbols.nupkg'
+              packagesToPush: '$(Pipeline.Workspace)/drop/*.nupkg'
               nuGetFeedType: 'external'
               publishFeedCredentials: 'NuGet'
 

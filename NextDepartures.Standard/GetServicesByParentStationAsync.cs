@@ -47,13 +47,11 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "station"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForStation
-                        .OrderBy(d => d.DepartureDateTime)
-                        .Select(d => CreateService(agencies, stops, d, "station"))
-                        .ToList();
-                }
+
+                return departuresForStation
+                    .OrderBy(d => d.DepartureDateTime)
+                    .Select(d => CreateService(agencies, stops, d, "station"))
+                    .ToList();
             }
             catch
             {
@@ -100,13 +98,11 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "station"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForStation
-                        .OrderBy(d => d.DepartureDateTime)
-                        .Select(d => CreateService(agencies, stops, d, "station"))
-                        .ToList();
-                }
+
+                return departuresForStation
+                    .OrderBy(d => d.DepartureDateTime)
+                    .Select(d => CreateService(agencies, stops, d, "station"))
+                    .ToList();
             }
             catch
             {
@@ -150,13 +146,11 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "station"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForStation
-                        .OrderBy(d => d.DepartureDateTime)
-                        .Select(d => CreateService(agencies, stops, d, "station"))
-                        .ToList();
-                }
+
+                return departuresForStation
+                    .OrderBy(d => d.DepartureDateTime)
+                    .Select(d => CreateService(agencies, stops, d, "station"))
+                    .ToList();
             }
             catch
             {
@@ -202,13 +196,11 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "station"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForStation
-                        .OrderBy(d => d.DepartureDateTime)
-                        .Select(d => CreateService(agencies, stops, d, "station"))
-                        .ToList();
-                }
+
+                return departuresForStation
+                    .OrderBy(d => d.DepartureDateTime)
+                    .Select(d => CreateService(agencies, stops, d, "station"))
+                    .ToList();
             }
             catch
             {

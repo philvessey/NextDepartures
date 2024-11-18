@@ -5,7 +5,6 @@
         <TestDevelopmentVersion>17.11.1</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
         <TestFrameworkVersion>3.6.3</TestFrameworkVersion> <!-- MSTest.Test -->
 
-        <CommandLibraryVersion>2.9.1</CommandLibraryVersion> <!-- CommandLineParser -->
         <DatabaseLibraryVersion>5.2.2</DatabaseLibraryVersion> <!-- Microsoft.Data.SqlClient -->
         <TimeLibraryVersion>3.2.0</TimeLibraryVersion> <!-- NodaTime -->
         <TransitLibraryVersion>3.0.0-pre006</TransitLibraryVersion> <!-- GTFS -->
