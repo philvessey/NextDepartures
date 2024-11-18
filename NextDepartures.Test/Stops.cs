@@ -1,8 +1,6 @@
-using GTFS.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
 using NextDepartures.Storage.GTFS;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NextDepartures.Test
@@ -13,100 +11,111 @@ namespace NextDepartures.Test
         [TestMethod]
         public async Task GetStopsByDescriptionAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Stop> results = await feed.GetStopsByDescriptionAsync();
+            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetStopsByDescriptionAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetStopsByLevelAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Stop> results = await feed.GetStopsByLevelAsync();
+            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetStopsByLevelAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetStopsByLocationAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Stop> results = await feed.GetStopsByLocationAsync();
+            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetStopsByLocationAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetStopsByLocationTypeAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Stop> results = await feed.GetStopsByLocationTypeAsync();
+            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetStopsByLocationTypeAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetStopsByParentStationAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Stop> results = await feed.GetStopsByParentStationAsync();
+            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetStopsByParentStationAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetStopsByPlatformCodeAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Stop> results = await feed.GetStopsByPlatformCodeAsync();
+            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetStopsByPlatformCodeAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetStopsByQueryAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Stop> results = await feed.GetStopsByQueryAsync();
+            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetStopsByQueryAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetStopsByTimezoneAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Stop> results = await feed.GetStopsByTimezoneAsync();
+            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetStopsByTimezoneAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
-        public async Task GetStopsByURLAsync()
+        public async Task GetStopsByUrlAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Stop> results = await feed.GetStopsByURLAsync();
+            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetStopsByUrlAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetStopsByWheelchairBoardingAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Stop> results = await feed.GetStopsByWheelchairBoardingAsync();
+            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetStopsByWheelchairBoardingAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
 
         [TestMethod]
         public async Task GetStopsByZoneAsync()
         {
-            Feed feed = await Feed.Load(GTFSStorage.Load("Data/gtfs.zip"));
-            List<Stop> results = await feed.GetStopsByZoneAsync();
+            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+            var results = await feed.GetStopsByZoneAsync();
 
             Assert.IsNotNull(results);
+            Assert.IsTrue(results.Count > 0);
         }
     }
 }

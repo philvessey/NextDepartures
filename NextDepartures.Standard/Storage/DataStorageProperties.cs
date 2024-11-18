@@ -5,9 +5,9 @@ namespace NextDepartures.Standard.Storage
 {
     public class DataStorageProperties
     {
-        public bool DoesSupportParallelPreload { get; set; }
+        public bool DoesSupportParallelPreload { get; }
 
-        public DataStorageProperties()
+        private DataStorageProperties()
         {
             DoesSupportParallelPreload = false;
         }

@@ -1,6 +1,6 @@
 # NextDepartures
 
-NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally or in an Azure SQL Database. The library will work with any well formed GTFS data set.
+NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally or in an Azure SQL Database. The library will work with any well-formed GTFS data set.
 
 * Build Status: [![Build Status](https://dev.azure.com/philvessey/NextDepartures/_apis/build/status/philvessey.NextDepartures?branchName=master)](https://dev.azure.com/philvessey/NextDepartures/_build/latest?definitionId=2&branchName=master)
 * NextDepartures.Standard: [![NuGet Version](https://img.shields.io/nuget/v/NextDepartures.Standard.svg?style=flat)](https://www.nuget.org/packages/NextDepartures.Standard/)
@@ -15,22 +15,12 @@ Connect to the library:
 using NextDepartures.Standard;
 using NextDepartures.Storage.GTFS;
 
-Feed feed = await Feed.Load(GTFSStorage.Load([path]));
+Feed feed = await Feed.Load(GtfsStorage.Load([path]));
 ```
 
 * [path] > Path to GTFS data set .zip or directory. Required.
 
 ## SQL Server Usage
-
-Build the data from the database project:
-
-```
-dotnet run -d [--database] -g [--gtfs] (--prefix)
-```
-
-* [database] > Database connection string. Required.
-* [gtfs] > Path to GTFS data set .zip or directory. Required.
-* (prefix) > Specify database table prefix. Default (GTFS). Optional.
 
 Connect to the library:
 
@@ -49,13 +39,13 @@ Feed feed = await Feed.Load(SqlServerStorage.Load([database], (prefix)));
 Once connected to the library:
 
 ```csharp
-List<Agency> results = await feed.GetAgenciesByEmailAsync();
-List<Agency> results = await feed.GetAgenciesByFareURLAsync();
-List<Agency> results = await feed.GetAgenciesByLanguageCodeAsync();
-List<Agency> results = await feed.GetAgenciesByPhoneAsync();
-List<Agency> results = await feed.GetAgenciesByQueryAsync();
-List<Agency> results = await feed.GetAgenciesByTimezoneAsync();
-List<Agency> results = await feed.GetAgenciesByURLAsync();
+var results = await feed.GetAgenciesByEmailAsync();
+var results = await feed.GetAgenciesByFareUrlAsync();
+var results = await feed.GetAgenciesByLanguageCodeAsync();
+var results = await feed.GetAgenciesByPhoneAsync();
+var results = await feed.GetAgenciesByQueryAsync();
+var results = await feed.GetAgenciesByTimezoneAsync();
+var results = await feed.GetAgenciesByUrlAsync();
 ```
 
 ## Services Endpoints
@@ -63,9 +53,9 @@ List<Agency> results = await feed.GetAgenciesByURLAsync();
 Once connected to the library:
 
 ```csharp
-List<Service> results = await feed.GetServicesByParentStationAsync();
-List<Service> results = await feed.GetServicesByStopAsync();
-List<Service> results = await feed.GetServicesByTripAsync();
+var results = await feed.GetServicesByParentStationAsync();
+var results = await feed.GetServicesByStopAsync();
+var results = await feed.GetServicesByTripAsync();
 ```
 
 ## Stops Endpoints
@@ -73,17 +63,17 @@ List<Service> results = await feed.GetServicesByTripAsync();
 Once connected to the library:
 
 ```csharp
-List<Stop> results = await feed.GetStopsByDescriptionAsync();
-List<Stop> results = await feed.GetStopsByLevelAsync();
-List<Stop> results = await feed.GetStopsByLocationAsync();
-List<Stop> results = await feed.GetStopsByLocationTypeAsync();
-List<Stop> results = await feed.GetStopsByParentStationAsync();
-List<Stop> results = await feed.GetStopsByPlatformCodeAsync();
-List<Stop> results = await feed.GetStopsByQueryAsync();
-List<Stop> results = await feed.GetStopsByTimezoneAsync();
-List<Stop> results = await feed.GetStopsByURLAsync();
-List<Stop> results = await feed.GetStopsByWheelchairBoardingAsync();
-List<Stop> results = await feed.GetStopsByZoneAsync();
+var results = await feed.GetStopsByDescriptionAsync();
+var results = await feed.GetStopsByLevelAsync();
+var results = await feed.GetStopsByLocationAsync();
+var results = await feed.GetStopsByLocationTypeAsync();
+var results = await feed.GetStopsByParentStationAsync();
+var results = await feed.GetStopsByPlatformCodeAsync();
+var results = await feed.GetStopsByQueryAsync();
+var results = await feed.GetStopsByTimezoneAsync();
+var results = await feed.GetStopsByUrlAsync();
+var results = await feed.GetStopsByWheelchairBoardingAsync();
+var results = await feed.GetStopsByZoneAsync();
 ```
 
 ## License

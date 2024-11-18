@@ -5,20 +5,20 @@ namespace NextDepartures.Standard.Models
 {
     public class Service
     {
-        public string AgencyId { get; set; }
-        public string AgencyName { get; set; }
-        public DateTime DepartureDateTime { get; set; }
-        public TimeOfDay? DepartureTime { get; set; }
-        public string DestinationName { get; set; }
-        public string RouteName { get; set; }
-        public string StopId { get; set; }
-        public string StopName { get; set; }
-        public string TripId { get; set; }
-        public string Type { get; set; }
+        public string AgencyId { get; init; }
+        public string AgencyName { get; init; }
+        public DateTime DepartureDateTime { get; init; }
+        public TimeOfDay? DepartureTime { get; init; }
+        public string DestinationName { get; init; }
+        public string RouteName { get; init; }
+        public string StopId { get; init; }
+        public string StopName { get; init; }
+        public string TripId { get; init; }
+        public string Type { get; init; }
         
         public override string ToString()
         {
-            return Type != "trip" ? string.Format("[{0}] {1}", DepartureDateTime, DestinationName) : string.Format("[{0}] {1}", DepartureDateTime, StopName);
+            return Type != "trip" ? $"[{DepartureDateTime}] {DestinationName}" : $"[{DepartureDateTime}] {StopName}";
         }
     }
 }

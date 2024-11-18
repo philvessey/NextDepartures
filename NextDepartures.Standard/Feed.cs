@@ -14,12 +14,10 @@ namespace NextDepartures.Standard
     public partial class Feed
     {
         private readonly IDataStorage _dataStorage;
-        private readonly DataStorageProperties _dataStorageProperties;
 
-        private Feed(IDataStorage dataStorage, DataStorageProperties dataStorageProperties)
+        private Feed(IDataStorage dataStorage)
         {
             _dataStorage = dataStorage;
-            _dataStorageProperties = dataStorageProperties;
         }
 
         /// <summary>
@@ -30,15 +28,16 @@ namespace NextDepartures.Standard
         /// <returns>A new feed instance.</returns>
         public static async Task<Feed> Load(IDataStorage dataStorage, bool preload = true)
         {
-            IDataStorage storage = dataStorage;
             DataStorageProperties storageProperties = new(dataStorage);
+            
+            var storage = dataStorage;
 
             if (preload)
             {
                 storage = await PreloadDataStorage.LoadAsync(storage, storageProperties);
             }
 
-            return new Feed(storage, storageProperties);
+            return new Feed(storage);
         }
 
         private static Departure CreateProcessedDeparture(Departure tempDeparture, DateTime departureDateTime)
@@ -71,29 +70,29 @@ namespace NextDepartures.Standard
         {
             const string fallback = "unknown";
 
-            string agencyId = StringUtils.FindPossibleString(fallback,
-                                    () => agencies.FirstOrDefault(a => a.Id == departure.AgencyId)?.Id,
-                                    () => agencies.FirstOrDefault()?.Id
-                                    ).Trim();
+            var agencyId = StringUtils.FindPossibleString(fallback,
+                () => agencies.FirstOrDefault(a => a.Id == departure.AgencyId)?.Id,
+                () => agencies.FirstOrDefault()?.Id
+                ).Trim();
 
-            string agencyName = StringUtils.FindPossibleString(fallback,
-                                    () => agencies.FirstOrDefault(a => a.Id == departure.AgencyId)?.Name,
-                                    () => agencies.FirstOrDefault()?.Name
-                                    ).Trim().ToTitleCase();
+            var agencyName = StringUtils.FindPossibleString(fallback,
+                () => agencies.FirstOrDefault(a => a.Id == departure.AgencyId)?.Name,
+                () => agencies.FirstOrDefault()?.Name
+                ).Trim().ToTitleCase();
 
-            string destinationName = StringUtils.FindPossibleString(fallback,
+            var destinationName = StringUtils.FindPossibleString(fallback,
                 () => stops.FirstOrDefault(s => departure.RouteShortName.Contains(s.Id.WithPrefix("_")) || departure.RouteShortName.Contains(s.Id.WithPrefix("->")))?.Name,
                 () => departure.TripHeadsign,
                 () => departure.TripShortName,
                 () => departure.RouteLongName
                 ).Trim().ToTitleCase();
 
-            string routeName = StringUtils.FindPossibleString(fallback,
+            var routeName = StringUtils.FindPossibleString(fallback,
                 () => stops.FirstOrDefault(s => departure.RouteShortName.Contains(s.Id.WithPrefix("_")) || departure.RouteShortName.Contains(s.Id.WithPrefix("->")))?.Name,
                 () => departure.RouteShortName
                 ).Trim().ToTitleCase();
 
-            string stopName = StringUtils.FindPossibleString(fallback,
+            var stopName = StringUtils.FindPossibleString(fallback,
                 () => stops.FirstOrDefault(s => s.Id == departure.StopId)?.Name
                 ).Trim().ToTitleCase();
 
@@ -114,14 +113,14 @@ namespace NextDepartures.Standard
 
         private static DateTime GetDateTimeFromDeparture(DateTime zonedDateTime, int dayOffset, TimeOfDay? departureTime)
         {
-            return new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Value.Hours % 24, departureTime.Value.Minutes, departureTime.Value.Seconds).AddDays((departureTime.Value.Hours / 24) + dayOffset);
+            return departureTime != null ? new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Value.Hours % 24, departureTime.Value.Minutes, departureTime.Value.Seconds).AddDays((departureTime.Value.Hours / 24.0) + dayOffset) : DateTime.MinValue;
         }
 
         private static List<Departure> GetDeparturesOnDay(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, List<Departure> departures, DateTime now, DayOffsetType dayOffset, TimeSpan timeOffset, int toleranceInHours, string id)
         {
-            List<Departure> resultForDay = new();
+            List<Departure> resultForDay = [];
 
-            foreach (Departure departure in departures)
+            foreach (var departure in departures)
             {
                 resultForDay.AddIfNotNull(TryProcessDeparture(agencies, calendarDates, stops, now, dayOffset, timeOffset, toleranceInHours, id, departure));
             }
@@ -139,52 +138,28 @@ namespace NextDepartures.Standard
 
         private static bool IsDepartureValid(List<CalendarDate> calendarDates, TimeSpan timeOffset, int toleranceInHours, string id, Func<DayOfWeek, Departure, bool> dayOfWeekMapper, Departure departure, DateTime zonedDateTime, DateTime departureDateTime, DateTime targetDateTime, DateTime startDate, DateTime endDate)
         {
-            if (startDate <= targetDateTime.Date && endDate >= targetDateTime.Date)
+            bool include;
+            
+            if (startDate > targetDateTime.Date || endDate < targetDateTime.Date) return false;
+
+            if (dayOfWeekMapper(zonedDateTime.DayOfWeek, departure))
             {
-                bool include = false;
+                include = !calendarDates.Any(d => d.ServiceId == departure.ServiceId && d.Date == targetDateTime.Date && d.ExceptionType == ExceptionType.Removed);
+            }
+            else
+            {
+                include = calendarDates.Any(d => d.ServiceId == departure.ServiceId && d.Date == targetDateTime.Date && d.ExceptionType == ExceptionType.Added);
+            }
 
-                if (dayOfWeekMapper(zonedDateTime.DayOfWeek, departure))
-                {
-                    include = !calendarDates.Any(c => c.ServiceId == departure.ServiceId && c.Date == targetDateTime.Date && c.ExceptionType == ExceptionType.Removed);
-                }
-                else
-                {
-                    include = calendarDates.Any(c => c.ServiceId == departure.ServiceId && c.Date == targetDateTime.Date && c.ExceptionType == ExceptionType.Added);
-                }
-
-                if (include && (departure.RouteShortName.Contains(id.WithPrefix("_"), StringComparison.CurrentCultureIgnoreCase) || departure.RouteShortName.Contains(id.WithPrefix("->"), StringComparison.CurrentCultureIgnoreCase)))
-                {
+            switch (include)
+            {
+                case true when (departure.RouteShortName.Contains(id.WithPrefix("_"), StringComparison.CurrentCultureIgnoreCase) || departure.RouteShortName.Contains(id.WithPrefix("->"), StringComparison.CurrentCultureIgnoreCase)):
                     return false;
-                }
-
-                if (include && timeOffset > TimeSpan.Zero && toleranceInHours > 0)
-                {
-                    if (departureDateTime >= zonedDateTime.Add(timeOffset) && departureDateTime <= zonedDateTime.AddHours(toleranceInHours))
-                    {
-                        return true;
-                    }
-                }
-                else if (include && toleranceInHours > 0)
-                {
-                    if (departureDateTime >= zonedDateTime && departureDateTime <= zonedDateTime.AddHours(toleranceInHours))
-                    {
-                        return true;
-                    }
-                }
-                else if (include && timeOffset > TimeSpan.Zero)
-                {
-                    if (departureDateTime >= zonedDateTime.Add(timeOffset))
-                    {
-                        return true;
-                    }
-                }
-                else if (include)
-                {
-                    if (departureDateTime >= zonedDateTime)
-                    {
-                        return true;
-                    }
-                }
+                case true when timeOffset > TimeSpan.Zero && toleranceInHours > 0 && departureDateTime >= zonedDateTime.Add(timeOffset) && departureDateTime <= zonedDateTime.AddHours(toleranceInHours) && departureDateTime >= zonedDateTime.Add(timeOffset) && departureDateTime <= zonedDateTime.AddHours(toleranceInHours):
+                case true when toleranceInHours > 0 && departureDateTime >= zonedDateTime && departureDateTime <= zonedDateTime.AddHours(toleranceInHours) && departureDateTime >= zonedDateTime && departureDateTime <= zonedDateTime.AddHours(toleranceInHours):
+                case true when timeOffset > TimeSpan.Zero && departureDateTime >= zonedDateTime.Add(timeOffset) && departureDateTime >= zonedDateTime.Add(timeOffset):
+                case true when departureDateTime >= zonedDateTime:
+                    return true;
             }
 
             return false;
@@ -192,18 +167,7 @@ namespace NextDepartures.Standard
 
         private static Departure TryProcessDeparture(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, DateTime now, DayOffsetType dayOffset, TimeSpan timeOffset, int toleranceInHours, string id, Departure departure)
         {
-            DateTime zonedDateTime = now.ToZonedDateTime(GetTimezone(agencies, stops, departure));
-            DateTime departureDateTime = GetDateTimeFromDeparture(zonedDateTime, dayOffset.GetNumeric(), departure.DepartureTime);
-            DateTime targetDateTime = zonedDateTime.AddDays(dayOffset.GetNumeric());
-
-            if (IsDepartureValid(calendarDates, timeOffset, toleranceInHours, id, WeekdayUtils.GetUtilByDayType(dayOffset), departure, zonedDateTime, departureDateTime, targetDateTime, departure.StartDate, departure.EndDate))
-            {
-                return CreateProcessedDeparture(departure, departureDateTime);
-            }
-            else
-            {
-                return null;
-            }
+            return IsDepartureValid(calendarDates, timeOffset, toleranceInHours, id, WeekdayUtils.GetUtilByDayType(dayOffset), departure, now.ToZonedDateTime(GetTimezone(agencies, stops, departure)), GetDateTimeFromDeparture(now.ToZonedDateTime(GetTimezone(agencies, stops, departure)), dayOffset.GetNumeric(), departure.DepartureTime), now.ToZonedDateTime(GetTimezone(agencies, stops, departure)).AddDays(dayOffset.GetNumeric()), departure.StartDate, departure.EndDate) ? CreateProcessedDeparture(departure, GetDateTimeFromDeparture(now.ToZonedDateTime(GetTimezone(agencies, stops, departure)), dayOffset.GetNumeric(), departure.DepartureTime)) : null;
         }
     }
 }

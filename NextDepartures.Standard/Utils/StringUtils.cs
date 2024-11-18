@@ -11,11 +11,9 @@ namespace NextDepartures.Standard.Utils
                 return fallback;
             }
 
-            string returnValue = string.Empty;
-
-            for (int i = 0; i < steps.Length; i++)
+            foreach (var t in steps)
             {
-                returnValue = steps[i]();
+                var returnValue = t();
 
                 if (!string.IsNullOrEmpty(returnValue))
                 {

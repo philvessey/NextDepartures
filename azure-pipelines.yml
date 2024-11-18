@@ -1,4 +1,4 @@
-name: '3.5.1'
+name: '3.5.2'
 
 trigger:
 - master
@@ -23,19 +23,13 @@ stages:
       displayName: 'Use Required SDKs'
       inputs:
         packageType: 'sdk'
-        version: '6.0.x'
+        version: '8.0.x'
     
     - task: UseDotNet@2
       displayName: 'Use Required SDKs'
       inputs:
         packageType: 'sdk'
-        version: '7.0.x'
-
-    - task: UseDotNet@2
-      displayName: 'Use Required SDKs'
-      inputs:
-        packageType: 'sdk'
-        version: '8.0.x'
+        version: '9.0.x'
 
     - task: CmdLine@2
       displayName: 'List Installed SDKs'
@@ -61,7 +55,6 @@ stages:
       inputs:
         command: 'pack'
         packagesToPack: '**/NextDepartures.Standard/*.csproj;**/NextDepartures.Storage.GTFS/*.csproj;**/NextDepartures.Storage.SqlServer/*.csproj'
-        includesymbols: true
         versioningScheme: 'off'
 
     - publish: '$(Build.ArtifactStagingDirectory)'
@@ -93,7 +86,7 @@ stages:
             displayName: 'Push NuGet Packages'
             inputs:
               command: 'push'
-              packagesToPush: '$(Pipeline.Workspace)/drop/*.nupkg;!$(Pipeline.Workspace)/drop/*.symbols.nupkg'
+              packagesToPush: '$(Pipeline.Workspace)/drop/*.nupkg'
               nuGetFeedType: 'external'
               publishFeedCredentials: 'NuGet'
 

@@ -1,7 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDepartures.Database", "NextDepartures.Database\NextDepartures.Database.csproj", "{2FAD17C6-5687-42C8-98B2-A0FBB5223873}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDepartures.Standard", "NextDepartures.Standard\NextDepartures.Standard.csproj", "{2605B71D-3B48-4915-B87B-B270CDB89339}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDepartures.Storage.SqlServer", "NextDepartures.Storage.SqlServer\NextDepartures.Storage.SqlServer.csproj", "{F255349C-F044-437A-B6AF-6789FD2710BE}"
@@ -22,10 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2FAD17C6-5687-42C8-98B2-A0FBB5223873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FAD17C6-5687-42C8-98B2-A0FBB5223873}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FAD17C6-5687-42C8-98B2-A0FBB5223873}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FAD17C6-5687-42C8-98B2-A0FBB5223873}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2605B71D-3B48-4915-B87B-B270CDB89339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2605B71D-3B48-4915-B87B-B270CDB89339}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2605B71D-3B48-4915-B87B-B270CDB89339}.Release|Any CPU.ActiveCfg = Release|Any CPU

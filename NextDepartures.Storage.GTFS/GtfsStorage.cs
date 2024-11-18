@@ -14,15 +14,11 @@ namespace NextDepartures.Storage.GTFS
     /// <summary>
     /// Implements the data storage for the GTFS library
     /// </summary>
-    public class GTFSStorage : IDataStorage
+    public class GtfsStorage : IDataStorage
     {
         private readonly GTFSFeed _feed;
-
-        /// <summary>
-        /// Creates a new GTFS storage.
-        /// </summary>
-        /// <param name="feed">The GTFSFeed to use.</param>
-        public GTFSStorage(GTFSFeed feed)
+        
+        private GtfsStorage(GTFSFeed feed)
         {
             _feed = feed;
         }
@@ -31,12 +27,10 @@ namespace NextDepartures.Storage.GTFS
         /// Loads a GTFS data set.
         /// </summary>
         /// <param name="path">The path of the directory containing the feed or the path to the zip file.</param>
-        public static GTFSStorage Load(string path)
+        public static GtfsStorage Load(string path)
         {
             GTFSReader<GTFSFeed> reader = new();
-            GTFSFeed feed = reader.Read(path);
-
-            return new GTFSStorage(feed);
+            return new GtfsStorage(reader.Read(path));
         }
 
         private List<Agency> GetAgenciesFromFeed()
@@ -59,17 +53,17 @@ namespace NextDepartures.Storage.GTFS
         private List<Agency> GetAgenciesFromFeedByConditionWithSpecialCasing(Func<Agency, bool> condition)
         {
             return _feed.Agencies
-                .Where(a => condition(a))
-                .Select(e => new Agency()
+                .Where(condition)
+                .Select(a => new Agency()
                 {
-                    Id = e.Id,
-                    Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(e.Name.ToLower()),
-                    URL = e.URL,
-                    Timezone = e.Timezone,
-                    LanguageCode = e.LanguageCode,
-                    Phone = e.Phone,
-                    FareURL = e.FareURL,
-                    Email = e.Email
+                    Id = a.Id,
+                    Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(a.Name.ToLower()),
+                    URL = a.URL,
+                    Timezone = a.Timezone,
+                    LanguageCode = a.LanguageCode,
+                    Phone = a.Phone,
+                    FareURL = a.FareURL,
+                    Email = a.Email
                 })
                 .ToList();
         }
@@ -94,13 +88,13 @@ namespace NextDepartures.Storage.GTFS
         }
 
         /// <summary>
-        /// Gets the agencies by the given fare URL.
+        /// Gets the agencies by the given fare url.
         /// </summary>
-        /// <param name="fareURL">The fare URL.</param>
+        /// <param name="fareUrl">The fare url.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Agency>> GetAgenciesByFareURLAsync(string fareURL)
+        public Task<List<Agency>> GetAgenciesByFareUrlAsync(string fareUrl)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.FareURL ?? "").Contains(fareURL, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.FareURL ?? "").Contains(fareUrl, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -130,7 +124,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByQueryAsync(string query)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.Id ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase) || a.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.Id ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase) || (a.Name ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -140,17 +134,17 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of agencies.</returns>
         public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.Timezone.Contains(timezone, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.Timezone ?? "").Contains(timezone, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
-        /// Gets the agencies by the given URL.
+        /// Gets the agencies by the given url.
         /// </summary>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The url.</param>
         /// <returns>A list of agencies.</returns>
-        public Task<List<Agency>> GetAgenciesByURLAsync(string url)
+        public Task<List<Agency>> GetAgenciesByUrlAsync(string url)
         {
-            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => a.URL.Contains(url, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetAgenciesFromFeedByConditionWithSpecialCasing(a => (a.URL ?? "").Contains(url, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         private List<CalendarDate> GetCalendarDatesFromFeed()
@@ -254,23 +248,23 @@ namespace NextDepartures.Storage.GTFS
         private List<Stop> GetStopsFromFeedByConditionWithSpecialCasing(Func<Stop, bool> condition)
         {
             return _feed.Stops
-                .Where(s => condition(s))
-                .Select(e => new Stop()
+                .Where(condition)
+                .Select(s => new Stop()
                 {
-                    Id = e.Id,
-                    Code = e.Code,
-                    Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(e.Name.ToLower()),
-                    Description = e.Description,
-                    Longitude = e.Longitude,
-                    Latitude = e.Latitude,
-                    Zone = e.Zone,
-                    Url = e.Url,
-                    LocationType = e.LocationType,
-                    ParentStation = e.ParentStation,
-                    Timezone = e.Timezone,
-                    WheelchairBoarding = e.WheelchairBoarding,
-                    LevelId = e.LevelId,
-                    PlatformCode = e.PlatformCode
+                    Id = s.Id,
+                    Code = s.Code,
+                    Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(s.Name.ToLower()),
+                    Description = s.Description,
+                    Longitude = s.Longitude,
+                    Latitude = s.Latitude,
+                    Zone = s.Zone,
+                    Url = s.Url,
+                    LocationType = s.LocationType,
+                    ParentStation = s.ParentStation,
+                    Timezone = s.Timezone,
+                    WheelchairBoarding = s.WheelchairBoarding,
+                    LevelId = s.LevelId,
+                    PlatformCode = s.PlatformCode
                 })
                 .ToList();
         }
@@ -301,7 +295,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByLevelAsync(string id)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.LevelId ?? "").Equals(id, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.LevelId ?? "").Contains(id, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -334,7 +328,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByParentStationAsync(string id)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.ParentStation ?? "").Equals(id, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.ParentStation ?? "").Contains(id, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -344,7 +338,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.PlatformCode ?? "").Equals(platformCode, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.PlatformCode ?? "").Contains(platformCode, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -354,7 +348,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByQueryAsync(string query)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => s.Id.Contains(query, StringComparison.CurrentCultureIgnoreCase) || (s.Code ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase) || (s.Name ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Id ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase) || (s.Code ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase) || (s.Name ?? "").Contains(query, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -368,11 +362,11 @@ namespace NextDepartures.Storage.GTFS
         }
 
         /// <summary>
-        /// Gets the stops by the given URL.
+        /// Gets the stops by the given url.
         /// </summary>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The url.</param>
         /// <returns>A list of stops.</returns>
-        public Task<List<Stop>> GetStopsByURLAsync(string url)
+        public Task<List<Stop>> GetStopsByUrlAsync(string url)
         {
             return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Url ?? "").Contains(url, StringComparison.CurrentCultureIgnoreCase)));
         }
@@ -384,7 +378,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.WheelchairBoarding ?? "").Equals(wheelchairBoarding, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.WheelchairBoarding ?? "").Contains(wheelchairBoarding, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         /// <summary>
@@ -394,7 +388,7 @@ namespace NextDepartures.Storage.GTFS
         /// <returns>A list of stops.</returns>
         public Task<List<Stop>> GetStopsByZoneAsync(string zone)
         {
-            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Zone ?? "").Equals(zone, StringComparison.CurrentCultureIgnoreCase)));
+            return Task.FromResult(GetStopsFromFeedByConditionWithSpecialCasing(s => (s.Zone ?? "").Contains(zone, StringComparison.CurrentCultureIgnoreCase)));
         }
     }
 }

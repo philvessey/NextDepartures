@@ -18,16 +18,8 @@ namespace NextDepartures.Standard
         {
             try
             {
-                List<Stop> stopsFromStorage = await _dataStorage.GetStopsByLocationTypeAsync(locationType);
-
-                if (count > 0)
-                {
-                    return stopsFromStorage.Take(count).ToList();
-                }
-                else
-                {
-                    return stopsFromStorage;
-                }
+                var stopsFromStorage = await _dataStorage.GetStopsByLocationTypeAsync(locationType);
+                return count > 0 ? stopsFromStorage.Take(count).ToList() : stopsFromStorage;
             }
             catch
             {

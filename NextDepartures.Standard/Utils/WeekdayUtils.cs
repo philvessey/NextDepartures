@@ -6,7 +6,7 @@ namespace NextDepartures.Standard.Utils
 {
     public static class WeekdayUtils
     {
-        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> _previousDays = new()
+        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> PreviousDays = new()
         {
             { DayOfWeek.Monday, d => d.Sunday },
             { DayOfWeek.Tuesday, d => d.Monday },
@@ -17,7 +17,7 @@ namespace NextDepartures.Standard.Utils
             { DayOfWeek.Sunday, d => d.Saturday },
         };
 
-        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> _todayDays = new()
+        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> TodayDays = new()
         {
             { DayOfWeek.Monday, d => d.Monday },
             { DayOfWeek.Tuesday, d => d.Tuesday },
@@ -28,7 +28,7 @@ namespace NextDepartures.Standard.Utils
             { DayOfWeek.Sunday, d => d.Sunday },
         };
 
-        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> _followingDays = new()
+        private static readonly Dictionary<DayOfWeek, Func<Departure, bool>> FollowingDays = new()
         {
             { DayOfWeek.Monday, d => d.Tuesday },
             { DayOfWeek.Tuesday, d => d.Wednesday },
@@ -39,35 +39,30 @@ namespace NextDepartures.Standard.Utils
             { DayOfWeek.Sunday, d => d.Monday },
         };
 
-        public static bool GetPreviousDay(DayOfWeek dayOfWeek, Departure departure)
+        private static bool GetPreviousDay(DayOfWeek dayOfWeek, Departure departure)
         {
-            return _previousDays[dayOfWeek](departure);
+            return PreviousDays[dayOfWeek](departure);
         }
 
-        public static bool GetTodayDay(DayOfWeek dayOfWeek, Departure departure)
+        private static bool GetTodayDay(DayOfWeek dayOfWeek, Departure departure)
         {
-            return _todayDays[dayOfWeek](departure);
+            return TodayDays[dayOfWeek](departure);
         }
 
-        public static bool GetFollowingDay(DayOfWeek dayOfWeek, Departure departure)
+        private static bool GetFollowingDay(DayOfWeek dayOfWeek, Departure departure)
         {
-            return _followingDays[dayOfWeek](departure);
+            return FollowingDays[dayOfWeek](departure);
         }
 
         public static Func<DayOfWeek, Departure, bool> GetUtilByDayType(DayOffsetType dayOffsetType)
         {
-            if (dayOffsetType == DayOffsetType.Yesterday)
+            return dayOffsetType switch
             {
-                return GetPreviousDay;
-            }
-            else if (dayOffsetType == DayOffsetType.Today)
-            {
-                return GetTodayDay;
-            }
-            else
-            {
-                return GetFollowingDay;
-            }
+                DayOffsetType.Yesterday => GetPreviousDay,
+                DayOffsetType.Today => GetTodayDay,
+                DayOffsetType.Tomorrow => GetFollowingDay,
+                _ => GetTodayDay
+            };
         }
     }
 }

@@ -25,11 +25,11 @@ namespace NextDepartures.Standard.Storage
         Task<List<Agency>> GetAgenciesByEmailAsync(string email);
 
         /// <summary>
-        /// Gets the agencies by the given fare URL.
+        /// Gets the agencies by the given fare url.
         /// </summary>
-        /// <param name="fareURL">The fare URL.</param>
+        /// <param name="fareUrl">The fare url.</param>
         /// <returns>A list of agencies.</returns>
-        Task<List<Agency>> GetAgenciesByFareURLAsync(string fareURL);
+        Task<List<Agency>> GetAgenciesByFareUrlAsync(string fareUrl);
 
         /// <summary>
         /// Gets the agencies by the given language code.
@@ -60,11 +60,11 @@ namespace NextDepartures.Standard.Storage
         Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone);
 
         /// <summary>
-        /// Gets the agencies by the given URL.
+        /// Gets the agencies by the given url.
         /// </summary>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The url.</param>
         /// <returns>A list of agencies.</returns>
-        Task<List<Agency>> GetAgenciesByURLAsync(string url);
+        Task<List<Agency>> GetAgenciesByUrlAsync(string url);
 
         /// <summary>
         /// Gets all available calendar dates.
@@ -154,11 +154,11 @@ namespace NextDepartures.Standard.Storage
         Task<List<Stop>> GetStopsByTimezoneAsync(string timezone);
 
         /// <summary>
-        /// Gets the stops by the given URL.
+        /// Gets the stops by the given url.
         /// </summary>
-        /// <param name="url">The URL.</param>
+        /// <param name="url">The url.</param>
         /// <returns>A list of stops.</returns>
-        Task<List<Stop>> GetStopsByURLAsync(string url);
+        Task<List<Stop>> GetStopsByUrlAsync(string url);
 
         /// <summary>
         /// Gets the stops by the given wheelchair boarding.

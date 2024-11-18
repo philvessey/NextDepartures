@@ -17,9 +17,39 @@ namespace NextDepartures.Standard
         /// <param name="hours">The maximum number of hours to search over. Default is all (0) but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public Task<List<Service>> GetServicesByStopAsync(string id, int hours = 0, int count = 0)
+        public async Task<List<Service>> GetServicesByStopAsync(string id, int hours = 0, int count = 0)
         {
-            return GetServicesByStopAsync(id, DateTime.Now, TimeSpan.Zero, hours, count);
+            try
+            {
+                var agencies = await _dataStorage.GetAgenciesAsync();
+                var calendarDates = await _dataStorage.GetCalendarDatesAsync();
+                var departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(id);
+                var stops = await _dataStorage.GetStopsAsync();
+
+                List<Departure> departuresForStop = [];
+
+                departuresForStop.AddRange(new List<Departure>()
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, DateTime.Now, DayOffsetType.Yesterday, TimeSpan.Zero, hours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, DateTime.Now, DayOffsetType.Today, TimeSpan.Zero, hours, id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, DateTime.Now, DayOffsetType.Tomorrow, TimeSpan.Zero, hours, id))
+                );
+
+                if (count > 0)
+                {
+                    return departuresForStop
+                        .Take(count)
+                        .Select(d => CreateService(agencies, stops, d, "stop"))
+                        .ToList();
+                }
+
+                return departuresForStop
+                    .Select(d => CreateService(agencies, stops, d, "stop"))
+                    .ToList();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -35,12 +65,12 @@ namespace NextDepartures.Standard
         {
             try
             {
-                List<Agency> agencies = await _dataStorage.GetAgenciesAsync();
-                List<CalendarDate> calendarDates = await _dataStorage.GetCalendarDatesAsync();
-                List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(id);
-                List<Stop> stops = await _dataStorage.GetStopsAsync();
+                var agencies = await _dataStorage.GetAgenciesAsync();
+                var calendarDates = await _dataStorage.GetCalendarDatesAsync();
+                var departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(id);
+                var stops = await _dataStorage.GetStopsAsync();
 
-                List<Departure> departuresForStop = new();
+                List<Departure> departuresForStop = [];
 
                 departuresForStop.AddRange(new List<Departure>()
                     .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, offset, hours, id))
@@ -55,12 +85,10 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "stop"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForStop
-                        .Select(d => CreateService(agencies, stops, d, "stop"))
-                        .ToList();
-                }
+
+                return departuresForStop
+                    .Select(d => CreateService(agencies, stops, d, "stop"))
+                    .ToList();
             }
             catch
             {
@@ -75,9 +103,39 @@ namespace NextDepartures.Standard
         /// <param name="hours">The maximum number of hours to search over. Default is all (0) but can be overridden.</param>
         /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
         /// <returns>A list of services.</returns>
-        public Task<List<Service>> GetServicesByStopAsync(Stop stop, int hours = 0, int count = 0)
+        public async Task<List<Service>> GetServicesByStopAsync(Stop stop, int hours = 0, int count = 0)
         {
-            return GetServicesByStopAsync(stop, DateTime.Now, TimeSpan.Zero, hours, count);
+            try
+            {
+                var agencies = await _dataStorage.GetAgenciesAsync();
+                var calendarDates = await _dataStorage.GetCalendarDatesAsync();
+                var departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(stop.Id);
+                var stops = await _dataStorage.GetStopsAsync();
+
+                List<Departure> departuresForStop = [];
+
+                departuresForStop.AddRange(new List<Departure>()
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, DateTime.Now, DayOffsetType.Yesterday, TimeSpan.Zero, hours, stop.Id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, DateTime.Now, DayOffsetType.Today, TimeSpan.Zero, hours, stop.Id))
+                    .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, DateTime.Now, DayOffsetType.Tomorrow, TimeSpan.Zero, hours, stop.Id))
+                );
+
+                if (count > 0)
+                {
+                    return departuresForStop
+                        .Take(count)
+                        .Select(d => CreateService(agencies, stops, d, "stop"))
+                        .ToList();
+                }
+
+                return departuresForStop
+                    .Select(d => CreateService(agencies, stops, d, "stop"))
+                    .ToList();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -93,12 +151,12 @@ namespace NextDepartures.Standard
         {
             try
             {
-                List<Agency> agencies = await _dataStorage.GetAgenciesAsync();
-                List<CalendarDate> calendarDates = await _dataStorage.GetCalendarDatesAsync();
-                List<Departure> departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(stop.Id);
-                List<Stop> stops = await _dataStorage.GetStopsAsync();
+                var agencies = await _dataStorage.GetAgenciesAsync();
+                var calendarDates = await _dataStorage.GetCalendarDatesAsync();
+                var departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(stop.Id);
+                var stops = await _dataStorage.GetStopsAsync();
 
-                List<Departure> departuresForStop = new();
+                List<Departure> departuresForStop = [];
 
                 departuresForStop.AddRange(new List<Departure>()
                     .AddMultiple(GetDeparturesOnDay(agencies, calendarDates, stops, departuresFromStorage, now, DayOffsetType.Yesterday, offset, hours, stop.Id))
@@ -113,12 +171,10 @@ namespace NextDepartures.Standard
                         .Select(d => CreateService(agencies, stops, d, "stop"))
                         .ToList();
                 }
-                else
-                {
-                    return departuresForStop
-                        .Select(d => CreateService(agencies, stops, d, "stop"))
-                        .ToList();
-                }
+
+                return departuresForStop
+                    .Select(d => CreateService(agencies, stops, d, "stop"))
+                    .ToList();
             }
             catch
             {
