@@ -3,79 +3,78 @@ using NextDepartures.Standard;
 using NextDepartures.Storage.GTFS;
 using System.Threading.Tasks;
 
-namespace NextDepartures.Test
+namespace NextDepartures.Test;
+
+[TestClass]
+public class Agencies
 {
-    [TestClass]
-    public class Agencies
+    [TestMethod]
+    public async Task GetAgenciesByEmailAsync()
     {
-        [TestMethod]
-        public async Task GetAgenciesByEmailAsync()
-        {
-            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
-            var results = await feed.GetAgenciesByEmailAsync();
+        var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+        var results = await feed.GetAgenciesByEmailAsync();
 
-            Assert.IsNotNull(results);
-            Assert.IsTrue(results.Count > 0);
-        }
+        Assert.IsNotNull(results);
+        Assert.IsTrue(results.Count > 0);
+    }
 
-        [TestMethod]
-        public async Task GetAgenciesByFareUrlAsync()
-        {
-            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
-            var results = await feed.GetAgenciesByFareUrlAsync();
+    [TestMethod]
+    public async Task GetAgenciesByFareUrlAsync()
+    {
+        var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+        var results = await feed.GetAgenciesByFareUrlAsync();
 
-            Assert.IsNotNull(results);
-            Assert.IsTrue(results.Count > 0);
-        }
+        Assert.IsNotNull(results);
+        Assert.IsTrue(results.Count > 0);
+    }
 
-        [TestMethod]
-        public async Task GetAgenciesByLanguageCodeAsync()
-        {
-            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
-            var results = await feed.GetAgenciesByLanguageCodeAsync();
+    [TestMethod]
+    public async Task GetAgenciesByLanguageCodeAsync()
+    {
+        var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+        var results = await feed.GetAgenciesByLanguageCodeAsync();
 
-            Assert.IsNotNull(results);
-            Assert.IsTrue(results.Count > 0);
-        }
+        Assert.IsNotNull(results);
+        Assert.IsTrue(results.Count > 0);
+    }
 
-        [TestMethod]
-        public async Task GetAgenciesByPhoneAsync()
-        {
-            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
-            var results = await feed.GetAgenciesByPhoneAsync();
+    [TestMethod]
+    public async Task GetAgenciesByPhoneAsync()
+    {
+        var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+        var results = await feed.GetAgenciesByPhoneAsync();
 
-            Assert.IsNotNull(results);
-            Assert.IsTrue(results.Count > 0);
-        }
+        Assert.IsNotNull(results);
+        Assert.IsTrue(results.Count > 0);
+    }
 
-        [TestMethod]
-        public async Task GetAgenciesByQueryAsync()
-        {
-            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
-            var results = await feed.GetAgenciesByQueryAsync();
+    [TestMethod]
+    public async Task GetAgenciesByQueryAsync()
+    {
+        var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+        var results = await feed.GetAgenciesByQueryAsync();
 
-            Assert.IsNotNull(results);
-            Assert.IsTrue(results.Count > 0);
-        }
+        Assert.IsNotNull(results);
+        Assert.IsTrue(results.Count > 0);
+    }
 
-        [TestMethod]
-        public async Task GetAgenciesByTimezoneAsync()
-        {
-            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
-            var results = await feed.GetAgenciesByTimezoneAsync();
+    [TestMethod]
+    public async Task GetAgenciesByTimezoneAsync()
+    {
+        var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+        var results = await feed.GetAgenciesByTimezoneAsync();
 
-            Assert.IsNotNull(results);
-            Assert.IsTrue(results.Count > 0);
-        }
+        Assert.IsNotNull(results);
+        Assert.IsTrue(results.Count > 0);
+    }
 
-        [TestMethod]
-        public async Task GetAgenciesByUrlAsync()
-        {
-            var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
-            var results = await feed.GetAgenciesByUrlAsync();
+    [TestMethod]
+    public async Task GetAgenciesByUrlAsync()
+    {
+        var feed = await Feed.Load(GtfsStorage.Load("Data/gtfs.zip"));
+        var results = await feed.GetAgenciesByUrlAsync();
 
-            Assert.IsNotNull(results);
-            Assert.IsTrue(results.Count > 0);
-        }
+        Assert.IsNotNull(results);
+        Assert.IsTrue(results.Count > 0);
     }
 }
