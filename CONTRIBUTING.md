@@ -47,7 +47,7 @@ We follow the [Microsoft C# Coding Conventions](https://docs.microsoft.com/en-us
 
 ## Unit Tests
 
-We use VSTest for our unit tests. Please make sure your changes include appropriate unit tests in the `NextDepartures.Test` project. Tests are setup for each endpoint in the library. If you create a new endpoint, create a new test for it. If you modify an existing endpoint, please make sure your changes are reflected in the existing test.
+We use VSTest for our unit tests. Please make sure your changes include appropriate unit tests in the `NextDepartures.Test` project. Tests are set up for each endpoint in the library. If you create a new endpoint, create a new test for it. If you modify an existing endpoint, please make sure your changes are reflected in the existing test.
 
 ## Reporting Bugs
 
