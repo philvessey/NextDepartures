@@ -7,11 +7,11 @@
     <PackageId>NextDepartures.Storage.GTFS</PackageId>
     <PackageLicense>MIT</PackageLicense>
     <PackageLicenseUrl>https://raw.github.com/philvessey/NextDepartures/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>http://nextdepartures.net</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/philvessey/NextDepartures</PackageProjectUrl>
     <Product>NextDepartures.Storage.GTFS</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
   </PropertyGroup>
 
   <ItemGroup>

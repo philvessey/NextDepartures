@@ -3,7 +3,7 @@
         <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 
         <TestDevelopmentVersion>17.11.1</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
-        <TestFrameworkVersion>3.6.3</TestFrameworkVersion> <!-- MSTest.Test -->
+        <TestFrameworkVersion>3.6.3</TestFrameworkVersion> <!-- MSTest.TestFramework -->
 
         <DatabaseLibraryVersion>5.2.2</DatabaseLibraryVersion> <!-- Microsoft.Data.SqlClient -->
         <TimeLibraryVersion>3.2.0</TimeLibraryVersion> <!-- NodaTime -->

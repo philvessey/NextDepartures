@@ -3,32 +3,31 @@ using System;
 using System.Globalization;
 using System.Linq;
 
-namespace NextDepartures.Standard.Extensions
+namespace NextDepartures.Standard.Extensions;
+
+public static class StringExtensions
 {
-    public static class StringExtensions
+    private static readonly string[] Separator = [":"];
+
+    public static TimeOfDay? ToTimeOfDay(this string baseString)
     {
-        private static readonly string[] Separator = [":"];
+        var value = baseString.Split(Separator, StringSplitOptions.None).Select(int.Parse).ToArray();
 
-        public static TimeOfDay? ToTimeOfDay(this string baseString)
+        return new TimeOfDay
         {
-            var splitTime = baseString.Split(Separator, StringSplitOptions.None).Select(int.Parse).ToArray();
+            Hours = value[0],
+            Minutes = value[1],
+            Seconds = value[2]
+        };
+    }
 
-            return new TimeOfDay()
-            {
-                Hours = splitTime[0],
-                Minutes = splitTime[1],
-                Seconds = splitTime[2]
-            };
-        }
+    public static string ToTitleCase(this string baseString)
+    {
+        return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(baseString.ToLower());
+    }
 
-        public static string ToTitleCase(this string baseString)
-        {
-            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(baseString.ToLower());
-        }
-
-        public static string WithPrefix(this string baseString, string prefix)
-        {
-            return $"{prefix}{baseString}";
-        }
+    public static string WithPrefix(this string baseString, string prefix)
+    {
+        return $"{prefix}{baseString}";
     }
 }

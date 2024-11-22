@@ -1,20 +1,19 @@
 ﻿using NextDepartures.Standard.Storage.Attributes;
 using System.Reflection;
 
-namespace NextDepartures.Standard.Storage
+namespace NextDepartures.Standard.Storage;
+
+public class DataStorageProperties
 {
-    public class DataStorageProperties
+    public bool DoesSupportParallelPreload { get; }
+
+    private DataStorageProperties()
     {
-        public bool DoesSupportParallelPreload { get; }
+        DoesSupportParallelPreload = false;
+    }
 
-        private DataStorageProperties()
-        {
-            DoesSupportParallelPreload = false;
-        }
-
-        public DataStorageProperties(IDataStorage dataStorage) : this()
-        {
-            DoesSupportParallelPreload = dataStorage.GetType().GetCustomAttribute<SupportsParallelPreloadAttribute>() != null;
-        }
+    public DataStorageProperties(IDataStorage dataStorage) : this()
+    {
+        DoesSupportParallelPreload = dataStorage.GetType().GetCustomAttribute<SupportsParallelPreloadAttribute>() != null;
     }
 }
