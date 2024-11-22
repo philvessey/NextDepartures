@@ -16,6 +16,14 @@ public class Agencies
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var agency in results)
+        {
+            Assert.IsNotNull(agency.Id);
+            Assert.IsNotNull(agency.Name);
+            Assert.IsNotNull(agency.URL);
+            Assert.IsNotNull(agency.Timezone);
+        }
     }
 
     [TestMethod]
@@ -26,6 +34,14 @@ public class Agencies
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var agency in results)
+        {
+            Assert.IsNotNull(agency.Id);
+            Assert.IsNotNull(agency.Name);
+            Assert.IsNotNull(agency.URL);
+            Assert.IsNotNull(agency.Timezone);
+        }
     }
 
     [TestMethod]
@@ -36,6 +52,14 @@ public class Agencies
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var agency in results)
+        {
+            Assert.IsNotNull(agency.Id);
+            Assert.IsNotNull(agency.Name);
+            Assert.IsNotNull(agency.URL);
+            Assert.IsNotNull(agency.Timezone);
+        }
     }
 
     [TestMethod]
@@ -46,6 +70,14 @@ public class Agencies
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var agency in results)
+        {
+            Assert.IsNotNull(agency.Id);
+            Assert.IsNotNull(agency.Name);
+            Assert.IsNotNull(agency.URL);
+            Assert.IsNotNull(agency.Timezone);
+        }
     }
 
     [TestMethod]
@@ -56,6 +88,14 @@ public class Agencies
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var agency in results)
+        {
+            Assert.IsNotNull(agency.Id);
+            Assert.IsNotNull(agency.Name);
+            Assert.IsNotNull(agency.URL);
+            Assert.IsNotNull(agency.Timezone);
+        }
     }
 
     [TestMethod]
@@ -66,6 +106,14 @@ public class Agencies
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var agency in results)
+        {
+            Assert.IsNotNull(agency.Id);
+            Assert.IsNotNull(agency.Name);
+            Assert.IsNotNull(agency.URL);
+            Assert.IsNotNull(agency.Timezone);
+        }
     }
 
     [TestMethod]
@@ -76,5 +124,13 @@ public class Agencies
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var agency in results)
+        {
+            Assert.IsNotNull(agency.Id);
+            Assert.IsNotNull(agency.Name);
+            Assert.IsNotNull(agency.URL);
+            Assert.IsNotNull(agency.Timezone);
+        }
     }
 }

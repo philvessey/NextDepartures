@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
 using NextDepartures.Storage.GTFS;
 using System.Threading.Tasks;
+using GTFS.Entities.Enumerations;
 
 namespace NextDepartures.Test;
 
@@ -16,6 +17,28 @@ public class Stops
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.Stop or LocationType.Station or LocationType.EntranceExit))
+                continue;
+            
+            Assert.IsNotNull(stop.Name);
+            Assert.IsNotNull(stop.Latitude);
+            Assert.IsNotNull(stop.Longitude);
+        }
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.EntranceExit or LocationType.GenericNode or LocationType.BoardingArea))
+                continue;
+
+            Assert.IsNotNull(stop.ParentStation);
+        }
     }
 
     [TestMethod]
@@ -26,6 +49,28 @@ public class Stops
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.Stop or LocationType.Station or LocationType.EntranceExit))
+                continue;
+            
+            Assert.IsNotNull(stop.Name);
+            Assert.IsNotNull(stop.Latitude);
+            Assert.IsNotNull(stop.Longitude);
+        }
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.EntranceExit or LocationType.GenericNode or LocationType.BoardingArea))
+                continue;
+
+            Assert.IsNotNull(stop.ParentStation);
+        }
     }
 
     [TestMethod]
@@ -36,6 +81,28 @@ public class Stops
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.Stop or LocationType.Station or LocationType.EntranceExit))
+                continue;
+            
+            Assert.IsNotNull(stop.Name);
+            Assert.IsNotNull(stop.Latitude);
+            Assert.IsNotNull(stop.Longitude);
+        }
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.EntranceExit or LocationType.GenericNode or LocationType.BoardingArea))
+                continue;
+
+            Assert.IsNotNull(stop.ParentStation);
+        }
     }
 
     [TestMethod]
@@ -46,6 +113,28 @@ public class Stops
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.Stop or LocationType.Station or LocationType.EntranceExit))
+                continue;
+            
+            Assert.IsNotNull(stop.Name);
+            Assert.IsNotNull(stop.Latitude);
+            Assert.IsNotNull(stop.Longitude);
+        }
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.EntranceExit or LocationType.GenericNode or LocationType.BoardingArea))
+                continue;
+
+            Assert.IsNotNull(stop.ParentStation);
+        }
     }
 
     [TestMethod]
@@ -56,6 +145,28 @@ public class Stops
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.Stop or LocationType.Station or LocationType.EntranceExit))
+                continue;
+            
+            Assert.IsNotNull(stop.Name);
+            Assert.IsNotNull(stop.Latitude);
+            Assert.IsNotNull(stop.Longitude);
+        }
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.EntranceExit or LocationType.GenericNode or LocationType.BoardingArea))
+                continue;
+
+            Assert.IsNotNull(stop.ParentStation);
+        }
     }
 
     [TestMethod]
@@ -66,6 +177,28 @@ public class Stops
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.Stop or LocationType.Station or LocationType.EntranceExit))
+                continue;
+            
+            Assert.IsNotNull(stop.Name);
+            Assert.IsNotNull(stop.Latitude);
+            Assert.IsNotNull(stop.Longitude);
+        }
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.EntranceExit or LocationType.GenericNode or LocationType.BoardingArea))
+                continue;
+
+            Assert.IsNotNull(stop.ParentStation);
+        }
     }
 
     [TestMethod]
@@ -76,6 +209,28 @@ public class Stops
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.Stop or LocationType.Station or LocationType.EntranceExit))
+                continue;
+            
+            Assert.IsNotNull(stop.Name);
+            Assert.IsNotNull(stop.Latitude);
+            Assert.IsNotNull(stop.Longitude);
+        }
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.EntranceExit or LocationType.GenericNode or LocationType.BoardingArea))
+                continue;
+
+            Assert.IsNotNull(stop.ParentStation);
+        }
     }
 
     [TestMethod]
@@ -86,6 +241,28 @@ public class Stops
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.Stop or LocationType.Station or LocationType.EntranceExit))
+                continue;
+            
+            Assert.IsNotNull(stop.Name);
+            Assert.IsNotNull(stop.Latitude);
+            Assert.IsNotNull(stop.Longitude);
+        }
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.EntranceExit or LocationType.GenericNode or LocationType.BoardingArea))
+                continue;
+
+            Assert.IsNotNull(stop.ParentStation);
+        }
     }
 
     [TestMethod]
@@ -96,6 +273,28 @@ public class Stops
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.Stop or LocationType.Station or LocationType.EntranceExit))
+                continue;
+            
+            Assert.IsNotNull(stop.Name);
+            Assert.IsNotNull(stop.Latitude);
+            Assert.IsNotNull(stop.Longitude);
+        }
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.EntranceExit or LocationType.GenericNode or LocationType.BoardingArea))
+                continue;
+
+            Assert.IsNotNull(stop.ParentStation);
+        }
     }
 
     [TestMethod]
@@ -106,6 +305,28 @@ public class Stops
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.Stop or LocationType.Station or LocationType.EntranceExit))
+                continue;
+            
+            Assert.IsNotNull(stop.Name);
+            Assert.IsNotNull(stop.Latitude);
+            Assert.IsNotNull(stop.Longitude);
+        }
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.EntranceExit or LocationType.GenericNode or LocationType.BoardingArea))
+                continue;
+
+            Assert.IsNotNull(stop.ParentStation);
+        }
     }
 
     [TestMethod]
@@ -116,5 +337,27 @@ public class Stops
 
         Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.Stop or LocationType.Station or LocationType.EntranceExit))
+                continue;
+            
+            Assert.IsNotNull(stop.Name);
+            Assert.IsNotNull(stop.Latitude);
+            Assert.IsNotNull(stop.Longitude);
+        }
+        
+        foreach (var stop in results)
+        {
+            Assert.IsNotNull(stop.Id);
+
+            if (stop.LocationType is not (LocationType.EntranceExit or LocationType.GenericNode or LocationType.BoardingArea))
+                continue;
+
+            Assert.IsNotNull(stop.ParentStation);
+        }
     }
 }

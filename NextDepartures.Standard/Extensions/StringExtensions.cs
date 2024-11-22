@@ -11,13 +11,13 @@ public static class StringExtensions
 
     public static TimeOfDay? ToTimeOfDay(this string baseString)
     {
-        var splitTime = baseString.Split(Separator, StringSplitOptions.None).Select(int.Parse).ToArray();
+        var value = baseString.Split(Separator, StringSplitOptions.None).Select(int.Parse).ToArray();
 
         return new TimeOfDay
         {
-            Hours = splitTime[0],
-            Minutes = splitTime[1],
-            Seconds = splitTime[2]
+            Hours = value[0],
+            Minutes = value[1],
+            Seconds = value[2]
         };
     }
 

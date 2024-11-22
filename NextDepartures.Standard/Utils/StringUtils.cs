@@ -13,11 +13,11 @@ public static class StringUtils
 
         foreach (var t in steps)
         {
-            var returnValue = t();
+            var value = t();
 
-            if (!string.IsNullOrEmpty(returnValue))
+            if (!string.IsNullOrEmpty(value))
             {
-                return returnValue;
+                return value;
             }
         }
 
