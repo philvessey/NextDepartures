@@ -12,7 +12,16 @@
       "login": "philvessey",
       "name": "Phil Vessey",
       "avatar_url": "https://avatars.githubusercontent.com/u/814882?v=4",
-      "profile": "https://tramtimes.net",
+      "profile": "https://github.com/philvessey",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "hypervtechnics",
+      "name": "hypervtechnics",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10027956?v=4",
+      "profile": "https://github.com/hypervtechnics",
       "contributions": [
         "code"
       ]
