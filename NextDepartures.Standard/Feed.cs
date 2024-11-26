@@ -42,9 +42,9 @@ public partial class Feed
 
     private static Departure CreateProcessedDeparture(Departure tempDeparture, DateTime departureDateTime)
     {
-        return new Departure()
+        return new Departure
         {
-            DepartureTime = new TimeOfDay() { Hours = departureDateTime.Hour, Minutes = departureDateTime.Minute, Seconds = departureDateTime.Second },
+            DepartureTime = new TimeOfDay { Hours = departureDateTime.Hour, Minutes = departureDateTime.Minute, Seconds = departureDateTime.Second },
             DepartureDateTime = departureDateTime,
             StopId = tempDeparture.StopId,
             TripId = tempDeparture.TripId,

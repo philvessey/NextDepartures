@@ -9,7 +9,7 @@ public static class IntExtensions
         return baseInt == 0 ? ExceptionType.Added : ExceptionType.Removed;
     }
 
-    public static LocationType? ToLocationType(this int baseInt)
+    public static LocationType ToLocationType(this int baseInt)
     {
         return baseInt switch
         {
@@ -18,7 +18,7 @@ public static class IntExtensions
             2 => LocationType.EntranceExit,
             3 => LocationType.GenericNode,
             4 => LocationType.BoardingArea,
-            _ => null
+            _ => LocationType.Stop
         };
     }
 }
