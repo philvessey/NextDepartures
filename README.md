@@ -91,25 +91,6 @@ var results = await feed.GetStopsByWheelchairBoardingAsync();
 var results = await feed.GetStopsByZoneAsync();
 ```
 
-## Contributors
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/philvessey"><img src="https://avatars.githubusercontent.com/u/814882?v=4&s=100" width="100px;" alt="Phil Vessey"/><br /><sub><b>Phil Vessey</b></sub></a><br /><a href="#code-philvessey" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/hypervtechnics"><img src="https://avatars.githubusercontent.com/u/10027956?v=4&s=100" width="100px;" alt="hypervtechnics"/><br /><sub><b>hypervtechnics</b></sub></a><br /><a href="#code-hypervtechnics" title="Code">💻</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
 ## License
 
 Licensed under the [MIT License](./LICENSE).
