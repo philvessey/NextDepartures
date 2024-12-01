@@ -1,10 +1,14 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
-
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+ 
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextDepartures.Database", "NextDepartures.Database\NextDepartures.Database.csproj", "{131987AC-67E7-4880-A59A-5106336CA323}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDepartures.Standard", "NextDepartures.Standard\NextDepartures.Standard.csproj", "{2605B71D-3B48-4915-B87B-B270CDB89339}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDepartures.Storage.SqlServer", "NextDepartures.Storage.SqlServer\NextDepartures.Storage.SqlServer.csproj", "{F255349C-F044-437A-B6AF-6789FD2710BE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextDepartures.Storage.GTFS", "NextDepartures.Storage.GTFS\NextDepartures.Storage.GTFS.csproj", "{879FCDEC-CEAE-4DA0-955F-0F59967644A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextDepartures.Storage.Sqlite", "NextDepartures.Storage.Sqlite\NextDepartures.Storage.Sqlite.csproj", "{78B10FA0-A132-4108-B994-21C504E5AF14}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NextDepartures.Storage.SqlServer", "NextDepartures.Storage.SqlServer\NextDepartures.Storage.SqlServer.csproj", "{F255349C-F044-437A-B6AF-6789FD2710BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NextDepartures.Test", "NextDepartures.Test\NextDepartures.Test.csproj", "{8880FB4C-88CA-4895-9843-0558244F7906}"
 EndProject
@@ -12,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		CONTRIBUTING.md = CONTRIBUTING.md
+		CONTRIBUTORS.md = CONTRIBUTORS.md
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		README.md = README.md
@@ -24,18 +29,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{131987AC-67E7-4880-A59A-5106336CA323}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{131987AC-67E7-4880-A59A-5106336CA323}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{131987AC-67E7-4880-A59A-5106336CA323}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{131987AC-67E7-4880-A59A-5106336CA323}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2605B71D-3B48-4915-B87B-B270CDB89339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2605B71D-3B48-4915-B87B-B270CDB89339}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2605B71D-3B48-4915-B87B-B270CDB89339}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2605B71D-3B48-4915-B87B-B270CDB89339}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F255349C-F044-437A-B6AF-6789FD2710BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F255349C-F044-437A-B6AF-6789FD2710BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F255349C-F044-437A-B6AF-6789FD2710BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F255349C-F044-437A-B6AF-6789FD2710BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{879FCDEC-CEAE-4DA0-955F-0F59967644A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{879FCDEC-CEAE-4DA0-955F-0F59967644A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{879FCDEC-CEAE-4DA0-955F-0F59967644A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{879FCDEC-CEAE-4DA0-955F-0F59967644A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78B10FA0-A132-4108-B994-21C504E5AF14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78B10FA0-A132-4108-B994-21C504E5AF14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78B10FA0-A132-4108-B994-21C504E5AF14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78B10FA0-A132-4108-B994-21C504E5AF14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F255349C-F044-437A-B6AF-6789FD2710BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F255349C-F044-437A-B6AF-6789FD2710BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F255349C-F044-437A-B6AF-6789FD2710BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F255349C-F044-437A-B6AF-6789FD2710BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8880FB4C-88CA-4895-9843-0558244F7906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8880FB4C-88CA-4895-9843-0558244F7906}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8880FB4C-88CA-4895-9843-0558244F7906}.Release|Any CPU.ActiveCfg = Release|Any CPU

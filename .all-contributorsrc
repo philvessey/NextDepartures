@@ -1,22 +1,7 @@
 {
-  "projectName": "NextDepartures",
-  "projectOwner": "philvessey",
-  "files": [
-    "README.md"
-  ],
-  "commitType": "docs",
   "commitConvention": "angular",
-  "contributorsPerLine": 7,
+  "commitType": "docs",
   "contributors": [
-    {
-      "login": "philvessey",
-      "name": "Phil Vessey",
-      "avatar_url": "https://avatars.githubusercontent.com/u/814882?v=4",
-      "profile": "https://github.com/philvessey",
-      "contributions": [
-        "code"
-      ]
-    },
     {
       "login": "hypervtechnics",
       "name": "hypervtechnics",
@@ -26,5 +11,11 @@
         "code"
       ]
     }
-  ]
+  ],
+  "contributorsPerLine": 7,
+  "files": [
+    "CONTRIBUTORS.md"
+  ],
+  "projectName": "NextDepartures",
+  "projectOwner": "philvessey"
 }

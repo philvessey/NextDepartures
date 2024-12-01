@@ -52,3 +52,15 @@ We use VSTest for our unit tests. Please make sure your changes include appropri
 ## Reporting Bugs
 
 If you find a bug, please open an issue in the repository and include as much detail as possible about the bug and how to reproduce it.
+
+## Lead Project Maintainer
+
+[Phil Vessey](https://github.com/philvessey) is the lead project maintainer. Feel free to reach out to him for any significant inquiries or guidance regarding NextDepartures.
+
+## Code of Conduct
+
+We adhere to the Contributor Covenant [Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+
+## License
+
+By contributing to NextDepartures, you agree that your contributions will be licensed under the [MIT License](./LICENSE).

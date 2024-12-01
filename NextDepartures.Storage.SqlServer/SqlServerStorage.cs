@@ -223,7 +223,7 @@ public class SqlServerStorage : IDataStorage
     /// <returns>A list of departures.</returns>
     public Task<List<Departure>> GetDeparturesForStopAsync(string id)
     {
-        return ExecuteCommand($"SELECT s.DepartureTime, s.StopId, t.Id, t.ServiceId, t.Headsign, t.ShortName, r.AgencyId, r.ShortName, r.LongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM {_prefix.ToUpper()}_STOP_TIME s LEFT JOIN {_prefix.ToUpper()}_TRIP t ON (s.TripId = t.Id) LEFT JOIN {_prefix.ToUpper()}_ROUTE r ON (t.RouteId = r.Id) LEFT JOIN {_prefix.ToUpper()}_CALENDAR c ON (t.ServiceId = c.ServiceId) WHERE LOWER(s.StopId) = '{id.ToLower()}' AND s.PickupType != 1 ORDER BY s.DepartureTime ASC", GetDepartureFromDataReader);
+        return ExecuteCommand($"SELECT s.DepartureTime, s.StopId, t.Id, t.ServiceId, t.Headsign, t.ShortName, r.AgencyId, r.ShortName, r.LongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM {_prefix.ToUpper()}_STOP_TIME s LEFT JOIN {_prefix.ToUpper()}_TRIP t ON (s.TripId = t.Id) LEFT JOIN {_prefix.ToUpper()}_ROUTE r ON (t.RouteId = r.Id) LEFT JOIN {_prefix.ToUpper()}_CALENDAR c ON (t.ServiceId = c.ServiceId) WHERE LOWER(s.StopId) = '{id.ToLower()}' AND ISNULL(s.PickupType, 0) != 1 ORDER BY s.DepartureTime", GetDepartureFromDataReader);
     }
 
     /// <summary>
@@ -234,7 +234,7 @@ public class SqlServerStorage : IDataStorage
     /// <returns>A list of departures.</returns>
     public Task<List<Departure>> GetDeparturesForTripAsync(string id)
     {
-        return ExecuteCommand($"SELECT s.DepartureTime, s.StopId, t.Id, t.ServiceId, t.Headsign, t.ShortName, r.AgencyId, r.ShortName, r.LongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM {_prefix.ToUpper()}_STOP_TIME s LEFT JOIN {_prefix.ToUpper()}_TRIP t ON (s.TripId = t.Id) LEFT JOIN {_prefix.ToUpper()}_ROUTE r ON (t.RouteId = r.Id) LEFT JOIN {_prefix.ToUpper()}_CALENDAR c ON (t.ServiceId = c.ServiceId) WHERE LOWER(s.TripId) = '{id.ToLower()}' AND s.PickupType != 1 ORDER BY s.DepartureTime ASC", GetDepartureFromDataReader);
+        return ExecuteCommand($"SELECT s.DepartureTime, s.StopId, t.Id, t.ServiceId, t.Headsign, t.ShortName, r.AgencyId, r.ShortName, r.LongName, c.Monday, c.Tuesday, c.Wednesday, c.Thursday, c.Friday, c.Saturday, c.Sunday, c.StartDate, c.EndDate FROM {_prefix.ToUpper()}_STOP_TIME s LEFT JOIN {_prefix.ToUpper()}_TRIP t ON (s.TripId = t.Id) LEFT JOIN {_prefix.ToUpper()}_ROUTE r ON (t.RouteId = r.Id) LEFT JOIN {_prefix.ToUpper()}_CALENDAR c ON (t.ServiceId = c.ServiceId) WHERE LOWER(s.TripId) = '{id.ToLower()}' AND ISNULL(s.PickupType, 0) != 1 ORDER BY s.DepartureTime", GetDepartureFromDataReader);
     }
 
     private static Stop GetStopFromDataReader(SqlDataReader dataReader)

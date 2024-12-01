@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Authors>Phil Vessey</Authors>
     <Copyright>Copyright © 2024 Phil Vessey and Contributors</Copyright>
-    <Description>NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally or in an Azure SQL Database. The library will work with any well-formed GTFS data set.</Description>
+    <Description>NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, in a SQLite database or in a SQL Server database. The library will work with any well-formed GTFS data set.</Description>
     <IsPackable>false</IsPackable>
     <Product>NextDepartures.Test</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,15 +20,20 @@
   <ItemGroup>
     <ProjectReference Include="..\NextDepartures.Standard\NextDepartures.Standard.csproj" />
     <ProjectReference Include="..\NextDepartures.Storage.GTFS\NextDepartures.Storage.GTFS.csproj" />
-    <ProjectReference Include="..\NextDepartures.Storage.SqlServer\NextDepartures.Storage.SqlServer.csproj" />
+    <ProjectReference Include="..\NextDepartures.Storage.Sqlite\NextDepartures.Storage.Sqlite.csproj" />
   </ItemGroup>
   
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Storage.GTFS\" />
+    <Folder Include="Storage.Sqlite\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\gtfs.zip">
+    <None Update="Data\feed.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\feed.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Data\realtime-alerts.aspx">
