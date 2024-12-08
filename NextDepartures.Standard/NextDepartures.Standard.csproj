@@ -8,6 +8,7 @@
     <PackageLicense>MIT</PackageLicense>
     <PackageLicenseUrl>https://raw.github.com/philvessey/NextDepartures/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/philvessey/NextDepartures</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Product>NextDepartures.Standard</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
@@ -24,6 +25,13 @@
     <Folder Include="Models\" />
     <Folder Include="Storage\" />
     <Folder Include="Utils\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

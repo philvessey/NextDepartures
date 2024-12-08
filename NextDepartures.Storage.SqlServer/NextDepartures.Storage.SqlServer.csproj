@@ -8,6 +8,7 @@
     <PackageLicense>MIT</PackageLicense>
     <PackageLicenseUrl>https://raw.github.com/philvessey/NextDepartures/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/philvessey/NextDepartures</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Product>NextDepartures.Storage.SqlServer</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
@@ -20,6 +21,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NextDepartures.Standard\NextDepartures.Standard.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
