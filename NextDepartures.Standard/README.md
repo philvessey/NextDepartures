@@ -2,7 +2,7 @@
 
 NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, in a SQLite database or in a SQL Server database. The library will work with any well-formed GTFS data set.
 
-## Agencies Endpoints
+## Agencies
 
 ```csharp
 var results = await feed.GetAgenciesByEmailAsync();
@@ -14,7 +14,7 @@ var results = await feed.GetAgenciesByTimezoneAsync();
 var results = await feed.GetAgenciesByUrlAsync();
 ```
 
-## Services Endpoints
+## Services
 
 ```csharp
 var results = await feed.GetServicesByParentStationAsync();
@@ -22,7 +22,7 @@ var results = await feed.GetServicesByStopAsync();
 var results = await feed.GetServicesByTripAsync();
 ```
 
-## Stops Endpoints
+## Stops
 
 ```csharp
 var results = await feed.GetStopsByDescriptionAsync();
