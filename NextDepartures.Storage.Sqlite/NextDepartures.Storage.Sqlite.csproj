@@ -8,10 +8,11 @@
     <PackageLicense>MIT</PackageLicense>
     <PackageLicenseUrl>https://raw.github.com/philvessey/NextDepartures/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/philvessey/NextDepartures</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Product>NextDepartures.Storage.Sqlite</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-    <Version>3.5.5</Version>
+    <Version>3.5.6</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NextDepartures.Standard\NextDepartures.Standard.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
