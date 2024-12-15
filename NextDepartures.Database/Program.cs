@@ -179,7 +179,7 @@ SqliteCommand createLevel = new($"CREATE TABLE GTFS_LEVEL (Id nvarchar(255), Ind
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertLevel = new($"INSERT INTO GTFS_LEVEL (Id, Index, Name) VALUES (@id, @index, @name)", connection)
+SqliteCommand insertLevel = new($"INSERT INTO GTFS_LEVEL (Id, Indexes, Name) VALUES (@id, @indexes, @name)", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
@@ -191,7 +191,7 @@ foreach (var level in feed.Levels)
 {
     insertLevel.Parameters.Clear();
     insertLevel.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(level.Id) ? level.Id : DBNull.Value);
-    insertLevel.Parameters.AddWithValue("@index", level.Index);
+    insertLevel.Parameters.AddWithValue("@indexes", level.Index);
     insertLevel.Parameters.AddWithValue("@name", !string.IsNullOrEmpty(level.Name) ? level.Name : DBNull.Value);
 
     await insertLevel.ExecuteNonQueryAsync();
