@@ -3,7 +3,7 @@
         <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 
         <TestDevelopmentVersion>17.12.0</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
-        <TestFrameworkVersion>3.6.3</TestFrameworkVersion> <!-- MSTest.TestFramework -->
+        <TestFrameworkVersion>3.6.4</TestFrameworkVersion> <!-- MSTest.TestFramework -->
 
         <DatabaseLocalLibraryVersion>9.0.0</DatabaseLocalLibraryVersion> <!-- Microsoft.Data.Sqlite -->
         <DatabaseServerLibraryVersion>5.2.2</DatabaseServerLibraryVersion> <!-- Microsoft.Data.SqlClient -->
