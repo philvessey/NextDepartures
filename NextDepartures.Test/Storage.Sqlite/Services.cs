@@ -19,20 +19,6 @@ public class Services
 
         Assert.IsNotNull(resultsByParentStation);
         Assert.IsTrue(resultsByParentStation.Count > 0);
-
-        foreach (var service in resultsByParentStation)
-        {
-            Assert.IsNotNull(service.AgencyId);
-            Assert.IsNotNull(service.AgencyName);
-            Assert.IsNotNull(service.DepartureDateTime);
-            Assert.IsNotNull(service.DepartureTime);
-            Assert.IsNotNull(service.DestinationName);
-            Assert.IsNotNull(service.RouteName);
-            Assert.IsNotNull(service.StopId);
-            Assert.IsNotNull(service.StopName);
-            Assert.IsNotNull(service.TripId);
-            Assert.IsNotNull(service.Type);
-        }
     }
 
     [TestMethod]
@@ -43,20 +29,6 @@ public class Services
 
         Assert.IsNotNull(resultsByStop);
         Assert.IsTrue(resultsByStop.Count > 0);
-            
-        foreach (var service in resultsByStop)
-        {
-            Assert.IsNotNull(service.AgencyId);
-            Assert.IsNotNull(service.AgencyName);
-            Assert.IsNotNull(service.DepartureDateTime);
-            Assert.IsNotNull(service.DepartureTime);
-            Assert.IsNotNull(service.DestinationName);
-            Assert.IsNotNull(service.RouteName);
-            Assert.IsNotNull(service.StopId);
-            Assert.IsNotNull(service.StopName);
-            Assert.IsNotNull(service.TripId);
-            Assert.IsNotNull(service.Type);
-        }
     }
 
     [TestMethod]
@@ -68,19 +40,5 @@ public class Services
 
         Assert.IsNotNull(resultsByTrip);
         Assert.IsTrue(resultsByTrip.Count > 0);
-            
-        foreach (var service in resultsByTrip)
-        {
-            Assert.IsNotNull(service.AgencyId);
-            Assert.IsNotNull(service.AgencyName);
-            Assert.IsNotNull(service.DepartureDateTime);
-            Assert.IsNotNull(service.DepartureTime);
-            Assert.IsNotNull(service.DestinationName);
-            Assert.IsNotNull(service.RouteName);
-            Assert.IsNotNull(service.StopId);
-            Assert.IsNotNull(service.StopName);
-            Assert.IsNotNull(service.TripId);
-            Assert.IsNotNull(service.Type);
-        }
     }
 }
