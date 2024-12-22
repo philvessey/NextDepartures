@@ -1,5 +1,8 @@
-﻿namespace NextDepartures.Standard.Models;
+﻿using JetBrains.Annotations;
 
+namespace NextDepartures.Standard.Models;
+
+[UsedImplicitly]
 public enum DayOffsetType
 {
     Yesterday = -1,

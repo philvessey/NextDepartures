@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="GTFS" Version="$(TransitFeedLibraryVersion)" />
+    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsLibraryVersion)" />
     <PackageReference Include="NodaTime" Version="$(DateTimeLibraryVersion)" />
   </ItemGroup>
   

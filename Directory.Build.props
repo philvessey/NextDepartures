@@ -8,6 +8,7 @@
         <DatabaseLocalLibraryVersion>9.0.0</DatabaseLocalLibraryVersion> <!-- Microsoft.Data.Sqlite -->
         <DatabaseServerLibraryVersion>5.2.2</DatabaseServerLibraryVersion> <!-- Microsoft.Data.SqlClient -->
         <DateTimeLibraryVersion>3.2.0</DateTimeLibraryVersion> <!-- NodaTime -->
+        <JetBrainsLibraryVersion>2024.3.0</JetBrainsLibraryVersion> <!-- JetBrains.Annotations -->
         <TransitFeedLibraryVersion>3.0.0-pre006</TransitFeedLibraryVersion> <!-- GTFS -->
     </PropertyGroup>
 </Project>
