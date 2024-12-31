@@ -1,4 +1,4 @@
-name: '3.5.9'
+name: '3.6.0'
 
 trigger:
 - master
