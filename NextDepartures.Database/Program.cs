@@ -9,18 +9,25 @@ var feed = reader.Read("Data/feed.zip");
 await using SqliteConnection connection = new("Data Source=Data/feed.db;");
 connection.Open();
 
-SqliteCommand createAgency = new($"CREATE TABLE GTFS_AGENCY (Id nvarchar(255), Name nvarchar(255), URL nvarchar(255), Timezone nvarchar(255), LanguageCode nvarchar(255), Phone nvarchar(255), FareURL nvarchar(255), Email nvarchar(255))", connection)
+SqliteCommand dropAgency = new("DROP TABLE IF EXISTS GTFS_AGENCY", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertAgency = new($"INSERT INTO GTFS_AGENCY (Id, Name, URL, Timezone, LanguageCode, Phone, FareURL, Email) VALUES (@id, @name, @url, @timezone, @languageCode, @phone, @fareUrl, @email)", connection)
+SqliteCommand createAgency = new("CREATE TABLE GTFS_AGENCY (Id nvarchar(255), Name nvarchar(255), URL nvarchar(255), Timezone nvarchar(255), LanguageCode nvarchar(255), Phone nvarchar(255), FareURL nvarchar(255), Email nvarchar(255))", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertAgency = new("INSERT INTO GTFS_AGENCY (Id, Name, URL, Timezone, LanguageCode, Phone, FareURL, Email) VALUES (@id, @name, @url, @timezone, @languageCode, @phone, @fareUrl, @email)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropAgency.ExecuteNonQueryAsync();
 await createAgency.ExecuteNonQueryAsync();
 
 foreach (var agency in feed.Agencies)
@@ -38,18 +45,25 @@ foreach (var agency in feed.Agencies)
     await insertAgency.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createCalendar = new($"CREATE TABLE GTFS_CALENDAR (ServiceId nvarchar(255) PRIMARY KEY, Monday bit, Tuesday bit, Wednesday bit, Thursday bit, Friday bit, Saturday bit, Sunday bit, StartDate datetime, EndDate datetime)", connection)
+SqliteCommand dropCalendar = new("DROP TABLE IF EXISTS GTFS_CALENDAR", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertCalendar = new($"INSERT INTO GTFS_CALENDAR (ServiceId, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, StartDate, EndDate) VALUES (@serviceId, @monday, @tuesday, @wednesday, @thursday, @friday, @saturday, @sunday, @startDate, @endDate)", connection)
+SqliteCommand createCalendar = new("CREATE TABLE GTFS_CALENDAR (ServiceId nvarchar(255) PRIMARY KEY, Monday bit, Tuesday bit, Wednesday bit, Thursday bit, Friday bit, Saturday bit, Sunday bit, StartDate datetime, EndDate datetime)", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertCalendar = new("INSERT INTO GTFS_CALENDAR (ServiceId, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, StartDate, EndDate) VALUES (@serviceId, @monday, @tuesday, @wednesday, @thursday, @friday, @saturday, @sunday, @startDate, @endDate)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropCalendar.ExecuteNonQueryAsync();
 await createCalendar.ExecuteNonQueryAsync();
 
 foreach (var calendar in feed.Calendars)
@@ -69,18 +83,25 @@ foreach (var calendar in feed.Calendars)
     await insertCalendar.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createCalendarDate = new($"CREATE TABLE GTFS_CALENDAR_DATE (ServiceId nvarchar(255), Date datetime, ExceptionType int)", connection)
+SqliteCommand dropCalendarDate = new("DROP TABLE IF EXISTS GTFS_CALENDAR_DATE", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertCalendarDate = new($"INSERT INTO GTFS_CALENDAR_DATE (ServiceId, Date, ExceptionType) VALUES (@serviceId, @date, @exceptionType)", connection)
+SqliteCommand createCalendarDate = new("CREATE TABLE GTFS_CALENDAR_DATE (ServiceId nvarchar(255), Date datetime, ExceptionType int)", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertCalendarDate = new("INSERT INTO GTFS_CALENDAR_DATE (ServiceId, Date, ExceptionType) VALUES (@serviceId, @date, @exceptionType)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropCalendarDate.ExecuteNonQueryAsync();
 await createCalendarDate.ExecuteNonQueryAsync();
 
 foreach (var calendarDate in feed.CalendarDates)
@@ -93,18 +114,25 @@ foreach (var calendarDate in feed.CalendarDates)
     await insertCalendarDate.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createFareAttribute = new($"CREATE TABLE GTFS_FARE_ATTRIBUTE (FareId nvarchar(255), Price nvarchar(255), CurrencyType nvarchar(255), PaymentMethod int, Transfers int, AgencyId nvarchar(255), TransferDuration nvarchar(255))", connection)
+SqliteCommand dropFareAttribute = new("DROP TABLE IF EXISTS GTFS_FARE_ATTRIBUTE", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertFareAttribute = new($"INSERT INTO GTFS_FARE_ATTRIBUTE (FareId, Price, CurrencyType, PaymentMethod, Transfers, AgencyId, TransferDuration) VALUES (@fareId, @price, @currencyType, @paymentMethod, @transfers, @agencyId, @transferDuration)", connection)
+SqliteCommand createFareAttribute = new("CREATE TABLE GTFS_FARE_ATTRIBUTE (FareId nvarchar(255), Price nvarchar(255), CurrencyType nvarchar(255), PaymentMethod int, Transfers int, AgencyId nvarchar(255), TransferDuration nvarchar(255))", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertFareAttribute = new("INSERT INTO GTFS_FARE_ATTRIBUTE (FareId, Price, CurrencyType, PaymentMethod, Transfers, AgencyId, TransferDuration) VALUES (@fareId, @price, @currencyType, @paymentMethod, @transfers, @agencyId, @transferDuration)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropFareAttribute.ExecuteNonQueryAsync();
 await createFareAttribute.ExecuteNonQueryAsync();
 
 foreach (var fareAttribute in feed.FareAttributes)
@@ -121,18 +149,25 @@ foreach (var fareAttribute in feed.FareAttributes)
     await insertFareAttribute.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createFareRule = new($"CREATE TABLE GTFS_FARE_RULE (FareId nvarchar(255), RouteId nvarchar(255), OriginId nvarchar(255), DestinationId nvarchar(255), ContainsId nvarchar(255))", connection)
+SqliteCommand dropFareRule = new("DROP TABLE IF EXISTS GTFS_FARE_RULE", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertFareRule = new($"INSERT INTO GTFS_FARE_RULE (FareId, RouteId, OriginId, DestinationId, ContainsId) VALUES (@fareId, @routeId, @originId, @destinationId, @containsId)", connection)
+SqliteCommand createFareRule = new("CREATE TABLE GTFS_FARE_RULE (FareId nvarchar(255), RouteId nvarchar(255), OriginId nvarchar(255), DestinationId nvarchar(255), ContainsId nvarchar(255))", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertFareRule = new("INSERT INTO GTFS_FARE_RULE (FareId, RouteId, OriginId, DestinationId, ContainsId) VALUES (@fareId, @routeId, @originId, @destinationId, @containsId)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropFareRule.ExecuteNonQueryAsync();
 await createFareRule.ExecuteNonQueryAsync();
 
 foreach (var fareRule in feed.FareRules)
@@ -147,18 +182,25 @@ foreach (var fareRule in feed.FareRules)
     await insertFareRule.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createFrequency = new($"CREATE TABLE GTFS_FREQUENCY (TripId nvarchar(255), StartTime nvarchar(255), EndTime nvarchar(255), HeadwaySecs nvarchar(255), ExactTimes bit)", connection)
+SqliteCommand dropFrequency = new("DROP TABLE IF EXISTS GTFS_FREQUENCY", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertFrequency = new($"INSERT INTO GTFS_FREQUENCY (TripId, StartTime, EndTime, HeadwaySecs, ExactTimes) VALUES (@tripId, @startTime, @endTime, @headwaySecs, @exactTimes)", connection)
+SqliteCommand createFrequency = new("CREATE TABLE GTFS_FREQUENCY (TripId nvarchar(255), StartTime nvarchar(255), EndTime nvarchar(255), HeadwaySecs nvarchar(255), ExactTimes bit)", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertFrequency = new("INSERT INTO GTFS_FREQUENCY (TripId, StartTime, EndTime, HeadwaySecs, ExactTimes) VALUES (@tripId, @startTime, @endTime, @headwaySecs, @exactTimes)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropFrequency.ExecuteNonQueryAsync();
 await createFrequency.ExecuteNonQueryAsync();
 
 foreach (var frequency in feed.Frequencies)
@@ -173,18 +215,25 @@ foreach (var frequency in feed.Frequencies)
     await insertFrequency.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createLevel = new($"CREATE TABLE GTFS_LEVEL (Id nvarchar(255), Indexes float, Name nvarchar(255))", connection)
+SqliteCommand dropLevel = new("DROP TABLE IF EXISTS GTFS_LEVEL", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertLevel = new($"INSERT INTO GTFS_LEVEL (Id, Indexes, Name) VALUES (@id, @indexes, @name)", connection)
+SqliteCommand createLevel = new("CREATE TABLE GTFS_LEVEL (Id nvarchar(255), Indexes float, Name nvarchar(255))", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertLevel = new("INSERT INTO GTFS_LEVEL (Id, Indexes, Name) VALUES (@id, @indexes, @name)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropLevel.ExecuteNonQueryAsync();
 await createLevel.ExecuteNonQueryAsync();
 
 foreach (var level in feed.Levels)
@@ -197,18 +246,25 @@ foreach (var level in feed.Levels)
     await insertLevel.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createPathway = new($"CREATE TABLE GTFS_PATHWAY (Id nvarchar(255), FromStopId nvarchar(255), ToStopId nvarchar(255), PathwayMode int, IsBidirectional int, Length float, TraversalTime int, StairCount int, MaxSlope float, MinWidth float, SignpostedAs nvarchar(255), ReversedSignpostedAs nvarchar(255))", connection)
+SqliteCommand dropPathway = new("DROP TABLE IF EXISTS GTFS_PATHWAY", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertPathway = new($"INSERT INTO GTFS_PATHWAY (Id, FromStopId, ToStopId, PathwayMode, IsBidirectional, Length, TraversalTime, StairCount, MaxSlope, MinWidth, SignpostedAs, ReversedSignpostedAs) VALUES (@id, @fromStopId, @toStopId, @pathwayMode, @isBidirectional, @length, @traversalTime, @stairCount, @maxSlope, @minWidth, @signpostedAs, @reversedSignpostedAs)", connection)
+SqliteCommand createPathway = new("CREATE TABLE GTFS_PATHWAY (Id nvarchar(255), FromStopId nvarchar(255), ToStopId nvarchar(255), PathwayMode int, IsBidirectional int, Length float, TraversalTime int, StairCount int, MaxSlope float, MinWidth float, SignpostedAs nvarchar(255), ReversedSignpostedAs nvarchar(255))", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertPathway = new("INSERT INTO GTFS_PATHWAY (Id, FromStopId, ToStopId, PathwayMode, IsBidirectional, Length, TraversalTime, StairCount, MaxSlope, MinWidth, SignpostedAs, ReversedSignpostedAs) VALUES (@id, @fromStopId, @toStopId, @pathwayMode, @isBidirectional, @length, @traversalTime, @stairCount, @maxSlope, @minWidth, @signpostedAs, @reversedSignpostedAs)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropPathway.ExecuteNonQueryAsync();
 await createPathway.ExecuteNonQueryAsync();
 
 foreach (var pathway in feed.Pathways)
@@ -226,20 +282,29 @@ foreach (var pathway in feed.Pathways)
     insertPathway.Parameters.AddWithValue("@minWidth", pathway.MinWidth != null ? pathway.MinWidth : DBNull.Value);
     insertPathway.Parameters.AddWithValue("@signpostedAs", !string.IsNullOrEmpty(pathway.SignpostedAs) ? pathway.SignpostedAs : DBNull.Value);
     insertPathway.Parameters.AddWithValue("@reversedSignpostedAs", !string.IsNullOrEmpty(pathway.ReversedSignpostedAs) ? pathway.ReversedSignpostedAs : DBNull.Value);
+    
+    await insertAgency.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createRoute = new($"CREATE TABLE GTFS_ROUTE (Id nvarchar(255) PRIMARY KEY, AgencyId nvarchar(255), ShortName nvarchar(255), LongName nvarchar(255), Description nvarchar(255), Type int, Url nvarchar(255), Color int, TextColor int)", connection)
+SqliteCommand dropRoute = new("DROP TABLE IF EXISTS GTFS_ROUTE", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertRoute = new($"INSERT INTO GTFS_ROUTE (Id, AgencyId, ShortName, LongName, Description, Type, Url, Color, TextColor) VALUES (@id, @agencyId, @shortName, @longName, @description, @type, @url, @color, @textColor)", connection)
+SqliteCommand createRoute = new("CREATE TABLE GTFS_ROUTE (Id nvarchar(255) PRIMARY KEY, AgencyId nvarchar(255), ShortName nvarchar(255), LongName nvarchar(255), Description nvarchar(255), Type int, Url nvarchar(255), Color int, TextColor int)", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertRoute = new("INSERT INTO GTFS_ROUTE (Id, AgencyId, ShortName, LongName, Description, Type, Url, Color, TextColor) VALUES (@id, @agencyId, @shortName, @longName, @description, @type, @url, @color, @textColor)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropRoute.ExecuteNonQueryAsync();
 await createRoute.ExecuteNonQueryAsync();
 
 foreach (var route in feed.Routes)
@@ -258,18 +323,25 @@ foreach (var route in feed.Routes)
     await insertRoute.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createShape = new($"CREATE TABLE GTFS_SHAPE (Id nvarchar(255), Longitude float, Latitude float, Sequence int, DistanceTravelled float)", connection)
+SqliteCommand dropShape = new("DROP TABLE IF EXISTS GTFS_SHAPE", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertShape = new($"INSERT INTO GTFS_SHAPE (Id, Longitude, Latitude, Sequence, DistanceTravelled) VALUES (@id, @longitude, @latitude, @sequence, @distanceTravelled)", connection)
+SqliteCommand createShape = new("CREATE TABLE GTFS_SHAPE (Id nvarchar(255), Longitude float, Latitude float, Sequence int, DistanceTravelled float)", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertShape = new("INSERT INTO GTFS_SHAPE (Id, Longitude, Latitude, Sequence, DistanceTravelled) VALUES (@id, @longitude, @latitude, @sequence, @distanceTravelled)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropShape.ExecuteNonQueryAsync();
 await createShape.ExecuteNonQueryAsync();
 
 foreach (var shape in feed.Shapes)
@@ -284,18 +356,25 @@ foreach (var shape in feed.Shapes)
     await insertShape.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createStop = new($"CREATE TABLE GTFS_STOP (Id nvarchar(255) PRIMARY KEY, Code nvarchar(255), Name nvarchar(255), Description nvarchar(255), Longitude float, Latitude float, Zone nvarchar(255), Url nvarchar(255), LocationType int, ParentStation nvarchar(255), Timezone nvarchar(255), WheelchairBoarding nvarchar(255), LevelId nvarchar(255), PlatformCode nvarchar(255))", connection)
+SqliteCommand dropStop = new("DROP TABLE IF EXISTS GTFS_STOP", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertStop = new($"INSERT INTO GTFS_STOP (Id, Code, Name, Description, Longitude, Latitude, Zone, Url, LocationType, ParentStation, Timezone, WheelchairBoarding, LevelId, PlatformCode) VALUES (@id, @code, @name, @description, @longitude, @latitude, @zone, @url, @locationType, @parentStation, @timezone, @wheelchairBoarding, @levelId, @platformCode)", connection)
+SqliteCommand createStop = new("CREATE TABLE GTFS_STOP (Id nvarchar(255) PRIMARY KEY, Code nvarchar(255), Name nvarchar(255), Description nvarchar(255), Longitude float, Latitude float, Zone nvarchar(255), Url nvarchar(255), LocationType int, ParentStation nvarchar(255), Timezone nvarchar(255), WheelchairBoarding nvarchar(255), LevelId nvarchar(255), PlatformCode nvarchar(255))", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertStop = new("INSERT INTO GTFS_STOP (Id, Code, Name, Description, Longitude, Latitude, Zone, Url, LocationType, ParentStation, Timezone, WheelchairBoarding, LevelId, PlatformCode) VALUES (@id, @code, @name, @description, @longitude, @latitude, @zone, @url, @locationType, @parentStation, @timezone, @wheelchairBoarding, @levelId, @platformCode)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropStop.ExecuteNonQueryAsync();
 await createStop.ExecuteNonQueryAsync();
 
 foreach (var stop in feed.Stops)
@@ -319,18 +398,25 @@ foreach (var stop in feed.Stops)
     await insertStop.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createStopTime = new($"CREATE TABLE GTFS_STOP_TIME (TripId nvarchar(255), ArrivalTime nvarchar(255), DepartureTime nvarchar(255), StopId nvarchar(255), StopSequence int, StopHeadsign nvarchar(255), PickupType int, DropOffType int, ShapeDistTravelled float, TimepointType int)", connection)
+SqliteCommand dropStopTime = new("DROP TABLE IF EXISTS GTFS_STOP_TIME", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertStopTime = new($"INSERT INTO GTFS_STOP_TIME (TripId, ArrivalTime, DepartureTime, StopId, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTravelled, TimepointType) VALUES (@tripId, @arrivalTime, @departureTime, @stopId, @stopSequence, @stopHeadsign, @pickupType, @dropOffType, @shapeDistTravelled, @timepointType)", connection)
+SqliteCommand createStopTime = new("CREATE TABLE GTFS_STOP_TIME (TripId nvarchar(255), ArrivalTime nvarchar(255), DepartureTime nvarchar(255), StopId nvarchar(255), StopSequence int, StopHeadsign nvarchar(255), PickupType int, DropOffType int, ShapeDistTravelled float, TimepointType int)", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertStopTime = new("INSERT INTO GTFS_STOP_TIME (TripId, ArrivalTime, DepartureTime, StopId, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTravelled, TimepointType) VALUES (@tripId, @arrivalTime, @departureTime, @stopId, @stopSequence, @stopHeadsign, @pickupType, @dropOffType, @shapeDistTravelled, @timepointType)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropStopTime.ExecuteNonQueryAsync();
 await createStopTime.ExecuteNonQueryAsync();
 
 foreach (var stopTime in feed.StopTimes)
@@ -350,18 +436,25 @@ foreach (var stopTime in feed.StopTimes)
     await insertStopTime.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createTransfer = new($"CREATE TABLE GTFS_TRANSFER (FromStopId nvarchar(255), ToStopId nvarchar(255), TransferType int, MinimumTransferTime nvarchar(255))", connection)
+SqliteCommand dropTransfer = new("DROP TABLE IF EXISTS GTFS_TRANSFER", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertTransfer = new($"INSERT INTO GTFS_TRANSFER (FromStopId, ToStopId, TransferType, MinimumTransferTime) VALUES (@fromStopId, @toStopId, @transferType, @minimumTransferTime)", connection)
+SqliteCommand createTransfer = new("CREATE TABLE GTFS_TRANSFER (FromStopId nvarchar(255), ToStopId nvarchar(255), TransferType int, MinimumTransferTime nvarchar(255))", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertTransfer = new("INSERT INTO GTFS_TRANSFER (FromStopId, ToStopId, TransferType, MinimumTransferTime) VALUES (@fromStopId, @toStopId, @transferType, @minimumTransferTime)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropTransfer.ExecuteNonQueryAsync();
 await createTransfer.ExecuteNonQueryAsync();
 
 foreach (var transfer in feed.Transfers)
@@ -375,18 +468,25 @@ foreach (var transfer in feed.Transfers)
     await insertTransfer.ExecuteNonQueryAsync();
 }
 
-SqliteCommand createTrip = new($"CREATE TABLE GTFS_TRIP (Id nvarchar(255) PRIMARY KEY, RouteId nvarchar(255), ServiceId nvarchar(255), Headsign nvarchar(255), ShortName nvarchar(255), Direction int, BlockId nvarchar(255), ShapeId nvarchar(255), AccessibilityType int)", connection)
+SqliteCommand dropTrip = new("DROP TABLE IF EXISTS GTFS_TRIP", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
-SqliteCommand insertTrip = new($"INSERT INTO GTFS_TRIP (Id, RouteId, ServiceId, Headsign, ShortName, Direction, BlockId, ShapeId, AccessibilityType) VALUES (@id, @routeId, @serviceId, @headsign, @shortName, @direction, @blockId, @shapeId, @accessibilityType)", connection)
+SqliteCommand createTrip = new("CREATE TABLE GTFS_TRIP (Id nvarchar(255) PRIMARY KEY, RouteId nvarchar(255), ServiceId nvarchar(255), Headsign nvarchar(255), ShortName nvarchar(255), Direction int, BlockId nvarchar(255), ShapeId nvarchar(255), AccessibilityType int)", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
 };
 
+SqliteCommand insertTrip = new("INSERT INTO GTFS_TRIP (Id, RouteId, ServiceId, Headsign, ShortName, Direction, BlockId, ShapeId, AccessibilityType) VALUES (@id, @routeId, @serviceId, @headsign, @shortName, @direction, @blockId, @shapeId, @accessibilityType)", connection)
+{
+    CommandTimeout = 0,
+    CommandType = CommandType.Text
+};
+
+await dropTrip.ExecuteNonQueryAsync();
 await createTrip.ExecuteNonQueryAsync();
 
 foreach (var trip in feed.Trips)
@@ -405,7 +505,7 @@ foreach (var trip in feed.Trips)
     await insertTrip.ExecuteNonQueryAsync();
 }
 
-SqliteCommand indexStopTime = new($"CREATE INDEX GTFS_STOP_TIME_INDEX ON GTFS_STOP_TIME (TripId, StopId, PickupType, ArrivalTime, DepartureTime, StopSequence, StopHeadsign, DropOffType, ShapeDistTravelled, TimepointType)", connection)
+SqliteCommand indexStopTime = new("CREATE INDEX GTFS_STOP_TIME_INDEX ON GTFS_STOP_TIME (TripId, StopId, PickupType, ArrivalTime, DepartureTime, StopSequence, StopHeadsign, DropOffType, ShapeDistTravelled, TimepointType)", connection)
 {
     CommandTimeout = 0,
     CommandType = CommandType.Text
