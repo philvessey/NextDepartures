@@ -1,7 +1,7 @@
-﻿using GTFS;
-using Microsoft.Data.Sqlite;
-using System;
+﻿using System;
 using System.Data;
+using GTFS;
+using Microsoft.Data.Sqlite;
 
 GTFSReader<GTFSFeed> reader = new();
 var feed = reader.Read("Data/feed.zip");
@@ -9,506 +9,790 @@ var feed = reader.Read("Data/feed.zip");
 await using SqliteConnection connection = new("Data Source=Data/feed.db;");
 connection.Open();
 
-SqliteCommand dropAgency = new("DROP TABLE IF EXISTS GTFS_AGENCY", connection)
+var command = new SqliteCommand
 {
     CommandTimeout = 0,
-    CommandType = CommandType.Text
+    CommandType = CommandType.Text,
+    Connection = connection
 };
 
-SqliteCommand createAgency = new("CREATE TABLE GTFS_AGENCY (Id nvarchar(255), Name nvarchar(255), URL nvarchar(255), Timezone nvarchar(255), LanguageCode nvarchar(255), Phone nvarchar(255), FareURL nvarchar(255), Email nvarchar(255))", connection)
+command.CommandText = "DROP TABLE IF EXISTS GTFS_AGENCY";
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "CREATE TABLE GTFS_AGENCY (" + 
+                            "Id NVARCHAR(255), " + 
+                            "Name NVARCHAR(255), " + 
+                            "URL NVARCHAR(255), " + 
+                            "Timezone NVARCHAR(255), " + 
+                            "LanguageCode NVARCHAR(255), " + 
+                            "Phone NVARCHAR(255), " + 
+                            "FareURL NVARCHAR(255), " + 
+                            "Email NVARCHAR(255)" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "INSERT INTO GTFS_AGENCY (" + 
+                            "Id, " + 
+                            "Name, " + 
+                            "URL, " + 
+                            "Timezone, " + 
+                            "LanguageCode, " + 
+                            "Phone, " + 
+                            "FareURL, " + 
+                            "Email" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@id, " + 
+                            "@name, " + 
+                            "@url, " + 
+                            "@timezone, " + 
+                            "@languageCode, " + 
+                            "@phone, " + 
+                            "@fareUrl, " + 
+                            "@email" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var a in feed.Agencies)
 {
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand insertAgency = new("INSERT INTO GTFS_AGENCY (Id, Name, URL, Timezone, LanguageCode, Phone, FareURL, Email) VALUES (@id, @name, @url, @timezone, @languageCode, @phone, @fareUrl, @email)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-await dropAgency.ExecuteNonQueryAsync();
-await createAgency.ExecuteNonQueryAsync();
-
-foreach (var agency in feed.Agencies)
-{
-    insertAgency.Parameters.Clear();
-    insertAgency.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(agency.Id) ? agency.Id : DBNull.Value);
-    insertAgency.Parameters.AddWithValue("@name", !string.IsNullOrEmpty(agency.Name) ? agency.Name : DBNull.Value);
-    insertAgency.Parameters.AddWithValue("@url", !string.IsNullOrEmpty(agency.URL) ? agency.URL : DBNull.Value);
-    insertAgency.Parameters.AddWithValue("@timezone", !string.IsNullOrEmpty(agency.Timezone) ? agency.Timezone : DBNull.Value);
-    insertAgency.Parameters.AddWithValue("@languageCode", !string.IsNullOrEmpty(agency.LanguageCode) ? agency.LanguageCode : DBNull.Value);
-    insertAgency.Parameters.AddWithValue("@phone", !string.IsNullOrEmpty(agency.Phone) ? agency.Phone : DBNull.Value);
-    insertAgency.Parameters.AddWithValue("@fareUrl", !string.IsNullOrEmpty(agency.FareURL) ? agency.FareURL : DBNull.Value);
-    insertAgency.Parameters.AddWithValue("@email", !string.IsNullOrEmpty(agency.Email) ? agency.Email : DBNull.Value);
-
-    await insertAgency.ExecuteNonQueryAsync();
-}
-
-SqliteCommand dropCalendar = new("DROP TABLE IF EXISTS GTFS_CALENDAR", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand createCalendar = new("CREATE TABLE GTFS_CALENDAR (ServiceId nvarchar(255) PRIMARY KEY, Monday bit, Tuesday bit, Wednesday bit, Thursday bit, Friday bit, Saturday bit, Sunday bit, StartDate datetime, EndDate datetime)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand insertCalendar = new("INSERT INTO GTFS_CALENDAR (ServiceId, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, StartDate, EndDate) VALUES (@serviceId, @monday, @tuesday, @wednesday, @thursday, @friday, @saturday, @sunday, @startDate, @endDate)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-await dropCalendar.ExecuteNonQueryAsync();
-await createCalendar.ExecuteNonQueryAsync();
-
-foreach (var calendar in feed.Calendars)
-{
-    insertCalendar.Parameters.Clear();
-    insertCalendar.Parameters.AddWithValue("@serviceId", !string.IsNullOrEmpty(calendar.ServiceId) ? calendar.ServiceId : DBNull.Value);
-    insertCalendar.Parameters.AddWithValue("@monday", calendar.Monday);
-    insertCalendar.Parameters.AddWithValue("@tuesday", calendar.Tuesday);
-    insertCalendar.Parameters.AddWithValue("@wednesday", calendar.Wednesday);
-    insertCalendar.Parameters.AddWithValue("@thursday", calendar.Thursday);
-    insertCalendar.Parameters.AddWithValue("@friday", calendar.Friday);
-    insertCalendar.Parameters.AddWithValue("@saturday", calendar.Saturday);
-    insertCalendar.Parameters.AddWithValue("@sunday", calendar.Sunday);
-    insertCalendar.Parameters.AddWithValue("@startDate", calendar.StartDate);
-    insertCalendar.Parameters.AddWithValue("@endDate", calendar.EndDate);
-
-    await insertCalendar.ExecuteNonQueryAsync();
-}
-
-SqliteCommand dropCalendarDate = new("DROP TABLE IF EXISTS GTFS_CALENDAR_DATE", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand createCalendarDate = new("CREATE TABLE GTFS_CALENDAR_DATE (ServiceId nvarchar(255), Date datetime, ExceptionType int)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand insertCalendarDate = new("INSERT INTO GTFS_CALENDAR_DATE (ServiceId, Date, ExceptionType) VALUES (@serviceId, @date, @exceptionType)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-await dropCalendarDate.ExecuteNonQueryAsync();
-await createCalendarDate.ExecuteNonQueryAsync();
-
-foreach (var calendarDate in feed.CalendarDates)
-{
-    insertCalendarDate.Parameters.Clear();
-    insertCalendarDate.Parameters.AddWithValue("@serviceId", !string.IsNullOrEmpty(calendarDate.ServiceId) ? calendarDate.ServiceId : DBNull.Value);
-    insertCalendarDate.Parameters.AddWithValue("@date", calendarDate.Date);
-    insertCalendarDate.Parameters.AddWithValue("@exceptionType", calendarDate.ExceptionType);
-
-    await insertCalendarDate.ExecuteNonQueryAsync();
-}
-
-SqliteCommand dropFareAttribute = new("DROP TABLE IF EXISTS GTFS_FARE_ATTRIBUTE", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand createFareAttribute = new("CREATE TABLE GTFS_FARE_ATTRIBUTE (FareId nvarchar(255), Price nvarchar(255), CurrencyType nvarchar(255), PaymentMethod int, Transfers int, AgencyId nvarchar(255), TransferDuration nvarchar(255))", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand insertFareAttribute = new("INSERT INTO GTFS_FARE_ATTRIBUTE (FareId, Price, CurrencyType, PaymentMethod, Transfers, AgencyId, TransferDuration) VALUES (@fareId, @price, @currencyType, @paymentMethod, @transfers, @agencyId, @transferDuration)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-await dropFareAttribute.ExecuteNonQueryAsync();
-await createFareAttribute.ExecuteNonQueryAsync();
-
-foreach (var fareAttribute in feed.FareAttributes)
-{
-    insertFareAttribute.Parameters.Clear();
-    insertFareAttribute.Parameters.AddWithValue("@fareId", !string.IsNullOrEmpty(fareAttribute.FareId) ? fareAttribute.FareId : DBNull.Value);
-    insertFareAttribute.Parameters.AddWithValue("@price", !string.IsNullOrEmpty(fareAttribute.Price) ? fareAttribute.Price : DBNull.Value);
-    insertFareAttribute.Parameters.AddWithValue("@currencyType", !string.IsNullOrEmpty(fareAttribute.CurrencyType) ? fareAttribute.CurrencyType : DBNull.Value);
-    insertFareAttribute.Parameters.AddWithValue("@paymentMethod", fareAttribute.PaymentMethod);
-    insertFareAttribute.Parameters.AddWithValue("@transfers", fareAttribute.Transfers != null ? fareAttribute.Transfers : DBNull.Value);
-    insertFareAttribute.Parameters.AddWithValue("@agencyId", !string.IsNullOrEmpty(fareAttribute.AgencyId) ? fareAttribute.AgencyId : DBNull.Value);
-    insertFareAttribute.Parameters.AddWithValue("@transferDuration", !string.IsNullOrEmpty(fareAttribute.TransferDuration) ? fareAttribute.TransferDuration : DBNull.Value);
-
-    await insertFareAttribute.ExecuteNonQueryAsync();
-}
-
-SqliteCommand dropFareRule = new("DROP TABLE IF EXISTS GTFS_FARE_RULE", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand createFareRule = new("CREATE TABLE GTFS_FARE_RULE (FareId nvarchar(255), RouteId nvarchar(255), OriginId nvarchar(255), DestinationId nvarchar(255), ContainsId nvarchar(255))", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand insertFareRule = new("INSERT INTO GTFS_FARE_RULE (FareId, RouteId, OriginId, DestinationId, ContainsId) VALUES (@fareId, @routeId, @originId, @destinationId, @containsId)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-await dropFareRule.ExecuteNonQueryAsync();
-await createFareRule.ExecuteNonQueryAsync();
-
-foreach (var fareRule in feed.FareRules)
-{
-    insertFareRule.Parameters.Clear();
-    insertFareRule.Parameters.AddWithValue("@fareId", !string.IsNullOrEmpty(fareRule.FareId) ? fareRule.FareId : DBNull.Value);
-    insertFareRule.Parameters.AddWithValue("@routeId", !string.IsNullOrEmpty(fareRule.RouteId) ? fareRule.RouteId : DBNull.Value);
-    insertFareRule.Parameters.AddWithValue("@originId", !string.IsNullOrEmpty(fareRule.OriginId) ? fareRule.OriginId : DBNull.Value);
-    insertFareRule.Parameters.AddWithValue("@destinationId", !string.IsNullOrEmpty(fareRule.DestinationId) ? fareRule.DestinationId : DBNull.Value);
-    insertFareRule.Parameters.AddWithValue("@containsId", !string.IsNullOrEmpty(fareRule.ContainsId) ? fareRule.ContainsId : DBNull.Value);
-
-    await insertFareRule.ExecuteNonQueryAsync();
-}
-
-SqliteCommand dropFrequency = new("DROP TABLE IF EXISTS GTFS_FREQUENCY", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand createFrequency = new("CREATE TABLE GTFS_FREQUENCY (TripId nvarchar(255), StartTime nvarchar(255), EndTime nvarchar(255), HeadwaySecs nvarchar(255), ExactTimes bit)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand insertFrequency = new("INSERT INTO GTFS_FREQUENCY (TripId, StartTime, EndTime, HeadwaySecs, ExactTimes) VALUES (@tripId, @startTime, @endTime, @headwaySecs, @exactTimes)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-await dropFrequency.ExecuteNonQueryAsync();
-await createFrequency.ExecuteNonQueryAsync();
-
-foreach (var frequency in feed.Frequencies)
-{
-    insertFrequency.Parameters.Clear();
-    insertFrequency.Parameters.AddWithValue("@tripId", !string.IsNullOrEmpty(frequency.TripId) ? frequency.TripId : DBNull.Value);
-    insertFrequency.Parameters.AddWithValue("@startTime", !string.IsNullOrEmpty(frequency.StartTime) ? frequency.StartTime : DBNull.Value);
-    insertFrequency.Parameters.AddWithValue("@endTime", !string.IsNullOrEmpty(frequency.EndTime) ? frequency.EndTime : DBNull.Value);
-    insertFrequency.Parameters.AddWithValue("@headwaySecs", !string.IsNullOrEmpty(frequency.HeadwaySecs) ? frequency.HeadwaySecs : DBNull.Value);
-    insertFrequency.Parameters.AddWithValue("@exactTimes", frequency.ExactTimes != null ? frequency.ExactTimes : DBNull.Value);
-
-    await insertFrequency.ExecuteNonQueryAsync();
-}
-
-SqliteCommand dropLevel = new("DROP TABLE IF EXISTS GTFS_LEVEL", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand createLevel = new("CREATE TABLE GTFS_LEVEL (Id nvarchar(255), Indexes float, Name nvarchar(255))", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand insertLevel = new("INSERT INTO GTFS_LEVEL (Id, Indexes, Name) VALUES (@id, @indexes, @name)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-await dropLevel.ExecuteNonQueryAsync();
-await createLevel.ExecuteNonQueryAsync();
-
-foreach (var level in feed.Levels)
-{
-    insertLevel.Parameters.Clear();
-    insertLevel.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(level.Id) ? level.Id : DBNull.Value);
-    insertLevel.Parameters.AddWithValue("@indexes", level.Index);
-    insertLevel.Parameters.AddWithValue("@name", !string.IsNullOrEmpty(level.Name) ? level.Name : DBNull.Value);
-
-    await insertLevel.ExecuteNonQueryAsync();
-}
-
-SqliteCommand dropPathway = new("DROP TABLE IF EXISTS GTFS_PATHWAY", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand createPathway = new("CREATE TABLE GTFS_PATHWAY (Id nvarchar(255), FromStopId nvarchar(255), ToStopId nvarchar(255), PathwayMode int, IsBidirectional int, Length float, TraversalTime int, StairCount int, MaxSlope float, MinWidth float, SignpostedAs nvarchar(255), ReversedSignpostedAs nvarchar(255))", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand insertPathway = new("INSERT INTO GTFS_PATHWAY (Id, FromStopId, ToStopId, PathwayMode, IsBidirectional, Length, TraversalTime, StairCount, MaxSlope, MinWidth, SignpostedAs, ReversedSignpostedAs) VALUES (@id, @fromStopId, @toStopId, @pathwayMode, @isBidirectional, @length, @traversalTime, @stairCount, @maxSlope, @minWidth, @signpostedAs, @reversedSignpostedAs)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-await dropPathway.ExecuteNonQueryAsync();
-await createPathway.ExecuteNonQueryAsync();
-
-foreach (var pathway in feed.Pathways)
-{
-    insertPathway.Parameters.Clear();
-    insertPathway.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(pathway.Id) ? pathway.Id : DBNull.Value);
-    insertPathway.Parameters.AddWithValue("@fromStopId", !string.IsNullOrEmpty(pathway.FromStopId) ? pathway.FromStopId : DBNull.Value);
-    insertPathway.Parameters.AddWithValue("@toStopId", !string.IsNullOrEmpty(pathway.ToStopId) ? pathway.ToStopId : DBNull.Value);
-    insertPathway.Parameters.AddWithValue("@pathwayMode", pathway.PathwayMode);
-    insertPathway.Parameters.AddWithValue("@isBidirectional", pathway.IsBidirectional);
-    insertPathway.Parameters.AddWithValue("@length", pathway.Length != null ? pathway.Length : DBNull.Value);
-    insertPathway.Parameters.AddWithValue("@traversalTime", pathway.TraversalTime != null ? pathway.TraversalTime : DBNull.Value);
-    insertPathway.Parameters.AddWithValue("@stairCount", pathway.StairCount != null ? pathway.StairCount : DBNull.Value);
-    insertPathway.Parameters.AddWithValue("@maxSlope", pathway.MaxSlope != null ? pathway.MaxSlope : DBNull.Value);
-    insertPathway.Parameters.AddWithValue("@minWidth", pathway.MinWidth != null ? pathway.MinWidth : DBNull.Value);
-    insertPathway.Parameters.AddWithValue("@signpostedAs", !string.IsNullOrEmpty(pathway.SignpostedAs) ? pathway.SignpostedAs : DBNull.Value);
-    insertPathway.Parameters.AddWithValue("@reversedSignpostedAs", !string.IsNullOrEmpty(pathway.ReversedSignpostedAs) ? pathway.ReversedSignpostedAs : DBNull.Value);
+    command.Parameters.Clear();
     
-    await insertAgency.ExecuteNonQueryAsync();
+    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(a.Id) ? a.Id : DBNull.Value);
+    command.Parameters.AddWithValue("@name", !string.IsNullOrEmpty(a.Name) ? a.Name : DBNull.Value);
+    command.Parameters.AddWithValue("@url", !string.IsNullOrEmpty(a.URL) ? a.URL : DBNull.Value);
+    command.Parameters.AddWithValue("@timezone", !string.IsNullOrEmpty(a.Timezone) ? a.Timezone : DBNull.Value);
+    command.Parameters.AddWithValue("@languageCode", !string.IsNullOrEmpty(a.LanguageCode) ? a.LanguageCode : DBNull.Value);
+    command.Parameters.AddWithValue("@phone", !string.IsNullOrEmpty(a.Phone) ? a.Phone : DBNull.Value);
+    command.Parameters.AddWithValue("@fareUrl", !string.IsNullOrEmpty(a.FareURL) ? a.FareURL : DBNull.Value);
+    command.Parameters.AddWithValue("@email", !string.IsNullOrEmpty(a.Email) ? a.Email : DBNull.Value);
+
+    await command.ExecuteNonQueryAsync();
 }
 
-SqliteCommand dropRoute = new("DROP TABLE IF EXISTS GTFS_ROUTE", connection)
+command.Parameters.Clear();
+
+command.CommandText = "DROP TABLE IF EXISTS GTFS_CALENDAR";
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "CREATE TABLE GTFS_CALENDAR (" + 
+                            "ServiceId NVARCHAR(255) PRIMARY KEY, " + 
+                            "Monday BIT, " + 
+                            "Tuesday BIT, " + 
+                            "Wednesday BIT, " + 
+                            "Thursday BIT, " + 
+                            "Friday BIT, " + 
+                            "Saturday BIT, " + 
+                            "Sunday BIT, " + 
+                            "StartDate DATETIME, " + 
+                            "EndDate DATETIME" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "INSERT INTO GTFS_CALENDAR (" + 
+                            "ServiceId, " + 
+                            "Monday, " + 
+                            "Tuesday, " + 
+                            "Wednesday, " + 
+                            "Thursday, " + 
+                            "Friday, " + 
+                            "Saturday, " + 
+                            "Sunday, " + 
+                            "StartDate, " + 
+                            "EndDate" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@serviceId, " + 
+                            "@monday, " + 
+                            "@tuesday, " + 
+                            "@wednesday, " + 
+                            "@thursday, " + 
+                            "@friday, " + 
+                            "@saturday, " + 
+                            "@sunday, " + 
+                            "@startDate, " + 
+                            "@endDate" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var c in feed.Calendars)
 {
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand createRoute = new("CREATE TABLE GTFS_ROUTE (Id nvarchar(255) PRIMARY KEY, AgencyId nvarchar(255), ShortName nvarchar(255), LongName nvarchar(255), Description nvarchar(255), Type int, Url nvarchar(255), Color int, TextColor int)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand insertRoute = new("INSERT INTO GTFS_ROUTE (Id, AgencyId, ShortName, LongName, Description, Type, Url, Color, TextColor) VALUES (@id, @agencyId, @shortName, @longName, @description, @type, @url, @color, @textColor)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-await dropRoute.ExecuteNonQueryAsync();
-await createRoute.ExecuteNonQueryAsync();
-
-foreach (var route in feed.Routes)
-{
-    insertRoute.Parameters.Clear();
-    insertRoute.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(route.Id) ? route.Id : DBNull.Value);
-    insertRoute.Parameters.AddWithValue("@agencyId", !string.IsNullOrEmpty(route.AgencyId) ? route.AgencyId : DBNull.Value);
-    insertRoute.Parameters.AddWithValue("@shortName", !string.IsNullOrEmpty(route.ShortName) ? route.ShortName : DBNull.Value);
-    insertRoute.Parameters.AddWithValue("@longName", !string.IsNullOrEmpty(route.LongName) ? route.LongName : DBNull.Value);
-    insertRoute.Parameters.AddWithValue("@description", !string.IsNullOrEmpty(route.Description) ? route.Description : DBNull.Value);
-    insertRoute.Parameters.AddWithValue("@type", route.Type);
-    insertRoute.Parameters.AddWithValue("@url", !string.IsNullOrEmpty(route.Url) ? route.Url : DBNull.Value);
-    insertRoute.Parameters.AddWithValue("@color", route.Color != null ? route.Color : DBNull.Value);
-    insertRoute.Parameters.AddWithValue("@textColor", route.TextColor != null ? route.TextColor : DBNull.Value);
-
-    await insertRoute.ExecuteNonQueryAsync();
-}
-
-SqliteCommand dropShape = new("DROP TABLE IF EXISTS GTFS_SHAPE", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand createShape = new("CREATE TABLE GTFS_SHAPE (Id nvarchar(255), Longitude float, Latitude float, Sequence int, DistanceTravelled float)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand insertShape = new("INSERT INTO GTFS_SHAPE (Id, Longitude, Latitude, Sequence, DistanceTravelled) VALUES (@id, @longitude, @latitude, @sequence, @distanceTravelled)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-await dropShape.ExecuteNonQueryAsync();
-await createShape.ExecuteNonQueryAsync();
-
-foreach (var shape in feed.Shapes)
-{
-    insertShape.Parameters.Clear();
-    insertShape.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(shape.Id) ? shape.Id : DBNull.Value);
-    insertShape.Parameters.AddWithValue("@longitude", shape.Longitude);
-    insertShape.Parameters.AddWithValue("@latitude", shape.Latitude);
-    insertShape.Parameters.AddWithValue("@sequence", shape.Sequence);
-    insertShape.Parameters.AddWithValue("@distanceTravelled", shape.DistanceTravelled != null ? shape.DistanceTravelled : DBNull.Value);
-
-    await insertShape.ExecuteNonQueryAsync();
-}
-
-SqliteCommand dropStop = new("DROP TABLE IF EXISTS GTFS_STOP", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand createStop = new("CREATE TABLE GTFS_STOP (Id nvarchar(255) PRIMARY KEY, Code nvarchar(255), Name nvarchar(255), Description nvarchar(255), Longitude float, Latitude float, Zone nvarchar(255), Url nvarchar(255), LocationType int, ParentStation nvarchar(255), Timezone nvarchar(255), WheelchairBoarding nvarchar(255), LevelId nvarchar(255), PlatformCode nvarchar(255))", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-SqliteCommand insertStop = new("INSERT INTO GTFS_STOP (Id, Code, Name, Description, Longitude, Latitude, Zone, Url, LocationType, ParentStation, Timezone, WheelchairBoarding, LevelId, PlatformCode) VALUES (@id, @code, @name, @description, @longitude, @latitude, @zone, @url, @locationType, @parentStation, @timezone, @wheelchairBoarding, @levelId, @platformCode)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
-
-await dropStop.ExecuteNonQueryAsync();
-await createStop.ExecuteNonQueryAsync();
-
-foreach (var stop in feed.Stops)
-{
-    insertStop.Parameters.Clear();
-    insertStop.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(stop.Id) ? stop.Id : DBNull.Value);
-    insertStop.Parameters.AddWithValue("@code", !string.IsNullOrEmpty(stop.Code) ? stop.Code : DBNull.Value);
-    insertStop.Parameters.AddWithValue("@name", !string.IsNullOrEmpty(stop.Name) ? stop.Name : DBNull.Value);
-    insertStop.Parameters.AddWithValue("@description", !string.IsNullOrEmpty(stop.Description) ? stop.Description : DBNull.Value);
-    insertStop.Parameters.AddWithValue("@longitude", stop.Longitude);
-    insertStop.Parameters.AddWithValue("@latitude", stop.Latitude);
-    insertStop.Parameters.AddWithValue("@zone", !string.IsNullOrEmpty(stop.Zone) ? stop.Zone : DBNull.Value);
-    insertStop.Parameters.AddWithValue("@url", !string.IsNullOrEmpty(stop.Url) ? stop.Url : DBNull.Value);
-    insertStop.Parameters.AddWithValue("@locationType", stop.LocationType != null ? stop.LocationType : DBNull.Value);
-    insertStop.Parameters.AddWithValue("@parentStation", !string.IsNullOrEmpty(stop.ParentStation) ? stop.ParentStation : DBNull.Value);
-    insertStop.Parameters.AddWithValue("@timezone", !string.IsNullOrEmpty(stop.Timezone) ? stop.Timezone : DBNull.Value);
-    insertStop.Parameters.AddWithValue("@wheelchairBoarding", !string.IsNullOrEmpty(stop.WheelchairBoarding) ? stop.WheelchairBoarding : DBNull.Value);
-    insertStop.Parameters.AddWithValue("@levelId", !string.IsNullOrEmpty(stop.LevelId) ? stop.LevelId : DBNull.Value);
-    insertStop.Parameters.AddWithValue("@platformCode", !string.IsNullOrEmpty(stop.PlatformCode) ? stop.PlatformCode : DBNull.Value);
+    command.Parameters.Clear();
     
-    await insertStop.ExecuteNonQueryAsync();
+    command.Parameters.AddWithValue("@serviceId", !string.IsNullOrEmpty(c.ServiceId) ? c.ServiceId : DBNull.Value);
+    command.Parameters.AddWithValue("@monday", c.Monday);
+    command.Parameters.AddWithValue("@tuesday", c.Tuesday);
+    command.Parameters.AddWithValue("@wednesday", c.Wednesday);
+    command.Parameters.AddWithValue("@thursday", c.Thursday);
+    command.Parameters.AddWithValue("@friday", c.Friday);
+    command.Parameters.AddWithValue("@saturday", c.Saturday);
+    command.Parameters.AddWithValue("@sunday", c.Sunday);
+    command.Parameters.AddWithValue("@startDate", c.StartDate);
+    command.Parameters.AddWithValue("@endDate", c.EndDate);
+
+    await command.ExecuteNonQueryAsync();
 }
 
-SqliteCommand dropStopTime = new("DROP TABLE IF EXISTS GTFS_STOP_TIME", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
+command.Parameters.Clear();
 
-SqliteCommand createStopTime = new("CREATE TABLE GTFS_STOP_TIME (TripId nvarchar(255), ArrivalTime nvarchar(255), DepartureTime nvarchar(255), StopId nvarchar(255), StopSequence int, StopHeadsign nvarchar(255), PickupType int, DropOffType int, ShapeDistTravelled float, TimepointType int)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
+command.CommandText = "DROP TABLE IF EXISTS GTFS_CALENDAR_DATE";
+await command.ExecuteNonQueryAsync();
 
-SqliteCommand insertStopTime = new("INSERT INTO GTFS_STOP_TIME (TripId, ArrivalTime, DepartureTime, StopId, StopSequence, StopHeadsign, PickupType, DropOffType, ShapeDistTravelled, TimepointType) VALUES (@tripId, @arrivalTime, @departureTime, @stopId, @stopSequence, @stopHeadsign, @pickupType, @dropOffType, @shapeDistTravelled, @timepointType)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
+command.CommandText = "CREATE TABLE GTFS_CALENDAR_DATE (" + 
+                            "ServiceId NVARCHAR(255), " + 
+                            "ExceptionDate DATETIME, " + 
+                            "ExceptionType INT" + 
+                            ")";
 
-await dropStopTime.ExecuteNonQueryAsync();
-await createStopTime.ExecuteNonQueryAsync();
+await command.ExecuteNonQueryAsync();
 
-foreach (var stopTime in feed.StopTimes)
+command.CommandText = "INSERT INTO GTFS_CALENDAR_DATE (" + 
+                            "ServiceId, " + 
+                            "ExceptionDate, " + 
+                            "ExceptionType" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@serviceId, " + 
+                            "@exceptionDate, " + 
+                            "@exceptionType" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var d in feed.CalendarDates)
 {
-    insertStopTime.Parameters.Clear();
-    insertStopTime.Parameters.AddWithValue("@tripId", !string.IsNullOrEmpty(stopTime.TripId) ? stopTime.TripId : DBNull.Value);
-    insertStopTime.Parameters.AddWithValue("@arrivalTime", stopTime.ArrivalTime != null ? stopTime.ArrivalTime.ToString() : DBNull.Value);
-    insertStopTime.Parameters.AddWithValue("@departureTime", stopTime.DepartureTime != null ? stopTime.DepartureTime.ToString() : DBNull.Value);
-    insertStopTime.Parameters.AddWithValue("@stopId", !string.IsNullOrEmpty(stopTime.StopId) ? stopTime.StopId : DBNull.Value);
-    insertStopTime.Parameters.AddWithValue("@stopSequence", stopTime.StopSequence);
-    insertStopTime.Parameters.AddWithValue("@stopHeadsign", !string.IsNullOrEmpty(stopTime.StopHeadsign) ? stopTime.StopHeadsign : DBNull.Value);
-    insertStopTime.Parameters.AddWithValue("@pickupType", stopTime.PickupType != null ? stopTime.PickupType : DBNull.Value);
-    insertStopTime.Parameters.AddWithValue("@dropOffType", stopTime.DropOffType != null ? stopTime.DropOffType : DBNull.Value);
-    insertStopTime.Parameters.AddWithValue("@shapeDistTravelled", stopTime.ShapeDistTravelled != null ? stopTime.ShapeDistTravelled : DBNull.Value);
-    insertStopTime.Parameters.AddWithValue("@timepointType", stopTime.TimepointType);
+    command.Parameters.Clear();
     
-    await insertStopTime.ExecuteNonQueryAsync();
+    command.Parameters.AddWithValue("@serviceId", !string.IsNullOrEmpty(d.ServiceId) ? d.ServiceId : DBNull.Value);
+    command.Parameters.AddWithValue("@exceptionDate", d.Date);
+    command.Parameters.AddWithValue("@exceptionType", d.ExceptionType);
+
+    await command.ExecuteNonQueryAsync();
 }
 
-SqliteCommand dropTransfer = new("DROP TABLE IF EXISTS GTFS_TRANSFER", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
+command.Parameters.Clear();
 
-SqliteCommand createTransfer = new("CREATE TABLE GTFS_TRANSFER (FromStopId nvarchar(255), ToStopId nvarchar(255), TransferType int, MinimumTransferTime nvarchar(255))", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
+command.CommandText = "DROP TABLE IF EXISTS GTFS_FARE_ATTRIBUTE";
+await command.ExecuteNonQueryAsync();
 
-SqliteCommand insertTransfer = new("INSERT INTO GTFS_TRANSFER (FromStopId, ToStopId, TransferType, MinimumTransferTime) VALUES (@fromStopId, @toStopId, @transferType, @minimumTransferTime)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
+command.CommandText = "CREATE TABLE GTFS_FARE_ATTRIBUTE (" + 
+                            "FareId NVARCHAR(255), " + 
+                            "Price NVARCHAR(255), " + 
+                            "CurrencyType NVARCHAR(255), " + 
+                            "PaymentMethod INT, " + 
+                            "Transfers INT, " + 
+                            "AgencyId NVARCHAR(255), " + 
+                            "TransferDuration NVARCHAR(255)" + 
+                            ")";
 
-await dropTransfer.ExecuteNonQueryAsync();
-await createTransfer.ExecuteNonQueryAsync();
+await command.ExecuteNonQueryAsync();
 
-foreach (var transfer in feed.Transfers)
+command.CommandText = "INSERT INTO GTFS_FARE_ATTRIBUTE (" + 
+                            "FareId, " + 
+                            "Price, " + 
+                            "CurrencyType, " + 
+                            "PaymentMethod, " + 
+                            "Transfers, " + 
+                            "AgencyId, " + 
+                            "TransferDuration" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@fareId, " + 
+                            "@price, " + 
+                            "@currencyType, " + 
+                            "@paymentMethod, " + 
+                            "@transfers, " + 
+                            "@agencyId, " + 
+                            "@transferDuration" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var f in feed.FareAttributes)
 {
-    insertTransfer.Parameters.Clear();
-    insertTransfer.Parameters.AddWithValue("@fromStopId", !string.IsNullOrEmpty(transfer.FromStopId) ? transfer.FromStopId : DBNull.Value);
-    insertTransfer.Parameters.AddWithValue("@toStopId", !string.IsNullOrEmpty(transfer.ToStopId) ? transfer.ToStopId : DBNull.Value);
-    insertTransfer.Parameters.AddWithValue("@transferType", transfer.TransferType);
-    insertTransfer.Parameters.AddWithValue("@minimumTransferTime", !string.IsNullOrEmpty(transfer.MinimumTransferTime) ? transfer.MinimumTransferTime : DBNull.Value);
+    command.Parameters.Clear();
     
-    await insertTransfer.ExecuteNonQueryAsync();
+    command.Parameters.AddWithValue("@fareId", !string.IsNullOrEmpty(f.FareId) ? f.FareId : DBNull.Value);
+    command.Parameters.AddWithValue("@price", !string.IsNullOrEmpty(f.Price) ? f.Price : DBNull.Value);
+    command.Parameters.AddWithValue("@currencyType", !string.IsNullOrEmpty(f.CurrencyType) ? f.CurrencyType : DBNull.Value);
+    command.Parameters.AddWithValue("@paymentMethod", f.PaymentMethod);
+    command.Parameters.AddWithValue("@transfers", f.Transfers != null ? f.Transfers : DBNull.Value);
+    command.Parameters.AddWithValue("@agencyId", !string.IsNullOrEmpty(f.AgencyId) ? f.AgencyId : DBNull.Value);
+    command.Parameters.AddWithValue("@transferDuration", !string.IsNullOrEmpty(f.TransferDuration) ? f.TransferDuration : DBNull.Value);
+
+    await command.ExecuteNonQueryAsync();
 }
 
-SqliteCommand dropTrip = new("DROP TABLE IF EXISTS GTFS_TRIP", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
+command.Parameters.Clear();
 
-SqliteCommand createTrip = new("CREATE TABLE GTFS_TRIP (Id nvarchar(255) PRIMARY KEY, RouteId nvarchar(255), ServiceId nvarchar(255), Headsign nvarchar(255), ShortName nvarchar(255), Direction int, BlockId nvarchar(255), ShapeId nvarchar(255), AccessibilityType int)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
+command.CommandText = "DROP TABLE IF EXISTS GTFS_FARE_RULE";
+await command.ExecuteNonQueryAsync();
 
-SqliteCommand insertTrip = new("INSERT INTO GTFS_TRIP (Id, RouteId, ServiceId, Headsign, ShortName, Direction, BlockId, ShapeId, AccessibilityType) VALUES (@id, @routeId, @serviceId, @headsign, @shortName, @direction, @blockId, @shapeId, @accessibilityType)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
+command.CommandText = "CREATE TABLE GTFS_FARE_RULE (" + 
+                            "FareId NVARCHAR(255), " + 
+                            "RouteId NVARCHAR(255), " + 
+                            "OriginId NVARCHAR(255), " + 
+                            "DestinationId NVARCHAR(255), " + 
+                            "ContainsId NVARCHAR(255)" + 
+                            ")";
 
-await dropTrip.ExecuteNonQueryAsync();
-await createTrip.ExecuteNonQueryAsync();
+await command.ExecuteNonQueryAsync();
 
-foreach (var trip in feed.Trips)
+command.CommandText = "INSERT INTO GTFS_FARE_RULE (" + 
+                            "FareId, " + 
+                            "RouteId, " + 
+                            "OriginId, " + 
+                            "DestinationId, " + 
+                            "ContainsId" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@fareId, " + 
+                            "@routeId, " + 
+                            "@originId, " + 
+                            "@destinationId, " + 
+                            "@containsId" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var f in feed.FareRules)
 {
-    insertTrip.Parameters.Clear();
-    insertTrip.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(trip.Id) ? trip.Id : DBNull.Value);
-    insertTrip.Parameters.AddWithValue("@routeId", !string.IsNullOrEmpty(trip.RouteId) ? trip.RouteId : DBNull.Value);
-    insertTrip.Parameters.AddWithValue("@serviceId", !string.IsNullOrEmpty(trip.ServiceId) ? trip.ServiceId : DBNull.Value);
-    insertTrip.Parameters.AddWithValue("@headsign", !string.IsNullOrEmpty(trip.Headsign) ? trip.Headsign : DBNull.Value);
-    insertTrip.Parameters.AddWithValue("@shortName", !string.IsNullOrEmpty(trip.ShortName) ? trip.ShortName : DBNull.Value);
-    insertTrip.Parameters.AddWithValue("@direction", trip.Direction != null ? trip.Direction : DBNull.Value);
-    insertTrip.Parameters.AddWithValue("@blockId", !string.IsNullOrEmpty(trip.BlockId) ? trip.BlockId : DBNull.Value);
-    insertTrip.Parameters.AddWithValue("@shapeId", !string.IsNullOrEmpty(trip.ShapeId) ? trip.ShapeId : DBNull.Value);
-    insertTrip.Parameters.AddWithValue("@accessibilityType", trip.AccessibilityType != null ? trip.AccessibilityType : DBNull.Value);
+    command.Parameters.Clear();
     
-    await insertTrip.ExecuteNonQueryAsync();
+    command.Parameters.AddWithValue("@fareId", !string.IsNullOrEmpty(f.FareId) ? f.FareId : DBNull.Value);
+    command.Parameters.AddWithValue("@routeId", !string.IsNullOrEmpty(f.RouteId) ? f.RouteId : DBNull.Value);
+    command.Parameters.AddWithValue("@originId", !string.IsNullOrEmpty(f.OriginId) ? f.OriginId : DBNull.Value);
+    command.Parameters.AddWithValue("@destinationId", !string.IsNullOrEmpty(f.DestinationId) ? f.DestinationId : DBNull.Value);
+    command.Parameters.AddWithValue("@containsId", !string.IsNullOrEmpty(f.ContainsId) ? f.ContainsId : DBNull.Value);
+
+    await command.ExecuteNonQueryAsync();
 }
 
-SqliteCommand indexStopTime = new("CREATE INDEX GTFS_STOP_TIME_INDEX ON GTFS_STOP_TIME (TripId, StopId, PickupType, ArrivalTime, DepartureTime, StopSequence, StopHeadsign, DropOffType, ShapeDistTravelled, TimepointType)", connection)
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text
-};
+command.Parameters.Clear();
 
-await indexStopTime.ExecuteNonQueryAsync();
+command.CommandText = "DROP TABLE IF EXISTS GTFS_FREQUENCY";
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "CREATE TABLE GTFS_FREQUENCY (" + 
+                            "TripId NVARCHAR(255), " + 
+                            "StartTime NVARCHAR(255), " + 
+                            "EndTime NVARCHAR(255), " + 
+                            "HeadwaySecs NVARCHAR(255), " + 
+                            "ExactTimes BIT" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "INSERT INTO GTFS_FREQUENCY (" + 
+                            "TripId, " + 
+                            "StartTime, " + 
+                            "EndTime, " + 
+                            "HeadwaySecs, " + 
+                            "ExactTimes" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@tripId, " + 
+                            "@startTime, " + 
+                            "@endTime, " + 
+                            "@headwaySecs, " + 
+                            "@exactTimes" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var f in feed.Frequencies)
+{
+    command.Parameters.Clear();
+    
+    command.Parameters.AddWithValue("@tripId", !string.IsNullOrEmpty(f.TripId) ? f.TripId : DBNull.Value);
+    command.Parameters.AddWithValue("@startTime", !string.IsNullOrEmpty(f.StartTime) ? f.StartTime : DBNull.Value);
+    command.Parameters.AddWithValue("@endTime", !string.IsNullOrEmpty(f.EndTime) ? f.EndTime : DBNull.Value);
+    command.Parameters.AddWithValue("@headwaySecs", !string.IsNullOrEmpty(f.HeadwaySecs) ? f.HeadwaySecs : DBNull.Value);
+    command.Parameters.AddWithValue("@exactTimes", f.ExactTimes != null ? f.ExactTimes : DBNull.Value);
+
+    await command.ExecuteNonQueryAsync();
+}
+
+command.Parameters.Clear();
+
+command.CommandText = "DROP TABLE IF EXISTS GTFS_LEVEL";
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "CREATE TABLE GTFS_LEVEL (" + 
+                            "Id NVARCHAR(255), " + 
+                            "Idx FLOAT, " + 
+                            "Name NVARCHAR(255)" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "INSERT INTO GTFS_LEVEL (" + 
+                            "Id, " + 
+                            "Idx, " + 
+                            "Name" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@id, " + 
+                            "@idx, " + 
+                            "@name" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var l in feed.Levels)
+{
+    command.Parameters.Clear();
+    
+    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(l.Id) ? l.Id : DBNull.Value);
+    command.Parameters.AddWithValue("@idx", l.Index);
+    command.Parameters.AddWithValue("@name", !string.IsNullOrEmpty(l.Name) ? l.Name : DBNull.Value);
+
+    await command.ExecuteNonQueryAsync();
+}
+
+command.Parameters.Clear();
+
+command.CommandText = "DROP TABLE IF EXISTS GTFS_PATHWAY";
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "CREATE TABLE GTFS_PATHWAY (" + 
+                            "Id NVARCHAR(255), " + 
+                            "FromStopId NVARCHAR(255), " + 
+                            "ToStopId NVARCHAR(255), " + 
+                            "PathwayMode INT, " + 
+                            "IsBidirectional INT, " + 
+                            "Length FLOAT, " + 
+                            "TraversalTime INT, " + 
+                            "StairCount INT, " + 
+                            "MaxSlope FLOAT, " + 
+                            "MinWidth FLOAT, " + 
+                            "SignpostedAs NVARCHAR(255), " + 
+                            "ReversedSignpostedAs NVARCHAR(255)" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "INSERT INTO GTFS_PATHWAY (" + 
+                            "Id, " + 
+                            "FromStopId, " + 
+                            "ToStopId, " + 
+                            "PathwayMode, " + 
+                            "IsBidirectional, " + 
+                            "Length, " + 
+                            "TraversalTime, " + 
+                            "StairCount, " + 
+                            "MaxSlope, " + 
+                            "MinWidth, " + 
+                            "SignpostedAs, " + 
+                            "ReversedSignpostedAs" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@id, " + 
+                            "@fromStopId, " + 
+                            "@toStopId, " + 
+                            "@pathwayMode, " + 
+                            "@isBidirectional, " + 
+                            "@length, " + 
+                            "@traversalTime, " + 
+                            "@stairCount, " + 
+                            "@maxSlope, " + 
+                            "@minWidth, " + 
+                            "@signpostedAs, " + 
+                            "@reversedSignpostedAs" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var p in feed.Pathways)
+{
+    command.Parameters.Clear();
+    
+    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(p.Id) ? p.Id : DBNull.Value);
+    command.Parameters.AddWithValue("@fromStopId", !string.IsNullOrEmpty(p.FromStopId) ? p.FromStopId : DBNull.Value);
+    command.Parameters.AddWithValue("@toStopId", !string.IsNullOrEmpty(p.ToStopId) ? p.ToStopId : DBNull.Value);
+    command.Parameters.AddWithValue("@pathwayMode", p.PathwayMode);
+    command.Parameters.AddWithValue("@isBidirectional", p.IsBidirectional);
+    command.Parameters.AddWithValue("@length", p.Length != null ? p.Length : DBNull.Value);
+    command.Parameters.AddWithValue("@traversalTime", p.TraversalTime != null ? p.TraversalTime : DBNull.Value);
+    command.Parameters.AddWithValue("@stairCount", p.StairCount != null ? p.StairCount : DBNull.Value);
+    command.Parameters.AddWithValue("@maxSlope", p.MaxSlope != null ? p.MaxSlope : DBNull.Value);
+    command.Parameters.AddWithValue("@minWidth", p.MinWidth != null ? p.MinWidth : DBNull.Value);
+    command.Parameters.AddWithValue("@signpostedAs", !string.IsNullOrEmpty(p.SignpostedAs) ? p.SignpostedAs : DBNull.Value);
+    command.Parameters.AddWithValue("@reversedSignpostedAs", !string.IsNullOrEmpty(p.ReversedSignpostedAs) ? p.ReversedSignpostedAs : DBNull.Value);
+    
+    await command.ExecuteNonQueryAsync();
+}
+
+command.Parameters.Clear();
+
+command.CommandText = "DROP TABLE IF EXISTS GTFS_ROUTE";
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "CREATE TABLE GTFS_ROUTE (" + 
+                            "Id NVARCHAR(255) PRIMARY KEY, " + 
+                            "AgencyId NVARCHAR(255), " + 
+                            "ShortName NVARCHAR(255), " + 
+                            "LongName NVARCHAR(255), " + 
+                            "Description NVARCHAR(255), " + 
+                            "Type INT, " + 
+                            "Url NVARCHAR(255), " + 
+                            "Color INT, " + 
+                            "TextColor INT" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "INSERT INTO GTFS_ROUTE (" + 
+                            "Id, " + 
+                            "AgencyId, " + 
+                            "ShortName, " + 
+                            "LongName, " + 
+                            "Description, " + 
+                            "Type, " + 
+                            "Url, " + 
+                            "Color, " + 
+                            "TextColor" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@id, " + 
+                            "@agencyId, " + 
+                            "@shortName, " + 
+                            "@longName, " + 
+                            "@description, " + 
+                            "@type, " + 
+                            "@url, " + 
+                            "@color, " + 
+                            "@textColor" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var r in feed.Routes)
+{
+    command.Parameters.Clear();
+    
+    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(r.Id) ? r.Id : DBNull.Value);
+    command.Parameters.AddWithValue("@agencyId", !string.IsNullOrEmpty(r.AgencyId) ? r.AgencyId : DBNull.Value);
+    command.Parameters.AddWithValue("@shortName", !string.IsNullOrEmpty(r.ShortName) ? r.ShortName : DBNull.Value);
+    command.Parameters.AddWithValue("@longName", !string.IsNullOrEmpty(r.LongName) ? r.LongName : DBNull.Value);
+    command.Parameters.AddWithValue("@description", !string.IsNullOrEmpty(r.Description) ? r.Description : DBNull.Value);
+    command.Parameters.AddWithValue("@type", r.Type);
+    command.Parameters.AddWithValue("@url", !string.IsNullOrEmpty(r.Url) ? r.Url : DBNull.Value);
+    command.Parameters.AddWithValue("@color", r.Color != null ? r.Color : DBNull.Value);
+    command.Parameters.AddWithValue("@textColor", r.TextColor != null ? r.TextColor : DBNull.Value);
+
+    await command.ExecuteNonQueryAsync();
+}
+
+command.Parameters.Clear();
+
+command.CommandText = "DROP TABLE IF EXISTS GTFS_SHAPE";
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "CREATE TABLE GTFS_SHAPE (" + 
+                            "Id NVARCHAR(255), " + 
+                            "Longitude FLOAT, " + 
+                            "Latitude FLOAT, " + 
+                            "Sequence INT, " + 
+                            "DistanceTravelled FLOAT" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "INSERT INTO GTFS_SHAPE (" + 
+                            "Id, " + 
+                            "Longitude, " + 
+                            "Latitude, " + 
+                            "Sequence, " + 
+                            "DistanceTravelled" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@id, " + 
+                            "@longitude, " + 
+                            "@latitude, " + 
+                            "@sequence, " + 
+                            "@distanceTravelled" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var s in feed.Shapes)
+{
+    command.Parameters.Clear();
+    
+    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(s.Id) ? s.Id : DBNull.Value);
+    command.Parameters.AddWithValue("@longitude", s.Longitude);
+    command.Parameters.AddWithValue("@latitude", s.Latitude);
+    command.Parameters.AddWithValue("@sequence", s.Sequence);
+    command.Parameters.AddWithValue("@distanceTravelled", s.DistanceTravelled != null ? s.DistanceTravelled : DBNull.Value);
+
+    await command.ExecuteNonQueryAsync();
+}
+
+command.Parameters.Clear();
+
+command.CommandText = "DROP TABLE IF EXISTS GTFS_STOP";
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "CREATE TABLE GTFS_STOP (" + 
+                            "Id NVARCHAR(255) PRIMARY KEY, " + 
+                            "Code NVARCHAR(255), " + 
+                            "Name NVARCHAR(255), " + 
+                            "Description NVARCHAR(255), " + 
+                            "Longitude FLOAT, " + 
+                            "Latitude FLOAT, " + 
+                            "Zone NVARCHAR(255), " + 
+                            "Url NVARCHAR(255), " + 
+                            "LocationType INT, " + 
+                            "ParentStation NVARCHAR(255), " + 
+                            "Timezone NVARCHAR(255), " + 
+                            "WheelchairBoarding NVARCHAR(255), " + 
+                            "LevelId NVARCHAR(255), " + 
+                            "PlatformCode NVARCHAR(255)" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "INSERT INTO GTFS_STOP (" + 
+                            "Id, " + 
+                            "Code, " + 
+                            "Name, " + 
+                            "Description, " + 
+                            "Longitude, " + 
+                            "Latitude, " + 
+                            "Zone, " + 
+                            "Url, " + 
+                            "LocationType, " + 
+                            "ParentStation, " + 
+                            "Timezone, " + 
+                            "WheelchairBoarding, " + 
+                            "LevelId, " + 
+                            "PlatformCode" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@id, " + 
+                            "@code, " + 
+                            "@name, " + 
+                            "@description, " + 
+                            "@longitude, " + 
+                            "@latitude, " + 
+                            "@zone, " + 
+                            "@url, " + 
+                            "@locationType, " + 
+                            "@parentStation, " + 
+                            "@timezone, " + 
+                            "@wheelchairBoarding, " + 
+                            "@levelId, " + 
+                            "@platformCode" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var s in feed.Stops)
+{
+    command.Parameters.Clear();
+    
+    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(s.Id) ? s.Id : DBNull.Value);
+    command.Parameters.AddWithValue("@code", !string.IsNullOrEmpty(s.Code) ? s.Code : DBNull.Value);
+    command.Parameters.AddWithValue("@name", !string.IsNullOrEmpty(s.Name) ? s.Name : DBNull.Value);
+    command.Parameters.AddWithValue("@description", !string.IsNullOrEmpty(s.Description) ? s.Description : DBNull.Value);
+    command.Parameters.AddWithValue("@longitude", s.Longitude);
+    command.Parameters.AddWithValue("@latitude", s.Latitude);
+    command.Parameters.AddWithValue("@zone", !string.IsNullOrEmpty(s.Zone) ? s.Zone : DBNull.Value);
+    command.Parameters.AddWithValue("@url", !string.IsNullOrEmpty(s.Url) ? s.Url : DBNull.Value);
+    command.Parameters.AddWithValue("@locationType", s.LocationType != null ? s.LocationType : DBNull.Value);
+    command.Parameters.AddWithValue("@parentStation", !string.IsNullOrEmpty(s.ParentStation) ? s.ParentStation : DBNull.Value);
+    command.Parameters.AddWithValue("@timezone", !string.IsNullOrEmpty(s.Timezone) ? s.Timezone : DBNull.Value);
+    command.Parameters.AddWithValue("@wheelchairBoarding", !string.IsNullOrEmpty(s.WheelchairBoarding) ? s.WheelchairBoarding : DBNull.Value);
+    command.Parameters.AddWithValue("@levelId", !string.IsNullOrEmpty(s.LevelId) ? s.LevelId : DBNull.Value);
+    command.Parameters.AddWithValue("@platformCode", !string.IsNullOrEmpty(s.PlatformCode) ? s.PlatformCode : DBNull.Value);
+    
+    await command.ExecuteNonQueryAsync();
+}
+
+command.Parameters.Clear();
+
+command.CommandText = "DROP TABLE IF EXISTS GTFS_STOP_TIME";
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "CREATE TABLE GTFS_STOP_TIME (" + 
+                            "TripId NVARCHAR(255), " + 
+                            "ArrivalTime NVARCHAR(255), " + 
+                            "DepartureTime NVARCHAR(255), " + 
+                            "StopId NVARCHAR(255), " + 
+                            "StopSequence INT, " + 
+                            "StopHeadsign NVARCHAR(255), " + 
+                            "PickupType INT, " + 
+                            "DropOffType INT, " + 
+                            "ShapeDistTravelled FLOAT, " + 
+                            "TimepointType INT" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "INSERT INTO GTFS_STOP_TIME (" + 
+                            "TripId, " + 
+                            "ArrivalTime, " + 
+                            "DepartureTime, " + 
+                            "StopId, " + 
+                            "StopSequence, " + 
+                            "StopHeadsign, " + 
+                            "PickupType, " + 
+                            "DropOffType, " + 
+                            "ShapeDistTravelled, " + 
+                            "TimepointType" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@tripId, " + 
+                            "@arrivalTime, " + 
+                            "@departureTime, " + 
+                            "@stopId, " + 
+                            "@stopSequence, " + 
+                            "@stopHeadsign, " + 
+                            "@pickupType, " + 
+                            "@dropOffType, " + 
+                            "@shapeDistTravelled, " + 
+                            "@timepointType" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var s in feed.StopTimes)
+{
+    command.Parameters.Clear();
+    
+    command.Parameters.AddWithValue("@tripId", !string.IsNullOrEmpty(s.TripId) ? s.TripId : DBNull.Value);
+    command.Parameters.AddWithValue("@arrivalTime", s.ArrivalTime != null ? s.ArrivalTime.ToString() : DBNull.Value);
+    command.Parameters.AddWithValue("@departureTime", s.DepartureTime != null ? s.DepartureTime.ToString() : DBNull.Value);
+    command.Parameters.AddWithValue("@stopId", !string.IsNullOrEmpty(s.StopId) ? s.StopId : DBNull.Value);
+    command.Parameters.AddWithValue("@stopSequence", s.StopSequence);
+    command.Parameters.AddWithValue("@stopHeadsign", !string.IsNullOrEmpty(s.StopHeadsign) ? s.StopHeadsign : DBNull.Value);
+    command.Parameters.AddWithValue("@pickupType", s.PickupType != null ? s.PickupType : DBNull.Value);
+    command.Parameters.AddWithValue("@dropOffType", s.DropOffType != null ? s.DropOffType : DBNull.Value);
+    command.Parameters.AddWithValue("@shapeDistTravelled", s.ShapeDistTravelled != null ? s.ShapeDistTravelled : DBNull.Value);
+    command.Parameters.AddWithValue("@timepointType", s.TimepointType);
+    
+    await command.ExecuteNonQueryAsync();
+}
+
+command.Parameters.Clear();
+
+command.CommandText = "DROP TABLE IF EXISTS GTFS_TRANSFER";
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "CREATE TABLE GTFS_TRANSFER (" + 
+                            "FromStopId NVARCHAR(255), " + 
+                            "ToStopId NVARCHAR(255), " + 
+                            "TransferType INT, " + 
+                            "MinimumTransferTime NVARCHAR(255)" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "INSERT INTO GTFS_TRANSFER (" + 
+                            "FromStopId, " + 
+                            "ToStopId, " + 
+                            "TransferType, " + 
+                            "MinimumTransferTime" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@fromStopId, " + 
+                            "@toStopId, " + 
+                            "@transferType, " + 
+                            "@minimumTransferTime" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var t in feed.Transfers)
+{
+    command.Parameters.Clear();
+    
+    command.Parameters.AddWithValue("@fromStopId", !string.IsNullOrEmpty(t.FromStopId) ? t.FromStopId : DBNull.Value);
+    command.Parameters.AddWithValue("@toStopId", !string.IsNullOrEmpty(t.ToStopId) ? t.ToStopId : DBNull.Value);
+    command.Parameters.AddWithValue("@transferType", t.TransferType);
+    command.Parameters.AddWithValue("@minimumTransferTime", !string.IsNullOrEmpty(t.MinimumTransferTime) ? t.MinimumTransferTime : DBNull.Value);
+    
+    await command.ExecuteNonQueryAsync();
+}
+
+command.Parameters.Clear();
+
+command.CommandText = "DROP TABLE IF EXISTS GTFS_TRIP";
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "CREATE TABLE GTFS_TRIP (" + 
+                            "Id NVARCHAR(255) PRIMARY KEY, " + 
+                            "RouteId NVARCHAR(255), " + 
+                            "ServiceId NVARCHAR(255), " + 
+                            "Headsign NVARCHAR(255), " + 
+                            "ShortName NVARCHAR(255), " + 
+                            "Direction INT, " + 
+                            "BlockId NVARCHAR(255), " + 
+                            "ShapeId NVARCHAR(255), " + 
+                            "AccessibilityType INT" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
+
+command.CommandText = "INSERT INTO GTFS_TRIP (" + 
+                            "Id, " + 
+                            "RouteId, " + 
+                            "ServiceId, " + 
+                            "Headsign, " + 
+                            "ShortName, " + 
+                            "Direction, " + 
+                            "BlockId, " + 
+                            "ShapeId, " + 
+                            "AccessibilityType" + 
+                            ") " + 
+                      "VALUES (" + 
+                            "@id, " + 
+                            "@routeId, " + 
+                            "@serviceId, " + 
+                            "@headsign, " + 
+                            "@shortName, " + 
+                            "@direction, " + 
+                            "@blockId, " + 
+                            "@shapeId, " + 
+                            "@accessibilityType" + 
+                            ")";
+
+command.Parameters.Clear();
+
+foreach (var t in feed.Trips)
+{
+    command.Parameters.Clear();
+    
+    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(t.Id) ? t.Id : DBNull.Value);
+    command.Parameters.AddWithValue("@routeId", !string.IsNullOrEmpty(t.RouteId) ? t.RouteId : DBNull.Value);
+    command.Parameters.AddWithValue("@serviceId", !string.IsNullOrEmpty(t.ServiceId) ? t.ServiceId : DBNull.Value);
+    command.Parameters.AddWithValue("@headsign", !string.IsNullOrEmpty(t.Headsign) ? t.Headsign : DBNull.Value);
+    command.Parameters.AddWithValue("@shortName", !string.IsNullOrEmpty(t.ShortName) ? t.ShortName : DBNull.Value);
+    command.Parameters.AddWithValue("@direction", t.Direction != null ? t.Direction : DBNull.Value);
+    command.Parameters.AddWithValue("@blockId", !string.IsNullOrEmpty(t.BlockId) ? t.BlockId : DBNull.Value);
+    command.Parameters.AddWithValue("@shapeId", !string.IsNullOrEmpty(t.ShapeId) ? t.ShapeId : DBNull.Value);
+    command.Parameters.AddWithValue("@accessibilityType", t.AccessibilityType != null ? t.AccessibilityType : DBNull.Value);
+    
+    await command.ExecuteNonQueryAsync();
+}
+
+command.Parameters.Clear();
+
+command.CommandText = "CREATE INDEX GTFS_STOP_TIME_INDEX ON GTFS_STOP_TIME (" + 
+                            "TripId, " + 
+                            "StopId, " + 
+                            "PickupType, " + 
+                            "ArrivalTime, " + 
+                            "DepartureTime, " + 
+                            "StopSequence, " + 
+                            "StopHeadsign, " + 
+                            "DropOffType, " + 
+                            "ShapeDistTravelled, " + 
+                            "TimepointType" + 
+                            ")";
+
+await command.ExecuteNonQueryAsync();
