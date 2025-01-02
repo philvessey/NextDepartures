@@ -54,7 +54,11 @@ stages:
       displayName: 'Pack NuGet Packages'
       inputs:
         command: 'pack'
-        packagesToPack: '**/NextDepartures.Standard/*.csproj;**/NextDepartures.Storage.GTFS/*.csproj;**/NextDepartures.Storage.Sqlite/*.csproj;**/NextDepartures.Storage.SqlServer/*.csproj'
+        packagesToPack: >-
+          **/NextDepartures.Standard/*.csproj;
+          **/NextDepartures.Storage.GTFS/*.csproj;
+          **/NextDepartures.Storage.Sqlite/*.csproj;
+          **/NextDepartures.Storage.SqlServer/*.csproj;
         versioningScheme: 'off'
 
     - publish: '$(Build.ArtifactStagingDirectory)'
@@ -99,4 +103,4 @@ stages:
               tag: '$(tagPrefix)$(Build.BuildNumber)'
               title: '$(tagPrefix)$(Build.BuildNumber)'
               changeLogCompareToRelease: 'lastNonDraftRelease'
-              isDraft: true
+              isDraft: 'true'

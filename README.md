@@ -1,6 +1,9 @@
 # NextDepartures
 
-NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, in a SQLite database or in a SQL Server database. The library will work with any well-formed GTFS data set.
+NextDepartures is a .NET Library that queries GTFS (General 
+Transit Feed Specification) data sets stored locally, in a SQLite 
+database or in a SQL Server database. The library will work with 
+any well-formed GTFS data set.
 
 * Build Status: [![Build Status](https://dev.azure.com/philvessey/NextDepartures/_apis/build/status/philvessey.NextDepartures?branchName=master)](https://dev.azure.com/philvessey/NextDepartures/_build/latest?definitionId=2&branchName=master)
 * NextDepartures.Standard: [![NuGet Version](https://img.shields.io/nuget/v/NextDepartures.Standard.svg?style=flat)](https://www.nuget.org/packages/NextDepartures.Standard/)
@@ -10,53 +13,39 @@ NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specifi
 
 ## Local Usage
 
-Connect to the library:
-
 ```csharp
 using NextDepartures.Standard;
 using NextDepartures.Storage.GTFS;
 
-Feed feed = await Feed.Load(GtfsStorage.Load([path]));
+var feed = await Feed.Load(GtfsStorage.Load());
 ```
 
-* [path] > Path to GTFS data set .zip or directory. Required.
-
 ## SQLite Usage
-
-Connect to the library:
 
 ```csharp
 using NextDepartures.Standard;
 using NextDepartures.Storage.Sqlite;
 
-Feed feed = await Feed.Load(SqliteStorage.Load([database], (prefix)));
+var feed = await Feed.Load(SqliteStorage.Load());
 ```
 
-* [database] > Database connection string. Required.
-* (prefix) > Specify database table prefix. Default (GTFS). Optional.
-
 ## SQL Server Usage
-
-Connect to the library:
 
 ```csharp
 using NextDepartures.Standard;
 using NextDepartures.Storage.SqlServer;
 
-Feed feed = await Feed.Load(SqlServerStorage.Load([database], (prefix)));
+var feed = await Feed.Load(SqlServerStorage.Load());
 ```
 
-* [database] > Database connection string. Required.
-* (prefix) > Specify database table prefix. Default (GTFS). Optional.
-
 ## Agencies Endpoints
-
-Once connected to the library:
 
 ```csharp
 var results = await feed.GetAgenciesByEmailAsync();
 var results = await feed.GetAgenciesByFareUrlAsync();
+var results = await feed.GetAgenciesByIdAsync();
 var results = await feed.GetAgenciesByLanguageCodeAsync();
+var results = await feed.GetAgenciesByNameAsync();
 var results = await feed.GetAgenciesByPhoneAsync();
 var results = await feed.GetAgenciesByQueryAsync();
 var results = await feed.GetAgenciesByTimezoneAsync();
@@ -64,8 +53,6 @@ var results = await feed.GetAgenciesByUrlAsync();
 ```
 
 ## Services Endpoints
-
-Once connected to the library:
 
 ```csharp
 var results = await feed.GetServicesByParentStationAsync();
@@ -75,13 +62,14 @@ var results = await feed.GetServicesByTripAsync();
 
 ## Stops Endpoints
 
-Once connected to the library:
-
 ```csharp
+var results = await feed.GetStopsByCodeAsync();
 var results = await feed.GetStopsByDescriptionAsync();
+var results = await feed.GetStopsByIdAsync();
 var results = await feed.GetStopsByLevelAsync();
 var results = await feed.GetStopsByLocationAsync();
 var results = await feed.GetStopsByLocationTypeAsync();
+var results = await feed.GetStopsByNameAsync();
 var results = await feed.GetStopsByParentStationAsync();
 var results = await feed.GetStopsByPlatformCodeAsync();
 var results = await feed.GetStopsByQueryAsync();
