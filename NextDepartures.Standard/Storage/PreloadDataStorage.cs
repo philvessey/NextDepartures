@@ -1,8 +1,9 @@
-﻿using GTFS.Entities;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using GTFS.Entities;
 using GTFS.Entities.Enumerations;
 using NextDepartures.Standard.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using NextDepartures.Standard.Types;
 
 namespace NextDepartures.Standard.Storage;
 
@@ -50,236 +51,144 @@ public class PreloadDataStorage : IDataStorage
             _stops = await _dataStorage.GetStopsAsync();
         }
     }
-
-    /// <summary>
-    /// Gets all available agencies.
-    /// </summary>
-    /// <returns>A list of agencies.</returns>
+    
     public Task<List<Agency>> GetAgenciesAsync()
     {
         return Task.FromResult(_agencies);
     }
-
-    /// <summary>
-    /// Gets the agencies by the given email.
-    /// </summary>
-    /// <param name="email">The email.</param>
-    /// <returns>A list of agencies.</returns>
-    public Task<List<Agency>> GetAgenciesByEmailAsync(string email)
-    {
-        return _dataStorage.GetAgenciesByEmailAsync(email);
-    }
-
-    /// <summary>
-    /// Gets the agencies by the given fare url.
-    /// </summary>
-    /// <param name="fareUrl">The fare url.</param>
-    /// <returns>A list of agencies.</returns>
-    public Task<List<Agency>> GetAgenciesByFareUrlAsync(string fareUrl)
-    {
-        return _dataStorage.GetAgenciesByFareUrlAsync(fareUrl);
-    }
-
-    /// <summary>
-    /// Gets the agencies by the given language code.
-    /// </summary>
-    /// <param name="languageCode">The language code.</param>
-    /// <returns>A list of agencies.</returns>
-    public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode)
-    {
-        return _dataStorage.GetAgenciesByLanguageCodeAsync(languageCode);
-    }
-
-    /// <summary>
-    /// Gets the agencies by the given phone.
-    /// </summary>
-    /// <param name="phone">The phone.</param>
-    /// <returns>A list of agencies.</returns>
-    public Task<List<Agency>> GetAgenciesByPhoneAsync(string phone)
-    {
-        return _dataStorage.GetAgenciesByPhoneAsync(phone);
-    }
-
-    /// <summary>
-    /// Gets the agencies by the given query.
-    /// </summary>
-    /// <param name="query">The query.</param>
-    /// <returns>A list of agencies.</returns>
-    public Task<List<Agency>> GetAgenciesByQueryAsync(string query)
-    {
-        return _dataStorage.GetAgenciesByQueryAsync(query);
-    }
-
-    /// <summary>
-    /// Gets the agencies in the given timezone.
-    /// </summary>
-    /// <param name="timezone">The timezone.</param>
-    /// <returns>A list of agencies.</returns>
-    public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone)
-    {
-        return _dataStorage.GetAgenciesByTimezoneAsync(timezone);
-    }
-
-    /// <summary>
-    /// Gets the agencies by the given url.
-    /// </summary>
-    /// <param name="url">The url.</param>
-    /// <returns>A list of agencies.</returns>
-    public Task<List<Agency>> GetAgenciesByUrlAsync(string url)
-    {
-        return _dataStorage.GetAgenciesByUrlAsync(url);
-    }
-
-    /// <summary>
-    /// Gets all available calendar dates.
-    /// </summary>
-    /// <returns>A list of calendar dates.</returns>
+    
     public Task<List<CalendarDate>> GetCalendarDatesAsync()
     {
         return Task.FromResult(_calendarDates);
     }
-
-    /// <summary>
-    /// Gets the departures for a specific stop.
-    /// </summary>
-    /// <param name="id">The id of the stop.</param>
-    /// <remarks>The list should be ordered ascending by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
-    /// <returns>A list of departures.</returns>
-    public Task<List<Departure>> GetDeparturesForStopAsync(string id)
-    {
-        return _dataStorage.GetDeparturesForStopAsync(id);
-    }
-
-    /// <summary>
-    /// Gets the departures for a specific trip.
-    /// </summary>
-    /// <param name="id">The id of the trip.</param>
-    /// <remarks>The list should be ordered ascending by the departure time. Also stop times with a pickup type of 1 should be ignored.</remarks>
-    /// <returns>A list of departures.</returns>
-    public Task<List<Departure>> GetDeparturesForTripAsync(string id)
-    {
-        return _dataStorage.GetDeparturesForTripAsync(id);
-    }
-
-    /// <summary>
-    /// Gets all available stops.
-    /// </summary>
-    /// <returns>A list of stops.</returns>
+    
     public Task<List<Stop>> GetStopsAsync()
     {
         return Task.FromResult(_stops);
     }
-
-    /// <summary>
-    /// Gets the stops by the given description.
-    /// </summary>
-    /// <param name="description">The description.</param>
-    /// <returns>A list of stops.</returns>
-    public Task<List<Stop>> GetStopsByDescriptionAsync(string description)
+    
+    public Task<List<Agency>> GetAgenciesByEmailAsync(string email, ComparisonType comparison)
     {
-        return _dataStorage.GetStopsByDescriptionAsync(description);
+        return _dataStorage.GetAgenciesByEmailAsync(email, comparison);
     }
-
-    /// <summary>
-    /// Gets the stops by the given level.
-    /// </summary>
-    /// <param name="id">The id of the level.</param>
-    /// <returns>A list of stops.</returns>
-    public Task<List<Stop>> GetStopsByLevelAsync(string id)
+    
+    public Task<List<Agency>> GetAgenciesByFareUrlAsync(string fareUrl, ComparisonType comparison)
     {
-        return _dataStorage.GetStopsByLevelAsync(id);
+        return _dataStorage.GetAgenciesByFareUrlAsync(fareUrl, comparison);
     }
-
-    /// <summary>
-    /// Gets the stops in the given location.
-    /// </summary>
-    /// <param name="minimumLongitude">The minimum longitude.</param>
-    /// <param name="minimumLatitude">The minimum latitude.</param>
-    /// <param name="maximumLongitude">The maximum longitude.</param>
-    /// <param name="maximumLatitude">The maximum latitude.</param>
-    /// <returns>A list of stops.</returns>
-    public Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude)
+    
+    public Task<List<Agency>> GetAgenciesByIdAsync(string id, ComparisonType comparison)
     {
-        return _dataStorage.GetStopsByLocationAsync(minimumLongitude, minimumLatitude, maximumLongitude, maximumLatitude);
+        return _dataStorage.GetAgenciesByIdAsync(id, comparison);
     }
-
-    /// <summary>
-    /// Gets the stops by the given location type.
-    /// </summary>
-    /// <param name="locationType">The location type.</param>
-    /// <returns>A list of stops.</returns>
-    public Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType)
+    
+    public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode, ComparisonType comparison)
     {
-        return _dataStorage.GetStopsByLocationTypeAsync(locationType);
+        return _dataStorage.GetAgenciesByLanguageCodeAsync(languageCode, comparison);
     }
-
-    /// <summary>
-    /// Gets the stops by the given parent station.
-    /// </summary>
-    /// <param name="id">The id of the station.</param>
-    /// <returns>A list of stops.</returns>
-    public Task<List<Stop>> GetStopsByParentStationAsync(string id)
+    
+    public Task<List<Agency>> GetAgenciesByNameAsync(string name, ComparisonType comparison)
     {
-        return _dataStorage.GetStopsByParentStationAsync(id);
+        return _dataStorage.GetAgenciesByNameAsync(name, comparison);
     }
-
-    /// <summary>
-    /// Gets the stops by the given platform code.
-    /// </summary>
-    /// <param name="platformCode">The platform code.</param>
-    /// <returns>A list of stops.</returns>
-    public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode)
+    
+    public Task<List<Agency>> GetAgenciesByPhoneAsync(string phone, ComparisonType comparison)
     {
-        return _dataStorage.GetStopsByPlatformCodeAsync(platformCode);
+        return _dataStorage.GetAgenciesByPhoneAsync(phone, comparison);
     }
-
-    /// <summary>
-    /// Gets the stops by the given query.
-    /// </summary>
-    /// <param name="query">The query.</param>
-    /// <returns>A list of stops.</returns>
-    public Task<List<Stop>> GetStopsByQueryAsync(string query)
+    
+    public Task<List<Agency>> GetAgenciesByQueryAsync(string search, ComparisonType comparison)
     {
-        return _dataStorage.GetStopsByQueryAsync(query);
+        return _dataStorage.GetAgenciesByQueryAsync(search, comparison);
     }
-
-    /// <summary>
-    /// Gets the stops in the given timezone.
-    /// </summary>
-    /// <param name="timezone">The timezone.</param>
-    /// <returns>A list of stops.</returns>
-    public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone)
+    
+    public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone, ComparisonType comparison)
     {
-        return _dataStorage.GetStopsByTimezoneAsync(timezone);
+        return _dataStorage.GetAgenciesByTimezoneAsync(timezone, comparison);
     }
-
-    /// <summary>
-    /// Gets the stops by the given url.
-    /// </summary>
-    /// <param name="url">The url.</param>
-    /// <returns>A list of stops.</returns>
-    public Task<List<Stop>> GetStopsByUrlAsync(string url)
+    
+    public Task<List<Agency>> GetAgenciesByUrlAsync(string url, ComparisonType comparison)
     {
-        return _dataStorage.GetStopsByUrlAsync(url);
+        return _dataStorage.GetAgenciesByUrlAsync(url, comparison);
     }
-
-    /// <summary>
-    /// Gets the stops by the given wheelchair boarding.
-    /// </summary>
-    /// <param name="wheelchairBoarding">The wheelchair boarding.</param>
-    /// <returns>A list of stops.</returns>
-    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding)
+    
+    public Task<List<Departure>> GetDeparturesForStopAsync(string id, ComparisonType comparison)
     {
-        return _dataStorage.GetStopsByWheelchairBoardingAsync(wheelchairBoarding);
+        return _dataStorage.GetDeparturesForStopAsync(id, comparison);
     }
-
-    /// <summary>
-    /// Gets the stops by the given zone.
-    /// </summary>
-    /// <param name="zone">The zone.</param>
-    /// <returns>A list of stops.</returns>
-    public Task<List<Stop>> GetStopsByZoneAsync(string zone)
+    
+    public Task<List<Departure>> GetDeparturesForTripAsync(string id, ComparisonType comparison)
     {
-        return _dataStorage.GetStopsByZoneAsync(zone);
+        return _dataStorage.GetDeparturesForTripAsync(id, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByCodeAsync(string code, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByCodeAsync(code, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByDescriptionAsync(string description, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByDescriptionAsync(description, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByIdAsync(string id, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByIdAsync(id, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByLevelAsync(string id, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByLevelAsync(id, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByLocationAsync(minimumLongitude, minimumLatitude, maximumLongitude, maximumLatitude, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByLocationTypeAsync(locationType, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByNameAsync(string name, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByNameAsync(name, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByParentStationAsync(string id, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByParentStationAsync(id, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByPlatformCodeAsync(platformCode, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByQueryAsync(string search, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByQueryAsync(search, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByTimezoneAsync(timezone, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByUrlAsync(string url, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByUrlAsync(url, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByWheelchairBoardingAsync(wheelchairBoarding, comparison);
+    }
+    
+    public Task<List<Stop>> GetStopsByZoneAsync(string zone, ComparisonType comparison)
+    {
+        return _dataStorage.GetStopsByZoneAsync(zone, comparison);
     }
 }

@@ -1,40 +1,40 @@
-﻿using GTFS.Entities;
+﻿using System;
+using GTFS.Entities;
 using JetBrains.Annotations;
-using System;
 
 namespace NextDepartures.Standard.Models;
 
 public class Service
 {
     [UsedImplicitly]
-    public string AgencyId { get; init; }
+    public string AgencyId { get; set; }
     
     [UsedImplicitly]
-    public string AgencyName { get; init; }
+    public string AgencyName { get; set; }
     
     [UsedImplicitly]
-    public DateTime DepartureDateTime { get; init; }
+    public DateTime DepartureDateTime { get; set; }
     
     [UsedImplicitly]
-    public TimeOfDay? DepartureTime { get; init; }
+    public TimeOfDay? DepartureTime { get; set; }
     
     [UsedImplicitly]
-    public string DestinationName { get; init; }
+    public string DestinationName { get; set; }
     
     [UsedImplicitly]
-    public string RouteName { get; init; }
+    public string RouteName { get; set; }
     
     [UsedImplicitly]
-    public string StopId { get; init; }
+    public string StopId { get; set; }
     
     [UsedImplicitly]
-    public string StopName { get; init; }
+    public string StopName { get; set; }
     
     [UsedImplicitly]
-    public string TripId { get; init; }
+    public string TripId { get; set; }
     
     [UsedImplicitly]
-    public string Type { get; init; }
+    public string Type { get; set; }
         
     public override string ToString()
     {

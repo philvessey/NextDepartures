@@ -1,28 +1,33 @@
-﻿using GTFS.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GTFS.Entities;
+using NextDepartures.Standard.Types;
 
 namespace NextDepartures.Standard;
 
 public partial class Feed
 {
     /// <summary>
-    /// Gets the agencies by the given language code.
+    /// Gets agencies by language code
     /// </summary>
-    /// <param name="languageCode">The language code. Default is all but can be overridden.</param>
-    /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
+    /// <param name="languageCode">The language code of the agency. Default is all.</param>
+    /// <param name="comparison">The comparison type to use when searching. Default is partial.</param>
+    /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of agencies.</returns>
-    public async Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode = "", int count = 0)
+    public async Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode = "", ComparisonType comparison = ComparisonType.Partial, int results = int.MaxValue)
     {
         try
         {
-            var agenciesFromStorage = await _dataStorage.GetAgenciesByLanguageCodeAsync(languageCode);
-            return count > 0 ? agenciesFromStorage.Take(count).ToList() : agenciesFromStorage;
+            var agenciesFromStorage = await _dataStorage.GetAgenciesByLanguageCodeAsync(languageCode, comparison);
+            
+            return agenciesFromStorage
+                .Take(results)
+                .ToList();
         }
         catch
         {
-            return null;
+            return [];
         }
     }
 }

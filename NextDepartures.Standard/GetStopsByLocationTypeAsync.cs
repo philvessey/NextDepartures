@@ -1,29 +1,34 @@
-﻿using GTFS.Entities;
-using GTFS.Entities.Enumerations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GTFS.Entities;
+using GTFS.Entities.Enumerations;
+using NextDepartures.Standard.Types;
 
 namespace NextDepartures.Standard;
 
 public partial class Feed
 {
     /// <summary>
-    /// Gets the stops by the given location type.
+    /// Gets stops by location type
     /// </summary>
-    /// <param name="locationType">The location type. Default is LocationType.Stop but can be overridden.</param>
-    /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
+    /// <param name="locationType">The location type of the stop. Default is stop.</param>
+    /// <param name="comparison">The comparison type to use when searching. Default is partial.</param>
+    /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of stops.</returns>
-    public async Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType = LocationType.Stop, int count = 0)
+    public async Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType = LocationType.Stop, ComparisonType comparison = ComparisonType.Partial, int results = int.MaxValue)
     {
         try
         {
-            var stopsFromStorage = await _dataStorage.GetStopsByLocationTypeAsync(locationType);
-            return count > 0 ? stopsFromStorage.Take(count).ToList() : stopsFromStorage;
+            var stopsFromStorage = await _dataStorage.GetStopsByLocationTypeAsync(locationType, comparison);
+           
+            return stopsFromStorage
+                .Take(results)
+                .ToList();
         }
         catch
         {
-            return null;
+            return [];
         }
     }
 }

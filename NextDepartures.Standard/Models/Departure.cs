@@ -1,67 +1,67 @@
-﻿using GTFS.Entities;
+﻿using System;
+using GTFS.Entities;
 using JetBrains.Annotations;
-using System;
 
 namespace NextDepartures.Standard.Models;
 
 public class Departure
 {
     [UsedImplicitly]
-    public TimeOfDay? DepartureTime { get; init; }
+    public TimeOfDay DepartureTime { get; set; }
     
     [UsedImplicitly]
-    public DateTime DepartureDateTime { get; init; }
+    public DateTime DepartureDateTime { get; set; }
     
     [UsedImplicitly]
-    public string StopId { get; init; }
+    public string StopId { get; set; }
     
     [UsedImplicitly]
-    public string TripId { get; init; }
+    public string TripId { get; set; }
     
     [UsedImplicitly]
-    public string ServiceId { get; init; }
+    public string ServiceId { get; set; }
     
     [UsedImplicitly]
-    public string TripHeadsign { get; init; }
+    public string TripHeadsign { get; set; }
     
     [UsedImplicitly]
-    public string TripShortName { get; init; }
+    public string TripShortName { get; set; }
     
     [UsedImplicitly]
-    public string AgencyId { get; init; }
+    public string AgencyId { get; set; }
     
     [UsedImplicitly]
-    public string RouteLongName { get; init; }
+    public string RouteLongName { get; set; }
     
     [UsedImplicitly]
-    public string RouteShortName { get; init; }
+    public string RouteShortName { get; set; }
     
     [UsedImplicitly]
-    public bool Monday { get; init; }
+    public bool Monday { get; set; }
     
     [UsedImplicitly]
-    public bool Tuesday { get; init; }
+    public bool Tuesday { get; set; }
     
     [UsedImplicitly]
-    public bool Wednesday { get; init; }
+    public bool Wednesday { get; set; }
     
     [UsedImplicitly]
-    public bool Thursday { get; init; }
+    public bool Thursday { get; set; }
     
     [UsedImplicitly]
-    public bool Friday { get; init; }
+    public bool Friday { get; set; }
     
     [UsedImplicitly]
-    public bool Saturday { get; init; }
+    public bool Saturday { get; set; }
     
     [UsedImplicitly]
-    public bool Sunday { get; init; }
+    public bool Sunday { get; set; }
     
     [UsedImplicitly]
-    public DateTime EndDate { get; init; }
+    public DateTime StartDate { get; set; }
     
     [UsedImplicitly]
-    public DateTime StartDate { get; init; }
+    public DateTime EndDate { get; set; }
 
     public override string ToString()
     {

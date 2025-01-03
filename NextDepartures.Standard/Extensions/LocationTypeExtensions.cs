@@ -4,9 +4,9 @@ namespace NextDepartures.Standard.Extensions;
 
 public static class LocationTypeExtensions
 {
-    public static int ToInt32(this LocationType locationType)
+    public static int ToInt32(this LocationType baseLocationType)
     {
-        return locationType switch
+        return baseLocationType switch
         {
             LocationType.Stop => 0,
             LocationType.Station => 1,

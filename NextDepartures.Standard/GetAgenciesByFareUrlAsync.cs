@@ -1,28 +1,33 @@
-﻿using GTFS.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GTFS.Entities;
+using NextDepartures.Standard.Types;
 
 namespace NextDepartures.Standard;
 
 public partial class Feed
 {
     /// <summary>
-    /// Gets the agencies by the given fare url.
+    /// Gets agencies by fare url
     /// </summary>
-    /// <param name="fareUrl">The fare url. Default is all but can be overridden.</param>
-    /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
+    /// <param name="fareUrl">The fare url of the agency. Default is all.</param>
+    /// <param name="comparison">The comparison type to use when searching. Default is partial.</param>
+    /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of agencies.</returns>
-    public async Task<List<Agency>> GetAgenciesByFareUrlAsync(string fareUrl = "", int count = 0)
+    public async Task<List<Agency>> GetAgenciesByFareUrlAsync(string fareUrl = "", ComparisonType comparison = ComparisonType.Partial, int results = int.MaxValue)
     {
         try
         {
-            var agenciesFromStorage = await _dataStorage.GetAgenciesByFareUrlAsync(fareUrl);
-            return count > 0 ? agenciesFromStorage.Take(count).ToList() : agenciesFromStorage;
+            var agenciesFromStorage = await _dataStorage.GetAgenciesByFareUrlAsync(fareUrl, comparison);
+            
+            return agenciesFromStorage
+                .Take(results)
+                .ToList();
         }
         catch
         {
-            return null;
+            return [];
         }
     }
 }

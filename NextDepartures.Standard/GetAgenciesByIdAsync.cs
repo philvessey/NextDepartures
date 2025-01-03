@@ -9,19 +9,19 @@ namespace NextDepartures.Standard;
 public partial class Feed
 {
     /// <summary>
-    /// Gets stops by zone
+    /// Gets agencies by id
     /// </summary>
-    /// <param name="zone">The zone of the stop. Default is all.</param>
+    /// <param name="id">The id of the agency. Default is all.</param>
     /// <param name="comparison">The comparison type to use when searching. Default is partial.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
-    /// <returns>A list of stops.</returns>
-    public async Task<List<Stop>> GetStopsByZoneAsync(string zone = "", ComparisonType comparison = ComparisonType.Partial, int results = int.MaxValue)
+    /// <returns>A list of agencies.</returns>
+    public async Task<List<Agency>> GetAgenciesByIdAsync(string id = "", ComparisonType comparison = ComparisonType.Partial, int results = int.MaxValue)
     {
         try
         {
-            var stopsFromStorage = await _dataStorage.GetStopsByZoneAsync(zone, comparison);
+            var agenciesFromStorage = await _dataStorage.GetAgenciesByIdAsync(id, comparison);
             
-            return stopsFromStorage
+            return agenciesFromStorage
                 .Take(results)
                 .ToList();
         }

@@ -1,11 +1,11 @@
-﻿using NextDepartures.Standard.Models;
+﻿using NextDepartures.Standard.Types;
 
 namespace NextDepartures.Standard.Extensions;
 
 public static class DayOffsetTypeExtensions
 {
-    public static int GetNumeric(this DayOffsetType dayOffsetType)
+    public static int GetNumeric(this DayOffsetType baseDayOffsetType)
     {
-        return (int)dayOffsetType;
+        return (int)baseDayOffsetType;
     }
 }
