@@ -61,9 +61,9 @@ public class SqliteStorage : IDataStorage
         return new Agency
         {
             Id = !dataReader.IsDBNull(0) ? dataReader.GetString(0) : null,
-            Name = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
-            URL = !dataReader.IsDBNull(2) ? dataReader.GetString(2) : null,
-            Timezone = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
+            Name = dataReader.GetString(1),
+            URL = dataReader.GetString(2),
+            Timezone = dataReader.GetString(3),
             LanguageCode = !dataReader.IsDBNull(4) ? dataReader.GetString(4) : null,
             Phone = !dataReader.IsDBNull(5) ? dataReader.GetString(5) : null,
             FareURL = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
@@ -76,9 +76,9 @@ public class SqliteStorage : IDataStorage
         return new Agency
         {
             Id = !dataReader.IsDBNull(0) ? dataReader.GetString(0) : null,
-            Name = !dataReader.IsDBNull(1) ? dataReader.GetString(1).Trim().ToTitleCase() : null,
-            URL = !dataReader.IsDBNull(2) ? dataReader.GetString(2) : null,
-            Timezone = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
+            Name = dataReader.GetString(1).Trim().ToTitleCase(),
+            URL = dataReader.GetString(2),
+            Timezone = dataReader.GetString(3),
             LanguageCode = !dataReader.IsDBNull(4) ? dataReader.GetString(4) : null,
             Phone = !dataReader.IsDBNull(5) ? dataReader.GetString(5) : null,
             FareURL = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
@@ -90,7 +90,7 @@ public class SqliteStorage : IDataStorage
     {
         return new CalendarDate
         {
-            ServiceId = !dataReader.IsDBNull(0) ? dataReader.GetString(0) : null,
+            ServiceId = dataReader.GetString(0),
             Date = dataReader.GetDateTime(1),
             ExceptionType = dataReader.GetInt32(2).ToExceptionType()
         };
@@ -131,7 +131,7 @@ public class SqliteStorage : IDataStorage
     {
         return new Stop
         {
-            Id = !dataReader.IsDBNull(0) ? dataReader.GetString(0) : null,
+            Id = dataReader.GetString(0),
             Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
             Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2) : null,
             Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
@@ -152,7 +152,7 @@ public class SqliteStorage : IDataStorage
     {
         return new Stop
         {
-            Id = !dataReader.IsDBNull(0) ? dataReader.GetString(0) : null,
+            Id = dataReader.GetString(0),
             Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
             Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2).Trim().ToTitleCase() : null,
             Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
@@ -295,19 +295,19 @@ public class SqliteStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Name, '')) = '{name.ToLower()}'",
+                                        $"WHERE LOWER(Name) = '{name.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Name, '')) LIKE '{name.ToLower()}%'",
+                                        $"WHERE LOWER(Name) LIKE '{name.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Name, '')) LIKE '%{name.ToLower()}'",
+                                        $"WHERE LOWER(Name) LIKE '%{name.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(COALESCE(Name, '')) LIKE '%{name.ToLower()}%'"
+                    $"WHERE LOWER(Name) LIKE '%{name.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -343,10 +343,10 @@ public class SqliteStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Id, '')) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(Name, '')) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(URL, '')) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(Timezone, '')) = '{search.ToLower()}' " + 
+                                        $"WHERE LOWER(Name) = '{search.ToLower()}' " + 
+                                           $"OR LOWER(URL) = '{search.ToLower()}' " + 
+                                           $"OR LOWER(Timezone) = '{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(Id, '')) = '{search.ToLower()}' " + 
                                            $"OR LOWER(COALESCE(LanguageCode, '')) = '{search.ToLower()}' " + 
                                            $"OR LOWER(COALESCE(Phone, '')) = '{search.ToLower()}' " + 
                                            $"OR LOWER(COALESCE(FareURL, '')) = '{search.ToLower()}' " + 
@@ -354,10 +354,10 @@ public class SqliteStorage : IDataStorage
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Id, '')) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(Name, '')) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(URL, '')) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(Timezone, '')) LIKE '{search.ToLower()}%' " + 
+                                        $"WHERE LOWER(Name) LIKE '{search.ToLower()}%' " + 
+                                           $"OR LOWER(URL) LIKE '{search.ToLower()}%' " + 
+                                           $"OR LOWER(Timezone) LIKE '{search.ToLower()}%' " + 
+                                           $"OR LOWER(COALESCE(Id, '')) LIKE '{search.ToLower()}%' " + 
                                            $"OR LOWER(COALESCE(LanguageCode, '')) LIKE '{search.ToLower()}%' " + 
                                            $"OR LOWER(COALESCE(Phone, '')) LIKE '{search.ToLower()}%' " + 
                                            $"OR LOWER(COALESCE(FareURL, '')) LIKE '{search.ToLower()}%' " + 
@@ -365,10 +365,10 @@ public class SqliteStorage : IDataStorage
             
             ComparisonType.Ends => "SELECT * " +
                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Id, '')) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(Name, '')) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(URL, '')) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(Timezone, '')) LIKE '%{search.ToLower()}' " + 
+                                        $"WHERE LOWER(Name) LIKE '%{search.ToLower()}' " + 
+                                           $"OR LOWER(URL) LIKE '%{search.ToLower()}' " + 
+                                           $"OR LOWER(Timezone) LIKE '%{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(Id, '')) LIKE '%{search.ToLower()}' " + 
                                            $"OR LOWER(COALESCE(LanguageCode, '')) LIKE '%{search.ToLower()}' " + 
                                            $"OR LOWER(COALESCE(Phone, '')) LIKE '%{search.ToLower()}' " + 
                                            $"OR LOWER(COALESCE(FareURL, '')) LIKE '%{search.ToLower()}' " + 
@@ -376,10 +376,10 @@ public class SqliteStorage : IDataStorage
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(COALESCE(Id, '')) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(Name, '')) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(URL, '')) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(Timezone, '')) LIKE '%{search.ToLower()}%' " + 
+                    $"WHERE LOWER(Name) LIKE '%{search.ToLower()}%' " + 
+                       $"OR LOWER(URL) LIKE '%{search.ToLower()}%' " + 
+                       $"OR LOWER(Timezone) LIKE '%{search.ToLower()}%' " + 
+                       $"OR LOWER(COALESCE(Id, '')) LIKE '%{search.ToLower()}%' " + 
                        $"OR LOWER(COALESCE(LanguageCode, '')) LIKE '%{search.ToLower()}%' " + 
                        $"OR LOWER(COALESCE(Phone, '')) LIKE '%{search.ToLower()}%' " + 
                        $"OR LOWER(COALESCE(FareURL, '')) LIKE '%{search.ToLower()}%' " + 
@@ -395,19 +395,19 @@ public class SqliteStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Timezone, '')) = '{timezone.ToLower()}'",
+                                        $"WHERE LOWER(Timezone) = '{timezone.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Timezone, '')) LIKE '{timezone.ToLower()}%'",
+                                        $"WHERE LOWER(Timezone) LIKE '{timezone.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Timezone, '')) LIKE '%{timezone.ToLower()}'",
+                                        $"WHERE LOWER(Timezone) LIKE '%{timezone.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(COALESCE(Timezone, '')) LIKE '%{timezone.ToLower()}%'"
+                    $"WHERE LOWER(Timezone) LIKE '%{timezone.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -419,19 +419,19 @@ public class SqliteStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(URL, '')) = '{url.ToLower()}'",
+                                        $"WHERE LOWER(URL) = '{url.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(URL, '')) LIKE '{url.ToLower()}%'",
+                                        $"WHERE LOWER(URL) LIKE '{url.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(URL, '')) LIKE '%{url.ToLower()}'",
+                                        $"WHERE LOWER(URL) LIKE '%{url.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(COALESCE(URL, '')) LIKE '%{url.ToLower()}%'"
+                    $"WHERE LOWER(URL) LIKE '%{url.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -464,7 +464,7 @@ public class SqliteStorage : IDataStorage
                                       "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
                                       "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                              $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}%' " + 
-                                                "AND COALESCE(s.PickupType, 0) != 1 " + 
+                                                "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
                                       "ORDER BY s.DepartureTime",
 
             ComparisonType.Starts => "SELECT s.DepartureTime, " + 
@@ -490,7 +490,7 @@ public class SqliteStorage : IDataStorage
                                      "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                             $"WHERE LOWER(s.StopId) LIKE '{id.ToLower()}%' " + 
-                                               "AND COALESCE(s.PickupType, 0) != 1 " + 
+                                               "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
                                      "ORDER BY s.DepartureTime",
 
             ComparisonType.Ends => "SELECT s.DepartureTime, " + 
@@ -516,7 +516,7 @@ public class SqliteStorage : IDataStorage
                                    "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
                                    "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                           $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}' " + 
-                                             "AND COALESCE(s.PickupType, 0) != 1 " + 
+                                             "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
                                    "ORDER BY s.DepartureTime",
 
             _ => "SELECT s.DepartureTime, " + 
@@ -542,7 +542,7 @@ public class SqliteStorage : IDataStorage
                  "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
                  "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                         $"WHERE LOWER(s.StopId) = '{id.ToLower()}' " + 
-                           "AND COALESCE(s.PickupType, 0) != 1 " + 
+                           "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
                  "ORDER BY s.DepartureTime"
         };
         
@@ -576,7 +576,7 @@ public class SqliteStorage : IDataStorage
                                       "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
                                       "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                              $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}%' " + 
-                                                "AND COALESCE(s.PickupType, 0) != 1 " + 
+                                                "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
                                       "ORDER BY s.DepartureTime",
 
             ComparisonType.Starts => "SELECT s.DepartureTime, " + 
@@ -602,7 +602,7 @@ public class SqliteStorage : IDataStorage
                                      "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                             $"WHERE LOWER(s.TripId) LIKE '{id.ToLower()}%' " + 
-                                               "AND COALESCE(s.PickupType, 0) != 1 " + 
+                                               "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
                                      "ORDER BY s.DepartureTime",
 
             ComparisonType.Ends => "SELECT s.DepartureTime, " + 
@@ -628,7 +628,7 @@ public class SqliteStorage : IDataStorage
                                    "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
                                    "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                           $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}' " + 
-                                             "AND COALESCE(s.PickupType, 0) != 1 " + 
+                                             "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
                                    "ORDER BY s.DepartureTime",
 
             _ => "SELECT s.DepartureTime, " + 
@@ -654,7 +654,7 @@ public class SqliteStorage : IDataStorage
                  "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
                  "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                         $"WHERE LOWER(s.TripId) = '{id.ToLower()}' " + 
-                           "AND COALESCE(s.PickupType, 0) != 1 " + 
+                           "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
                  "ORDER BY s.DepartureTime"
         };
         
@@ -799,19 +799,19 @@ public class SqliteStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_STOP " + 
-                                        $"WHERE LocationType = {locationType.ToInt32()}",
+                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_STOP " + 
-                                        $"WHERE LocationType = {locationType.ToInt32()}",
+                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_STOP " + 
-                                        $"WHERE LocationType = {locationType.ToInt32()}",
+                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
             
             _ => "SELECT * " + 
                  "FROM GTFS_STOP " + 
-                    $"WHERE LocationType = {locationType.ToInt32()}"
+                    $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);

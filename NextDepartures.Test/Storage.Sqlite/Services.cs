@@ -15,7 +15,7 @@ public class Services
     public async Task GetServicesByParentStationAsync()
     {
         var feed = await Feed.Load(SqliteStorage.Load("Data Source=Data/feed.db;"));
-        var resultsByParentStation = await feed.GetServicesByParentStationAsync(["16TH", "24TH"], new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.Zero, ComparisonType.Exact, 1, 10);
+        var resultsByParentStation = await feed.GetServicesByParentStationAsync(["16TH", "24TH"], new DateTime(2025, 1, 21, 18, 0, 0), TimeSpan.Zero, ComparisonType.Exact, 1, 10);
 
         Assert.IsTrue(resultsByParentStation.Count > 0);
     }
@@ -24,7 +24,7 @@ public class Services
     public async Task GetServicesByStopAsync()
     {
         var feed = await Feed.Load(SqliteStorage.Load("Data Source=Data/feed.db;"));
-        var resultsByStop = await feed.GetServicesByStopAsync("16TH", new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.Zero, ComparisonType.Exact, 1, 10);
+        var resultsByStop = await feed.GetServicesByStopAsync("16TH", new DateTime(2025, 1, 21, 18, 0, 0), TimeSpan.Zero, ComparisonType.Exact, 1, 10);
 
         Assert.IsTrue(resultsByStop.Count > 0);
     }
@@ -33,8 +33,8 @@ public class Services
     public async Task GetServicesByTripAsync()
     {
         var feed = await Feed.Load(SqliteStorage.Load("Data Source=Data/feed.db;"));
-        var resultsByStop = await feed.GetServicesByStopAsync("24TH", new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.Zero, ComparisonType.Exact, 1, 10);
-        var resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop.First().TripId, new DateTime(2024, 11, 7, 18, 0, 0), TimeSpan.FromMinutes(10), ComparisonType.Exact, 1, 10);
+        var resultsByStop = await feed.GetServicesByStopAsync("24TH", new DateTime(2025, 1, 21, 18, 0, 0), TimeSpan.Zero, ComparisonType.Exact, 1, 10);
+        var resultsByTrip = await feed.GetServicesByTripAsync(resultsByStop.First().TripId, new DateTime(2025, 1, 21, 18, 0, 0), TimeSpan.FromMinutes(10), ComparisonType.Exact, 1, 10);
 
         Assert.IsTrue(resultsByTrip.Count > 0);
     }

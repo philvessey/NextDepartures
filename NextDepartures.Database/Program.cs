@@ -21,9 +21,9 @@ await command.ExecuteNonQueryAsync();
 
 command.CommandText = "CREATE TABLE GTFS_AGENCY (" + 
                             "Id NVARCHAR(255), " + 
-                            "Name NVARCHAR(255), " + 
-                            "URL NVARCHAR(255), " + 
-                            "Timezone NVARCHAR(255), " + 
+                            "Name NVARCHAR(255) NOT NULL, " + 
+                            "URL NVARCHAR(255) NOT NULL, " + 
+                            "Timezone NVARCHAR(255) NOT NULL, " + 
                             "LanguageCode NVARCHAR(255), " + 
                             "Phone NVARCHAR(255), " + 
                             "FareURL NVARCHAR(255), " + 
@@ -59,14 +59,14 @@ foreach (var a in feed.Agencies)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(a.Id) ? a.Id : DBNull.Value);
-    command.Parameters.AddWithValue("@name", !string.IsNullOrEmpty(a.Name) ? a.Name : DBNull.Value);
-    command.Parameters.AddWithValue("@url", !string.IsNullOrEmpty(a.URL) ? a.URL : DBNull.Value);
-    command.Parameters.AddWithValue("@timezone", !string.IsNullOrEmpty(a.Timezone) ? a.Timezone : DBNull.Value);
-    command.Parameters.AddWithValue("@languageCode", !string.IsNullOrEmpty(a.LanguageCode) ? a.LanguageCode : DBNull.Value);
-    command.Parameters.AddWithValue("@phone", !string.IsNullOrEmpty(a.Phone) ? a.Phone : DBNull.Value);
-    command.Parameters.AddWithValue("@fareUrl", !string.IsNullOrEmpty(a.FareURL) ? a.FareURL : DBNull.Value);
-    command.Parameters.AddWithValue("@email", !string.IsNullOrEmpty(a.Email) ? a.Email : DBNull.Value);
+    command.Parameters.AddWithValue("@id", a.Id != null ? a.Id : DBNull.Value);
+    command.Parameters.AddWithValue("@name", a.Name);
+    command.Parameters.AddWithValue("@url", a.URL);
+    command.Parameters.AddWithValue("@timezone", a.Timezone);
+    command.Parameters.AddWithValue("@languageCode", a.LanguageCode != null ? a.LanguageCode : DBNull.Value);
+    command.Parameters.AddWithValue("@phone", a.Phone != null ? a.Phone : DBNull.Value);
+    command.Parameters.AddWithValue("@fareUrl", a.FareURL != null ? a.FareURL : DBNull.Value);
+    command.Parameters.AddWithValue("@email", a.Email != null ? a.Email : DBNull.Value);
 
     await command.ExecuteNonQueryAsync();
 }
@@ -78,15 +78,15 @@ await command.ExecuteNonQueryAsync();
 
 command.CommandText = "CREATE TABLE GTFS_CALENDAR (" + 
                             "ServiceId NVARCHAR(255) PRIMARY KEY, " + 
-                            "Monday BIT, " + 
-                            "Tuesday BIT, " + 
-                            "Wednesday BIT, " + 
-                            "Thursday BIT, " + 
-                            "Friday BIT, " + 
-                            "Saturday BIT, " + 
-                            "Sunday BIT, " + 
-                            "StartDate DATETIME, " + 
-                            "EndDate DATETIME" + 
+                            "Monday BIT NOT NULL, " + 
+                            "Tuesday BIT NOT NULL, " + 
+                            "Wednesday BIT NOT NULL, " + 
+                            "Thursday BIT NOT NULL, " + 
+                            "Friday BIT NOT NULL, " + 
+                            "Saturday BIT NOT NULL, " + 
+                            "Sunday BIT NOT NULL, " + 
+                            "StartDate DATETIME NOT NULL, " + 
+                            "EndDate DATETIME NOT NULL" + 
                             ")";
 
 await command.ExecuteNonQueryAsync();
@@ -122,7 +122,7 @@ foreach (var c in feed.Calendars)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@serviceId", !string.IsNullOrEmpty(c.ServiceId) ? c.ServiceId : DBNull.Value);
+    command.Parameters.AddWithValue("@serviceId", c.ServiceId);
     command.Parameters.AddWithValue("@monday", c.Monday);
     command.Parameters.AddWithValue("@tuesday", c.Tuesday);
     command.Parameters.AddWithValue("@wednesday", c.Wednesday);
@@ -142,9 +142,9 @@ command.CommandText = "DROP TABLE IF EXISTS GTFS_CALENDAR_DATE";
 await command.ExecuteNonQueryAsync();
 
 command.CommandText = "CREATE TABLE GTFS_CALENDAR_DATE (" + 
-                            "ServiceId NVARCHAR(255), " + 
-                            "ExceptionDate DATETIME, " + 
-                            "ExceptionType INT" + 
+                            "ServiceId NVARCHAR(255) NOT NULL, " + 
+                            "ExceptionDate DATETIME NOT NULL, " + 
+                            "ExceptionType INT NOT NULL" + 
                             ")";
 
 await command.ExecuteNonQueryAsync();
@@ -166,7 +166,7 @@ foreach (var d in feed.CalendarDates)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@serviceId", !string.IsNullOrEmpty(d.ServiceId) ? d.ServiceId : DBNull.Value);
+    command.Parameters.AddWithValue("@serviceId", d.ServiceId);
     command.Parameters.AddWithValue("@exceptionDate", d.Date);
     command.Parameters.AddWithValue("@exceptionType", d.ExceptionType);
 
@@ -179,11 +179,11 @@ command.CommandText = "DROP TABLE IF EXISTS GTFS_FARE_ATTRIBUTE";
 await command.ExecuteNonQueryAsync();
 
 command.CommandText = "CREATE TABLE GTFS_FARE_ATTRIBUTE (" + 
-                            "FareId NVARCHAR(255), " + 
-                            "Price NVARCHAR(255), " + 
-                            "CurrencyType NVARCHAR(255), " + 
-                            "PaymentMethod INT, " + 
-                            "Transfers INT, " + 
+                            "FareId NVARCHAR(255) NOT NULL, " + 
+                            "Price NVARCHAR(255) NOT NULL, " + 
+                            "CurrencyType NVARCHAR(255) NOT NULL, " + 
+                            "PaymentMethod INT NOT NULL, " + 
+                            "Transfers INT NOT NULL, " + 
                             "AgencyId NVARCHAR(255), " + 
                             "TransferDuration NVARCHAR(255)" + 
                             ")";
@@ -215,13 +215,13 @@ foreach (var f in feed.FareAttributes)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@fareId", !string.IsNullOrEmpty(f.FareId) ? f.FareId : DBNull.Value);
-    command.Parameters.AddWithValue("@price", !string.IsNullOrEmpty(f.Price) ? f.Price : DBNull.Value);
-    command.Parameters.AddWithValue("@currencyType", !string.IsNullOrEmpty(f.CurrencyType) ? f.CurrencyType : DBNull.Value);
+    command.Parameters.AddWithValue("@fareId", f.FareId);
+    command.Parameters.AddWithValue("@price", f.Price);
+    command.Parameters.AddWithValue("@currencyType", f.CurrencyType);
     command.Parameters.AddWithValue("@paymentMethod", f.PaymentMethod);
-    command.Parameters.AddWithValue("@transfers", f.Transfers != null ? f.Transfers : DBNull.Value);
-    command.Parameters.AddWithValue("@agencyId", !string.IsNullOrEmpty(f.AgencyId) ? f.AgencyId : DBNull.Value);
-    command.Parameters.AddWithValue("@transferDuration", !string.IsNullOrEmpty(f.TransferDuration) ? f.TransferDuration : DBNull.Value);
+    command.Parameters.AddWithValue("@transfers", f.Transfers.ToString() != string.Empty ? f.Transfers : string.Empty);
+    command.Parameters.AddWithValue("@agencyId", f.AgencyId != null ? f.AgencyId : DBNull.Value);
+    command.Parameters.AddWithValue("@transferDuration", f.TransferDuration != null ? f.TransferDuration != string.Empty ? f.TransferDuration : string.Empty : DBNull.Value);
 
     await command.ExecuteNonQueryAsync();
 }
@@ -232,7 +232,7 @@ command.CommandText = "DROP TABLE IF EXISTS GTFS_FARE_RULE";
 await command.ExecuteNonQueryAsync();
 
 command.CommandText = "CREATE TABLE GTFS_FARE_RULE (" + 
-                            "FareId NVARCHAR(255), " + 
+                            "FareId NVARCHAR(255) NOT NULL, " + 
                             "RouteId NVARCHAR(255), " + 
                             "OriginId NVARCHAR(255), " + 
                             "DestinationId NVARCHAR(255), " + 
@@ -262,11 +262,11 @@ foreach (var f in feed.FareRules)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@fareId", !string.IsNullOrEmpty(f.FareId) ? f.FareId : DBNull.Value);
-    command.Parameters.AddWithValue("@routeId", !string.IsNullOrEmpty(f.RouteId) ? f.RouteId : DBNull.Value);
-    command.Parameters.AddWithValue("@originId", !string.IsNullOrEmpty(f.OriginId) ? f.OriginId : DBNull.Value);
-    command.Parameters.AddWithValue("@destinationId", !string.IsNullOrEmpty(f.DestinationId) ? f.DestinationId : DBNull.Value);
-    command.Parameters.AddWithValue("@containsId", !string.IsNullOrEmpty(f.ContainsId) ? f.ContainsId : DBNull.Value);
+    command.Parameters.AddWithValue("@fareId", f.FareId);
+    command.Parameters.AddWithValue("@routeId", f.RouteId != null ? f.RouteId : DBNull.Value);
+    command.Parameters.AddWithValue("@originId", f.OriginId != null ? f.OriginId : DBNull.Value);
+    command.Parameters.AddWithValue("@destinationId", f.DestinationId != null ? f.DestinationId : DBNull.Value);
+    command.Parameters.AddWithValue("@containsId", f.ContainsId != null ? f.ContainsId : DBNull.Value);
 
     await command.ExecuteNonQueryAsync();
 }
@@ -277,10 +277,10 @@ command.CommandText = "DROP TABLE IF EXISTS GTFS_FREQUENCY";
 await command.ExecuteNonQueryAsync();
 
 command.CommandText = "CREATE TABLE GTFS_FREQUENCY (" + 
-                            "TripId NVARCHAR(255), " + 
-                            "StartTime NVARCHAR(255), " + 
-                            "EndTime NVARCHAR(255), " + 
-                            "HeadwaySecs NVARCHAR(255), " + 
+                            "TripId NVARCHAR(255) NOT NULL, " + 
+                            "StartTime NVARCHAR(255) NOT NULL, " + 
+                            "EndTime NVARCHAR(255) NOT NULL, " + 
+                            "HeadwaySecs NVARCHAR(255) NOT NULL, " + 
                             "ExactTimes BIT" + 
                             ")";
 
@@ -307,11 +307,11 @@ foreach (var f in feed.Frequencies)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@tripId", !string.IsNullOrEmpty(f.TripId) ? f.TripId : DBNull.Value);
-    command.Parameters.AddWithValue("@startTime", !string.IsNullOrEmpty(f.StartTime) ? f.StartTime : DBNull.Value);
-    command.Parameters.AddWithValue("@endTime", !string.IsNullOrEmpty(f.EndTime) ? f.EndTime : DBNull.Value);
-    command.Parameters.AddWithValue("@headwaySecs", !string.IsNullOrEmpty(f.HeadwaySecs) ? f.HeadwaySecs : DBNull.Value);
-    command.Parameters.AddWithValue("@exactTimes", f.ExactTimes != null ? f.ExactTimes : DBNull.Value);
+    command.Parameters.AddWithValue("@tripId", f.TripId);
+    command.Parameters.AddWithValue("@startTime", f.StartTime);
+    command.Parameters.AddWithValue("@endTime", f.EndTime);
+    command.Parameters.AddWithValue("@headwaySecs", f.HeadwaySecs);
+    command.Parameters.AddWithValue("@exactTimes", f.ExactTimes != null ? f.ExactTimes.ToString() != string.Empty ? f.ExactTimes : string.Empty : DBNull.Value);
 
     await command.ExecuteNonQueryAsync();
 }
@@ -322,8 +322,8 @@ command.CommandText = "DROP TABLE IF EXISTS GTFS_LEVEL";
 await command.ExecuteNonQueryAsync();
 
 command.CommandText = "CREATE TABLE GTFS_LEVEL (" + 
-                            "Id NVARCHAR(255), " + 
-                            "Idx FLOAT, " + 
+                            "Id NVARCHAR(255) NOT NULL, " + 
+                            "Idx FLOAT NOT NULL, " + 
                             "Name NVARCHAR(255)" + 
                             ")";
 
@@ -346,9 +346,9 @@ foreach (var l in feed.Levels)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(l.Id) ? l.Id : DBNull.Value);
+    command.Parameters.AddWithValue("@id", l.Id);
     command.Parameters.AddWithValue("@idx", l.Index);
-    command.Parameters.AddWithValue("@name", !string.IsNullOrEmpty(l.Name) ? l.Name : DBNull.Value);
+    command.Parameters.AddWithValue("@name", l.Name != null ? l.Name : DBNull.Value);
 
     await command.ExecuteNonQueryAsync();
 }
@@ -359,11 +359,11 @@ command.CommandText = "DROP TABLE IF EXISTS GTFS_PATHWAY";
 await command.ExecuteNonQueryAsync();
 
 command.CommandText = "CREATE TABLE GTFS_PATHWAY (" + 
-                            "Id NVARCHAR(255), " + 
-                            "FromStopId NVARCHAR(255), " + 
-                            "ToStopId NVARCHAR(255), " + 
-                            "PathwayMode INT, " + 
-                            "IsBidirectional INT, " + 
+                            "Id NVARCHAR(255) NOT NULL, " + 
+                            "FromStopId NVARCHAR(255) NOT NULL, " + 
+                            "ToStopId NVARCHAR(255) NOT NULL, " + 
+                            "PathwayMode INT NOT NULL, " + 
+                            "IsBidirectional INT NOT NULL, " + 
                             "Length FLOAT, " + 
                             "TraversalTime INT, " + 
                             "StairCount INT, " + 
@@ -410,18 +410,18 @@ foreach (var p in feed.Pathways)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(p.Id) ? p.Id : DBNull.Value);
-    command.Parameters.AddWithValue("@fromStopId", !string.IsNullOrEmpty(p.FromStopId) ? p.FromStopId : DBNull.Value);
-    command.Parameters.AddWithValue("@toStopId", !string.IsNullOrEmpty(p.ToStopId) ? p.ToStopId : DBNull.Value);
+    command.Parameters.AddWithValue("@id", p.Id);
+    command.Parameters.AddWithValue("@fromStopId", p.FromStopId);
+    command.Parameters.AddWithValue("@toStopId", p.ToStopId);
     command.Parameters.AddWithValue("@pathwayMode", p.PathwayMode);
     command.Parameters.AddWithValue("@isBidirectional", p.IsBidirectional);
     command.Parameters.AddWithValue("@length", p.Length != null ? p.Length : DBNull.Value);
     command.Parameters.AddWithValue("@traversalTime", p.TraversalTime != null ? p.TraversalTime : DBNull.Value);
     command.Parameters.AddWithValue("@stairCount", p.StairCount != null ? p.StairCount : DBNull.Value);
-    command.Parameters.AddWithValue("@maxSlope", p.MaxSlope != null ? p.MaxSlope : DBNull.Value);
+    command.Parameters.AddWithValue("@maxSlope", p.MaxSlope != null ? p.MaxSlope.ToString() != string.Empty ? p.MaxSlope : string.Empty : DBNull.Value);
     command.Parameters.AddWithValue("@minWidth", p.MinWidth != null ? p.MinWidth : DBNull.Value);
-    command.Parameters.AddWithValue("@signpostedAs", !string.IsNullOrEmpty(p.SignpostedAs) ? p.SignpostedAs : DBNull.Value);
-    command.Parameters.AddWithValue("@reversedSignpostedAs", !string.IsNullOrEmpty(p.ReversedSignpostedAs) ? p.ReversedSignpostedAs : DBNull.Value);
+    command.Parameters.AddWithValue("@signpostedAs", p.SignpostedAs != null ? p.SignpostedAs : DBNull.Value);
+    command.Parameters.AddWithValue("@reversedSignpostedAs", p.ReversedSignpostedAs != null ? p.ReversedSignpostedAs : DBNull.Value);
     
     await command.ExecuteNonQueryAsync();
 }
@@ -437,7 +437,7 @@ command.CommandText = "CREATE TABLE GTFS_ROUTE (" +
                             "ShortName NVARCHAR(255), " + 
                             "LongName NVARCHAR(255), " + 
                             "Description NVARCHAR(255), " + 
-                            "Type INT, " + 
+                            "Type INT NOT NULL, " + 
                             "Url NVARCHAR(255), " + 
                             "Color INT, " + 
                             "TextColor INT" + 
@@ -474,15 +474,15 @@ foreach (var r in feed.Routes)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(r.Id) ? r.Id : DBNull.Value);
-    command.Parameters.AddWithValue("@agencyId", !string.IsNullOrEmpty(r.AgencyId) ? r.AgencyId : DBNull.Value);
-    command.Parameters.AddWithValue("@shortName", !string.IsNullOrEmpty(r.ShortName) ? r.ShortName : DBNull.Value);
-    command.Parameters.AddWithValue("@longName", !string.IsNullOrEmpty(r.LongName) ? r.LongName : DBNull.Value);
-    command.Parameters.AddWithValue("@description", !string.IsNullOrEmpty(r.Description) ? r.Description : DBNull.Value);
+    command.Parameters.AddWithValue("@id", r.Id);
+    command.Parameters.AddWithValue("@agencyId", r.AgencyId != null ? r.AgencyId : DBNull.Value);
+    command.Parameters.AddWithValue("@shortName", r.ShortName != null ? r.ShortName != string.Empty ? r.ShortName : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@longName", r.LongName != null ? r.LongName != string.Empty ? r.LongName : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@description", r.Description != null ? r.Description : DBNull.Value);
     command.Parameters.AddWithValue("@type", r.Type);
-    command.Parameters.AddWithValue("@url", !string.IsNullOrEmpty(r.Url) ? r.Url : DBNull.Value);
-    command.Parameters.AddWithValue("@color", r.Color != null ? r.Color : DBNull.Value);
-    command.Parameters.AddWithValue("@textColor", r.TextColor != null ? r.TextColor : DBNull.Value);
+    command.Parameters.AddWithValue("@url", r.Url != null ? r.Url : DBNull.Value);
+    command.Parameters.AddWithValue("@color", r.Color != null ? r.Color.ToString() != string.Empty ? r.Color : 0xFFFFFF : DBNull.Value);
+    command.Parameters.AddWithValue("@textColor", r.TextColor != null ? r.TextColor.ToString() != string.Empty ? r.TextColor : 0x000000 : DBNull.Value);
 
     await command.ExecuteNonQueryAsync();
 }
@@ -493,10 +493,10 @@ command.CommandText = "DROP TABLE IF EXISTS GTFS_SHAPE";
 await command.ExecuteNonQueryAsync();
 
 command.CommandText = "CREATE TABLE GTFS_SHAPE (" + 
-                            "Id NVARCHAR(255), " + 
-                            "Longitude FLOAT, " + 
-                            "Latitude FLOAT, " + 
-                            "Sequence INT, " + 
+                            "Id NVARCHAR(255) NOT NULL, " + 
+                            "Longitude FLOAT NOT NULL, " + 
+                            "Latitude FLOAT NOT NULL, " + 
+                            "Sequence INT NOT NULL, " + 
                             "DistanceTravelled FLOAT" + 
                             ")";
 
@@ -523,7 +523,7 @@ foreach (var s in feed.Shapes)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(s.Id) ? s.Id : DBNull.Value);
+    command.Parameters.AddWithValue("@id", s.Id);
     command.Parameters.AddWithValue("@longitude", s.Longitude);
     command.Parameters.AddWithValue("@latitude", s.Latitude);
     command.Parameters.AddWithValue("@sequence", s.Sequence);
@@ -595,20 +595,20 @@ foreach (var s in feed.Stops)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(s.Id) ? s.Id : DBNull.Value);
-    command.Parameters.AddWithValue("@code", !string.IsNullOrEmpty(s.Code) ? s.Code : DBNull.Value);
-    command.Parameters.AddWithValue("@name", !string.IsNullOrEmpty(s.Name) ? s.Name : DBNull.Value);
-    command.Parameters.AddWithValue("@description", !string.IsNullOrEmpty(s.Description) ? s.Description : DBNull.Value);
+    command.Parameters.AddWithValue("@id", s.Id);
+    command.Parameters.AddWithValue("@code", s.Code != null ? s.Code != string.Empty ? s.Code : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@name", s.Name != null ? s.Name : DBNull.Value);
+    command.Parameters.AddWithValue("@description", s.Description != null ? s.Description : DBNull.Value);
     command.Parameters.AddWithValue("@longitude", s.Longitude);
     command.Parameters.AddWithValue("@latitude", s.Latitude);
-    command.Parameters.AddWithValue("@zone", !string.IsNullOrEmpty(s.Zone) ? s.Zone : DBNull.Value);
-    command.Parameters.AddWithValue("@url", !string.IsNullOrEmpty(s.Url) ? s.Url : DBNull.Value);
-    command.Parameters.AddWithValue("@locationType", s.LocationType != null ? s.LocationType : DBNull.Value);
-    command.Parameters.AddWithValue("@parentStation", !string.IsNullOrEmpty(s.ParentStation) ? s.ParentStation : DBNull.Value);
-    command.Parameters.AddWithValue("@timezone", !string.IsNullOrEmpty(s.Timezone) ? s.Timezone : DBNull.Value);
-    command.Parameters.AddWithValue("@wheelchairBoarding", !string.IsNullOrEmpty(s.WheelchairBoarding) ? s.WheelchairBoarding : DBNull.Value);
-    command.Parameters.AddWithValue("@levelId", !string.IsNullOrEmpty(s.LevelId) ? s.LevelId : DBNull.Value);
-    command.Parameters.AddWithValue("@platformCode", !string.IsNullOrEmpty(s.PlatformCode) ? s.PlatformCode : DBNull.Value);
+    command.Parameters.AddWithValue("@zone", s.Zone != null ? s.Zone : DBNull.Value);
+    command.Parameters.AddWithValue("@url", s.Url != null ? s.Url : DBNull.Value);
+    command.Parameters.AddWithValue("@locationType", s.LocationType != null ? s.LocationType.ToString() != string.Empty ? s.LocationType : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@parentStation", s.ParentStation != null ? s.ParentStation != string.Empty ? s.ParentStation : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@timezone", s.Timezone != null ? s.Timezone != string.Empty ? s.Timezone : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@wheelchairBoarding", s.WheelchairBoarding != null ? s.WheelchairBoarding != string.Empty ? s.WheelchairBoarding : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@levelId", s.LevelId != null ? s.LevelId : DBNull.Value);
+    command.Parameters.AddWithValue("@platformCode", s.PlatformCode != null ? s.PlatformCode : DBNull.Value);
     
     await command.ExecuteNonQueryAsync();
 }
@@ -619,11 +619,11 @@ command.CommandText = "DROP TABLE IF EXISTS GTFS_STOP_TIME";
 await command.ExecuteNonQueryAsync();
 
 command.CommandText = "CREATE TABLE GTFS_STOP_TIME (" + 
-                            "TripId NVARCHAR(255), " + 
+                            "TripId NVARCHAR(255) NOT NULL, " + 
                             "ArrivalTime NVARCHAR(255), " + 
                             "DepartureTime NVARCHAR(255), " + 
                             "StopId NVARCHAR(255), " + 
-                            "StopSequence INT, " + 
+                            "StopSequence INT NOT NULL, " + 
                             "StopHeadsign NVARCHAR(255), " + 
                             "PickupType INT, " + 
                             "DropOffType INT, " + 
@@ -664,16 +664,16 @@ foreach (var s in feed.StopTimes)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@tripId", !string.IsNullOrEmpty(s.TripId) ? s.TripId : DBNull.Value);
+    command.Parameters.AddWithValue("@tripId", s.TripId);
     command.Parameters.AddWithValue("@arrivalTime", s.ArrivalTime != null ? s.ArrivalTime.ToString() : DBNull.Value);
     command.Parameters.AddWithValue("@departureTime", s.DepartureTime != null ? s.DepartureTime.ToString() : DBNull.Value);
-    command.Parameters.AddWithValue("@stopId", !string.IsNullOrEmpty(s.StopId) ? s.StopId : DBNull.Value);
+    command.Parameters.AddWithValue("@stopId", s.StopId != null ? s.StopId : DBNull.Value);
     command.Parameters.AddWithValue("@stopSequence", s.StopSequence);
-    command.Parameters.AddWithValue("@stopHeadsign", !string.IsNullOrEmpty(s.StopHeadsign) ? s.StopHeadsign : DBNull.Value);
-    command.Parameters.AddWithValue("@pickupType", s.PickupType != null ? s.PickupType : DBNull.Value);
-    command.Parameters.AddWithValue("@dropOffType", s.DropOffType != null ? s.DropOffType : DBNull.Value);
+    command.Parameters.AddWithValue("@stopHeadsign", s.StopHeadsign != null ? s.StopHeadsign : DBNull.Value);
+    command.Parameters.AddWithValue("@pickupType", s.PickupType != null ? s.PickupType.ToString() != string.Empty ? s.PickupType : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@dropOffType", s.DropOffType != null ? s.DropOffType.ToString() != string.Empty ? s.DropOffType : string.Empty : DBNull.Value);
     command.Parameters.AddWithValue("@shapeDistTravelled", s.ShapeDistTravelled != null ? s.ShapeDistTravelled : DBNull.Value);
-    command.Parameters.AddWithValue("@timepointType", s.TimepointType);
+    command.Parameters.AddWithValue("@timepointType", s.TimepointType.ToString() != string.Empty ? s.TimepointType : DBNull.Value);
     
     await command.ExecuteNonQueryAsync();
 }
@@ -686,7 +686,7 @@ await command.ExecuteNonQueryAsync();
 command.CommandText = "CREATE TABLE GTFS_TRANSFER (" + 
                             "FromStopId NVARCHAR(255), " + 
                             "ToStopId NVARCHAR(255), " + 
-                            "TransferType INT, " + 
+                            "TransferType INT NOT NULL, " + 
                             "MinimumTransferTime NVARCHAR(255)" + 
                             ")";
 
@@ -711,10 +711,10 @@ foreach (var t in feed.Transfers)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@fromStopId", !string.IsNullOrEmpty(t.FromStopId) ? t.FromStopId : DBNull.Value);
-    command.Parameters.AddWithValue("@toStopId", !string.IsNullOrEmpty(t.ToStopId) ? t.ToStopId : DBNull.Value);
-    command.Parameters.AddWithValue("@transferType", t.TransferType);
-    command.Parameters.AddWithValue("@minimumTransferTime", !string.IsNullOrEmpty(t.MinimumTransferTime) ? t.MinimumTransferTime : DBNull.Value);
+    command.Parameters.AddWithValue("@fromStopId", t.FromStopId != null ? t.FromStopId : DBNull.Value);
+    command.Parameters.AddWithValue("@toStopId", t.ToStopId != null ? t.ToStopId : DBNull.Value);
+    command.Parameters.AddWithValue("@transferType", t.TransferType.ToString() != string.Empty ? t.TransferType : string.Empty);
+    command.Parameters.AddWithValue("@minimumTransferTime", t.MinimumTransferTime != null ? t.MinimumTransferTime : DBNull.Value);
     
     await command.ExecuteNonQueryAsync();
 }
@@ -726,8 +726,8 @@ await command.ExecuteNonQueryAsync();
 
 command.CommandText = "CREATE TABLE GTFS_TRIP (" + 
                             "Id NVARCHAR(255) PRIMARY KEY, " + 
-                            "RouteId NVARCHAR(255), " + 
-                            "ServiceId NVARCHAR(255), " + 
+                            "RouteId NVARCHAR(255) NOT NULL, " + 
+                            "ServiceId NVARCHAR(255) NOT NULL, " + 
                             "Headsign NVARCHAR(255), " + 
                             "ShortName NVARCHAR(255), " + 
                             "Direction INT, " + 
@@ -767,15 +767,15 @@ foreach (var t in feed.Trips)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", !string.IsNullOrEmpty(t.Id) ? t.Id : DBNull.Value);
-    command.Parameters.AddWithValue("@routeId", !string.IsNullOrEmpty(t.RouteId) ? t.RouteId : DBNull.Value);
-    command.Parameters.AddWithValue("@serviceId", !string.IsNullOrEmpty(t.ServiceId) ? t.ServiceId : DBNull.Value);
-    command.Parameters.AddWithValue("@headsign", !string.IsNullOrEmpty(t.Headsign) ? t.Headsign : DBNull.Value);
-    command.Parameters.AddWithValue("@shortName", !string.IsNullOrEmpty(t.ShortName) ? t.ShortName : DBNull.Value);
+    command.Parameters.AddWithValue("@id", t.Id);
+    command.Parameters.AddWithValue("@routeId", t.RouteId);
+    command.Parameters.AddWithValue("@serviceId", t.ServiceId);
+    command.Parameters.AddWithValue("@headsign", t.Headsign != null ? t.Headsign : DBNull.Value);
+    command.Parameters.AddWithValue("@shortName", t.ShortName != null ? t.ShortName != string.Empty ? t.ShortName : string.Empty : DBNull.Value);
     command.Parameters.AddWithValue("@direction", t.Direction != null ? t.Direction : DBNull.Value);
-    command.Parameters.AddWithValue("@blockId", !string.IsNullOrEmpty(t.BlockId) ? t.BlockId : DBNull.Value);
-    command.Parameters.AddWithValue("@shapeId", !string.IsNullOrEmpty(t.ShapeId) ? t.ShapeId : DBNull.Value);
-    command.Parameters.AddWithValue("@accessibilityType", t.AccessibilityType != null ? t.AccessibilityType : DBNull.Value);
+    command.Parameters.AddWithValue("@blockId", t.BlockId != null ? t.BlockId : DBNull.Value);
+    command.Parameters.AddWithValue("@shapeId", t.ShapeId != null ? t.ShapeId : DBNull.Value);
+    command.Parameters.AddWithValue("@accessibilityType", t.AccessibilityType != null ? t.AccessibilityType.ToString() != string.Empty ? t.AccessibilityType : string.Empty : DBNull.Value);
     
     await command.ExecuteNonQueryAsync();
 }

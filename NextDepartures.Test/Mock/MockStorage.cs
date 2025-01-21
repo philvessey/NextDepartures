@@ -32,8 +32,8 @@ public class MockStorage : IDataStorage
         {
             new()
             {
-                ServiceId = "2024_08_12-DX-MVS-Weekday-001",
-                Date = new DateTime(2024, 9, 2),
+                ServiceId = "2025_01_21-DX-MVS",
+                Date = new DateTime(2025, 12, 25),
                 ExceptionType = ExceptionType.Removed
             }
         });
@@ -205,7 +205,7 @@ public class MockStorage : IDataStorage
                 
                 StopId = "16TH",
                 TripId = "1561190",
-                ServiceId = "2024_08_12-DX-MVS",
+                ServiceId = "2025_01_21-DX-MVS",
                 TripHeadsign = "San Francisco / Antioch",
                 RouteShortName = "Yellow-N",
                 RouteLongName = "Millbrae/SFIA to Antioch",
@@ -216,7 +216,7 @@ public class MockStorage : IDataStorage
                 Friday = true,
                 Saturday = true,
                 Sunday = true,
-                StartDate = new DateTime(2024, 8, 12),
+                StartDate = new DateTime(2025, 1, 21),
                 EndDate = new DateTime(2025, 12, 31)
             }
         });
@@ -237,7 +237,7 @@ public class MockStorage : IDataStorage
                 
                 StopId = "16TH",
                 TripId = "1561190",
-                ServiceId = "2024_08_12-DX-MVS",
+                ServiceId = "2025_01_21-DX-MVS",
                 TripHeadsign = "San Francisco / Antioch",
                 RouteShortName = "Yellow-N",
                 RouteLongName = "Millbrae/SFIA to Antioch",
@@ -248,7 +248,7 @@ public class MockStorage : IDataStorage
                 Friday = true,
                 Saturday = true,
                 Sunday = true,
-                StartDate = new DateTime(2024, 8, 12),
+                StartDate = new DateTime(2025, 1, 21),
                 EndDate = new DateTime(2025, 12, 31)
             }
         });
