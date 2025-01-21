@@ -30,11 +30,6 @@ public class GtfsStorage : IDataStorage
         GTFSReader<GTFSFeed> reader = new();
         return new GtfsStorage(reader.Read(path));
     }
-    
-    public Task<List<Agency>> GetAgenciesAsync()
-    {
-        return Task.FromResult(GetAgenciesFromFeed());
-    }
 
     private List<Agency> GetAgenciesFromFeed()
     {
@@ -69,11 +64,6 @@ public class GtfsStorage : IDataStorage
                 Email = a.Email
             })
             .ToList();
-    }
-    
-    public Task<List<CalendarDate>> GetCalendarDatesAsync()
-    {
-        return Task.FromResult(GetCalendarDatesFromFeed());
     }
     
     private List<CalendarDate> GetCalendarDatesFromFeed()
@@ -126,11 +116,6 @@ public class GtfsStorage : IDataStorage
             .ToList();
     }
     
-    public Task<List<Stop>> GetStopsAsync()
-    {
-        return Task.FromResult(GetStopsFromFeed());
-    }
-    
     private List<Stop> GetStopsFromFeed()
     {
         return _feed.Stops
@@ -176,6 +161,21 @@ public class GtfsStorage : IDataStorage
                 PlatformCode = s.PlatformCode
             })
             .ToList();
+    }
+    
+    public Task<List<Agency>> GetAgenciesAsync()
+    {
+        return Task.FromResult(GetAgenciesFromFeed());
+    }
+    
+    public Task<List<CalendarDate>> GetCalendarDatesAsync()
+    {
+        return Task.FromResult(GetCalendarDatesFromFeed());
+    }
+    
+    public Task<List<Stop>> GetStopsAsync()
+    {
+        return Task.FromResult(GetStopsFromFeed());
     }
     
     public Task<List<Agency>> GetAgenciesByEmailAsync(string email, ComparisonType comparison)
