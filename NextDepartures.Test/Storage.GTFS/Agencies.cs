@@ -1,7 +1,7 @@
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
 using NextDepartures.Storage.GTFS;
-using System.Threading.Tasks;
 
 namespace NextDepartures.Test.Storage.GTFS;
 
@@ -14,7 +14,6 @@ public class Agencies
         var feed = await Feed.Load(GtfsStorage.Load("Data/feed.zip"));
         var results = await feed.GetAgenciesByEmailAsync();
 
-        Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
     }
 
@@ -24,7 +23,15 @@ public class Agencies
         var feed = await Feed.Load(GtfsStorage.Load("Data/feed.zip"));
         var results = await feed.GetAgenciesByFareUrlAsync();
 
-        Assert.IsNotNull(results);
+        Assert.IsTrue(results.Count > 0);
+    }
+    
+    [TestMethod]
+    public async Task GetAgenciesByIdAsync()
+    {
+        var feed = await Feed.Load(GtfsStorage.Load("Data/feed.zip"));
+        var results = await feed.GetAgenciesByIdAsync();
+
         Assert.IsTrue(results.Count > 0);
     }
 
@@ -34,7 +41,15 @@ public class Agencies
         var feed = await Feed.Load(GtfsStorage.Load("Data/feed.zip"));
         var results = await feed.GetAgenciesByLanguageCodeAsync();
 
-        Assert.IsNotNull(results);
+        Assert.IsTrue(results.Count > 0);
+    }
+    
+    [TestMethod]
+    public async Task GetAgenciesByNameAsync()
+    {
+        var feed = await Feed.Load(GtfsStorage.Load("Data/feed.zip"));
+        var results = await feed.GetAgenciesByNameAsync();
+
         Assert.IsTrue(results.Count > 0);
     }
 
@@ -44,7 +59,6 @@ public class Agencies
         var feed = await Feed.Load(GtfsStorage.Load("Data/feed.zip"));
         var results = await feed.GetAgenciesByPhoneAsync();
 
-        Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
     }
 
@@ -54,7 +68,6 @@ public class Agencies
         var feed = await Feed.Load(GtfsStorage.Load("Data/feed.zip"));
         var results = await feed.GetAgenciesByQueryAsync();
 
-        Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
     }
 
@@ -64,7 +77,6 @@ public class Agencies
         var feed = await Feed.Load(GtfsStorage.Load("Data/feed.zip"));
         var results = await feed.GetAgenciesByTimezoneAsync();
 
-        Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
     }
 
@@ -74,7 +86,6 @@ public class Agencies
         var feed = await Feed.Load(GtfsStorage.Load("Data/feed.zip"));
         var results = await feed.GetAgenciesByUrlAsync();
 
-        Assert.IsNotNull(results);
         Assert.IsTrue(results.Count > 0);
     }
 }
