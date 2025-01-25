@@ -35,7 +35,7 @@ public class SqliteStorage : IDataStorage
         List<T> results = [];
 
         await using SqliteConnection connection = new(_connection);
-        connection.Open();
+        await connection.OpenAsync();
 
         SqliteCommand command = new(sql, connection)
         {
@@ -50,8 +50,8 @@ public class SqliteStorage : IDataStorage
             results.Add(entryProcessor(dataReader));
         }
 
-        dataReader.Close();
-        command.Dispose();
+        await dataReader.CloseAsync();
+        await command.DisposeAsync();
 
         return results;
     }
@@ -142,7 +142,7 @@ public class SqliteStorage : IDataStorage
             LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
             ParentStation = !dataReader.IsDBNull(9) ? dataReader.GetString(9) : null,
             Timezone = !dataReader.IsDBNull(10) ? dataReader.GetString(10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(11) ? dataReader.GetString(11) : null,
+            WheelchairBoarding = !dataReader.IsDBNull(11) ? dataReader.GetInt32(11).ToString() : null,
             LevelId = !dataReader.IsDBNull(12) ? dataReader.GetString(12) : null,
             PlatformCode = !dataReader.IsDBNull(13) ? dataReader.GetString(13) : null
         };
@@ -163,7 +163,7 @@ public class SqliteStorage : IDataStorage
             LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
             ParentStation = !dataReader.IsDBNull(9) ? dataReader.GetString(9) : null,
             Timezone = !dataReader.IsDBNull(10) ? dataReader.GetString(10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(11) ? dataReader.GetString(11) : null,
+            WheelchairBoarding = !dataReader.IsDBNull(11) ? dataReader.GetInt32(11).ToString() : null,
             LevelId = !dataReader.IsDBNull(12) ? dataReader.GetString(12) : null,
             PlatformCode = !dataReader.IsDBNull(13) ? dataReader.GetString(13) : null
         };
@@ -903,7 +903,6 @@ public class SqliteStorage : IDataStorage
                                            $"OR LOWER(COALESCE(Url, '')) = '{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(ParentStation, '')) = '{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(Timezone, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(WheelchairBoarding, '')) = '{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(LevelId, '')) = '{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(PlatformCode, '')) = '{search.ToLower()}'",
 
@@ -917,7 +916,6 @@ public class SqliteStorage : IDataStorage
                                            $"OR LOWER(COALESCE(Url, '')) LIKE '{search.ToLower()}%' " +
                                            $"OR LOWER(COALESCE(ParentStation, '')) LIKE '{search.ToLower()}%' " +
                                            $"OR LOWER(COALESCE(Timezone, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(WheelchairBoarding, '')) LIKE '{search.ToLower()}%' " +
                                            $"OR LOWER(COALESCE(LevelId, '')) LIKE '{search.ToLower()}%' " +
                                            $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '{search.ToLower()}%'",
 
@@ -931,7 +929,6 @@ public class SqliteStorage : IDataStorage
                                            $"OR LOWER(COALESCE(Url, '')) LIKE '%{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(ParentStation, '')) LIKE '%{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(Timezone, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(WheelchairBoarding, '')) LIKE '%{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(LevelId, '')) LIKE '%{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '%{search.ToLower()}'",
 
@@ -945,7 +942,6 @@ public class SqliteStorage : IDataStorage
                        $"OR LOWER(COALESCE(Url, '')) LIKE '%{search.ToLower()}%' " +
                        $"OR LOWER(COALESCE(ParentStation, '')) LIKE '%{search.ToLower()}%' " +
                        $"OR LOWER(COALESCE(Timezone, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(WheelchairBoarding, '')) LIKE '%{search.ToLower()}%' " +
                        $"OR LOWER(COALESCE(LevelId, '')) LIKE '%{search.ToLower()}%' " +
                        $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '%{search.ToLower()}%'"
         };
@@ -1001,25 +997,25 @@ public class SqliteStorage : IDataStorage
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
     }
     
-    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding, ComparisonType comparison)
+    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(WheelchairAccessibilityType wheelchairBoarding, ComparisonType comparison)
     {
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(WheelchairBoarding, '')) = '{wheelchairBoarding.ToLower()}'",
+                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(WheelchairBoarding, '')) LIKE '{wheelchairBoarding.ToLower()}%'",
+                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(WheelchairBoarding, '')) LIKE '%{wheelchairBoarding.ToLower()}'",
+                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
             _ => "SELECT * " + 
                  "FROM GTFS_STOP " + 
-                    $"WHERE LOWER(COALESCE(WheelchairBoarding, '')) LIKE '%{wheelchairBoarding.ToLower()}%'"
+                    $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);

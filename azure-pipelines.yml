@@ -57,6 +57,7 @@ stages:
         packagesToPack: >-
           **/NextDepartures.Standard/*.csproj;
           **/NextDepartures.Storage.GTFS/*.csproj;
+          **/NextDepartures.Storage.Postgres/*.csproj;
           **/NextDepartures.Storage.Sqlite/*.csproj;
           **/NextDepartures.Storage.SqlServer/*.csproj;
         versioningScheme: 'off'

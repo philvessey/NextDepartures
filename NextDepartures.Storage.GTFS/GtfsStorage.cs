@@ -591,7 +591,6 @@ public class GtfsStorage : IDataStorage
                 (s.Url ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.ParentStation ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.Timezone ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.WheelchairBoarding ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.LevelId ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.PlatformCode ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase))),
             
@@ -604,7 +603,6 @@ public class GtfsStorage : IDataStorage
                 (s.Url ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.ParentStation ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.Timezone ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.WheelchairBoarding ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.LevelId ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.PlatformCode ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase))),
             
@@ -617,7 +615,6 @@ public class GtfsStorage : IDataStorage
                 (s.Url ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.ParentStation ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.Timezone ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.WheelchairBoarding ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.LevelId ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.PlatformCode ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase))),
             
@@ -630,7 +627,6 @@ public class GtfsStorage : IDataStorage
                 (s.Url ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.ParentStation ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.Timezone ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.WheelchairBoarding ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.LevelId ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
                 (s.PlatformCode ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase)))
         };
@@ -672,21 +668,21 @@ public class GtfsStorage : IDataStorage
         };
     }
     
-    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding, ComparisonType comparison)
+    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(WheelchairAccessibilityType wheelchairBoarding, ComparisonType comparison)
     {
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding ?? string.Empty).Equals(wheelchairBoarding, StringComparison.CurrentCultureIgnoreCase))),
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").Equals(wheelchairBoarding.ToString("D")))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding ?? string.Empty).StartsWith(wheelchairBoarding, StringComparison.CurrentCultureIgnoreCase))),
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").Equals(wheelchairBoarding.ToString("D")))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding ?? string.Empty).EndsWith(wheelchairBoarding, StringComparison.CurrentCultureIgnoreCase))),
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").Equals(wheelchairBoarding.ToString("D")))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding ?? string.Empty).Contains(wheelchairBoarding, StringComparison.CurrentCultureIgnoreCase)))
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").Equals(wheelchairBoarding.ToString("D")))),
         };
     }
     

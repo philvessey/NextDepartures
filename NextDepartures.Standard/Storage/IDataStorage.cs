@@ -38,6 +38,6 @@ public interface IDataStorage
     Task<List<Stop>> GetStopsByQueryAsync(string search, ComparisonType comparison);
     Task<List<Stop>> GetStopsByTimezoneAsync(string timezone, ComparisonType comparison);
     Task<List<Stop>> GetStopsByUrlAsync(string url, ComparisonType comparison);
-    Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding, ComparisonType comparison);
+    Task<List<Stop>> GetStopsByWheelchairBoardingAsync(WheelchairAccessibilityType wheelchairBoarding, ComparisonType comparison);
     Task<List<Stop>> GetStopsByZoneAsync(string zone, ComparisonType comparison);
 }

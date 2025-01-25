@@ -16,22 +16,6 @@ var command = new SqliteCommand
     Connection = connection
 };
 
-command.CommandText = "DROP TABLE IF EXISTS GTFS_AGENCY";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_AGENCY (" + 
-                            "Id NVARCHAR(255), " + 
-                            "Name NVARCHAR(255) NOT NULL, " + 
-                            "URL NVARCHAR(255) NOT NULL, " + 
-                            "Timezone NVARCHAR(255) NOT NULL, " + 
-                            "LanguageCode NVARCHAR(255), " + 
-                            "Phone NVARCHAR(255), " + 
-                            "FareURL NVARCHAR(255), " + 
-                            "Email NVARCHAR(255)" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
-
 command.CommandText = "INSERT INTO GTFS_AGENCY (" + 
                             "Id, " + 
                             "Name, " + 
@@ -72,24 +56,6 @@ foreach (var a in feed.Agencies)
 }
 
 command.Parameters.Clear();
-
-command.CommandText = "DROP TABLE IF EXISTS GTFS_CALENDAR";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_CALENDAR (" + 
-                            "ServiceId NVARCHAR(255) PRIMARY KEY, " + 
-                            "Monday BIT NOT NULL, " + 
-                            "Tuesday BIT NOT NULL, " + 
-                            "Wednesday BIT NOT NULL, " + 
-                            "Thursday BIT NOT NULL, " + 
-                            "Friday BIT NOT NULL, " + 
-                            "Saturday BIT NOT NULL, " + 
-                            "Sunday BIT NOT NULL, " + 
-                            "StartDate DATETIME NOT NULL, " + 
-                            "EndDate DATETIME NOT NULL" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
 
 command.CommandText = "INSERT INTO GTFS_CALENDAR (" + 
                             "ServiceId, " + 
@@ -138,17 +104,6 @@ foreach (var c in feed.Calendars)
 
 command.Parameters.Clear();
 
-command.CommandText = "DROP TABLE IF EXISTS GTFS_CALENDAR_DATE";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_CALENDAR_DATE (" + 
-                            "ServiceId NVARCHAR(255) NOT NULL, " + 
-                            "ExceptionDate DATETIME NOT NULL, " + 
-                            "ExceptionType INT NOT NULL" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
-
 command.CommandText = "INSERT INTO GTFS_CALENDAR_DATE (" + 
                             "ServiceId, " + 
                             "ExceptionDate, " + 
@@ -174,21 +129,6 @@ foreach (var d in feed.CalendarDates)
 }
 
 command.Parameters.Clear();
-
-command.CommandText = "DROP TABLE IF EXISTS GTFS_FARE_ATTRIBUTE";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_FARE_ATTRIBUTE (" + 
-                            "FareId NVARCHAR(255) NOT NULL, " + 
-                            "Price NVARCHAR(255) NOT NULL, " + 
-                            "CurrencyType NVARCHAR(255) NOT NULL, " + 
-                            "PaymentMethod INT NOT NULL, " + 
-                            "Transfers INT NOT NULL, " + 
-                            "AgencyId NVARCHAR(255), " + 
-                            "TransferDuration NVARCHAR(255)" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
 
 command.CommandText = "INSERT INTO GTFS_FARE_ATTRIBUTE (" + 
                             "FareId, " + 
@@ -228,19 +168,6 @@ foreach (var f in feed.FareAttributes)
 
 command.Parameters.Clear();
 
-command.CommandText = "DROP TABLE IF EXISTS GTFS_FARE_RULE";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_FARE_RULE (" + 
-                            "FareId NVARCHAR(255) NOT NULL, " + 
-                            "RouteId NVARCHAR(255), " + 
-                            "OriginId NVARCHAR(255), " + 
-                            "DestinationId NVARCHAR(255), " + 
-                            "ContainsId NVARCHAR(255)" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
-
 command.CommandText = "INSERT INTO GTFS_FARE_RULE (" + 
                             "FareId, " + 
                             "RouteId, " + 
@@ -272,19 +199,6 @@ foreach (var f in feed.FareRules)
 }
 
 command.Parameters.Clear();
-
-command.CommandText = "DROP TABLE IF EXISTS GTFS_FREQUENCY";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_FREQUENCY (" + 
-                            "TripId NVARCHAR(255) NOT NULL, " + 
-                            "StartTime NVARCHAR(255) NOT NULL, " + 
-                            "EndTime NVARCHAR(255) NOT NULL, " + 
-                            "HeadwaySecs NVARCHAR(255) NOT NULL, " + 
-                            "ExactTimes BIT" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
 
 command.CommandText = "INSERT INTO GTFS_FREQUENCY (" + 
                             "TripId, " + 
@@ -318,17 +232,6 @@ foreach (var f in feed.Frequencies)
 
 command.Parameters.Clear();
 
-command.CommandText = "DROP TABLE IF EXISTS GTFS_LEVEL";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_LEVEL (" + 
-                            "Id NVARCHAR(255) NOT NULL, " + 
-                            "Idx FLOAT NOT NULL, " + 
-                            "Name NVARCHAR(255)" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
-
 command.CommandText = "INSERT INTO GTFS_LEVEL (" + 
                             "Id, " + 
                             "Idx, " + 
@@ -354,26 +257,6 @@ foreach (var l in feed.Levels)
 }
 
 command.Parameters.Clear();
-
-command.CommandText = "DROP TABLE IF EXISTS GTFS_PATHWAY";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_PATHWAY (" + 
-                            "Id NVARCHAR(255) NOT NULL, " + 
-                            "FromStopId NVARCHAR(255) NOT NULL, " + 
-                            "ToStopId NVARCHAR(255) NOT NULL, " + 
-                            "PathwayMode INT NOT NULL, " + 
-                            "IsBidirectional INT NOT NULL, " + 
-                            "Length FLOAT, " + 
-                            "TraversalTime INT, " + 
-                            "StairCount INT, " + 
-                            "MaxSlope FLOAT, " + 
-                            "MinWidth FLOAT, " + 
-                            "SignpostedAs NVARCHAR(255), " + 
-                            "ReversedSignpostedAs NVARCHAR(255)" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
 
 command.CommandText = "INSERT INTO GTFS_PATHWAY (" + 
                             "Id, " + 
@@ -428,23 +311,6 @@ foreach (var p in feed.Pathways)
 
 command.Parameters.Clear();
 
-command.CommandText = "DROP TABLE IF EXISTS GTFS_ROUTE";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_ROUTE (" + 
-                            "Id NVARCHAR(255) PRIMARY KEY, " + 
-                            "AgencyId NVARCHAR(255), " + 
-                            "ShortName NVARCHAR(255), " + 
-                            "LongName NVARCHAR(255), " + 
-                            "Description NVARCHAR(255), " + 
-                            "Type INT NOT NULL, " + 
-                            "Url NVARCHAR(255), " + 
-                            "Color INT, " + 
-                            "TextColor INT" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
-
 command.CommandText = "INSERT INTO GTFS_ROUTE (" + 
                             "Id, " + 
                             "AgencyId, " + 
@@ -489,19 +355,6 @@ foreach (var r in feed.Routes)
 
 command.Parameters.Clear();
 
-command.CommandText = "DROP TABLE IF EXISTS GTFS_SHAPE";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_SHAPE (" + 
-                            "Id NVARCHAR(255) NOT NULL, " + 
-                            "Longitude FLOAT NOT NULL, " + 
-                            "Latitude FLOAT NOT NULL, " + 
-                            "Sequence INT NOT NULL, " + 
-                            "DistanceTravelled FLOAT" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
-
 command.CommandText = "INSERT INTO GTFS_SHAPE (" + 
                             "Id, " + 
                             "Longitude, " + 
@@ -533,28 +386,6 @@ foreach (var s in feed.Shapes)
 }
 
 command.Parameters.Clear();
-
-command.CommandText = "DROP TABLE IF EXISTS GTFS_STOP";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_STOP (" + 
-                            "Id NVARCHAR(255) PRIMARY KEY, " + 
-                            "Code NVARCHAR(255), " + 
-                            "Name NVARCHAR(255), " + 
-                            "Description NVARCHAR(255), " + 
-                            "Longitude FLOAT, " + 
-                            "Latitude FLOAT, " + 
-                            "Zone NVARCHAR(255), " + 
-                            "Url NVARCHAR(255), " + 
-                            "LocationType INT, " + 
-                            "ParentStation NVARCHAR(255), " + 
-                            "Timezone NVARCHAR(255), " + 
-                            "WheelchairBoarding NVARCHAR(255), " + 
-                            "LevelId NVARCHAR(255), " + 
-                            "PlatformCode NVARCHAR(255)" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
 
 command.CommandText = "INSERT INTO GTFS_STOP (" + 
                             "Id, " + 
@@ -615,24 +446,6 @@ foreach (var s in feed.Stops)
 
 command.Parameters.Clear();
 
-command.CommandText = "DROP TABLE IF EXISTS GTFS_STOP_TIME";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_STOP_TIME (" + 
-                            "TripId NVARCHAR(255) NOT NULL, " + 
-                            "ArrivalTime NVARCHAR(255), " + 
-                            "DepartureTime NVARCHAR(255), " + 
-                            "StopId NVARCHAR(255), " + 
-                            "StopSequence INT NOT NULL, " + 
-                            "StopHeadsign NVARCHAR(255), " + 
-                            "PickupType INT, " + 
-                            "DropOffType INT, " + 
-                            "ShapeDistTravelled FLOAT, " + 
-                            "TimepointType INT" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
-
 command.CommandText = "INSERT INTO GTFS_STOP_TIME (" + 
                             "TripId, " + 
                             "ArrivalTime, " + 
@@ -680,18 +493,6 @@ foreach (var s in feed.StopTimes)
 
 command.Parameters.Clear();
 
-command.CommandText = "DROP TABLE IF EXISTS GTFS_TRANSFER";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_TRANSFER (" + 
-                            "FromStopId NVARCHAR(255), " + 
-                            "ToStopId NVARCHAR(255), " + 
-                            "TransferType INT NOT NULL, " + 
-                            "MinimumTransferTime NVARCHAR(255)" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
-
 command.CommandText = "INSERT INTO GTFS_TRANSFER (" + 
                             "FromStopId, " + 
                             "ToStopId, " + 
@@ -720,23 +521,6 @@ foreach (var t in feed.Transfers)
 }
 
 command.Parameters.Clear();
-
-command.CommandText = "DROP TABLE IF EXISTS GTFS_TRIP";
-await command.ExecuteNonQueryAsync();
-
-command.CommandText = "CREATE TABLE GTFS_TRIP (" + 
-                            "Id NVARCHAR(255) PRIMARY KEY, " + 
-                            "RouteId NVARCHAR(255) NOT NULL, " + 
-                            "ServiceId NVARCHAR(255) NOT NULL, " + 
-                            "Headsign NVARCHAR(255), " + 
-                            "ShortName NVARCHAR(255), " + 
-                            "Direction INT, " + 
-                            "BlockId NVARCHAR(255), " + 
-                            "ShapeId NVARCHAR(255), " + 
-                            "AccessibilityType INT" + 
-                            ")";
-
-await command.ExecuteNonQueryAsync();
 
 command.CommandText = "INSERT INTO GTFS_TRIP (" + 
                             "Id, " + 

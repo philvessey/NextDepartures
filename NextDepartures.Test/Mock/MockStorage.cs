@@ -446,7 +446,7 @@ public class MockStorage : IDataStorage
         });
     }
     
-    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding, ComparisonType comparison)
+    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(WheelchairAccessibilityType wheelchairBoarding, ComparisonType comparison)
     {
         return Task.FromResult(new List<Stop>
         {

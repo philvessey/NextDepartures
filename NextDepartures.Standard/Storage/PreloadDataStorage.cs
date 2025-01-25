@@ -182,7 +182,7 @@ public class PreloadDataStorage : IDataStorage
         return _dataStorage.GetStopsByUrlAsync(url, comparison);
     }
     
-    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(string wheelchairBoarding, ComparisonType comparison)
+    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(WheelchairAccessibilityType wheelchairBoarding, ComparisonType comparison)
     {
         return _dataStorage.GetStopsByWheelchairBoardingAsync(wheelchairBoarding, comparison);
     }
