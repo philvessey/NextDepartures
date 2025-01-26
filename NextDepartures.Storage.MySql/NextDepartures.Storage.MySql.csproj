@@ -5,19 +5,19 @@
     <Copyright>Copyright © 2025 Phil Vessey and Contributors</Copyright>
     <Description>NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, or in a
       database such as MySQL, PostgreSQL, SQLite or SQL Server. The library will work with any well-formed GTFS data set.</Description>
-    <PackageId>NextDepartures.Storage.SqlServer</PackageId>
+    <PackageId>NextDepartures.Storage.MySql</PackageId>
     <PackageLicense>MIT</PackageLicense>
     <PackageLicenseUrl>https://raw.github.com/philvessey/NextDepartures/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/philvessey/NextDepartures</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Product>NextDepartures.Storage.SqlServer</Product>
+    <Product>NextDepartures.Storage.MySql</Product>
     <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
     <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
     <Version>3.6.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(SQLServer)" />
+    <PackageReference Include="MySqlConnector" Version="$(MySQL)" />
   </ItemGroup>
 
   <ItemGroup>

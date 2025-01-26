@@ -2,6 +2,7 @@
     <PropertyGroup>
         <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 
+        <MySQL>2.4.0</MySQL> <!-- MySqlConnector -->
         <PgSQL>9.0.2</PgSQL> <!-- Npgsql -->
         <SQLite>9.0.1</SQLite> <!-- Microsoft.Data.Sqlite -->
         <SQLServer>6.0.1</SQLServer> <!-- Microsoft.Data.SqlClient -->

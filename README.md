@@ -2,12 +2,13 @@
 
 NextDepartures is a .NET Library that queries GTFS (General
 Transit Feed Specification) data sets stored locally, or in a
-database such as PostgreSQL, SQLite or SQL Server. The library 
-will work with any well-formed GTFS data set.
+database such as MySQL, PostgreSQL, SQLite or SQL Server. The 
+library will work with any well-formed GTFS data set.
 
 * Build Status: [![Build Status](https://dev.azure.com/philvessey/NextDepartures/_apis/build/status/philvessey.NextDepartures?branchName=master)](https://dev.azure.com/philvessey/NextDepartures/_build/latest?definitionId=2&branchName=master)
 * NextDepartures.Standard: [![NuGet Version](https://img.shields.io/nuget/v/NextDepartures.Standard.svg?style=flat)](https://www.nuget.org/packages/NextDepartures.Standard/)
 * NextDepartures.Storage.GTFS: [![NuGet Version](https://img.shields.io/nuget/v/NextDepartures.Storage.GTFS.svg?style=flat)](https://www.nuget.org/packages/NextDepartures.Storage.GTFS/)
+* NextDepartures.Storage.MySql: [![NuGet Version](https://img.shields.io/nuget/v/NextDepartures.Storage.MySql.svg?style=flat)](https://www.nuget.org/packages/NextDepartures.Storage.MySql/)
 * NextDepartures.Storage.Postgres: [![NuGet Version](https://img.shields.io/nuget/v/NextDepartures.Storage.Postgres.svg?style=flat)](https://www.nuget.org/packages/NextDepartures.Storage.Postgres/)
 * NextDepartures.Storage.Sqlite: [![NuGet Version](https://img.shields.io/nuget/v/NextDepartures.Storage.Sqlite.svg?style=flat)](https://www.nuget.org/packages/NextDepartures.Storage.Sqlite/)
 * NextDepartures.Storage.SqlServer: [![NuGet Version](https://img.shields.io/nuget/v/NextDepartures.Storage.SqlServer.svg?style=flat)](https://www.nuget.org/packages/NextDepartures.Storage.SqlServer/)
@@ -19,6 +20,15 @@ using NextDepartures.Standard;
 using NextDepartures.Storage.GTFS;
 
 var feed = await Feed.Load(GtfsStorage.Load());
+```
+
+## MySQL Usage
+
+```csharp
+using NextDepartures.Standard;
+using NextDepartures.Storage.MySql;
+
+var feed = await Feed.Load(MySqlStorage.Load());
 ```
 
 ## ProgreSQL Usage

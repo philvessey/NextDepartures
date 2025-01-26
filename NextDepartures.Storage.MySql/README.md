@@ -9,7 +9,7 @@ library will work with any well-formed GTFS data set.
 
 ```csharp
 using NextDepartures.Standard;
-using NextDepartures.Storage.Sqlite;
+using NextDepartures.Storage.MySql;
 
-var feed = await Feed.Load(SqliteStorage.Load());
+var feed = await Feed.Load(MySqlStorage.Load());
 ```
