@@ -1,17 +1,15 @@
-﻿using GTFS.Entities;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
+using GTFS.Entities;
 
 namespace NextDepartures.Standard.Extensions;
 
 public static class StringExtensions
 {
-    private static readonly string[] Separator = [":"];
-
-    public static TimeOfDay? ToTimeOfDay(this string baseString)
+    public static TimeOfDay ToTimeOfDay(this string baseString)
     {
-        var value = baseString.Split(Separator, StringSplitOptions.None).Select(int.Parse).ToArray();
+        var value = baseString.Split([":"], StringSplitOptions.None).Select(int.Parse).ToArray();
 
         return new TimeOfDay
         {

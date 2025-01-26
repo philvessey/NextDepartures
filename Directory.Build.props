@@ -2,12 +2,15 @@
     <PropertyGroup>
         <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 
-        <TestDevelopmentVersion>17.12.0</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
-        <TestFrameworkVersion>3.6.4</TestFrameworkVersion> <!-- MSTest.TestFramework -->
+        <MySQL>2.4.0</MySQL> <!-- MySqlConnector -->
+        <PgSQL>9.0.2</PgSQL> <!-- Npgsql -->
+        <SQLite>9.0.1</SQLite> <!-- Microsoft.Data.Sqlite -->
+        <SQLServer>6.0.1</SQLServer> <!-- Microsoft.Data.SqlClient -->
 
-        <DatabaseLocalLibraryVersion>9.0.0</DatabaseLocalLibraryVersion> <!-- Microsoft.Data.Sqlite -->
-        <DatabaseServerLibraryVersion>5.2.2</DatabaseServerLibraryVersion> <!-- Microsoft.Data.SqlClient -->
-        <DateTimeLibraryVersion>3.2.0</DateTimeLibraryVersion> <!-- NodaTime -->
+        <TestDevelopmentVersion>17.12.0</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
+        <TestFrameworkVersion>3.7.2</TestFrameworkVersion> <!-- MSTest.TestFramework -->
+        
+        <DateTimeLibraryVersion>3.2.1</DateTimeLibraryVersion> <!-- NodaTime -->
         <JetBrainsLibraryVersion>2024.3.0</JetBrainsLibraryVersion> <!-- JetBrains.Annotations -->
         <TransitFeedLibraryVersion>3.0.0-pre006</TransitFeedLibraryVersion> <!-- GTFS -->
     </PropertyGroup>

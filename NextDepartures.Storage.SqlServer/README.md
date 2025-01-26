@@ -1,6 +1,9 @@
 # NextDepartures
 
-NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, in a SQLite database or in a SQL Server database. The library will work with any well-formed GTFS data set.
+NextDepartures is a .NET Library that queries GTFS (General
+Transit Feed Specification) data sets stored locally, or in a
+database such as MySQL, PostgreSQL, SQLite or SQL Server. The
+library will work with any well-formed GTFS data set.
 
 ## Usage
 
@@ -8,5 +11,5 @@ NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specifi
 using NextDepartures.Standard;
 using NextDepartures.Storage.SqlServer;
 
-Feed feed = await Feed.Load(SqlServerStorage.Load([database], (prefix)));
+var feed = await Feed.Load(SqlServerStorage.Load());
 ```

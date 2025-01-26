@@ -1,6 +1,11 @@
 # Contributors to NextDepartures
 
-[Phil Vessey](https://github.com/philvessey) is the lead project maintainer. Feel free to reach out to him for any significant inquiries or guidance regarding NextDepartures. We welcome contributions from everyone. To learn how you can get started, the [Contributing](./CONTRIBUTING.md) guide has what you need. Other community members that have contributed to NextDepartures are listed below:
+[Phil Vessey](https://github.com/philvessey) is the lead project maintainer. Feel free to 
+reach out to him for any significant inquiries or guidance 
+regarding NextDepartures. We welcome contributions from 
+everyone. To learn how you can get started, the [Contributing](./CONTRIBUTING.md) 
+guide has what you need. Other community members that have 
+contributed to NextDepartures are listed below:
 
 ## Contributors
 

@@ -1,31 +1,36 @@
-﻿using GTFS.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GTFS.Entities;
+using NextDepartures.Standard.Types;
 
 namespace NextDepartures.Standard;
 
 public partial class Feed
 {
     /// <summary>
-    /// Gets the stops in the given location.
+    /// Gets stops by location bounding box
     /// </summary>
-    /// <param name="minimumLongitude">The minimum longitude. Default is -180 but can be overridden.</param>
-    /// <param name="minimumLatitude">The minimum latitude. Default is -90 but can be overridden.</param>
-    /// <param name="maximumLongitude">The maximum longitude. Default is 180 but can be overridden.</param>
-    /// <param name="maximumLatitude">The maximum latitude. Default is 90 but can be overridden.</param>
-    /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
+    /// <param name="minimumLongitude">The minimum longitude of the bounding box. Default is -180.</param>
+    /// <param name="minimumLatitude">The minimum latitude of the bounding box. Default is -90.</param>
+    /// <param name="maximumLongitude">The maximum longitude of the bounding box. Default is 180.</param>
+    /// <param name="maximumLatitude">The maximum latitude of the bounding box. Default is 90.</param>
+    /// <param name="comparison">The comparison type to use when searching. Default is partial.</param>
+    /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of stops.</returns>
-    public async Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude = -180, double minimumLatitude = -90, double maximumLongitude = 180, double maximumLatitude = 90, int count = 0)
+    public async Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude = -180, double minimumLatitude = -90, double maximumLongitude = 180, double maximumLatitude = 90, ComparisonType comparison = ComparisonType.Partial, int results = int.MaxValue)
     {
         try
         {
-            var stopsFromStorage = await _dataStorage.GetStopsByLocationAsync(minimumLongitude, minimumLatitude, maximumLongitude, maximumLatitude);
-            return count > 0 ? stopsFromStorage.Take(count).ToList() : stopsFromStorage;
+            var stopsFromStorage = await _dataStorage.GetStopsByLocationAsync(minimumLongitude, minimumLatitude, maximumLongitude, maximumLatitude, comparison);
+            
+            return stopsFromStorage
+                .Take(results)
+                .ToList();
         }
         catch
         {
-            return null;
+            return [];
         }
     }
 }

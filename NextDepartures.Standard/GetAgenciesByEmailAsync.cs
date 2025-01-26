@@ -1,28 +1,33 @@
-﻿using GTFS.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GTFS.Entities;
+using NextDepartures.Standard.Types;
 
 namespace NextDepartures.Standard;
 
 public partial class Feed
 {
     /// <summary>
-    /// Gets the agencies by the given email.
+    /// Gets agencies by email address
     /// </summary>
-    /// <param name="email">The email. Default is all but can be overridden.</param>
-    /// <param name="count">The maximum number of results to return. Default is all (0) but can be overridden.</param>
+    /// <param name="email">The email address of the agency. Default is all.</param>
+    /// <param name="comparison">The comparison type to use when searching. Default is partial.</param>
+    /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of agencies.</returns>
-    public async Task<List<Agency>> GetAgenciesByEmailAsync(string email = "", int count = 0)
+    public async Task<List<Agency>> GetAgenciesByEmailAsync(string email = "", ComparisonType comparison = ComparisonType.Partial, int results = int.MaxValue)
     {
         try
         {
-            var agenciesFromStorage = await _dataStorage.GetAgenciesByEmailAsync(email);
-            return count > 0 ? agenciesFromStorage.Take(count).ToList() : agenciesFromStorage;
+            var agenciesFromStorage = await _dataStorage.GetAgenciesByEmailAsync(email, comparison);
+            
+            return agenciesFromStorage
+                .Take(results)
+                .ToList();
         }
         catch
         {
-            return null;
+            return [];
         }
     }
 }

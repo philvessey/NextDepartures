@@ -1,13 +1,18 @@
 # NextDepartures
 
-NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, in a SQLite database or in a SQL Server database. The library will work with any well-formed GTFS data set.
+NextDepartures is a .NET Library that queries GTFS (General
+Transit Feed Specification) data sets stored locally, or in a
+database such as MySQL, PostgreSQL, SQLite or SQL Server. The
+library will work with any well-formed GTFS data set.
 
 ## Agencies
 
 ```csharp
 var results = await feed.GetAgenciesByEmailAsync();
 var results = await feed.GetAgenciesByFareUrlAsync();
+var results = await feed.GetAgenciesByIdAsync();
 var results = await feed.GetAgenciesByLanguageCodeAsync();
+var results = await feed.GetAgenciesByNameAsync();
 var results = await feed.GetAgenciesByPhoneAsync();
 var results = await feed.GetAgenciesByQueryAsync();
 var results = await feed.GetAgenciesByTimezoneAsync();
@@ -25,10 +30,13 @@ var results = await feed.GetServicesByTripAsync();
 ## Stops
 
 ```csharp
+var results = await feed.GetStopsByCodeAsync();
 var results = await feed.GetStopsByDescriptionAsync();
+var results = await feed.GetStopsByIdAsync();
 var results = await feed.GetStopsByLevelAsync();
 var results = await feed.GetStopsByLocationAsync();
 var results = await feed.GetStopsByLocationTypeAsync();
+var results = await feed.GetStopsByNameAsync();
 var results = await feed.GetStopsByParentStationAsync();
 var results = await feed.GetStopsByPlatformCodeAsync();
 var results = await feed.GetStopsByQueryAsync();
