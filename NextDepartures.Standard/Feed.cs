@@ -120,11 +120,26 @@ public partial class Feed
 
     private static DateTime GetDateTimeFromDeparture(DateTime zonedDateTime, int dayOffset, TimeOfDay departureTime)
     {
-        return new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Hours % 24,
-            departureTime.Minutes, departureTime.Seconds).AddDays(dayOffset + (double)departureTime.Hours / 24);
+        return departureTime.Hours switch
+        {
+            >= 144 => new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Hours - 144,
+                departureTime.Minutes, departureTime.Seconds).AddDays(dayOffset + 6),
+            >= 120 => new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Hours - 120,
+                departureTime.Minutes, departureTime.Seconds).AddDays(dayOffset + 5),
+            >= 96 => new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Hours - 96,
+                departureTime.Minutes, departureTime.Seconds).AddDays(dayOffset + 4),
+            >= 72 => new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Hours - 72,
+                departureTime.Minutes, departureTime.Seconds).AddDays(dayOffset + 3),
+            >= 48 => new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Hours - 48,
+                departureTime.Minutes, departureTime.Seconds).AddDays(dayOffset + 2),
+            >= 24 => new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Hours - 24,
+                departureTime.Minutes, departureTime.Seconds).AddDays(dayOffset + 1),
+            _ => new DateTime(zonedDateTime.Year, zonedDateTime.Month, zonedDateTime.Day, departureTime.Hours,
+                departureTime.Minutes, departureTime.Seconds).AddDays(dayOffset)
+        };
     }
 
-    private static List<Departure> GetDeparturesOnDay(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, List<Departure> departures, DateTime target, DayOffsetType dayOffset, TimeSpan timeOffset, int tolerance, string id)
+    private static List<Departure> GetDeparturesOnDay(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, List<Departure> departures, DateTime target, DayOffsetType dayOffset, TimeSpan timeOffset, TimeSpan tolerance, string id)
     {
         List<Departure> results = [];
 
@@ -146,7 +161,7 @@ public partial class Feed
             () => agencies.FirstOrDefault()?.Timezone);
     }
 
-    private static bool IsDepartureValid(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, DateTime target, TimeSpan timeOffset, int tolerance, string id, Departure departure, DateTime targetDateTime, DateTime departureDateTime, Func<DayOfWeek, Departure, bool> dayOfWeekMapper)
+    private static bool IsDepartureValid(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, DateTime target, TimeSpan timeOffset, TimeSpan tolerance, string id, Departure departure, DateTime targetDateTime, DateTime departureDateTime, Func<DayOfWeek, Departure, bool> dayOfWeekMapper)
     {
         var zonedDateTime = target.ToZonedDateTime(GetTimezone(agencies, stops, departure));
         
@@ -170,42 +185,19 @@ public partial class Feed
                 d.ExceptionType == ExceptionType.Added);
         }
 
-        switch (include)
+        return include switch
         {
-            case true
-                when departure.RouteShortName.Contains(id.WithPrefix("_"), StringComparison.CurrentCultureIgnoreCase) ||
-                     departure.RouteShortName.Contains(id.WithPrefix("->"), StringComparison.CurrentCultureIgnoreCase):
-                
-                return false;
-            
-            case true
-                when timeOffset > TimeSpan.Zero && tolerance > 0 &&
-                     departureDateTime >= zonedDateTime.Add(timeOffset) &&
-                     departureDateTime <= zonedDateTime.AddHours(tolerance) &&
-                     departureDateTime >= zonedDateTime.Add(timeOffset) &&
-                     departureDateTime <= zonedDateTime.AddHours(tolerance):
-                
-            case true
-                when tolerance > 0 && departureDateTime >= zonedDateTime &&
-                     departureDateTime <= zonedDateTime.AddHours(tolerance) &&
-                     departureDateTime >= zonedDateTime &&
-                     departureDateTime <= zonedDateTime.AddHours(tolerance):
-                
-            case true
-                when timeOffset > TimeSpan.Zero && 
-                     departureDateTime >= zonedDateTime.Add(timeOffset) &&
-                     departureDateTime >= zonedDateTime.Add(timeOffset):
-                
-            case true
-                when departureDateTime >= zonedDateTime:
-                
-                return true;
-        }
-
-        return false;
+            true when
+                departure.RouteShortName.Contains(id.WithPrefix("_"), StringComparison.CurrentCultureIgnoreCase) ||
+                departure.RouteShortName.Contains(id.WithPrefix("->"), StringComparison.CurrentCultureIgnoreCase) => false,
+            true when
+                departureDateTime >= zonedDateTime.Add(timeOffset) &&
+                departureDateTime <= zonedDateTime.Add(timeOffset).Add(tolerance) => true,
+            _ => false
+        };
     }
 
-    private static Departure TryProcessDeparture(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, DateTime target, DayOffsetType dayOffset, TimeSpan timeOffset, int tolerance, string id, Departure departure)
+    private static Departure TryProcessDeparture(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, DateTime target, DayOffsetType dayOffset, TimeSpan timeOffset, TimeSpan tolerance, string id, Departure departure)
     {
         var targetDateTime = target.ToZonedDateTime(GetTimezone(agencies, stops, departure))
             .AddDays(dayOffset.GetNumeric());

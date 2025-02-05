@@ -198,8 +198,8 @@ public class MockStorage : IDataStorage
             {
                 DepartureTime = new TimeOfDay
                 {
-                    Hours = 4,
-                    Minutes = 52,
+                    Hours = 10,
+                    Minutes = 30,
                     Seconds = 0
                 },
                 
@@ -216,7 +216,7 @@ public class MockStorage : IDataStorage
                 Friday = true,
                 Saturday = true,
                 Sunday = true,
-                StartDate = new DateTime(2025, 1, 21),
+                StartDate = new DateTime(2025, 1, 1),
                 EndDate = new DateTime(2025, 12, 31)
             }
         });
@@ -230,8 +230,8 @@ public class MockStorage : IDataStorage
             {
                 DepartureTime = new TimeOfDay()
                 {
-                    Hours = 4,
-                    Minutes = 52,
+                    Hours = 10,
+                    Minutes = 30,
                     Seconds = 0
                 },
                 
@@ -248,7 +248,7 @@ public class MockStorage : IDataStorage
                 Friday = true,
                 Saturday = true,
                 Sunday = true,
-                StartDate = new DateTime(2025, 1, 21),
+                StartDate = new DateTime(2025, 1, 1),
                 EndDate = new DateTime(2025, 12, 31)
             }
         });

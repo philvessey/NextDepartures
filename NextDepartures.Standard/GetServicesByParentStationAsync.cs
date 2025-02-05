@@ -15,11 +15,11 @@ public partial class Feed
     /// Gets the services by parent station
     /// </summary>
     /// <param name="id">The id of the parent station.</param>
-    /// <param name="comparison">The comparison type to use when searching. Default is exact.</param>
-    /// <param name="tolerance">The number of hours to search over. Default is all.</param>
+    /// <param name="comparison">The ComparisonType to use when searching. Default is exact.</param>
+    /// <param name="tolerance">The TimeSpan tolerance to search over. Default is all.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of services.</returns>
-    public async Task<List<Service>> GetServicesByParentStationAsync(string id, ComparisonType comparison = ComparisonType.Exact, int tolerance = int.MaxValue, int results = int.MaxValue)
+    public async Task<List<Service>> GetServicesByParentStationAsync(string id, ComparisonType comparison = ComparisonType.Exact, TimeSpan tolerance = default, int results = 0)
     {
         try
         {
@@ -46,9 +46,17 @@ public partial class Feed
                 );
             }
             
+            if (results > 0)
+            {
+                return departuresForStation
+                    .OrderBy(d => d.DepartureDateTime)
+                    .Take(results)
+                    .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
+                    .ToList();
+            }
+            
             return departuresForStation
                 .OrderBy(d => d.DepartureDateTime)
-                .Take(results)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
                 .ToList();
         }
@@ -64,11 +72,11 @@ public partial class Feed
     /// <param name="id">The id of the parent station.</param>
     /// <param name="target">The DateTime target to search from.</param>
     /// <param name="offset">The TimeSpan offset to filter by.</param>
-    /// <param name="comparison">The comparison type to use when searching. Default is exact.</param>
-    /// <param name="tolerance">The number of hours to search over. Default is all.</param>
+    /// <param name="comparison">The ComparisonType to use when searching. Default is exact.</param>
+    /// <param name="tolerance">The TimeSpan tolerance to search over. Default is all.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of services.</returns>
-    public async Task<List<Service>> GetServicesByParentStationAsync(string id, DateTime target, TimeSpan offset, ComparisonType comparison = ComparisonType.Exact, int tolerance = int.MaxValue, int results = int.MaxValue)
+    public async Task<List<Service>> GetServicesByParentStationAsync(string id, DateTime target, TimeSpan offset, ComparisonType comparison = ComparisonType.Exact, TimeSpan tolerance = default, int results = 0)
     {
         try
         {
@@ -94,10 +102,18 @@ public partial class Feed
                         departuresFromStorage, target, DayOffsetType.Tomorrow, offset, tolerance, stop.Id))
                 );
             }
+
+            if (results > 0)
+            {
+                return departuresForStation
+                    .OrderBy(d => d.DepartureDateTime)
+                    .Take(results)
+                    .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
+                    .ToList();
+            }
             
             return departuresForStation
                 .OrderBy(d => d.DepartureDateTime)
-                .Take(results)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
                 .ToList();
         }
@@ -111,11 +127,11 @@ public partial class Feed
     /// Gets the services by parent station
     /// </summary>
     /// <param name="ids">An array of stop id's to group as a parent station.</param>
-    /// <param name="comparison">The comparison type to use when searching. Default is exact.</param>
-    /// <param name="tolerance">The number of hours to search over. Default is all.</param>
+    /// <param name="comparison">The ComparisonType to use when searching. Default is exact.</param>
+    /// <param name="tolerance">The TimeSpan tolerance to search over. Default is all.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of services.</returns>
-    public async Task<List<Service>> GetServicesByParentStationAsync(string[] ids, ComparisonType comparison = ComparisonType.Exact, int tolerance = int.MaxValue, int results = int.MaxValue)
+    public async Task<List<Service>> GetServicesByParentStationAsync(string[] ids, ComparisonType comparison = ComparisonType.Exact, TimeSpan tolerance = default, int results = 0)
     {
         try
         {
@@ -144,10 +160,18 @@ public partial class Feed
                         departuresFromStorage, DateTime.Now, DayOffsetType.Tomorrow, TimeSpan.Zero, tolerance, stop.Id))
                 );
             }
+
+            if (results > 0)
+            {
+                return departuresForStation
+                    .OrderBy(d => d.DepartureDateTime)
+                    .Take(results)
+                    .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
+                    .ToList();
+            }
             
             return departuresForStation
                 .OrderBy(d => d.DepartureDateTime)
-                .Take(results)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
                 .ToList();
         }
@@ -163,11 +187,11 @@ public partial class Feed
     /// <param name="ids">An array of stop id's to group as a parent station.</param>
     /// <param name="target">The DateTime target to search from.</param>
     /// <param name="offset">The TimeSpan offset to filter by.</param>
-    /// <param name="comparison">The comparison type to use when searching. Default is exact.</param>
-    /// <param name="tolerance">The number of hours to search over. Default is all.</param>
+    /// <param name="comparison">The ComparisonType to use when searching. Default is exact.</param>
+    /// <param name="tolerance">The TimeSpan tolerance to search over. Default is all.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of services.</returns>
-    public async Task<List<Service>> GetServicesByParentStationAsync(string[] ids, DateTime target, TimeSpan offset, ComparisonType comparison = ComparisonType.Exact, int tolerance = int.MaxValue, int results = int.MaxValue)
+    public async Task<List<Service>> GetServicesByParentStationAsync(string[] ids, DateTime target, TimeSpan offset, ComparisonType comparison = ComparisonType.Exact, TimeSpan tolerance = default, int results = 0)
     {
         try
         {
@@ -197,9 +221,17 @@ public partial class Feed
                 );
             }
             
+            if (results > 0)
+            {
+                return departuresForStation
+                    .OrderBy(d => d.DepartureDateTime)
+                    .Take(results)
+                    .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
+                    .ToList();
+            }
+            
             return departuresForStation
                 .OrderBy(d => d.DepartureDateTime)
-                .Take(results)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
                 .ToList();
         }
@@ -213,11 +245,11 @@ public partial class Feed
     /// Gets the services by parent station
     /// </summary>
     /// <param name="stops">A list of stop objects to group as a parent station.</param>
-    /// <param name="comparison">The comparison type to use when searching. Default is exact.</param>
-    /// <param name="tolerance">The number of hours to search over. Default is all.</param>
+    /// <param name="comparison">The ComparisonType to use when searching. Default is exact.</param>
+    /// <param name="tolerance">The TimeSpan tolerance to search over. Default is all.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of services.</returns>
-    public async Task<List<Service>> GetServicesByParentStationAsync(List<Stop> stops, ComparisonType comparison = ComparisonType.Exact, int tolerance = int.MaxValue, int results = int.MaxValue)
+    public async Task<List<Service>> GetServicesByParentStationAsync(List<Stop> stops, ComparisonType comparison = ComparisonType.Exact, TimeSpan tolerance = default, int results = 0)
     {
         try
         {
@@ -247,9 +279,17 @@ public partial class Feed
                 );
             }
             
+            if (results > 0)
+            {
+                return departuresForStation
+                    .OrderBy(d => d.DepartureDateTime)
+                    .Take(results)
+                    .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
+                    .ToList();
+            }
+            
             return departuresForStation
                 .OrderBy(d => d.DepartureDateTime)
-                .Take(results)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
                 .ToList();
         }
@@ -265,11 +305,11 @@ public partial class Feed
     /// <param name="stops">A list of stop objects to group as a parent station.</param>
     /// <param name="target">The DateTime target to search from.</param>
     /// <param name="offset">The TimeSpan offset to filter by.</param>
-    /// <param name="comparison">The comparison type to use when searching. Default is exact.</param>
-    /// <param name="tolerance">The number of hours to search over. Default is all.</param>
+    /// <param name="comparison">The ComparisonType to use when searching. Default is exact.</param>
+    /// <param name="tolerance">The TimeSpan tolerance to search over. Default is all.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of services.</returns>
-    public async Task<List<Service>> GetServicesByParentStationAsync(List<Stop>stops, DateTime target, TimeSpan offset, ComparisonType comparison = ComparisonType.Exact, int tolerance = int.MaxValue, int results = int.MaxValue)
+    public async Task<List<Service>> GetServicesByParentStationAsync(List<Stop>stops, DateTime target, TimeSpan offset, ComparisonType comparison = ComparisonType.Exact, TimeSpan tolerance = default, int results = 0)
     {
         try
         {
@@ -299,9 +339,17 @@ public partial class Feed
                 );
             }
             
+            if (results > 0)
+            {
+                return departuresForStation
+                    .OrderBy(d => d.DepartureDateTime)
+                    .Take(results)
+                    .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
+                    .ToList();
+            }
+            
             return departuresForStation
                 .OrderBy(d => d.DepartureDateTime)
-                .Take(results)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "station"))
                 .ToList();
         }

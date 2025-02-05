@@ -15,17 +15,23 @@ public partial class Feed
     /// <param name="minimumLatitude">The minimum latitude of the bounding box. Default is -90.</param>
     /// <param name="maximumLongitude">The maximum longitude of the bounding box. Default is 180.</param>
     /// <param name="maximumLatitude">The maximum latitude of the bounding box. Default is 90.</param>
-    /// <param name="comparison">The comparison type to use when searching. Default is partial.</param>
+    /// <param name="comparison">The ComparisonType to use when searching. Default is partial.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of stops.</returns>
-    public async Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude = -180, double minimumLatitude = -90, double maximumLongitude = 180, double maximumLatitude = 90, ComparisonType comparison = ComparisonType.Partial, int results = int.MaxValue)
+    public async Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude = -180, double minimumLatitude = -90, double maximumLongitude = 180, double maximumLatitude = 90, ComparisonType comparison = ComparisonType.Partial, int results = 0)
     {
         try
         {
             var stopsFromStorage = await _dataStorage.GetStopsByLocationAsync(minimumLongitude, minimumLatitude, maximumLongitude, maximumLatitude, comparison);
             
+            if (results > 0)
+            {
+                return stopsFromStorage
+                    .Take(results)
+                    .ToList();
+            }
+            
             return stopsFromStorage
-                .Take(results)
                 .ToList();
         }
         catch
