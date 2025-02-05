@@ -168,33 +168,58 @@ public partial class Feed
         if (departure.StartDate > targetDateTime.Date) return false;
         if (departure.EndDate < targetDateTime.Date) return false;
         
-        bool include;
-
         if (dayOfWeekMapper(zonedDateTime.DayOfWeek, departure))
         {
-            include = !calendarDates.Any(d =>
+            var include = !calendarDates.Any(d =>
                 d.ServiceId == departure.ServiceId &&
                 d.Date == targetDateTime.Date &&
                 d.ExceptionType == ExceptionType.Removed);
+            
+            if (!include) return false;
         }
         else
         {
-            include = calendarDates.Any(d =>
+            var include = calendarDates.Any(d =>
                 d.ServiceId == departure.ServiceId &&
                 d.Date == targetDateTime.Date &&
                 d.ExceptionType == ExceptionType.Added);
+            
+            if (!include) return false;
         }
+        
+        if (departure.RouteShortName.Contains(id.WithPrefix("_"), StringComparison.CurrentCultureIgnoreCase)) return false;
+        if (departure.RouteShortName.Contains(id.WithPrefix("->"), StringComparison.CurrentCultureIgnoreCase)) return false;
 
-        return include switch
+        if (timeOffset > TimeSpan.Zero && tolerance > TimeSpan.Zero)
         {
-            true when
-                departure.RouteShortName.Contains(id.WithPrefix("_"), StringComparison.CurrentCultureIgnoreCase) ||
-                departure.RouteShortName.Contains(id.WithPrefix("->"), StringComparison.CurrentCultureIgnoreCase) => false,
-            true when
-                departureDateTime >= zonedDateTime.Add(timeOffset) &&
-                departureDateTime <= zonedDateTime.Add(timeOffset).Add(tolerance) => true,
-            _ => false
-        };
+            if (departureDateTime >= zonedDateTime.Add(timeOffset) && departureDateTime <= zonedDateTime.Add(timeOffset).Add(tolerance))
+            {
+                return true;
+            }
+        }
+        else if (tolerance > TimeSpan.Zero)
+        {
+            if (departureDateTime >= zonedDateTime && departureDateTime <= zonedDateTime.Add(tolerance))
+            {
+                return true;
+            }
+        }
+        else if (timeOffset > TimeSpan.Zero)
+        {
+            if (departureDateTime >= zonedDateTime.Add(timeOffset))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (departureDateTime >= zonedDateTime)
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     private static Departure TryProcessDeparture(List<Agency> agencies, List<CalendarDate> calendarDates, List<Stop> stops, DateTime target, DayOffsetType dayOffset, TimeSpan timeOffset, TimeSpan tolerance, string id, Departure departure)
