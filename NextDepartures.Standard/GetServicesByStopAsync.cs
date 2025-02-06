@@ -42,12 +42,14 @@ public partial class Feed
             if (results > 0)
             {
                 return departuresForStop
+                    .OrderBy(d => d.DepartureDateTime)
                     .Take(results)
                     .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "stop"))
                     .ToList();
             }
             
             return departuresForStop
+                .OrderBy(d => d.DepartureDateTime)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "stop"))
                 .ToList();
         }
@@ -90,12 +92,14 @@ public partial class Feed
             if (results > 0)
             {
                 return departuresForStop
+                    .OrderBy(d => d.DepartureDateTime)
                     .Take(results)
                     .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "stop"))
                     .ToList();
             }
             
             return departuresForStop
+                .OrderBy(d => d.DepartureDateTime)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "stop"))
                 .ToList();
         }
@@ -136,12 +140,14 @@ public partial class Feed
             if (results > 0)
             {
                 return departuresForStop
+                    .OrderBy(d => d.DepartureDateTime)
                     .Take(results)
                     .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "stop"))
                     .ToList();
             }
             
             return departuresForStop
+                .OrderBy(d => d.DepartureDateTime)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "stop"))
                 .ToList();
         }
@@ -184,12 +190,14 @@ public partial class Feed
             if (results > 0)
             {
                 return departuresForStop
+                    .OrderBy(d => d.DepartureDateTime)
                     .Take(results)
                     .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "stop"))
                     .ToList();
             }
             
             return departuresForStop
+                .OrderBy(d => d.DepartureDateTime)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "stop"))
                 .ToList();
         }

@@ -41,12 +41,14 @@ public partial class Feed
             if (results > 0)
             {
                 return departuresForTrip
+                    .OrderBy(d => d.DepartureDateTime)
                     .Take(results)
                     .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "trip"))
                     .ToList();
             }
             
             return departuresForTrip
+                .OrderBy(d => d.DepartureDateTime)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "trip"))
                 .ToList();
         }
@@ -89,12 +91,14 @@ public partial class Feed
             if (results > 0)
             {
                 return departuresForTrip
+                    .OrderBy(d => d.DepartureDateTime)
                     .Take(results)
                     .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "trip"))
                     .ToList();
             }
             
             return departuresForTrip
+                .OrderBy(d => d.DepartureDateTime)
                 .Select(d => CreateService(agenciesFromStorage, stopsFromStorage, d, "trip"))
                 .ToList();
         }
