@@ -24,11 +24,13 @@ public partial class Feed
             if (results > 0)
             {
                 return stopsFromStorage
+                    .OrderBy(s => s.Name)
                     .Take(results)
                     .ToList();
             }
             
             return stopsFromStorage
+                .OrderBy(s => s.Name)
                 .ToList();
         }
         catch

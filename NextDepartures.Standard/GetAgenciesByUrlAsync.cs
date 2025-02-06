@@ -24,11 +24,13 @@ public partial class Feed
             if (results > 0)
             {
                 return agenciesFromStorage
+                    .OrderBy(a => a.Name)
                     .Take(results)
                     .ToList();
             }
             
             return agenciesFromStorage
+                .OrderBy(a => a.Name)
                 .ToList();
         }
         catch
