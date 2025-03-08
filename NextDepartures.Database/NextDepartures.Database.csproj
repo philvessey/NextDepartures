@@ -1,37 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <Authors>Phil Vessey</Authors>
-    <Copyright>Copyright © 2025 Phil Vessey and Contributors</Copyright>
-    <Description>NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, or in a 
-      database such as MySQL, PostgreSQL, SQLite or SQL Server. The library will work with any well-formed GTFS data set.</Description>
-    <OutputType>Exe</OutputType>
-    <Product>NextDepartures.Database</Product>
-    <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
-    <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-    <Version>3.6.4</Version>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Authors>Phil Vessey</Authors>
+        <Copyright>Copyright © 2025 Phil Vessey and Contributors</Copyright>
+        <Description>NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, or in a
+            database such as MySQL, PostgreSQL, SQLite or SQL Server. The library will work with any well-formed GTFS data set.</Description>
+        <OutputType>Exe</OutputType>
+        <Product>NextDepartures.Database</Product>
+        <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
+        <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
+        <Version>3.6.4</Version>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="GTFS" Version="$(TransitFeedLibraryVersion)" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="$(SQLite)" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="$(SQLServer)" />
-    <PackageReference Include="MySqlConnector" Version="$(MySQL)" />
-    <PackageReference Include="Npgsql" Version="$(PgSQL)" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="GTFS" Version="$(TransitFeedLibraryVersion)" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="$(SQLite)" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="$(SQLServer)" />
+        <PackageReference Include="MySqlConnector" Version="$(MySQL)" />
+        <PackageReference Include="Npgsql" Version="$(PgSQL)" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Schema\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Data\" />
+        <Folder Include="Schema\" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Data\feed.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\feed.zip">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="Data\feed.db">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Data\feed.zip">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
 </Project>
