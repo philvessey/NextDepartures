@@ -17,24 +17,24 @@ var command = new SqliteCommand
 };
 
 command.CommandText = "INSERT INTO GTFS_AGENCY (" + 
-                            "Id, " + 
-                            "Name, " + 
-                            "URL, " + 
-                            "Timezone, " + 
-                            "LanguageCode, " + 
-                            "Phone, " + 
-                            "FareURL, " + 
-                            "Email" + 
+                            "AgencyId, " + 
+                            "AgencyName, " + 
+                            "AgencyUrl, " + 
+                            "AgencyTimezone, " + 
+                            "AgencyLang, " + 
+                            "AgencyPhone, " + 
+                            "AgencyFareUrl, " + 
+                            "AgencyEmail" + 
                             ") " + 
                       "VALUES (" + 
-                            "@id, " + 
-                            "@name, " + 
-                            "@url, " + 
-                            "@timezone, " + 
-                            "@languageCode, " + 
-                            "@phone, " + 
-                            "@fareUrl, " + 
-                            "@email" + 
+                            "@agencyId, " + 
+                            "@agencyName, " + 
+                            "@agencyUrl, " + 
+                            "@agencyTimezone, " + 
+                            "@agencyLang, " + 
+                            "@agencyPhone, " + 
+                            "@agencyFareUrl, " + 
+                            "@agencyEmail" + 
                             ")";
 
 command.Parameters.Clear();
@@ -43,14 +43,14 @@ foreach (var a in feed.Agencies)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", a.Id != null ? a.Id : DBNull.Value);
-    command.Parameters.AddWithValue("@name", a.Name);
-    command.Parameters.AddWithValue("@url", a.URL);
-    command.Parameters.AddWithValue("@timezone", a.Timezone);
-    command.Parameters.AddWithValue("@languageCode", a.LanguageCode != null ? a.LanguageCode : DBNull.Value);
-    command.Parameters.AddWithValue("@phone", a.Phone != null ? a.Phone : DBNull.Value);
-    command.Parameters.AddWithValue("@fareUrl", a.FareURL != null ? a.FareURL : DBNull.Value);
-    command.Parameters.AddWithValue("@email", a.Email != null ? a.Email : DBNull.Value);
+    command.Parameters.AddWithValue("@agencyId", a.Id != null ? a.Id : DBNull.Value);
+    command.Parameters.AddWithValue("@agencyName", a.Name);
+    command.Parameters.AddWithValue("@agencyUrl", a.URL);
+    command.Parameters.AddWithValue("@agencyTimezone", a.Timezone);
+    command.Parameters.AddWithValue("@agencyLang", a.LanguageCode != null ? a.LanguageCode : DBNull.Value);
+    command.Parameters.AddWithValue("@agencyPhone", a.Phone != null ? a.Phone : DBNull.Value);
+    command.Parameters.AddWithValue("@agencyFareUrl", a.FareURL != null ? a.FareURL : DBNull.Value);
+    command.Parameters.AddWithValue("@agencyEmail", a.Email != null ? a.Email : DBNull.Value);
 
     await command.ExecuteNonQueryAsync();
 }
@@ -104,7 +104,7 @@ foreach (var c in feed.Calendars)
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_CALENDAR_DATE (" + 
+command.CommandText = "INSERT INTO GTFS_CALENDAR_DATES (" + 
                             "ServiceId, " + 
                             "ExceptionDate, " + 
                             "ExceptionType" + 
@@ -130,7 +130,7 @@ foreach (var d in feed.CalendarDates)
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_FARE_ATTRIBUTE (" + 
+command.CommandText = "INSERT INTO GTFS_FARE_ATTRIBUTES (" + 
                             "FareId, " + 
                             "Price, " + 
                             "CurrencyType, " + 
@@ -168,7 +168,7 @@ foreach (var f in feed.FareAttributes)
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_FARE_RULE (" + 
+command.CommandText = "INSERT INTO GTFS_FARE_RULES (" + 
                             "FareId, " + 
                             "RouteId, " + 
                             "OriginId, " + 
@@ -200,7 +200,7 @@ foreach (var f in feed.FareRules)
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_FREQUENCY (" + 
+command.CommandText = "INSERT INTO GTFS_FREQUENCIES (" + 
                             "TripId, " + 
                             "StartTime, " + 
                             "EndTime, " + 
@@ -232,15 +232,15 @@ foreach (var f in feed.Frequencies)
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_LEVEL (" + 
-                            "Id, " + 
-                            "Idx, " + 
-                            "Name" + 
+command.CommandText = "INSERT INTO GTFS_LEVELS (" + 
+                            "LevelId, " + 
+                            "LevelIndex, " + 
+                            "LevelName" + 
                             ") " + 
                       "VALUES (" + 
-                            "@id, " + 
-                            "@idx, " + 
-                            "@name" + 
+                            "@levelId, " + 
+                            "@levelIndex, " + 
+                            "@levelName" + 
                             ")";
 
 command.Parameters.Clear();
@@ -249,17 +249,17 @@ foreach (var l in feed.Levels)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", l.Id);
-    command.Parameters.AddWithValue("@idx", l.Index);
-    command.Parameters.AddWithValue("@name", l.Name != null ? l.Name : DBNull.Value);
+    command.Parameters.AddWithValue("@levelId", l.Id);
+    command.Parameters.AddWithValue("@levelIndex", l.Index);
+    command.Parameters.AddWithValue("@levelName", l.Name != null ? l.Name : DBNull.Value);
 
     await command.ExecuteNonQueryAsync();
 }
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_PATHWAY (" + 
-                            "Id, " + 
+command.CommandText = "INSERT INTO GTFS_PATHWAYS (" + 
+                            "PathwayId, " + 
                             "FromStopId, " + 
                             "ToStopId, " + 
                             "PathwayMode, " + 
@@ -273,7 +273,7 @@ command.CommandText = "INSERT INTO GTFS_PATHWAY (" +
                             "ReversedSignpostedAs" + 
                             ") " + 
                       "VALUES (" + 
-                            "@id, " + 
+                            "@pathwayId, " + 
                             "@fromStopId, " + 
                             "@toStopId, " + 
                             "@pathwayMode, " + 
@@ -293,7 +293,7 @@ foreach (var p in feed.Pathways)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", p.Id);
+    command.Parameters.AddWithValue("@pathwayId", p.Id);
     command.Parameters.AddWithValue("@fromStopId", p.FromStopId);
     command.Parameters.AddWithValue("@toStopId", p.ToStopId);
     command.Parameters.AddWithValue("@pathwayMode", p.PathwayMode);
@@ -311,27 +311,27 @@ foreach (var p in feed.Pathways)
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_ROUTE (" + 
-                            "Id, " + 
+command.CommandText = "INSERT INTO GTFS_ROUTES (" + 
+                            "RouteId, " + 
                             "AgencyId, " + 
-                            "ShortName, " + 
-                            "LongName, " + 
-                            "Description, " + 
-                            "Type, " + 
-                            "Url, " + 
-                            "Color, " + 
-                            "TextColor" + 
+                            "RouteShortName, " + 
+                            "RouteLongName, " + 
+                            "RouteDesc, " + 
+                            "RouteType, " + 
+                            "RouteUrl, " + 
+                            "RouteColor, " + 
+                            "RouteTextColor" +
                             ") " + 
                       "VALUES (" + 
-                            "@id, " + 
+                            "@routeId, " + 
                             "@agencyId, " + 
-                            "@shortName, " + 
-                            "@longName, " + 
-                            "@description, " + 
-                            "@type, " + 
-                            "@url, " + 
-                            "@color, " + 
-                            "@textColor" + 
+                            "@routeShortName, " + 
+                            "@routeLongName, " + 
+                            "@routeDesc, " + 
+                            "@routeType, " + 
+                            "@routeUrl, " + 
+                            "@routeColor, " + 
+                            "@routeTextColor" +
                             ")";
 
 command.Parameters.Clear();
@@ -340,34 +340,34 @@ foreach (var r in feed.Routes)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", r.Id);
+    command.Parameters.AddWithValue("@routeId", r.Id);
     command.Parameters.AddWithValue("@agencyId", r.AgencyId != null ? r.AgencyId : DBNull.Value);
-    command.Parameters.AddWithValue("@shortName", r.ShortName != null ? r.ShortName != string.Empty ? r.ShortName : string.Empty : DBNull.Value);
-    command.Parameters.AddWithValue("@longName", r.LongName != null ? r.LongName != string.Empty ? r.LongName : string.Empty : DBNull.Value);
-    command.Parameters.AddWithValue("@description", r.Description != null ? r.Description : DBNull.Value);
-    command.Parameters.AddWithValue("@type", r.Type);
-    command.Parameters.AddWithValue("@url", r.Url != null ? r.Url : DBNull.Value);
-    command.Parameters.AddWithValue("@color", r.Color != null ? r.Color.ToString() != string.Empty ? r.Color : 0xFFFFFF : DBNull.Value);
-    command.Parameters.AddWithValue("@textColor", r.TextColor != null ? r.TextColor.ToString() != string.Empty ? r.TextColor : 0x000000 : DBNull.Value);
+    command.Parameters.AddWithValue("@routeShortName", r.ShortName != null ? r.ShortName != string.Empty ? r.ShortName : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@routeLongName", r.LongName != null ? r.LongName != string.Empty ? r.LongName : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@routeDesc", r.Description != null ? r.Description : DBNull.Value);
+    command.Parameters.AddWithValue("@routeType", r.Type);
+    command.Parameters.AddWithValue("@routeUrl", r.Url != null ? r.Url : DBNull.Value);
+    command.Parameters.AddWithValue("@routeColor", r.Color != null ? r.Color.ToString() != string.Empty ? r.Color : 0xFFFFFF : DBNull.Value);
+    command.Parameters.AddWithValue("@routeTextColor", r.TextColor != null ? r.TextColor.ToString() != string.Empty ? r.TextColor : 0x000000 : DBNull.Value);
 
     await command.ExecuteNonQueryAsync();
 }
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_SHAPE (" + 
-                            "Id, " + 
-                            "Longitude, " + 
-                            "Latitude, " + 
-                            "Sequence, " + 
-                            "DistanceTravelled" + 
+command.CommandText = "INSERT INTO GTFS_SHAPES (" + 
+                            "ShapeId, " + 
+                            "ShapePtLat, " + 
+                            "ShapePtLon, " + 
+                            "ShapePtSequence, " + 
+                            "ShapeDistanceTravelled" + 
                             ") " + 
                       "VALUES (" + 
-                            "@id, " + 
-                            "@longitude, " + 
-                            "@latitude, " + 
-                            "@sequence, " + 
-                            "@distanceTravelled" + 
+                            "@shapeId, " + 
+                            "@shapePtLat, " + 
+                            "@shapePtLon, " + 
+                            "@shapePtSequence, " + 
+                            "@shapeDistanceTravelled" + 
                             ")";
 
 command.Parameters.Clear();
@@ -376,45 +376,45 @@ foreach (var s in feed.Shapes)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", s.Id);
-    command.Parameters.AddWithValue("@longitude", s.Longitude);
-    command.Parameters.AddWithValue("@latitude", s.Latitude);
-    command.Parameters.AddWithValue("@sequence", s.Sequence);
-    command.Parameters.AddWithValue("@distanceTravelled", s.DistanceTravelled != null ? s.DistanceTravelled : DBNull.Value);
+    command.Parameters.AddWithValue("@shapeId", s.Id);
+    command.Parameters.AddWithValue("@shapePtLat", s.Latitude);
+    command.Parameters.AddWithValue("@shapePtLon", s.Longitude);
+    command.Parameters.AddWithValue("@shapePtSequence", s.Sequence);
+    command.Parameters.AddWithValue("@shapeDistanceTravelled", s.DistanceTravelled != null ? s.DistanceTravelled : DBNull.Value);
 
     await command.ExecuteNonQueryAsync();
 }
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_STOP (" + 
-                            "Id, " + 
-                            "Code, " + 
-                            "Name, " + 
-                            "Description, " + 
-                            "Longitude, " + 
-                            "Latitude, " + 
-                            "Zone, " + 
-                            "Url, " + 
+command.CommandText = "INSERT INTO GTFS_STOPS (" + 
+                            "StopId, " + 
+                            "StopCode, " + 
+                            "StopName, " + 
+                            "StopDesc, " + 
+                            "StopLat, " + 
+                            "StopLon, " + 
+                            "ZoneId, " + 
+                            "StopUrl, " + 
                             "LocationType, " + 
                             "ParentStation, " + 
-                            "Timezone, " + 
+                            "StopTimezone, " + 
                             "WheelchairBoarding, " + 
                             "LevelId, " + 
                             "PlatformCode" + 
                             ") " + 
                       "VALUES (" + 
-                            "@id, " + 
-                            "@code, " + 
-                            "@name, " + 
-                            "@description, " + 
-                            "@longitude, " + 
-                            "@latitude, " + 
-                            "@zone, " + 
-                            "@url, " + 
+                            "@stopId, " + 
+                            "@stopCode, " + 
+                            "@stopName, " + 
+                            "@stopDesc, " + 
+                            "@stopLat, " + 
+                            "@stopLon, " + 
+                            "@zoneId, " + 
+                            "@stopUrl, " + 
                             "@locationType, " + 
                             "@parentStation, " + 
-                            "@timezone, " + 
+                            "@stopTimezone, " + 
                             "@wheelchairBoarding, " + 
                             "@levelId, " + 
                             "@platformCode" + 
@@ -426,17 +426,17 @@ foreach (var s in feed.Stops)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", s.Id);
-    command.Parameters.AddWithValue("@code", s.Code != null ? s.Code != string.Empty ? s.Code : string.Empty : DBNull.Value);
-    command.Parameters.AddWithValue("@name", s.Name != null ? s.Name : DBNull.Value);
-    command.Parameters.AddWithValue("@description", s.Description != null ? s.Description : DBNull.Value);
-    command.Parameters.AddWithValue("@longitude", s.Longitude);
-    command.Parameters.AddWithValue("@latitude", s.Latitude);
-    command.Parameters.AddWithValue("@zone", s.Zone != null ? s.Zone : DBNull.Value);
-    command.Parameters.AddWithValue("@url", s.Url != null ? s.Url : DBNull.Value);
+    command.Parameters.AddWithValue("@stopId", s.Id);
+    command.Parameters.AddWithValue("@stopCode", s.Code != null ? s.Code != string.Empty ? s.Code : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@stopName", s.Name != null ? s.Name : DBNull.Value);
+    command.Parameters.AddWithValue("@stopDesc", s.Description != null ? s.Description : DBNull.Value);
+    command.Parameters.AddWithValue("@stopLat", s.Latitude);
+    command.Parameters.AddWithValue("@stopLon", s.Longitude);
+    command.Parameters.AddWithValue("@zoneId", s.Zone != null ? s.Zone : DBNull.Value);
+    command.Parameters.AddWithValue("@stopUrl", s.Url != null ? s.Url : DBNull.Value);
     command.Parameters.AddWithValue("@locationType", s.LocationType != null ? s.LocationType.ToString() != string.Empty ? s.LocationType : string.Empty : DBNull.Value);
     command.Parameters.AddWithValue("@parentStation", s.ParentStation != null ? s.ParentStation != string.Empty ? s.ParentStation : string.Empty : DBNull.Value);
-    command.Parameters.AddWithValue("@timezone", s.Timezone != null ? s.Timezone != string.Empty ? s.Timezone : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@stopTimezone", s.Timezone != null ? s.Timezone != string.Empty ? s.Timezone : string.Empty : DBNull.Value);
     command.Parameters.AddWithValue("@wheelchairBoarding", s.WheelchairBoarding != null ? s.WheelchairBoarding != string.Empty ? s.WheelchairBoarding : string.Empty : DBNull.Value);
     command.Parameters.AddWithValue("@levelId", s.LevelId != null ? s.LevelId : DBNull.Value);
     command.Parameters.AddWithValue("@platformCode", s.PlatformCode != null ? s.PlatformCode : DBNull.Value);
@@ -446,7 +446,7 @@ foreach (var s in feed.Stops)
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_STOP_TIME (" + 
+command.CommandText = "INSERT INTO GTFS_STOP_TIMES (" + 
                             "TripId, " + 
                             "ArrivalTime, " + 
                             "DepartureTime, " + 
@@ -456,7 +456,7 @@ command.CommandText = "INSERT INTO GTFS_STOP_TIME (" +
                             "PickupType, " + 
                             "DropOffType, " + 
                             "ShapeDistTravelled, " + 
-                            "TimepointType" + 
+                            "Timepoint" + 
                             ") " + 
                       "VALUES (" + 
                             "@tripId, " + 
@@ -468,7 +468,7 @@ command.CommandText = "INSERT INTO GTFS_STOP_TIME (" +
                             "@pickupType, " + 
                             "@dropOffType, " + 
                             "@shapeDistTravelled, " + 
-                            "@timepointType" + 
+                            "@timepoint" + 
                             ")";
 
 command.Parameters.Clear();
@@ -486,24 +486,24 @@ foreach (var s in feed.StopTimes)
     command.Parameters.AddWithValue("@pickupType", s.PickupType != null ? s.PickupType.ToString() != string.Empty ? s.PickupType : string.Empty : DBNull.Value);
     command.Parameters.AddWithValue("@dropOffType", s.DropOffType != null ? s.DropOffType.ToString() != string.Empty ? s.DropOffType : string.Empty : DBNull.Value);
     command.Parameters.AddWithValue("@shapeDistTravelled", s.ShapeDistTravelled != null ? s.ShapeDistTravelled : DBNull.Value);
-    command.Parameters.AddWithValue("@timepointType", s.TimepointType.ToString() != string.Empty ? s.TimepointType : DBNull.Value);
+    command.Parameters.AddWithValue("@timepoint", s.TimepointType.ToString() != string.Empty ? s.TimepointType : DBNull.Value);
     
     await command.ExecuteNonQueryAsync();
 }
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_TRANSFER (" + 
+command.CommandText = "INSERT INTO GTFS_TRANSFERS (" + 
                             "FromStopId, " + 
                             "ToStopId, " + 
                             "TransferType, " + 
-                            "MinimumTransferTime" + 
+                            "MinTransferTime" + 
                             ") " + 
                       "VALUES (" + 
                             "@fromStopId, " + 
                             "@toStopId, " + 
                             "@transferType, " + 
-                            "@minimumTransferTime" + 
+                            "@minTransferTime" + 
                             ")";
 
 command.Parameters.Clear();
@@ -515,34 +515,34 @@ foreach (var t in feed.Transfers)
     command.Parameters.AddWithValue("@fromStopId", t.FromStopId != null ? t.FromStopId : DBNull.Value);
     command.Parameters.AddWithValue("@toStopId", t.ToStopId != null ? t.ToStopId : DBNull.Value);
     command.Parameters.AddWithValue("@transferType", t.TransferType.ToString() != string.Empty ? t.TransferType : string.Empty);
-    command.Parameters.AddWithValue("@minimumTransferTime", t.MinimumTransferTime != null ? t.MinimumTransferTime : DBNull.Value);
+    command.Parameters.AddWithValue("@minTransferTime", t.MinimumTransferTime != null ? t.MinimumTransferTime : DBNull.Value);
     
     await command.ExecuteNonQueryAsync();
 }
 
 command.Parameters.Clear();
 
-command.CommandText = "INSERT INTO GTFS_TRIP (" + 
-                            "Id, " + 
+command.CommandText = "INSERT INTO GTFS_TRIPS (" + 
                             "RouteId, " + 
                             "ServiceId, " + 
-                            "Headsign, " + 
-                            "ShortName, " + 
-                            "Direction, " + 
+                            "TripId, " + 
+                            "TripHeadsign, " + 
+                            "TripShortName, " + 
+                            "DirectionId, " + 
                             "BlockId, " + 
                             "ShapeId, " + 
-                            "AccessibilityType" + 
+                            "WheelchairAccessible" +
                             ") " + 
                       "VALUES (" + 
-                            "@id, " + 
                             "@routeId, " + 
-                            "@serviceId, " + 
-                            "@headsign, " + 
-                            "@shortName, " + 
-                            "@direction, " + 
+                            "@serviceId, " +
+                            "@tripId, " +
+                            "@tripHeadsign, " + 
+                            "@tripShortName, " + 
+                            "@directionId, " + 
                             "@blockId, " + 
                             "@shapeId, " + 
-                            "@accessibilityType" + 
+                            "@wheelchairAccessible" +
                             ")";
 
 command.Parameters.Clear();
@@ -551,22 +551,22 @@ foreach (var t in feed.Trips)
 {
     command.Parameters.Clear();
     
-    command.Parameters.AddWithValue("@id", t.Id);
     command.Parameters.AddWithValue("@routeId", t.RouteId);
     command.Parameters.AddWithValue("@serviceId", t.ServiceId);
-    command.Parameters.AddWithValue("@headsign", t.Headsign != null ? t.Headsign : DBNull.Value);
-    command.Parameters.AddWithValue("@shortName", t.ShortName != null ? t.ShortName != string.Empty ? t.ShortName : string.Empty : DBNull.Value);
-    command.Parameters.AddWithValue("@direction", t.Direction != null ? t.Direction : DBNull.Value);
+    command.Parameters.AddWithValue("@tripId", t.Id);
+    command.Parameters.AddWithValue("@tripHeadsign", t.Headsign != null ? t.Headsign : DBNull.Value);
+    command.Parameters.AddWithValue("@tripShortName", t.ShortName != null ? t.ShortName != string.Empty ? t.ShortName : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@directionId", t.Direction != null ? t.Direction : DBNull.Value);
     command.Parameters.AddWithValue("@blockId", t.BlockId != null ? t.BlockId : DBNull.Value);
     command.Parameters.AddWithValue("@shapeId", t.ShapeId != null ? t.ShapeId : DBNull.Value);
-    command.Parameters.AddWithValue("@accessibilityType", t.AccessibilityType != null ? t.AccessibilityType.ToString() != string.Empty ? t.AccessibilityType : string.Empty : DBNull.Value);
+    command.Parameters.AddWithValue("@wheelchairAccessible", t.AccessibilityType != null ? t.AccessibilityType.ToString() != string.Empty ? t.AccessibilityType : string.Empty : DBNull.Value);
     
     await command.ExecuteNonQueryAsync();
 }
 
 command.Parameters.Clear();
 
-command.CommandText = "CREATE INDEX GTFS_STOP_TIME_INDEX ON GTFS_STOP_TIME (" + 
+command.CommandText = "CREATE INDEX GTFS_STOP_TIMES_INDEX ON GTFS_STOP_TIMES (" + 
                             "TripId, " + 
                             "StopId, " + 
                             "PickupType, " + 
@@ -576,7 +576,7 @@ command.CommandText = "CREATE INDEX GTFS_STOP_TIME_INDEX ON GTFS_STOP_TIME (" +
                             "StopHeadsign, " + 
                             "DropOffType, " + 
                             "ShapeDistTravelled, " + 
-                            "TimepointType" + 
+                            "Timepoint" + 
                             ")";
 
 await command.ExecuteNonQueryAsync();
