@@ -135,8 +135,8 @@ public class PostgresStorage : IDataStorage
             Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
             Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2) : null,
             Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
-            Longitude = dataReader.GetDouble(4),
-            Latitude = dataReader.GetDouble(5),
+            Latitude = dataReader.GetDouble(4),
+            Longitude = dataReader.GetDouble(5),
             Zone = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
             Url = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null,
             LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
@@ -156,8 +156,8 @@ public class PostgresStorage : IDataStorage
             Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
             Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2).Trim().ToTitleCase() : null,
             Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
-            Longitude = dataReader.GetDouble(4),
-            Latitude = dataReader.GetDouble(5),
+            Latitude = dataReader.GetDouble(4),
+            Longitude = dataReader.GetDouble(5),
             Zone = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
             Url = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null,
             LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
@@ -180,7 +180,7 @@ public class PostgresStorage : IDataStorage
     public Task<List<CalendarDate>> GetCalendarDatesAsync()
     {
         const string sql = "select * " + 
-                           "from gtfs_calendar_date";
+                           "from gtfs_calendar_dates";
         
         return ExecuteCommand(sql, GetCalendarDateFromDataReader);
     }
@@ -188,7 +188,7 @@ public class PostgresStorage : IDataStorage
     public Task<List<Stop>> GetStopsAsync()
     {
         const string sql = "select * " + 
-                           "from gtfs_stop";
+                           "from gtfs_stops";
         
         return ExecuteCommand(sql, GetStopFromDataReader);
     }
@@ -199,19 +199,19 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " + 
                                     "from gtfs_agency " +
-                                        $"where lower(coalesce(email, '')) = '{email.ToLower()}'",
+                                        $"where lower(coalesce(agency_email, '')) = '{email.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
                                      "from gtfs_agency " +
-                                        $"where lower(coalesce(email, '')) like '{email.ToLower()}%'",
+                                        $"where lower(coalesce(agency_email, '')) like '{email.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
                                    "from gtfs_agency " +
-                                        $"where lower(coalesce(email, '')) like '%{email.ToLower()}'",
+                                        $"where lower(coalesce(agency_email, '')) like '%{email.ToLower()}'",
             
             _ => "select * " + 
                  "from gtfs_agency " +
-                    $"where lower(coalesce(email, '')) like '%{email.ToLower()}%'"
+                    $"where lower(coalesce(agency_email, '')) like '%{email.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -223,19 +223,19 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " + 
                                     "from gtfs_agency " +
-                                        $"where lower(coalesce(fare_url, '')) = '{fareUrl.ToLower()}'",
+                                        $"where lower(coalesce(agency_fare_url, '')) = '{fareUrl.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
                                      "from gtfs_agency " +
-                                        $"where lower(coalesce(fare_url, '')) like '{fareUrl.ToLower()}%'",
+                                        $"where lower(coalesce(agency_fare_url, '')) like '{fareUrl.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
                                    "from gtfs_agency " +
-                                        $"where lower(coalesce(fare_url, '')) like '%{fareUrl.ToLower()}'",
+                                        $"where lower(coalesce(agency_fare_url, '')) like '%{fareUrl.ToLower()}'",
             
             _ => "select * " + 
                  "from gtfs_agency " +
-                    $"where lower(coalesce(fare_url, '')) like '%{fareUrl.ToLower()}%'"
+                    $"where lower(coalesce(agency_fare_url, '')) like '%{fareUrl.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -247,19 +247,19 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " + 
                                     "from gtfs_agency " +
-                                        $"where lower(coalesce(id, '')) = '{id.ToLower()}'",
+                                        $"where lower(coalesce(agency_id, '')) = '{id.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
                                      "from gtfs_agency " +
-                                        $"where lower(coalesce(id, '')) like '{id.ToLower()}%'",
+                                        $"where lower(coalesce(agency_id, '')) like '{id.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
                                    "from gtfs_agency " +
-                                        $"where lower(coalesce(id, '')) like '%{id.ToLower()}'",
+                                        $"where lower(coalesce(agency_id, '')) like '%{id.ToLower()}'",
             
             _ => "select * " + 
                  "from gtfs_agency " +
-                    $"where lower(coalesce(id, '')) like '%{id.ToLower()}%'"
+                    $"where lower(coalesce(agency_id, '')) like '%{id.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -271,19 +271,19 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " + 
                                     "from gtfs_agency " + 
-                                        $"where lower(coalesce(language_code, '')) = '{languageCode.ToLower()}'",
+                                        $"where lower(coalesce(agency_lang, '')) = '{languageCode.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
                                      "from gtfs_agency " + 
-                                        $"where lower(coalesce(language_code, '')) like '{languageCode.ToLower()}%'",
+                                        $"where lower(coalesce(agency_lang, '')) like '{languageCode.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
                                    "from gtfs_agency " + 
-                                        $"where lower(coalesce(language_code, '')) like '%{languageCode.ToLower()}'",
+                                        $"where lower(coalesce(agency_lang, '')) like '%{languageCode.ToLower()}'",
             
             _ => "select * " + 
                  "from gtfs_agency " + 
-                    $"where lower(coalesce(language_code, '')) like '%{languageCode.ToLower()}%'"
+                    $"where lower(coalesce(agency_lang, '')) like '%{languageCode.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -295,19 +295,19 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " + 
                                     "from gtfs_agency " + 
-                                        $"where lower(name) = '{name.ToLower()}'",
+                                        $"where lower(agency_name) = '{name.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
                                      "from gtfs_agency " + 
-                                        $"where lower(name) like '{name.ToLower()}%'",
+                                        $"where lower(agency_name) like '{name.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
                                    "from gtfs_agency " + 
-                                        $"where lower(name) like '%{name.ToLower()}'",
+                                        $"where lower(agency_name) like '%{name.ToLower()}'",
             
             _ => "select * " + 
                  "from gtfs_agency " + 
-                    $"where lower(name) like '%{name.ToLower()}%'"
+                    $"where lower(agency_name) like '%{name.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -319,19 +319,19 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " + 
                                     "from gtfs_agency " + 
-                                        $"where lower(coalesce(phone, '')) = '{phone.ToLower()}'",
+                                        $"where lower(coalesce(agency_phone, '')) = '{phone.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
                                      "from gtfs_agency " + 
-                                        $"where lower(coalesce(phone, '')) like '{phone.ToLower()}%'",
+                                        $"where lower(coalesce(agency_phone, '')) like '{phone.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
                                    "from gtfs_agency " + 
-                                        $"where lower(coalesce(phone, '')) like '%{phone.ToLower()}'",
+                                        $"where lower(coalesce(agency_phone, '')) like '%{phone.ToLower()}'",
             
             _ => "select * " + 
                  "from gtfs_agency " + 
-                    $"where lower(coalesce(phone, '')) like '%{phone.ToLower()}%'"
+                    $"where lower(coalesce(agency_phone, '')) like '%{phone.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -343,47 +343,47 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " + 
                                     "from gtfs_agency " + 
-                                        $"where lower(name) = '{search.ToLower()}' " + 
-                                           $"or lower(url) = '{search.ToLower()}' " + 
-                                           $"or lower(timezone) = '{search.ToLower()}' " + 
-                                           $"or lower(coalesce(id, '')) = '{search.ToLower()}' " + 
-                                           $"or lower(coalesce(language_code, '')) = '{search.ToLower()}' " + 
-                                           $"or lower(coalesce(phone, '')) = '{search.ToLower()}' " + 
-                                           $"or lower(coalesce(fare_url, '')) = '{search.ToLower()}' " + 
-                                           $"or lower(coalesce(email, '')) = '{search.ToLower()}'",
+                                        $"where lower(agency_name) = '{search.ToLower()}' " + 
+                                           $"or lower(agency_url) = '{search.ToLower()}' " + 
+                                           $"or lower(agency_timezone) = '{search.ToLower()}' " + 
+                                           $"or lower(coalesce(agency_id, '')) = '{search.ToLower()}' " + 
+                                           $"or lower(coalesce(agency_lang, '')) = '{search.ToLower()}' " + 
+                                           $"or lower(coalesce(agency_phone, '')) = '{search.ToLower()}' " + 
+                                           $"or lower(coalesce(agency_fare_url, '')) = '{search.ToLower()}' " + 
+                                           $"or lower(coalesce(agency_email, '')) = '{search.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
                                      "from gtfs_agency " + 
-                                        $"where lower(name) like '{search.ToLower()}%' " + 
-                                           $"or lower(url) like '{search.ToLower()}%' " + 
-                                           $"or lower(timezone) like '{search.ToLower()}%' " + 
-                                           $"or lower(coalesce(id, '')) like '{search.ToLower()}%' " + 
-                                           $"or lower(coalesce(language_code, '')) like '{search.ToLower()}%' " + 
-                                           $"or lower(coalesce(phone, '')) like '{search.ToLower()}%' " + 
-                                           $"or lower(coalesce(fare_url, '')) like '{search.ToLower()}%' " + 
-                                           $"or lower(coalesce(email, '')) like '{search.ToLower()}%'",
+                                        $"where lower(agency_name) like '{search.ToLower()}%' " + 
+                                           $"or lower(agency_url) like '{search.ToLower()}%' " + 
+                                           $"or lower(agency_timezone) like '{search.ToLower()}%' " + 
+                                           $"or lower(coalesce(agency_id, '')) like '{search.ToLower()}%' " + 
+                                           $"or lower(coalesce(agency_lang, '')) like '{search.ToLower()}%' " + 
+                                           $"or lower(coalesce(agency_phone, '')) like '{search.ToLower()}%' " + 
+                                           $"or lower(coalesce(agency_fare_url, '')) like '{search.ToLower()}%' " + 
+                                           $"or lower(coalesce(agency_email, '')) like '{search.ToLower()}%'",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_agency " + 
-                                        $"where lower(name) like '%{search.ToLower()}' " + 
-                                           $"or lower(url) like '%{search.ToLower()}' " + 
-                                           $"or lower(timezone) like '%{search.ToLower()}' " + 
-                                           $"or lower(coalesce(id, '')) like '%{search.ToLower()}' " + 
-                                           $"or lower(coalesce(language_code, '')) like '%{search.ToLower()}' " + 
-                                           $"or lower(coalesce(phone, '')) like '%{search.ToLower()}' " + 
-                                           $"or lower(coalesce(fare_url, '')) like '%{search.ToLower()}' " + 
-                                           $"or lower(coalesce(email, '')) like '%{search.ToLower()}'",
+                                        $"where lower(agency_name) like '%{search.ToLower()}' " + 
+                                           $"or lower(agency_url) like '%{search.ToLower()}' " + 
+                                           $"or lower(agency_timezone) like '%{search.ToLower()}' " + 
+                                           $"or lower(coalesce(agency_id, '')) like '%{search.ToLower()}' " + 
+                                           $"or lower(coalesce(agency_lang, '')) like '%{search.ToLower()}' " + 
+                                           $"or lower(coalesce(agency_phone, '')) like '%{search.ToLower()}' " + 
+                                           $"or lower(coalesce(agency_fare_url, '')) like '%{search.ToLower()}' " + 
+                                           $"or lower(coalesce(agency_email, '')) like '%{search.ToLower()}'",
             
             _ => "select * " + 
                  "from gtfs_agency " + 
-                    $"where lower(name) like '%{search.ToLower()}%' " + 
-                       $"or lower(url) like '%{search.ToLower()}%' " + 
-                       $"or lower(timezone) like '%{search.ToLower()}%' " + 
-                       $"or lower(coalesce(id, '')) like '%{search.ToLower()}%' " + 
-                       $"or lower(coalesce(language_code, '')) like '%{search.ToLower()}%' " + 
-                       $"or lower(coalesce(phone, '')) like '%{search.ToLower()}%' " + 
-                       $"or lower(coalesce(fare_url, '')) like '%{search.ToLower()}%' " + 
-                       $"or lower(coalesce(email, '')) like '%{search.ToLower()}%'"
+                    $"where lower(agency_name) like '%{search.ToLower()}%' " + 
+                       $"or lower(agency_url) like '%{search.ToLower()}%' " + 
+                       $"or lower(agency_timezone) like '%{search.ToLower()}%' " + 
+                       $"or lower(coalesce(agency_id, '')) like '%{search.ToLower()}%' " + 
+                       $"or lower(coalesce(agency_lang, '')) like '%{search.ToLower()}%' " + 
+                       $"or lower(coalesce(agency_phone, '')) like '%{search.ToLower()}%' " + 
+                       $"or lower(coalesce(agency_fare_url, '')) like '%{search.ToLower()}%' " + 
+                       $"or lower(coalesce(agency_email, '')) like '%{search.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -395,19 +395,19 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " + 
                                     "from gtfs_agency " + 
-                                        $"where lower(timezone) = '{timezone.ToLower()}'",
+                                        $"where lower(agency_timezone) = '{timezone.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
                                      "from gtfs_agency " + 
-                                        $"where lower(timezone) like '{timezone.ToLower()}%'",
+                                        $"where lower(agency_timezone) like '{timezone.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
                                    "from gtfs_agency " + 
-                                        $"where lower(timezone) like '%{timezone.ToLower()}'",
+                                        $"where lower(agency_timezone) like '%{timezone.ToLower()}'",
             
             _ => "select * " + 
                  "from gtfs_agency " + 
-                    $"where lower(timezone) like '%{timezone.ToLower()}%'"
+                    $"where lower(agency_timezone) like '%{timezone.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -419,19 +419,19 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " + 
                                     "from gtfs_agency " + 
-                                        $"where lower(url) = '{url.ToLower()}'",
+                                        $"where lower(agency_url) = '{url.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
                                      "from gtfs_agency " + 
-                                        $"where lower(url) like '{url.ToLower()}%'",
+                                        $"where lower(agency_url) like '{url.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
                                    "from gtfs_agency " + 
-                                        $"where lower(url) like '%{url.ToLower()}'",
+                                        $"where lower(agency_url) like '%{url.ToLower()}'",
             
             _ => "select * " + 
                  "from gtfs_agency " + 
-                    $"where lower(url) like '%{url.ToLower()}%'"
+                    $"where lower(agency_url) like '%{url.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -443,13 +443,13 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Partial => "select s.departure_time, " + 
                                              "s.stop_id, " + 
-                                             "t.id, " + 
+                                             "t.trip_id, " + 
                                              "t.service_id, " + 
-                                             "t.headsign, " + 
-                                             "t.short_name, " + 
+                                             "t.trip_headsign, " + 
+                                             "t.trip_short_name, " + 
                                              "r.agency_id, " + 
-                                             "r.short_name, " + 
-                                             "r.long_name, " + 
+                                             "r.route_short_name, " + 
+                                             "r.route_long_name, " + 
                                              "c.monday, " + 
                                              "c.tuesday, " + 
                                              "c.wednesday, " + 
@@ -459,9 +459,9 @@ public class PostgresStorage : IDataStorage
                                              "c.sunday, " + 
                                              "c.start_date, " + 
                                              "c.end_date " + 
-                                      "from gtfs_stop_time s " + 
-                                      "left join gtfs_trip t on (s.trip_id = t.id) " + 
-                                      "left join gtfs_route r on (t.route_id = r.id) " + 
+                                      "from gtfs_stop_times s " + 
+                                      "left join gtfs_trips t on (s.trip_id = t.trip_id) " + 
+                                      "left join gtfs_routes r on (t.route_id = r.route_id) " + 
                                       "left join gtfs_calendar c on (t.service_id = c.service_id) " + 
                                              $"where lower(s.stop_id) like '%{id.ToLower()}%' " + 
                                                 "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " + 
@@ -469,13 +469,13 @@ public class PostgresStorage : IDataStorage
 
             ComparisonType.Starts => "select s.departure_time, " + 
                                             "s.stop_id, " + 
-                                            "t.id, " + 
+                                            "t.trip_id, " + 
                                             "t.service_id, " + 
-                                            "t.headsign, " + 
-                                            "t.short_name, " + 
+                                            "t.trip_headsign, " + 
+                                            "t.trip_short_name, " + 
                                             "r.agency_id, " + 
-                                            "r.short_name, " + 
-                                            "r.long_name, " + 
+                                            "r.route_short_name, " + 
+                                            "r.route_long_name, " + 
                                             "c.monday, " + 
                                             "c.tuesday, " + 
                                             "c.wednesday, " + 
@@ -485,9 +485,9 @@ public class PostgresStorage : IDataStorage
                                             "c.sunday, " + 
                                             "c.start_date, " + 
                                             "c.end_date " + 
-                                     "from gtfs_stop_time s " + 
-                                     "left join gtfs_trip t on (s.trip_id = t.id) " + 
-                                     "left join gtfs_route r on (t.route_id = r.id) " + 
+                                     "from gtfs_stop_times s " + 
+                                     "left join gtfs_trips t on (s.trip_id = t.trip_id) " + 
+                                     "left join gtfs_routes r on (t.route_id = r.route_id) " + 
                                      "left join gtfs_calendar c on (t.service_id = c.service_id) " + 
                                             $"where lower(s.stop_id) like '{id.ToLower()}%' " + 
                                                "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " + 
@@ -495,13 +495,13 @@ public class PostgresStorage : IDataStorage
 
             ComparisonType.Ends => "select s.departure_time, " + 
                                           "s.stop_id, " + 
-                                          "t.id, " + 
+                                          "t.trip_id, " + 
                                           "t.service_id, " + 
-                                          "t.headsign, " + 
-                                          "t.short_name, " + 
+                                          "t.trip_headsign, " + 
+                                          "t.trip_short_name, " + 
                                           "r.agency_id, " + 
-                                          "r.short_name, " + 
-                                          "r.long_name, " + 
+                                          "r.route_short_name, " + 
+                                          "r.route_long_name, " + 
                                           "c.monday, " + 
                                           "c.tuesday, " + 
                                           "c.wednesday, " + 
@@ -511,9 +511,9 @@ public class PostgresStorage : IDataStorage
                                           "c.sunday, " + 
                                           "c.start_date, " + 
                                           "c.end_date " + 
-                                   "from gtfs_stop_time s " + 
-                                   "left join gtfs_trip t on (s.trip_id = t.id) " + 
-                                   "left join gtfs_route r on (t.route_id = r.id) " + 
+                                   "from gtfs_stop_times s " + 
+                                   "left join gtfs_trips t on (s.trip_id = t.trip_id) " + 
+                                   "left join gtfs_routes r on (t.route_id = r.route_id) " + 
                                    "left join gtfs_calendar c on (t.service_id = c.service_id) " + 
                                           $"where lower(s.stop_id) like '%{id.ToLower()}' " + 
                                              "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " + 
@@ -521,13 +521,13 @@ public class PostgresStorage : IDataStorage
 
             _ => "select s.departure_time, " + 
                         "s.stop_id, " + 
-                        "t.id, " + 
+                        "t.trip_id, " + 
                         "t.service_id, " + 
-                        "t.headsign, " + 
-                        "t.short_name, " + 
+                        "t.trip_headsign, " + 
+                        "t.trip_short_name, " + 
                         "r.agency_id, " + 
-                        "r.short_name, " + 
-                        "r.long_name, " + 
+                        "r.route_short_name, " + 
+                        "r.route_long_name, " + 
                         "c.monday, " + 
                         "c.tuesday, " + 
                         "c.wednesday, " + 
@@ -537,9 +537,9 @@ public class PostgresStorage : IDataStorage
                         "c.sunday, " + 
                         "c.start_date, " + 
                         "c.end_date " + 
-                 "from gtfs_stop_time s " + 
-                 "left join gtfs_trip t on (s.trip_id = t.id) " + 
-                 "left join gtfs_route r on (t.route_id = r.id) " + 
+                 "from gtfs_stop_times s " + 
+                 "left join gtfs_trips t on (s.trip_id = t.trip_id) " + 
+                 "left join gtfs_routes r on (t.route_id = r.route_id) " + 
                  "left join gtfs_calendar c on (t.service_id = c.service_id) " + 
                         $"where lower(s.stop_id) = '{id.ToLower()}' " + 
                            "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " + 
@@ -555,13 +555,13 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Partial => "select s.departure_time, " + 
                                              "s.stop_id, " + 
-                                             "t.id, " + 
+                                             "t.trip_id, " + 
                                              "t.service_id, " + 
-                                             "t.headsign, " + 
-                                             "t.short_name, " + 
+                                             "t.trip_headsign, " + 
+                                             "t.trip_short_name, " + 
                                              "r.agency_id, " + 
-                                             "r.short_name, " + 
-                                             "r.long_name, " + 
+                                             "r.route_short_name, " + 
+                                             "r.route_long_name, " + 
                                              "c.monday, " + 
                                              "c.tuesday, " + 
                                              "c.wednesday, " + 
@@ -571,9 +571,9 @@ public class PostgresStorage : IDataStorage
                                              "c.sunday, " + 
                                              "c.start_date, " + 
                                              "c.end_date " + 
-                                      "from gtfs_stop_time s " + 
-                                      "left join gtfs_trip t on (s.trip_id = t.id) " + 
-                                      "left join gtfs_route r on (t.route_id = r.id) " + 
+                                      "from gtfs_stop_times s " + 
+                                      "left join gtfs_trips t on (s.trip_id = t.trip_id) " + 
+                                      "left join gtfs_routes r on (t.route_id = r.route_id) " + 
                                       "left join gtfs_calendar c on (t.service_id = c.service_id) " + 
                                              $"where lower(s.trip_id) like '%{id.ToLower()}%' " + 
                                                 "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " + 
@@ -581,13 +581,13 @@ public class PostgresStorage : IDataStorage
 
             ComparisonType.Starts => "select s.departure_time, " + 
                                             "s.stop_id, " + 
-                                            "t.id, " + 
+                                            "t.trip_id, " + 
                                             "t.service_id, " + 
-                                            "t.headsign, " + 
-                                            "t.short_name, " + 
+                                            "t.trip_headsign, " + 
+                                            "t.trip_short_name, " + 
                                             "r.agency_id, " + 
-                                            "r.short_name, " + 
-                                            "r.long_name, " + 
+                                            "r.route_short_name, " + 
+                                            "r.route_long_name, " + 
                                             "c.monday, " + 
                                             "c.tuesday, " + 
                                             "c.wednesday, " + 
@@ -597,9 +597,9 @@ public class PostgresStorage : IDataStorage
                                             "c.sunday, " + 
                                             "c.start_date, " + 
                                             "c.end_date " + 
-                                     "from gtfs_stop_time s " + 
-                                     "left join gtfs_trip t on (s.trip_id = t.id) " + 
-                                     "left join gtfs_route r on (t.route_id = r.id) " + 
+                                     "from gtfs_stop_times s " + 
+                                     "left join gtfs_trips t on (s.trip_id = t.trip_id) " + 
+                                     "left join gtfs_routes r on (t.route_id = r.route_id) " + 
                                      "left join gtfs_calendar c on (t.service_id = c.service_id) " + 
                                             $"where lower(s.trip_id) like '{id.ToLower()}%' " + 
                                                "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " + 
@@ -607,13 +607,13 @@ public class PostgresStorage : IDataStorage
 
             ComparisonType.Ends => "select s.departure_time, " + 
                                           "s.stop_id, " + 
-                                          "t.id, " + 
+                                          "t.trip_id, " + 
                                           "t.service_id, " + 
-                                          "t.headsign, " + 
-                                          "t.short_name, " + 
+                                          "t.trip_headsign, " + 
+                                          "t.trip_short_name, " + 
                                           "r.agency_id, " + 
-                                          "r.short_name, " + 
-                                          "r.long_name, " + 
+                                          "r.route_short_name, " + 
+                                          "r.route_long_name, " + 
                                           "c.monday, " + 
                                           "c.tuesday, " + 
                                           "c.wednesday, " + 
@@ -623,9 +623,9 @@ public class PostgresStorage : IDataStorage
                                           "c.sunday, " + 
                                           "c.start_date, " + 
                                           "c.end_date " + 
-                                   "from gtfs_stop_time s " + 
-                                   "left join gtfs_trip t on (s.trip_id = t.id) " + 
-                                   "left join gtfs_route r on (t.route_id = r.id) " + 
+                                   "from gtfs_stop_times s " + 
+                                   "left join gtfs_trips t on (s.trip_id = t.trip_id) " + 
+                                   "left join gtfs_routes r on (t.route_id = r.route_id) " + 
                                    "left join gtfs_calendar c on (t.service_id = c.service_id) " + 
                                           $"where lower(s.trip_id) like '%{id.ToLower()}' " + 
                                              "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " + 
@@ -633,13 +633,13 @@ public class PostgresStorage : IDataStorage
 
             _ => "select s.departure_time, " + 
                         "s.stop_id, " + 
-                        "t.id, " + 
+                        "t.trip_id, " + 
                         "t.service_id, " + 
-                        "t.headsign, " + 
-                        "t.short_name, " + 
+                        "t.trip_headsign, " + 
+                        "t.trip_short_name, " + 
                         "r.agency_id, " + 
-                        "r.short_name, " + 
-                        "r.long_name, " + 
+                        "r.route_short_name, " + 
+                        "r.route_long_name, " + 
                         "c.monday, " + 
                         "c.tuesday, " + 
                         "c.wednesday, " + 
@@ -649,9 +649,9 @@ public class PostgresStorage : IDataStorage
                         "c.sunday, " + 
                         "c.start_date, " + 
                         "c.end_date " + 
-                 "from gtfs_stop_time s " + 
-                 "left join gtfs_trip t on (s.trip_id = t.id) " + 
-                 "left join gtfs_route r on (t.route_id = r.id) " + 
+                 "from gtfs_stop_times s " + 
+                 "left join gtfs_trips t on (s.trip_id = t.trip_id) " + 
+                 "left join gtfs_routes r on (t.route_id = r.route_id) " + 
                  "left join gtfs_calendar c on (t.service_id = c.service_id) " + 
                         $"where lower(s.trip_id) = '{id.ToLower()}' " + 
                            "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " + 
@@ -666,20 +666,20 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
-                                        $"where lower(coalesce(code, '')) = '{code.ToLower()}'",
+                                    "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_code, '')) = '{code.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
-                                        $"where lower(coalesce(code, '')) like '{code.ToLower()}%'",
+                                     "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_code, '')) like '{code.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
-                                        $"where lower(coalesce(code, '')) like '%{code.ToLower()}'",
+                                   "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_code, '')) like '%{code.ToLower()}'",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
-                    $"where lower(coalesce(code, '')) like '%{code.ToLower()}%'"
+                 "from gtfs_stops " + 
+                    $"where lower(coalesce(stop_code, '')) like '%{code.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -690,20 +690,20 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
-                                        $"where lower(coalesce(description, '')) = '{description.ToLower()}'",
+                                    "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_desc, '')) = '{description.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
-                                        $"where lower(coalesce(description, '')) like '{description.ToLower()}%'",
+                                     "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_desc, '')) like '{description.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
-                                        $"where lower(coalesce(description, '')) like '%{description.ToLower()}'",
+                                   "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_desc, '')) like '%{description.ToLower()}'",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
-                    $"where lower(coalesce(description, '')) like '%{description.ToLower()}%'"
+                 "from gtfs_stops " + 
+                    $"where lower(coalesce(stop_desc, '')) like '%{description.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -714,20 +714,20 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
-                                        $"where lower(id) = '{id.ToLower()}'",
+                                    "from gtfs_stops " + 
+                                        $"where lower(stop_id) = '{id.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
-                                        $"where lower(id) like '{id.ToLower()}%'",
+                                     "from gtfs_stops " + 
+                                        $"where lower(stop_id) like '{id.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
-                                        $"where lower(id) like '%{id.ToLower()}'",
+                                   "from gtfs_stops " + 
+                                        $"where lower(stop_id) like '%{id.ToLower()}'",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
-                    $"where lower(id) like '%{id.ToLower()}%'"
+                 "from gtfs_stops " + 
+                    $"where lower(stop_id) like '%{id.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -738,19 +738,19 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
+                                    "from gtfs_stops " + 
                                         $"where lower(coalesce(level_id, '')) = '{id.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
+                                     "from gtfs_stops " + 
                                         $"where lower(coalesce(level_id, '')) like '{id.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
+                                   "from gtfs_stops " + 
                                         $"where lower(coalesce(level_id, '')) like '%{id.ToLower()}'",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
+                 "from gtfs_stops " + 
                     $"where lower(coalesce(level_id, '')) like '%{id.ToLower()}%'"
         };
         
@@ -762,32 +762,32 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
-                                        $"where longitude >= {minimumLongitude} " + 
-                                          $"and latitude >= {minimumLatitude} " + 
-                                          $"and longitude <= {maximumLongitude} " + 
-                                          $"and latitude <= {maximumLatitude}",
+                                    "from gtfs_stops " + 
+                                        $"where stop_lon >= {minimumLongitude} " + 
+                                          $"and stop_lat >= {minimumLatitude} " + 
+                                          $"and stop_lon <= {maximumLongitude} " + 
+                                          $"and stop_lat <= {maximumLatitude}",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
-                                        $"where longitude >= {minimumLongitude} " + 
-                                          $"and latitude >= {minimumLatitude} " + 
-                                          $"and longitude <= {maximumLongitude} " + 
-                                          $"and latitude <= {maximumLatitude}",
+                                     "from gtfs_stops " + 
+                                        $"where stop_lon >= {minimumLongitude} " + 
+                                          $"and stop_lat >= {minimumLatitude} " + 
+                                          $"and stop_lon <= {maximumLongitude} " + 
+                                          $"and stop_lat <= {maximumLatitude}",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
-                                        $"where longitude >= {minimumLongitude} " + 
-                                          $"and latitude >= {minimumLatitude} " + 
-                                          $"and longitude <= {maximumLongitude} " + 
-                                          $"and latitude <= {maximumLatitude}",
+                                   "from gtfs_stops " + 
+                                        $"where stop_lon >= {minimumLongitude} " + 
+                                          $"and stop_lat >= {minimumLatitude} " + 
+                                          $"and stop_lon <= {maximumLongitude} " + 
+                                          $"and stop_lat <= {maximumLatitude}",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
-                    $"where longitude >= {minimumLongitude} " + 
-                      $"and latitude >= {minimumLatitude} " + 
-                      $"and longitude <= {maximumLongitude} " + 
-                      $"and latitude <= {maximumLatitude}"
+                 "from gtfs_stops " + 
+                    $"where stop_lon >= {minimumLongitude} " + 
+                      $"and stop_lat >= {minimumLatitude} " + 
+                      $"and stop_lon <= {maximumLongitude} " + 
+                      $"and stop_lat <= {maximumLatitude}"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -798,19 +798,19 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
+                                    "from gtfs_stops " + 
                                         $"where coalesce(nullif(location_type, ''), 0) = {locationType.ToInt32()}",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
+                                     "from gtfs_stops " + 
                                         $"where coalesce(nullif(location_type, ''), 0) = {locationType.ToInt32()}",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
+                                   "from gtfs_stops " + 
                                         $"where coalesce(nullif(location_type, ''), 0) = {locationType.ToInt32()}",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
+                 "from gtfs_stops " + 
                     $"where coalesce(nullif(location_type, ''), 0) = {locationType.ToInt32()}"
         };
         
@@ -822,20 +822,20 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
-                                        $"where lower(coalesce(name, '')) = '{name.ToLower()}'",
+                                    "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_name, '')) = '{name.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
-                                        $"where lower(coalesce(name, '')) like '{name.ToLower()}%'",
+                                     "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_name, '')) like '{name.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
-                                        $"where lower(coalesce(name, '')) like '%{name.ToLower()}'",
+                                   "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_name, '')) like '%{name.ToLower()}'",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
-                    $"where lower(coalesce(name, '')) like '%{name.ToLower()}%'"
+                 "from gtfs_stops " + 
+                    $"where lower(coalesce(stop_name, '')) like '%{name.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -846,19 +846,19 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
+                                    "from gtfs_stops " + 
                                         $"where lower(coalesce(parent_station, '')) = '{id.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
+                                     "from gtfs_stops " + 
                                         $"where lower(coalesce(parent_station, '')) like '{id.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
+                                   "from gtfs_stops " + 
                                         $"where lower(coalesce(parent_station, '')) like '%{id.ToLower()}'",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
+                 "from gtfs_stops " + 
                     $"where lower(coalesce(parent_station, '')) like '%{id.ToLower()}%'"
         };
         
@@ -870,19 +870,19 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
+                                    "from gtfs_stops " + 
                                         $"where lower(coalesce(platform_code, '')) = '{platformCode.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
+                                     "from gtfs_stops " + 
                                         $"where lower(coalesce(platform_code, '')) like '{platformCode.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
+                                   "from gtfs_stops " + 
                                         $"where lower(coalesce(platform_code, '')) like '%{platformCode.ToLower()}'",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
+                 "from gtfs_stops " + 
                     $"where lower(coalesce(platform_code, '')) like '%{platformCode.ToLower()}%'"
         };
         
@@ -894,54 +894,54 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " +
-                                    "from gtfs_stop " + 
-                                        $"where lower(id) = '{search.ToLower()}' " +
-                                           $"or lower(coalesce(code, '')) = '{search.ToLower()}' " +
-                                           $"or lower(coalesce(name, '')) = '{search.ToLower()}' " +
-                                           $"or lower(coalesce(description, '')) = '{search.ToLower()}' " +
-                                           $"or lower(coalesce(zone, '')) = '{search.ToLower()}' " +
-                                           $"or lower(coalesce(url, '')) = '{search.ToLower()}' " +
+                                    "from gtfs_stops " + 
+                                        $"where lower(stop_id) = '{search.ToLower()}' " +
+                                           $"or lower(coalesce(stop_code, '')) = '{search.ToLower()}' " +
+                                           $"or lower(coalesce(stop_name, '')) = '{search.ToLower()}' " +
+                                           $"or lower(coalesce(stop_desc, '')) = '{search.ToLower()}' " +
+                                           $"or lower(coalesce(zone_id, '')) = '{search.ToLower()}' " +
+                                           $"or lower(coalesce(stop_url, '')) = '{search.ToLower()}' " +
                                            $"or lower(coalesce(parent_station, '')) = '{search.ToLower()}' " +
-                                           $"or lower(coalesce(timezone, '')) = '{search.ToLower()}' " +
+                                           $"or lower(coalesce(stop_timezone, '')) = '{search.ToLower()}' " +
                                            $"or lower(coalesce(level_id, '')) = '{search.ToLower()}' " +
                                            $"or lower(coalesce(platform_code, '')) = '{search.ToLower()}'",
 
             ComparisonType.Starts => "select * " +
-                                     "from gtfs_stop " + 
-                                        $"where lower(id) like '{search.ToLower()}%' " +
-                                           $"or lower(coalesce(code, '')) like '{search.ToLower()}%' " +
-                                           $"or lower(coalesce(name, '')) like '{search.ToLower()}%' " +
-                                           $"or lower(coalesce(description, '')) like '{search.ToLower()}%' " +
-                                           $"or lower(coalesce(zone, '')) like '{search.ToLower()}%' " +
-                                           $"or lower(coalesce(url, '')) like '{search.ToLower()}%' " +
+                                     "from gtfs_stops " + 
+                                        $"where lower(stop_id) like '{search.ToLower()}%' " +
+                                           $"or lower(coalesce(stop_code, '')) like '{search.ToLower()}%' " +
+                                           $"or lower(coalesce(stop_name, '')) like '{search.ToLower()}%' " +
+                                           $"or lower(coalesce(stop_desc, '')) like '{search.ToLower()}%' " +
+                                           $"or lower(coalesce(zone_id, '')) like '{search.ToLower()}%' " +
+                                           $"or lower(coalesce(stop_url, '')) like '{search.ToLower()}%' " +
                                            $"or lower(coalesce(parent_station, '')) like '{search.ToLower()}%' " +
-                                           $"or lower(coalesce(timezone, '')) like '{search.ToLower()}%' " +
+                                           $"or lower(coalesce(stop_timezone, '')) like '{search.ToLower()}%' " +
                                            $"or lower(coalesce(level_id, '')) like '{search.ToLower()}%' " +
                                            $"or lower(coalesce(platform_code, '')) like '{search.ToLower()}%'",
 
             ComparisonType.Ends => "select * " +
-                                   "from gtfs_stop " + 
-                                        $"where lower(id) like '%{search.ToLower()}' " +
-                                           $"or lower(coalesce(code, '')) like '%{search.ToLower()}' " +
-                                           $"or lower(coalesce(name, '')) like '%{search.ToLower()}' " +
-                                           $"or lower(coalesce(description, '')) like '%{search.ToLower()}' " +
-                                           $"or lower(coalesce(zone, '')) like '%{search.ToLower()}' " +
-                                           $"or lower(coalesce(url, '')) like '%{search.ToLower()}' " +
+                                   "from gtfs_stops " + 
+                                        $"where lower(stop_id) like '%{search.ToLower()}' " +
+                                           $"or lower(coalesce(stop_code, '')) like '%{search.ToLower()}' " +
+                                           $"or lower(coalesce(stop_name, '')) like '%{search.ToLower()}' " +
+                                           $"or lower(coalesce(stop_desc, '')) like '%{search.ToLower()}' " +
+                                           $"or lower(coalesce(zone_id, '')) like '%{search.ToLower()}' " +
+                                           $"or lower(coalesce(stop_url, '')) like '%{search.ToLower()}' " +
                                            $"or lower(coalesce(parent_station, '')) like '%{search.ToLower()}' " +
-                                           $"or lower(coalesce(timezone, '')) like '%{search.ToLower()}' " +
+                                           $"or lower(coalesce(stop_timezone, '')) like '%{search.ToLower()}' " +
                                            $"or lower(coalesce(level_id, '')) like '%{search.ToLower()}' " +
                                            $"or lower(coalesce(platform_code, '')) like '%{search.ToLower()}'",
 
             _ => "select * " +
-                 "from gtfs_stop " + 
-                    $"where lower(id) like '%{search.ToLower()}%' " +
-                       $"or lower(coalesce(code, '')) like '%{search.ToLower()}%' " +
-                       $"or lower(coalesce(name, '')) like '%{search.ToLower()}%' " +
-                       $"or lower(coalesce(description, '')) like '%{search.ToLower()}%' " +
-                       $"or lower(coalesce(zone, '')) like '%{search.ToLower()}%' " +
-                       $"or lower(coalesce(url, '')) like '%{search.ToLower()}%' " +
+                 "from gtfs_stops " + 
+                    $"where lower(stop_id) like '%{search.ToLower()}%' " +
+                       $"or lower(coalesce(stop_code, '')) like '%{search.ToLower()}%' " +
+                       $"or lower(coalesce(stop_name, '')) like '%{search.ToLower()}%' " +
+                       $"or lower(coalesce(stop_desc, '')) like '%{search.ToLower()}%' " +
+                       $"or lower(coalesce(zone_id, '')) like '%{search.ToLower()}%' " +
+                       $"or lower(coalesce(stop_url, '')) like '%{search.ToLower()}%' " +
                        $"or lower(coalesce(parent_station, '')) like '%{search.ToLower()}%' " +
-                       $"or lower(coalesce(timezone, '')) like '%{search.ToLower()}%' " +
+                       $"or lower(coalesce(stop_timezone, '')) like '%{search.ToLower()}%' " +
                        $"or lower(coalesce(level_id, '')) like '%{search.ToLower()}%' " +
                        $"or lower(coalesce(platform_code, '')) like '%{search.ToLower()}%'"
         };
@@ -954,20 +954,20 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
-                                        $"where lower(coalesce(timezone, '')) = '{timezone.ToLower()}'",
+                                    "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_timezone, '')) = '{timezone.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
-                                        $"where lower(coalesce(timezone, '')) like '{timezone.ToLower()}%'",
+                                     "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_timezone, '')) like '{timezone.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
-                                        $"where lower(coalesce(timezone, '')) like '%{timezone.ToLower()}'",
+                                   "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_timezone, '')) like '%{timezone.ToLower()}'",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
-                    $"where lower(coalesce(timezone, '')) like '%{timezone.ToLower()}%'"
+                 "from gtfs_stops " + 
+                    $"where lower(coalesce(stop_timezone, '')) like '%{timezone.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -978,20 +978,20 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
-                                        $"where lower(coalesce(url, '')) = '{url.ToLower()}'",
+                                    "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_url, '')) = '{url.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
-                                        $"where lower(coalesce(url, '')) like '{url.ToLower()}%'",
+                                     "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_url, '')) like '{url.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
-                                        $"where lower(coalesce(url, '')) like '%{url.ToLower()}'",
+                                   "from gtfs_stops " + 
+                                        $"where lower(coalesce(stop_url, '')) like '%{url.ToLower()}'",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
-                    $"where lower(coalesce(url, '')) like '%{url.ToLower()}%'"
+                 "from gtfs_stops " + 
+                    $"where lower(coalesce(stop_url, '')) like '%{url.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -1002,44 +1002,44 @@ public class PostgresStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
+                                    "from gtfs_stops " + 
                                         $"where coalesce(nullif(wheelchair_boarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
+                                     "from gtfs_stops " + 
                                         $"where coalesce(nullif(wheelchair_boarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
+                                   "from gtfs_stops " + 
                                         $"where coalesce(nullif(wheelchair_boarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
+                 "from gtfs_stops " + 
                     $"where coalesce(nullif(wheelchair_boarding, ''), 0) = {wheelchairBoarding.ToInt32()}"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
     }
     
-    public Task<List<Stop>> GetStopsByZoneAsync(string zone, ComparisonType comparison)
+    public Task<List<Stop>> GetStopsByZoneAsync(string id, ComparisonType comparison)
     {
         var sql = comparison switch
         {
             ComparisonType.Exact => "select * " + 
-                                    "from gtfs_stop " + 
-                                        $"where lower(coalesce(zone, '')) = '{zone.ToLower()}'",
+                                    "from gtfs_stops " + 
+                                        $"where lower(coalesce(zone_id, '')) = '{id.ToLower()}'",
             
             ComparisonType.Starts => "select * " + 
-                                     "from gtfs_stop " + 
-                                        $"where lower(coalesce(zone, '')) like '{zone.ToLower()}%'",
+                                     "from gtfs_stops " + 
+                                        $"where lower(coalesce(zone_id, '')) like '{id.ToLower()}%'",
             
             ComparisonType.Ends => "select * " + 
-                                   "from gtfs_stop " + 
-                                        $"where lower(coalesce(zone, '')) like '%{zone.ToLower()}'",
+                                   "from gtfs_stops " + 
+                                        $"where lower(coalesce(zone_id, '')) like '%{id.ToLower()}'",
             
             _ => "select * " + 
-                 "from gtfs_stop " + 
-                    $"where lower(coalesce(zone, '')) like '%{zone.ToLower()}%'"
+                 "from gtfs_stops " + 
+                    $"where lower(coalesce(zone_id, '')) like '%{id.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);

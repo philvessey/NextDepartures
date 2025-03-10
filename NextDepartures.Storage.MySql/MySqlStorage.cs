@@ -135,8 +135,8 @@ public class MySqlStorage : IDataStorage
             Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
             Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2) : null,
             Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
-            Longitude = dataReader.GetDouble(4),
-            Latitude = dataReader.GetDouble(5),
+            Latitude = dataReader.GetDouble(4),
+            Longitude = dataReader.GetDouble(5),
             Zone = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
             Url = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null,
             LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
@@ -156,8 +156,8 @@ public class MySqlStorage : IDataStorage
             Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
             Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2).Trim().ToTitleCase() : null,
             Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
-            Longitude = dataReader.GetDouble(4),
-            Latitude = dataReader.GetDouble(5),
+            Latitude = dataReader.GetDouble(4),
+            Longitude = dataReader.GetDouble(5),
             Zone = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
             Url = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null,
             LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
@@ -180,7 +180,7 @@ public class MySqlStorage : IDataStorage
     public Task<List<CalendarDate>> GetCalendarDatesAsync()
     {
         const string sql = "SELECT * " + 
-                           "FROM GTFS_CALENDAR_DATE";
+                           "FROM GTFS_CALENDAR_DATES";
         
         return ExecuteCommand(sql, GetCalendarDateFromDataReader);
     }
@@ -188,7 +188,7 @@ public class MySqlStorage : IDataStorage
     public Task<List<Stop>> GetStopsAsync()
     {
         const string sql = "SELECT * " + 
-                           "FROM GTFS_STOP";
+                           "FROM GTFS_STOPS";
         
         return ExecuteCommand(sql, GetStopFromDataReader);
     }
@@ -199,19 +199,19 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(Email, '')) = '{email.ToLower()}'",
+                                        $"WHERE LOWER(COALESCE(AgencyEmail, '')) = '{email.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(Email, '')) LIKE '{email.ToLower()}%'",
+                                        $"WHERE LOWER(COALESCE(AgencyEmail, '')) LIKE '{email.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(Email, '')) LIKE '%{email.ToLower()}'",
+                                        $"WHERE LOWER(COALESCE(AgencyEmail, '')) LIKE '%{email.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " +
-                    $"WHERE LOWER(COALESCE(Email, '')) LIKE '%{email.ToLower()}%'"
+                    $"WHERE LOWER(COALESCE(AgencyEmail, '')) LIKE '%{email.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -223,19 +223,19 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(FareURL, '')) = '{fareUrl.ToLower()}'",
+                                        $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) = '{fareUrl.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(FareURL, '')) LIKE '{fareUrl.ToLower()}%'",
+                                        $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) LIKE '{fareUrl.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(FareURL, '')) LIKE '%{fareUrl.ToLower()}'",
+                                        $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{fareUrl.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " +
-                    $"WHERE LOWER(COALESCE(FareURL, '')) LIKE '%{fareUrl.ToLower()}%'"
+                    $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{fareUrl.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -247,19 +247,19 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(Id, '')) = '{id.ToLower()}'",
+                                        $"WHERE LOWER(COALESCE(AgencyId, '')) = '{id.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(Id, '')) LIKE '{id.ToLower()}%'",
+                                        $"WHERE LOWER(COALESCE(AgencyId, '')) LIKE '{id.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(Id, '')) LIKE '%{id.ToLower()}'",
+                                        $"WHERE LOWER(COALESCE(AgencyId, '')) LIKE '%{id.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " +
-                    $"WHERE LOWER(COALESCE(Id, '')) LIKE '%{id.ToLower()}%'"
+                    $"WHERE LOWER(COALESCE(AgencyId, '')) LIKE '%{id.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -271,19 +271,19 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(LanguageCode, '')) = '{languageCode.ToLower()}'",
+                                        $"WHERE LOWER(COALESCE(AgencyLang, '')) = '{languageCode.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(LanguageCode, '')) LIKE '{languageCode.ToLower()}%'",
+                                        $"WHERE LOWER(COALESCE(AgencyLang, '')) LIKE '{languageCode.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(LanguageCode, '')) LIKE '%{languageCode.ToLower()}'",
+                                        $"WHERE LOWER(COALESCE(AgencyLang, '')) LIKE '%{languageCode.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(COALESCE(LanguageCode, '')) LIKE '%{languageCode.ToLower()}%'"
+                    $"WHERE LOWER(COALESCE(AgencyLang, '')) LIKE '%{languageCode.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -295,19 +295,19 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(Name) = '{name.ToLower()}'",
+                                        $"WHERE LOWER(AgencyName) = '{name.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(Name) LIKE '{name.ToLower()}%'",
+                                        $"WHERE LOWER(AgencyName) LIKE '{name.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(Name) LIKE '%{name.ToLower()}'",
+                                        $"WHERE LOWER(AgencyName) LIKE '%{name.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(Name) LIKE '%{name.ToLower()}%'"
+                    $"WHERE LOWER(AgencyName) LIKE '%{name.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -319,19 +319,19 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Phone, '')) = '{phone.ToLower()}'",
+                                        $"WHERE LOWER(COALESCE(AgencyPhone, '')) = '{phone.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Phone, '')) LIKE '{phone.ToLower()}%'",
+                                        $"WHERE LOWER(COALESCE(AgencyPhone, '')) LIKE '{phone.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(Phone, '')) LIKE '%{phone.ToLower()}'",
+                                        $"WHERE LOWER(COALESCE(AgencyPhone, '')) LIKE '%{phone.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(COALESCE(Phone, '')) LIKE '%{phone.ToLower()}%'"
+                    $"WHERE LOWER(COALESCE(AgencyPhone, '')) LIKE '%{phone.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -343,47 +343,47 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(Name) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(URL) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(Timezone) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(Id, '')) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(LanguageCode, '')) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(Phone, '')) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(FareURL, '')) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(Email, '')) = '{search.ToLower()}'",
+                                        $"WHERE LOWER(AgencyName) = '{search.ToLower()}' " + 
+                                           $"OR LOWER(AgencyUrl) = '{search.ToLower()}' " + 
+                                           $"OR LOWER(AgencyTimezone) = '{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(AgencyId, '')) = '{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(AgencyLang, '')) = '{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(AgencyPhone, '')) = '{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(AgencyFareUrl, '')) = '{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(AgencyEmail, '')) = '{search.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(Name) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(URL) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(Timezone) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(Id, '')) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(LanguageCode, '')) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(Phone, '')) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(FareURL, '')) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(Email, '')) LIKE '{search.ToLower()}%'",
+                                        $"WHERE LOWER(AgencyName) LIKE '{search.ToLower()}%' " + 
+                                           $"OR LOWER(AgencyUrl) LIKE '{search.ToLower()}%' " + 
+                                           $"OR LOWER(AgencyTimezone) LIKE '{search.ToLower()}%' " + 
+                                           $"OR LOWER(COALESCE(AgencyId, '')) LIKE '{search.ToLower()}%' " + 
+                                           $"OR LOWER(COALESCE(AgencyLang, '')) LIKE '{search.ToLower()}%' " + 
+                                           $"OR LOWER(COALESCE(AgencyPhone, '')) LIKE '{search.ToLower()}%' " + 
+                                           $"OR LOWER(COALESCE(AgencyFareUrl, '')) LIKE '{search.ToLower()}%' " + 
+                                           $"OR LOWER(COALESCE(AgencyEmail, '')) LIKE '{search.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " +
                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(Name) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(URL) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(Timezone) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(Id, '')) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(LanguageCode, '')) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(Phone, '')) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(FareURL, '')) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(Email, '')) LIKE '%{search.ToLower()}'",
+                                        $"WHERE LOWER(AgencyName) LIKE '%{search.ToLower()}' " + 
+                                           $"OR LOWER(AgencyUrl) LIKE '%{search.ToLower()}' " + 
+                                           $"OR LOWER(AgencyTimezone) LIKE '%{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(AgencyId, '')) LIKE '%{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(AgencyLang, '')) LIKE '%{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(AgencyPhone, '')) LIKE '%{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{search.ToLower()}' " + 
+                                           $"OR LOWER(COALESCE(AgencyEmail, '')) LIKE '%{search.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(Name) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(URL) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(Timezone) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(Id, '')) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(LanguageCode, '')) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(Phone, '')) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(FareURL, '')) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(Email, '')) LIKE '%{search.ToLower()}%'"
+                    $"WHERE LOWER(AgencyName) LIKE '%{search.ToLower()}%' " + 
+                       $"OR LOWER(AgencyUrl) LIKE '%{search.ToLower()}%' " + 
+                       $"OR LOWER(AgencyTimezone) LIKE '%{search.ToLower()}%' " + 
+                       $"OR LOWER(COALESCE(AgencyId, '')) LIKE '%{search.ToLower()}%' " + 
+                       $"OR LOWER(COALESCE(AgencyLang, '')) LIKE '%{search.ToLower()}%' " + 
+                       $"OR LOWER(COALESCE(AgencyPhone, '')) LIKE '%{search.ToLower()}%' " + 
+                       $"OR LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{search.ToLower()}%' " + 
+                       $"OR LOWER(COALESCE(AgencyEmail, '')) LIKE '%{search.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -395,19 +395,19 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(Timezone) = '{timezone.ToLower()}'",
+                                        $"WHERE LOWER(AgencyTimezone) = '{timezone.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(Timezone) LIKE '{timezone.ToLower()}%'",
+                                        $"WHERE LOWER(AgencyTimezone) LIKE '{timezone.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(Timezone) LIKE '%{timezone.ToLower()}'",
+                                        $"WHERE LOWER(AgencyTimezone) LIKE '%{timezone.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(Timezone) LIKE '%{timezone.ToLower()}%'"
+                    $"WHERE LOWER(AgencyTimezone) LIKE '%{timezone.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -419,19 +419,19 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(URL) = '{url.ToLower()}'",
+                                        $"WHERE LOWER(AgencyUrl) = '{url.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(URL) LIKE '{url.ToLower()}%'",
+                                        $"WHERE LOWER(AgencyUrl) LIKE '{url.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(URL) LIKE '%{url.ToLower()}'",
+                                        $"WHERE LOWER(AgencyUrl) LIKE '%{url.ToLower()}'",
             
             _ => "SELECT * " + 
                  "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(URL) LIKE '%{url.ToLower()}%'"
+                    $"WHERE LOWER(AgencyUrl) LIKE '%{url.ToLower()}%'"
         };
 
         return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
@@ -443,13 +443,13 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Partial => "SELECT s.DepartureTime, " + 
                                              "s.StopId, " + 
-                                             "t.Id, " + 
+                                             "t.TripId, " + 
                                              "t.ServiceId, " + 
-                                             "t.Headsign, " + 
-                                             "t.ShortName, " + 
+                                             "t.TripHeadsign, " + 
+                                             "t.TripShortName, " + 
                                              "r.AgencyId, " + 
-                                             "r.ShortName, " + 
-                                             "r.LongName, " + 
+                                             "r.RouteShortName, " + 
+                                             "r.RouteLongName, " + 
                                              "c.Monday, " + 
                                              "c.Tuesday, " + 
                                              "c.Wednesday, " + 
@@ -459,9 +459,9 @@ public class MySqlStorage : IDataStorage
                                              "c.Sunday, " + 
                                              "c.StartDate, " + 
                                              "c.EndDate " + 
-                                      "FROM GTFS_STOP_TIME s " + 
-                                      "LEFT JOIN GTFS_TRIP t ON (s.TripId = t.Id) " + 
-                                      "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
+                                      "FROM GTFS_STOP_TIMES s " + 
+                                      "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
+                                      "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
                                       "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                              $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}%' " + 
                                                 "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
@@ -469,13 +469,13 @@ public class MySqlStorage : IDataStorage
 
             ComparisonType.Starts => "SELECT s.DepartureTime, " + 
                                             "s.StopId, " + 
-                                            "t.Id, " + 
+                                            "t.TripId, " + 
                                             "t.ServiceId, " + 
-                                            "t.Headsign, " + 
-                                            "t.ShortName, " + 
+                                            "t.TripHeadsign, " + 
+                                            "t.TripShortName, " + 
                                             "r.AgencyId, " + 
-                                            "r.ShortName, " + 
-                                            "r.LongName, " + 
+                                            "r.RouteShortName, " + 
+                                            "r.RouteLongName, " + 
                                             "c.Monday, " + 
                                             "c.Tuesday, " + 
                                             "c.Wednesday, " + 
@@ -485,9 +485,9 @@ public class MySqlStorage : IDataStorage
                                             "c.Sunday, " + 
                                             "c.StartDate, " + 
                                             "c.EndDate " + 
-                                     "FROM GTFS_STOP_TIME s " + 
-                                     "LEFT JOIN GTFS_TRIP t ON (s.TripId = t.Id) " + 
-                                     "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
+                                     "FROM GTFS_STOP_TIMES s " + 
+                                     "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
+                                     "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                             $"WHERE LOWER(s.StopId) LIKE '{id.ToLower()}%' " + 
                                                "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
@@ -495,13 +495,13 @@ public class MySqlStorage : IDataStorage
 
             ComparisonType.Ends => "SELECT s.DepartureTime, " + 
                                           "s.StopId, " + 
-                                          "t.Id, " + 
+                                          "t.TripId, " + 
                                           "t.ServiceId, " + 
-                                          "t.Headsign, " + 
-                                          "t.ShortName, " + 
+                                          "t.TripHeadsign, " + 
+                                          "t.TripShortName, " + 
                                           "r.AgencyId, " + 
-                                          "r.ShortName, " + 
-                                          "r.LongName, " + 
+                                          "r.RouteShortName, " + 
+                                          "r.RouteLongName, " + 
                                           "c.Monday, " + 
                                           "c.Tuesday, " + 
                                           "c.Wednesday, " + 
@@ -511,9 +511,9 @@ public class MySqlStorage : IDataStorage
                                           "c.Sunday, " + 
                                           "c.StartDate, " + 
                                           "c.EndDate " + 
-                                   "FROM GTFS_STOP_TIME s " + 
-                                   "LEFT JOIN GTFS_TRIP t ON (s.TripId = t.Id) " + 
-                                   "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
+                                   "FROM GTFS_STOP_TIMES s " + 
+                                   "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
+                                   "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
                                    "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                           $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}' " + 
                                              "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
@@ -521,13 +521,13 @@ public class MySqlStorage : IDataStorage
 
             _ => "SELECT s.DepartureTime, " + 
                         "s.StopId, " + 
-                        "t.Id, " + 
+                        "t.TripId, " + 
                         "t.ServiceId, " + 
-                        "t.Headsign, " + 
-                        "t.ShortName, " + 
+                        "t.TripHeadsign, " + 
+                        "t.TripShortName, " + 
                         "r.AgencyId, " + 
-                        "r.ShortName, " + 
-                        "r.LongName, " + 
+                        "r.RouteShortName, " + 
+                        "r.RouteLongName, " + 
                         "c.Monday, " + 
                         "c.Tuesday, " + 
                         "c.Wednesday, " + 
@@ -537,9 +537,9 @@ public class MySqlStorage : IDataStorage
                         "c.Sunday, " + 
                         "c.StartDate, " + 
                         "c.EndDate " + 
-                 "FROM GTFS_STOP_TIME s " + 
-                 "LEFT JOIN GTFS_TRIP t ON (s.TripId = t.Id) " + 
-                 "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
+                 "FROM GTFS_STOP_TIMES s " + 
+                 "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
+                 "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
                  "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                         $"WHERE LOWER(s.StopId) = '{id.ToLower()}' " + 
                            "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
@@ -555,13 +555,13 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Partial => "SELECT s.DepartureTime, " + 
                                              "s.StopId, " + 
-                                             "t.Id, " + 
+                                             "t.TripId, " + 
                                              "t.ServiceId, " + 
-                                             "t.Headsign, " + 
-                                             "t.ShortName, " + 
+                                             "t.TripHeadsign, " + 
+                                             "t.TripShortName, " + 
                                              "r.AgencyId, " + 
-                                             "r.ShortName, " + 
-                                             "r.LongName, " + 
+                                             "r.RouteShortName, " + 
+                                             "r.RouteLongName, " + 
                                              "c.Monday, " + 
                                              "c.Tuesday, " + 
                                              "c.Wednesday, " + 
@@ -571,9 +571,9 @@ public class MySqlStorage : IDataStorage
                                              "c.Sunday, " + 
                                              "c.StartDate, " + 
                                              "c.EndDate " + 
-                                      "FROM GTFS_STOP_TIME s " + 
-                                      "LEFT JOIN GTFS_TRIP t ON (s.TripId = t.Id) " + 
-                                      "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
+                                      "FROM GTFS_STOP_TIMES s " + 
+                                      "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
+                                      "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
                                       "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                              $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}%' " + 
                                                 "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
@@ -581,13 +581,13 @@ public class MySqlStorage : IDataStorage
 
             ComparisonType.Starts => "SELECT s.DepartureTime, " + 
                                             "s.StopId, " + 
-                                            "t.Id, " + 
+                                            "t.TripId, " + 
                                             "t.ServiceId, " + 
-                                            "t.Headsign, " + 
-                                            "t.ShortName, " + 
+                                            "t.TripHeadsign, " + 
+                                            "t.TripShortName, " + 
                                             "r.AgencyId, " + 
-                                            "r.ShortName, " + 
-                                            "r.LongName, " + 
+                                            "r.RouteShortName, " + 
+                                            "r.RouteLongName, " + 
                                             "c.Monday, " + 
                                             "c.Tuesday, " + 
                                             "c.Wednesday, " + 
@@ -597,9 +597,9 @@ public class MySqlStorage : IDataStorage
                                             "c.Sunday, " + 
                                             "c.StartDate, " + 
                                             "c.EndDate " + 
-                                     "FROM GTFS_STOP_TIME s " + 
-                                     "LEFT JOIN GTFS_TRIP t ON (s.TripId = t.Id) " + 
-                                     "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
+                                     "FROM GTFS_STOP_TIMES s " + 
+                                     "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
+                                     "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                             $"WHERE LOWER(s.TripId) LIKE '{id.ToLower()}%' " + 
                                                "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
@@ -607,13 +607,13 @@ public class MySqlStorage : IDataStorage
 
             ComparisonType.Ends => "SELECT s.DepartureTime, " + 
                                           "s.StopId, " + 
-                                          "t.Id, " + 
+                                          "t.TripId, " + 
                                           "t.ServiceId, " + 
-                                          "t.Headsign, " + 
-                                          "t.ShortName, " + 
+                                          "t.TripHeadsign, " + 
+                                          "t.TripShortName, " + 
                                           "r.AgencyId, " + 
-                                          "r.ShortName, " + 
-                                          "r.LongName, " + 
+                                          "r.RouteShortName, " + 
+                                          "r.RouteLongName, " + 
                                           "c.Monday, " + 
                                           "c.Tuesday, " + 
                                           "c.Wednesday, " + 
@@ -623,9 +623,9 @@ public class MySqlStorage : IDataStorage
                                           "c.Sunday, " + 
                                           "c.StartDate, " + 
                                           "c.EndDate " + 
-                                   "FROM GTFS_STOP_TIME s " + 
-                                   "LEFT JOIN GTFS_TRIP t ON (s.TripId = t.Id) " + 
-                                   "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
+                                   "FROM GTFS_STOP_TIMES s " + 
+                                   "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
+                                   "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
                                    "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                                           $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}' " + 
                                              "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
@@ -633,13 +633,13 @@ public class MySqlStorage : IDataStorage
 
             _ => "SELECT s.DepartureTime, " + 
                         "s.StopId, " + 
-                        "t.Id, " + 
+                        "t.TripId, " + 
                         "t.ServiceId, " + 
-                        "t.Headsign, " + 
-                        "t.ShortName, " + 
+                        "t.TripHeadsign, " + 
+                        "t.TripShortName, " + 
                         "r.AgencyId, " + 
-                        "r.ShortName, " + 
-                        "r.LongName, " + 
+                        "r.RouteShortName, " + 
+                        "r.RouteLongName, " + 
                         "c.Monday, " + 
                         "c.Tuesday, " + 
                         "c.Wednesday, " + 
@@ -649,9 +649,9 @@ public class MySqlStorage : IDataStorage
                         "c.Sunday, " + 
                         "c.StartDate, " + 
                         "c.EndDate " + 
-                 "FROM GTFS_STOP_TIME s " + 
-                 "LEFT JOIN GTFS_TRIP t ON (s.TripId = t.Id) " + 
-                 "LEFT JOIN GTFS_ROUTE r ON (t.RouteId = r.Id) " + 
+                 "FROM GTFS_STOP_TIMES s " + 
+                 "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
+                 "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
                  "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
                         $"WHERE LOWER(s.TripId) = '{id.ToLower()}' " + 
                            "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
@@ -666,20 +666,20 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Code, '')) = '{code.ToLower()}'",
+                                    "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopCode, '')) = '{code.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Code, '')) LIKE '{code.ToLower()}%'",
+                                     "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopCode, '')) LIKE '{code.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Code, '')) LIKE '%{code.ToLower()}'",
+                                   "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopCode, '')) LIKE '%{code.ToLower()}'",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
-                    $"WHERE LOWER(COALESCE(Code, '')) LIKE '%{code.ToLower()}%'"
+                 "FROM GTFS_STOPS " + 
+                    $"WHERE LOWER(COALESCE(StopCode, '')) LIKE '%{code.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -690,20 +690,20 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Description, '')) = '{description.ToLower()}'",
+                                    "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopDesc, '')) = '{description.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Description, '')) LIKE '{description.ToLower()}%'",
+                                     "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopDesc, '')) LIKE '{description.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Description, '')) LIKE '%{description.ToLower()}'",
+                                   "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopDesc, '')) LIKE '%{description.ToLower()}'",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
-                    $"WHERE LOWER(COALESCE(Description, '')) LIKE '%{description.ToLower()}%'"
+                 "FROM GTFS_STOPS " + 
+                    $"WHERE LOWER(COALESCE(StopDesc, '')) LIKE '%{description.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -714,20 +714,20 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(Id) = '{id.ToLower()}'",
+                                    "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(StopId) = '{id.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(Id) LIKE '{id.ToLower()}%'",
+                                     "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(StopId) LIKE '{id.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(Id) LIKE '%{id.ToLower()}'",
+                                   "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(StopId) LIKE '%{id.ToLower()}'",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
-                    $"WHERE LOWER(Id) LIKE '%{id.ToLower()}%'"
+                 "FROM GTFS_STOPS " + 
+                    $"WHERE LOWER(StopId) LIKE '%{id.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -738,19 +738,19 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
+                                    "FROM GTFS_STOPS " + 
                                         $"WHERE LOWER(COALESCE(LevelId, '')) = '{id.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
+                                     "FROM GTFS_STOPS " + 
                                         $"WHERE LOWER(COALESCE(LevelId, '')) LIKE '{id.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
+                                   "FROM GTFS_STOPS " + 
                                         $"WHERE LOWER(COALESCE(LevelId, '')) LIKE '%{id.ToLower()}'",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
+                 "FROM GTFS_STOPS " + 
                     $"WHERE LOWER(COALESCE(LevelId, '')) LIKE '%{id.ToLower()}%'"
         };
         
@@ -762,32 +762,32 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
-                                        $"WHERE Longitude >= {minimumLongitude} " + 
-                                          $"AND Latitude >= {minimumLatitude} " + 
-                                          $"AND Longitude <= {maximumLongitude} " + 
-                                          $"AND Latitude <= {maximumLatitude}",
+                                    "FROM GTFS_STOPS " + 
+                                        $"WHERE StopLon >= {minimumLongitude} " + 
+                                          $"AND StopLat >= {minimumLatitude} " + 
+                                          $"AND StopLon <= {maximumLongitude} " + 
+                                          $"AND StopLat <= {maximumLatitude}",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
-                                        $"WHERE Longitude >= {minimumLongitude} " + 
-                                          $"AND Latitude >= {minimumLatitude} " + 
-                                          $"AND Longitude <= {maximumLongitude} " + 
-                                          $"AND Latitude <= {maximumLatitude}",
+                                     "FROM GTFS_STOPS " + 
+                                        $"WHERE StopLon >= {minimumLongitude} " + 
+                                          $"AND StopLat >= {minimumLatitude} " + 
+                                          $"AND StopLon <= {maximumLongitude} " + 
+                                          $"AND StopLat <= {maximumLatitude}",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
-                                        $"WHERE Longitude >= {minimumLongitude} " + 
-                                          $"AND Latitude >= {minimumLatitude} " + 
-                                          $"AND Longitude <= {maximumLongitude} " + 
-                                          $"AND Latitude <= {maximumLatitude}",
+                                   "FROM GTFS_STOPS " + 
+                                        $"WHERE StopLon >= {minimumLongitude} " + 
+                                          $"AND StopLat >= {minimumLatitude} " + 
+                                          $"AND StopLon <= {maximumLongitude} " + 
+                                          $"AND StopLat <= {maximumLatitude}",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
-                    $"WHERE Longitude >= {minimumLongitude} " + 
-                      $"AND Latitude >= {minimumLatitude} " + 
-                      $"AND Longitude <= {maximumLongitude} " + 
-                      $"AND Latitude <= {maximumLatitude}"
+                 "FROM GTFS_STOPS " + 
+                    $"WHERE StopLon >= {minimumLongitude} " + 
+                      $"AND StopLat >= {minimumLatitude} " + 
+                      $"AND StopLon <= {maximumLongitude} " + 
+                      $"AND StopLat <= {maximumLatitude}"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -798,19 +798,19 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
+                                    "FROM GTFS_STOPS " + 
                                         $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
+                                     "FROM GTFS_STOPS " + 
                                         $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
+                                   "FROM GTFS_STOPS " + 
                                         $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
+                 "FROM GTFS_STOPS " + 
                     $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}"
         };
         
@@ -822,20 +822,20 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Name, '')) = '{name.ToLower()}'",
+                                    "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopName, '')) = '{name.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Name, '')) LIKE '{name.ToLower()}%'",
+                                     "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopName, '')) LIKE '{name.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Name, '')) LIKE '%{name.ToLower()}'",
+                                   "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopName, '')) LIKE '%{name.ToLower()}'",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
-                    $"WHERE LOWER(COALESCE(Name, '')) LIKE '%{name.ToLower()}%'"
+                 "FROM GTFS_STOPS " + 
+                    $"WHERE LOWER(COALESCE(StopName, '')) LIKE '%{name.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -846,19 +846,19 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
+                                    "FROM GTFS_STOPS " + 
                                         $"WHERE LOWER(COALESCE(ParentStation, '')) = '{id.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
+                                     "FROM GTFS_STOPS " + 
                                         $"WHERE LOWER(COALESCE(ParentStation, '')) LIKE '{id.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
+                                   "FROM GTFS_STOPS " + 
                                         $"WHERE LOWER(COALESCE(ParentStation, '')) LIKE '%{id.ToLower()}'",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
+                 "FROM GTFS_STOPS " + 
                     $"WHERE LOWER(COALESCE(ParentStation, '')) LIKE '%{id.ToLower()}%'"
         };
         
@@ -870,19 +870,19 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
+                                    "FROM GTFS_STOPS " + 
                                         $"WHERE LOWER(COALESCE(PlatformCode, '')) = '{platformCode.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
+                                     "FROM GTFS_STOPS " + 
                                         $"WHERE LOWER(COALESCE(PlatformCode, '')) LIKE '{platformCode.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
+                                   "FROM GTFS_STOPS " + 
                                         $"WHERE LOWER(COALESCE(PlatformCode, '')) LIKE '%{platformCode.ToLower()}'",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
+                 "FROM GTFS_STOPS " + 
                     $"WHERE LOWER(COALESCE(PlatformCode, '')) LIKE '%{platformCode.ToLower()}%'"
         };
         
@@ -894,54 +894,54 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " +
-                                    "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(Id) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Code, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Name, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Description, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Zone, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Url, '')) = '{search.ToLower()}' " +
+                                    "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(StopId) = '{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopCode, '')) = '{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopName, '')) = '{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopDesc, '')) = '{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(ZoneId, '')) = '{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopUrl, '')) = '{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(ParentStation, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Timezone, '')) = '{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopTimezone, '')) = '{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(LevelId, '')) = '{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(PlatformCode, '')) = '{search.ToLower()}'",
 
             ComparisonType.Starts => "SELECT * " +
-                                     "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(Id) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(Code, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(Name, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(Description, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(Zone, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(Url, '')) LIKE '{search.ToLower()}%' " +
+                                     "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(StopId) LIKE '{search.ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(StopCode, '')) LIKE '{search.ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(StopName, '')) LIKE '{search.ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(StopDesc, '')) LIKE '{search.ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(ZoneId, '')) LIKE '{search.ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(StopUrl, '')) LIKE '{search.ToLower()}%' " +
                                            $"OR LOWER(COALESCE(ParentStation, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(Timezone, '')) LIKE '{search.ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(StopTimezone, '')) LIKE '{search.ToLower()}%' " +
                                            $"OR LOWER(COALESCE(LevelId, '')) LIKE '{search.ToLower()}%' " +
                                            $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '{search.ToLower()}%'",
 
             ComparisonType.Ends => "SELECT * " +
-                                   "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(Id) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Code, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Name, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Description, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Zone, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Url, '')) LIKE '%{search.ToLower()}' " +
+                                   "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(StopId) LIKE '%{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopCode, '')) LIKE '%{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopName, '')) LIKE '%{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopDesc, '')) LIKE '%{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(ZoneId, '')) LIKE '%{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopUrl, '')) LIKE '%{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(ParentStation, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(Timezone, '')) LIKE '%{search.ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopTimezone, '')) LIKE '%{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(LevelId, '')) LIKE '%{search.ToLower()}' " +
                                            $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '%{search.ToLower()}'",
 
             _ => "SELECT * " +
-                 "FROM GTFS_STOP " + 
-                    $"WHERE LOWER(Id) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(Code, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(Name, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(Description, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(Zone, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(Url, '')) LIKE '%{search.ToLower()}%' " +
+                 "FROM GTFS_STOPS " + 
+                    $"WHERE LOWER(StopId) LIKE '%{search.ToLower()}%' " +
+                       $"OR LOWER(COALESCE(StopCode, '')) LIKE '%{search.ToLower()}%' " +
+                       $"OR LOWER(COALESCE(StopName, '')) LIKE '%{search.ToLower()}%' " +
+                       $"OR LOWER(COALESCE(StopDesc, '')) LIKE '%{search.ToLower()}%' " +
+                       $"OR LOWER(COALESCE(ZoneId, '')) LIKE '%{search.ToLower()}%' " +
+                       $"OR LOWER(COALESCE(StopUrl, '')) LIKE '%{search.ToLower()}%' " +
                        $"OR LOWER(COALESCE(ParentStation, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(Timezone, '')) LIKE '%{search.ToLower()}%' " +
+                       $"OR LOWER(COALESCE(StopTimezone, '')) LIKE '%{search.ToLower()}%' " +
                        $"OR LOWER(COALESCE(LevelId, '')) LIKE '%{search.ToLower()}%' " +
                        $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '%{search.ToLower()}%'"
         };
@@ -954,20 +954,20 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Timezone, '')) = '{timezone.ToLower()}'",
+                                    "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopTimezone, '')) = '{timezone.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Timezone, '')) LIKE '{timezone.ToLower()}%'",
+                                     "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopTimezone, '')) LIKE '{timezone.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Timezone, '')) LIKE '%{timezone.ToLower()}'",
+                                   "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopTimezone, '')) LIKE '%{timezone.ToLower()}'",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
-                    $"WHERE LOWER(COALESCE(Timezone, '')) LIKE '%{timezone.ToLower()}%'"
+                 "FROM GTFS_STOPS " + 
+                    $"WHERE LOWER(COALESCE(StopTimezone, '')) LIKE '%{timezone.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -978,20 +978,20 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Url, '')) = '{url.ToLower()}'",
+                                    "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopUrl, '')) = '{url.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Url, '')) LIKE '{url.ToLower()}%'",
+                                     "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopUrl, '')) LIKE '{url.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Url, '')) LIKE '%{url.ToLower()}'",
+                                   "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(StopUrl, '')) LIKE '%{url.ToLower()}'",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
-                    $"WHERE LOWER(COALESCE(Url, '')) LIKE '%{url.ToLower()}%'"
+                 "FROM GTFS_STOPS " + 
+                    $"WHERE LOWER(COALESCE(StopUrl, '')) LIKE '%{url.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
@@ -1002,44 +1002,44 @@ public class MySqlStorage : IDataStorage
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
+                                    "FROM GTFS_STOPS " + 
                                         $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
+                                     "FROM GTFS_STOPS " + 
                                         $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
+                                   "FROM GTFS_STOPS " + 
                                         $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
+                 "FROM GTFS_STOPS " + 
                     $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
     }
     
-    public Task<List<Stop>> GetStopsByZoneAsync(string zone, ComparisonType comparison)
+    public Task<List<Stop>> GetStopsByZoneAsync(string id, ComparisonType comparison)
     {
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Zone, '')) = '{zone.ToLower()}'",
+                                    "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(ZoneId, '')) = '{id.ToLower()}'",
             
             ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Zone, '')) LIKE '{zone.ToLower()}%'",
+                                     "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(ZoneId, '')) LIKE '{id.ToLower()}%'",
             
             ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOP " + 
-                                        $"WHERE LOWER(COALESCE(Zone, '')) LIKE '%{zone.ToLower()}'",
+                                   "FROM GTFS_STOPS " + 
+                                        $"WHERE LOWER(COALESCE(ZoneId, '')) LIKE '%{id.ToLower()}'",
             
             _ => "SELECT * " + 
-                 "FROM GTFS_STOP " + 
-                    $"WHERE LOWER(COALESCE(Zone, '')) LIKE '%{zone.ToLower()}%'"
+                 "FROM GTFS_STOPS " + 
+                    $"WHERE LOWER(COALESCE(ZoneId, '')) LIKE '%{id.ToLower()}%'"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
