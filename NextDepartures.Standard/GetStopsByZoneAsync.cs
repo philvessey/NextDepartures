@@ -11,15 +11,15 @@ public partial class Feed
     /// <summary>
     /// Gets stops by zone
     /// </summary>
-    /// <param name="zone">The zone of the stop. Default is all.</param>
+    /// <param name="id">The zone id of the stop. Default is all.</param>
     /// <param name="comparison">The ComparisonType to use when searching. Default is partial.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of stops.</returns>
-    public async Task<List<Stop>> GetStopsByZoneAsync(string zone = "", ComparisonType comparison = ComparisonType.Partial, int results = 0)
+    public async Task<List<Stop>> GetStopsByZoneAsync(string id = "", ComparisonType comparison = ComparisonType.Partial, int results = 0)
     {
         try
         {
-            var stopsFromStorage = await _dataStorage.GetStopsByZoneAsync(zone, comparison);
+            var stopsFromStorage = await _dataStorage.GetStopsByZoneAsync(id, comparison);
             
             if (results > 0)
             {

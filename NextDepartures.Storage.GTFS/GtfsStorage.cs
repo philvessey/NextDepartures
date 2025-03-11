@@ -9,6 +9,7 @@ using NextDepartures.Standard.Extensions;
 using NextDepartures.Standard.Models;
 using NextDepartures.Standard.Storage;
 using NextDepartures.Standard.Types;
+using NextDepartures.Storage.GTFS.Extensions;
 
 namespace NextDepartures.Storage.GTFS;
 
@@ -36,14 +37,14 @@ public class GtfsStorage : IDataStorage
         return _feed.Agencies
             .Select(a => new Agency
             {
-                Id = a.Id,
-                Name = a.Name,
-                URL = a.URL,
-                Timezone = a.Timezone,
-                LanguageCode = a.LanguageCode,
-                Phone = a.Phone,
-                FareURL = a.FareURL,
-                Email = a.Email
+                Id = a.Id?.TrimDoubleQuotes(),
+                Name = a.Name.TrimDoubleQuotes(),
+                URL = a.URL.TrimDoubleQuotes(),
+                Timezone = a.Timezone.TrimDoubleQuotes(),
+                LanguageCode = a.LanguageCode?.TrimDoubleQuotes(),
+                Phone = a.Phone?.TrimDoubleQuotes(),
+                FareURL = a.FareURL?.TrimDoubleQuotes(),
+                Email = a.Email?.TrimDoubleQuotes()
             })
             .ToList();
     }
@@ -54,14 +55,14 @@ public class GtfsStorage : IDataStorage
             .Where(condition)
             .Select(a => new Agency
             {
-                Id = a.Id,
-                Name = a.Name.Trim().ToTitleCase(),
-                URL = a.URL,
-                Timezone = a.Timezone,
-                LanguageCode = a.LanguageCode,
-                Phone = a.Phone,
-                FareURL = a.FareURL,
-                Email = a.Email
+                Id = a.Id?.TrimDoubleQuotes(),
+                Name = a.Name.TrimDoubleQuotes().ToTitleCase(),
+                URL = a.URL.TrimDoubleQuotes(),
+                Timezone = a.Timezone.TrimDoubleQuotes(),
+                LanguageCode = a.LanguageCode?.TrimDoubleQuotes(),
+                Phone = a.Phone?.TrimDoubleQuotes(),
+                FareURL = a.FareURL?.TrimDoubleQuotes(),
+                Email = a.Email?.TrimDoubleQuotes()
             })
             .ToList();
     }
@@ -71,7 +72,7 @@ public class GtfsStorage : IDataStorage
         return _feed.CalendarDates
             .Select(d => new CalendarDate
             {
-                ServiceId = d.ServiceId,
+                ServiceId = d.ServiceId.TrimDoubleQuotes(),
                 Date = d.Date,
                 ExceptionType = d.ExceptionType
             })
@@ -82,9 +83,9 @@ public class GtfsStorage : IDataStorage
     {
         return _feed.StopTimes
             .Where(s => condition(s) && (s.PickupType != null && s.PickupType.ToString() != string.Empty ? s.PickupType : PickupType.Regular) != PickupType.NoPickup)
-            .Join(_feed.Trips, s => s.TripId, t => t.Id, (s, t) => (s, t))
-            .Join(_feed.Routes, e => e.t.RouteId, r => r.Id, (e, r) => (e.s, e.t, r))
-            .Join(_feed.Calendars, e => e.t.ServiceId, c => c.ServiceId, (e, c) => (e.s, e.t, e.r, c))
+            .Join(_feed.Trips, s => s.TripId.TrimDoubleQuotes(), t => t.Id.TrimDoubleQuotes(), (s, t) => (s, t))
+            .Join(_feed.Routes, e => e.t.RouteId.TrimDoubleQuotes(), r => r.Id.TrimDoubleQuotes(), (e, r) => (e.s, e.t, r))
+            .Join(_feed.Calendars, e => e.t.ServiceId.TrimDoubleQuotes(), c => c.ServiceId.TrimDoubleQuotes(), (e, c) => (e.s, e.t, e.r, c))
             .OrderBy(e => e.s.DepartureTime)
             .Select(e => new Departure
             {
@@ -95,14 +96,14 @@ public class GtfsStorage : IDataStorage
                     Seconds = e.s.DepartureTime?.Seconds ?? 0
                 },
                 
-                StopId = e.s.StopId,
-                TripId = e.t.Id,
-                ServiceId = e.t.ServiceId,
-                TripHeadsign = e.t.Headsign,
-                TripShortName = e.t.ShortName,
-                AgencyId = e.r.AgencyId,
-                RouteShortName = e.r.ShortName,
-                RouteLongName = e.r.LongName,
+                StopId = e.s.StopId?.TrimDoubleQuotes(),
+                TripId = e.t.Id.TrimDoubleQuotes(),
+                ServiceId = e.t.ServiceId.TrimDoubleQuotes(),
+                TripHeadsign = e.t.Headsign?.TrimDoubleQuotes(),
+                TripShortName = e.t.ShortName?.TrimDoubleQuotes(),
+                AgencyId = e.r.AgencyId?.TrimDoubleQuotes(),
+                RouteShortName = e.r.ShortName?.TrimDoubleQuotes(),
+                RouteLongName = e.r.LongName?.TrimDoubleQuotes(),
                 Monday = e.c.Monday,
                 Tuesday = e.c.Tuesday,
                 Wednesday = e.c.Wednesday,
@@ -121,20 +122,20 @@ public class GtfsStorage : IDataStorage
         return _feed.Stops
             .Select(s => new Stop
             {
-                Id = s.Id,
-                Code = s.Code,
-                Name = s.Name,
-                Description = s.Description,
-                Longitude = s.Longitude,
+                Id = s.Id.TrimDoubleQuotes(),
+                Code = s.Code?.TrimDoubleQuotes(),
+                Name = s.Name?.TrimDoubleQuotes(),
+                Description = s.Description?.TrimDoubleQuotes(),
                 Latitude = s.Latitude,
-                Zone = s.Zone,
-                Url = s.Url,
+                Longitude = s.Longitude,
+                Zone = s.Zone?.TrimDoubleQuotes(),
+                Url = s.Url?.TrimDoubleQuotes(),
                 LocationType = s.LocationType,
-                ParentStation = s.ParentStation,
-                Timezone = s.Timezone,
-                WheelchairBoarding = s.WheelchairBoarding,
-                LevelId = s.LevelId,
-                PlatformCode = s.PlatformCode
+                ParentStation = s.ParentStation?.TrimDoubleQuotes(),
+                Timezone = s.Timezone?.TrimDoubleQuotes(),
+                WheelchairBoarding = s.WheelchairBoarding?.TrimDoubleQuotes(),
+                LevelId = s.LevelId?.TrimDoubleQuotes(),
+                PlatformCode = s.PlatformCode?.TrimDoubleQuotes()
             })
             .ToList();
     }
@@ -145,20 +146,20 @@ public class GtfsStorage : IDataStorage
             .Where(condition)
             .Select(s => new Stop
             {
-                Id = s.Id,
-                Code = s.Code,
-                Name = s.Name.Trim().ToTitleCase(),
-                Description = s.Description,
-                Longitude = s.Longitude,
+                Id = s.Id.TrimDoubleQuotes(),
+                Code = s.Code?.TrimDoubleQuotes(),
+                Name = s.Name?.TrimDoubleQuotes().ToTitleCase(),
+                Description = s.Description?.TrimDoubleQuotes(),
                 Latitude = s.Latitude,
-                Zone = s.Zone,
-                Url = s.Url,
+                Longitude = s.Longitude,
+                Zone = s.Zone?.TrimDoubleQuotes(),
+                Url = s.Url?.TrimDoubleQuotes(),
                 LocationType = s.LocationType,
-                ParentStation = s.ParentStation,
-                Timezone = s.Timezone,
-                WheelchairBoarding = s.WheelchairBoarding,
-                LevelId = s.LevelId,
-                PlatformCode = s.PlatformCode
+                ParentStation = s.ParentStation?.TrimDoubleQuotes(),
+                Timezone = s.Timezone?.TrimDoubleQuotes(),
+                WheelchairBoarding = s.WheelchairBoarding?.TrimDoubleQuotes(),
+                LevelId = s.LevelId?.TrimDoubleQuotes(),
+                PlatformCode = s.PlatformCode?.TrimDoubleQuotes()
             })
             .ToList();
     }
@@ -183,16 +184,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Email ?? string.Empty).Equals(email, StringComparison.CurrentCultureIgnoreCase))),
+                (a.Email ?? string.Empty).TrimDoubleQuotes().Equals(email, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Email ?? string.Empty).StartsWith(email, StringComparison.CurrentCultureIgnoreCase))),
+                (a.Email ?? string.Empty).TrimDoubleQuotes().StartsWith(email, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Email ?? string.Empty).EndsWith(email, StringComparison.CurrentCultureIgnoreCase))),
+                (a.Email ?? string.Empty).TrimDoubleQuotes().EndsWith(email, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Email ?? string.Empty).Contains(email, StringComparison.CurrentCultureIgnoreCase)))
+                (a.Email ?? string.Empty).TrimDoubleQuotes().Contains(email, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
 
@@ -201,16 +202,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.FareURL ?? string.Empty).Equals(fareUrl, StringComparison.CurrentCultureIgnoreCase))),
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes().Equals(fareUrl, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.FareURL ?? string.Empty).StartsWith(fareUrl, StringComparison.CurrentCultureIgnoreCase))),
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes().StartsWith(fareUrl, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.FareURL ?? string.Empty).EndsWith(fareUrl, StringComparison.CurrentCultureIgnoreCase))),
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes().EndsWith(fareUrl, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.FareURL ?? string.Empty).Contains(fareUrl, StringComparison.CurrentCultureIgnoreCase)))
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes().Contains(fareUrl, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -219,16 +220,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Id ?? string.Empty).Equals(id, StringComparison.CurrentCultureIgnoreCase))),
+                (a.Id ?? string.Empty).TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Id ?? string.Empty).StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                (a.Id ?? string.Empty).TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Id ?? string.Empty).EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                (a.Id ?? string.Empty).TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Id ?? string.Empty).Contains(id, StringComparison.CurrentCultureIgnoreCase)))
+                (a.Id ?? string.Empty).TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
 
@@ -237,16 +238,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.LanguageCode ?? string.Empty).Equals(languageCode, StringComparison.CurrentCultureIgnoreCase))),
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().Equals(languageCode, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.LanguageCode ?? string.Empty).StartsWith(languageCode, StringComparison.CurrentCultureIgnoreCase))),
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().StartsWith(languageCode, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.LanguageCode ?? string.Empty).EndsWith(languageCode, StringComparison.CurrentCultureIgnoreCase))),
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().EndsWith(languageCode, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.LanguageCode ?? string.Empty).Contains(languageCode, StringComparison.CurrentCultureIgnoreCase)))
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().Contains(languageCode, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -255,16 +256,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))),
+                a.Name.TrimDoubleQuotes().Equals(name, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase))),
+                a.Name.TrimDoubleQuotes().StartsWith(name, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.EndsWith(name, StringComparison.CurrentCultureIgnoreCase))),
+                a.Name.TrimDoubleQuotes().EndsWith(name, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase)))
+                a.Name.TrimDoubleQuotes().Contains(name, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
 
@@ -273,16 +274,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Phone ?? string.Empty).Equals(phone, StringComparison.CurrentCultureIgnoreCase))),
+                (a.Phone ?? string.Empty).TrimDoubleQuotes().Equals(phone, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Phone ?? string.Empty).StartsWith(phone, StringComparison.CurrentCultureIgnoreCase))),
+                (a.Phone ?? string.Empty).TrimDoubleQuotes().StartsWith(phone, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Phone ?? string.Empty).EndsWith(phone, StringComparison.CurrentCultureIgnoreCase))),
+                (a.Phone ?? string.Empty).TrimDoubleQuotes().EndsWith(phone, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Phone ?? string.Empty).Contains(phone, StringComparison.CurrentCultureIgnoreCase)))
+                (a.Phone ?? string.Empty).TrimDoubleQuotes().Contains(phone, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
 
@@ -291,44 +292,44 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.URL.Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.Timezone.Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Id ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.LanguageCode ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Phone ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.FareURL ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Email ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase))),
+                a.Name.TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                a.URL.TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                a.Timezone.TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Id ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Phone ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Email ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.URL.StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.Timezone.StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Id ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.LanguageCode ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Phone ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.FareURL ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Email ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase))),
+                a.Name.TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                a.URL.TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                a.Timezone.TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Id ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Phone ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Email ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.URL.EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.Timezone.EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Id ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.LanguageCode ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Phone ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.FareURL ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Email ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase))),
+                a.Name.TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                a.URL.TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                a.Timezone.TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Id ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Phone ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Email ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.URL.Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.Timezone.Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Id ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.LanguageCode ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Phone ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.FareURL ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Email ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase)))
+                a.Name.TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                a.URL.TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                a.Timezone.TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Id ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Phone ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Email ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
 
@@ -337,16 +338,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Timezone.Equals(timezone, StringComparison.CurrentCultureIgnoreCase))),
+                a.Timezone.TrimDoubleQuotes().Equals(timezone, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Timezone.StartsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
+                a.Timezone.TrimDoubleQuotes().StartsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Timezone.EndsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
+                a.Timezone.TrimDoubleQuotes().EndsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Timezone.Contains(timezone, StringComparison.CurrentCultureIgnoreCase)))
+                a.Timezone.TrimDoubleQuotes().Contains(timezone, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
 
@@ -355,16 +356,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.URL.Equals(url, StringComparison.CurrentCultureIgnoreCase))),
+                a.URL.TrimDoubleQuotes().Equals(url, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.URL.StartsWith(url, StringComparison.CurrentCultureIgnoreCase))),
+                a.URL.TrimDoubleQuotes().StartsWith(url, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.URL.EndsWith(url, StringComparison.CurrentCultureIgnoreCase))),
+                a.URL.TrimDoubleQuotes().EndsWith(url, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.URL.Contains(url, StringComparison.CurrentCultureIgnoreCase)))
+                a.URL.TrimDoubleQuotes().Contains(url, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -373,16 +374,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Partial => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.StopId.Contains(id, StringComparison.CurrentCultureIgnoreCase))),
+                s.StopId.TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.StopId.StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                s.StopId.TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.StopId.EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                s.StopId.TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.StopId.Equals(id, StringComparison.CurrentCultureIgnoreCase)))
+                s.StopId.TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
 
@@ -391,16 +392,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Partial => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.TripId.Contains(id, StringComparison.CurrentCultureIgnoreCase))),
+                s.TripId.TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.TripId.StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                s.TripId.TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.TripId.EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                s.TripId.TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.TripId.Equals(id, StringComparison.CurrentCultureIgnoreCase)))
+                s.TripId.TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -409,16 +410,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Code ?? string.Empty).Equals(code, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Code ?? string.Empty).TrimDoubleQuotes().Equals(code, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Code ?? string.Empty).StartsWith(code, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Code ?? string.Empty).TrimDoubleQuotes().StartsWith(code, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Code ?? string.Empty).EndsWith(code, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Code ?? string.Empty).TrimDoubleQuotes().EndsWith(code, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Code ?? string.Empty).Contains(code, StringComparison.CurrentCultureIgnoreCase)))
+                (s.Code ?? string.Empty).TrimDoubleQuotes().Contains(code, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -427,16 +428,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Description ?? string.Empty).Equals(description, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Description ?? string.Empty).TrimDoubleQuotes().Equals(description, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Description ?? string.Empty).StartsWith(description, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Description ?? string.Empty).TrimDoubleQuotes().StartsWith(description, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Description ?? string.Empty).EndsWith(description, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Description ?? string.Empty).TrimDoubleQuotes().EndsWith(description, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Description ?? string.Empty).Contains(description, StringComparison.CurrentCultureIgnoreCase)))
+                (s.Description ?? string.Empty).TrimDoubleQuotes().Contains(description, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -445,16 +446,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.Equals(id, StringComparison.CurrentCultureIgnoreCase))),
+                s.Id.TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                s.Id.TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                s.Id.TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.Contains(id, StringComparison.CurrentCultureIgnoreCase)))
+                s.Id.TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -463,16 +464,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LevelId ?? string.Empty).Equals(id, StringComparison.CurrentCultureIgnoreCase))),
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LevelId ?? string.Empty).StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LevelId ?? string.Empty).EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LevelId ?? string.Empty).Contains(id, StringComparison.CurrentCultureIgnoreCase)))
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -529,16 +530,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Name ?? string.Empty).Equals(name, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Name ?? string.Empty).TrimDoubleQuotes().Equals(name, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Name ?? string.Empty).StartsWith(name, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Name ?? string.Empty).TrimDoubleQuotes().StartsWith(name, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Name ?? string.Empty).EndsWith(name, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Name ?? string.Empty).TrimDoubleQuotes().EndsWith(name, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Name ?? string.Empty).Contains(name, StringComparison.CurrentCultureIgnoreCase)))
+                (s.Name ?? string.Empty).TrimDoubleQuotes().Contains(name, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -547,16 +548,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.ParentStation ?? string.Empty).Equals(id, StringComparison.CurrentCultureIgnoreCase))),
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.ParentStation ?? string.Empty).StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.ParentStation ?? string.Empty).EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.ParentStation ?? string.Empty).Contains(id, StringComparison.CurrentCultureIgnoreCase)))
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -565,16 +566,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.PlatformCode ?? string.Empty).Equals(platformCode, StringComparison.CurrentCultureIgnoreCase))),
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().Equals(platformCode, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.PlatformCode ?? string.Empty).StartsWith(platformCode, StringComparison.CurrentCultureIgnoreCase))),
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().StartsWith(platformCode, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.PlatformCode ?? string.Empty).EndsWith(platformCode, StringComparison.CurrentCultureIgnoreCase))),
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().EndsWith(platformCode, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.PlatformCode ?? string.Empty).Contains(platformCode, StringComparison.CurrentCultureIgnoreCase)))
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().Contains(platformCode, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -583,52 +584,52 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Code ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Name ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Description ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Zone ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Url ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.ParentStation ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Timezone ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.LevelId ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.PlatformCode ?? string.Empty).Equals(search, StringComparison.CurrentCultureIgnoreCase))),
+                s.Id.TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Code ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Name ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Description ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Zone ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Url ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Code ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Name ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Description ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Zone ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Url ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.ParentStation ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Timezone ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.LevelId ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.PlatformCode ?? string.Empty).StartsWith(search, StringComparison.CurrentCultureIgnoreCase))),
+                s.Id.TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Code ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Name ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Description ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Zone ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Url ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Code ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Name ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Description ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Zone ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Url ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.ParentStation ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Timezone ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.LevelId ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.PlatformCode ?? string.Empty).EndsWith(search, StringComparison.CurrentCultureIgnoreCase))),
+                s.Id.TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Code ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Name ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Description ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Zone ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Url ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Code ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Name ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Description ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Zone ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Url ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.ParentStation ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Timezone ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.LevelId ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.PlatformCode ?? string.Empty).Contains(search, StringComparison.CurrentCultureIgnoreCase)))
+                s.Id.TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Code ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Name ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Description ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Zone ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Url ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -637,16 +638,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Timezone ?? string.Empty).Equals(timezone, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes().Equals(timezone, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Timezone ?? string.Empty).StartsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes().StartsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Timezone ?? string.Empty).EndsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes().EndsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Timezone ?? string.Empty).Contains(timezone, StringComparison.CurrentCultureIgnoreCase)))
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes().Contains(timezone, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -655,16 +656,16 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Url ?? string.Empty).Equals(url, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Url ?? string.Empty).TrimDoubleQuotes().Equals(url, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Url ?? string.Empty).StartsWith(url, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Url ?? string.Empty).TrimDoubleQuotes().StartsWith(url, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Url ?? string.Empty).EndsWith(url, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Url ?? string.Empty).TrimDoubleQuotes().EndsWith(url, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Url ?? string.Empty).Contains(url, StringComparison.CurrentCultureIgnoreCase)))
+                (s.Url ?? string.Empty).TrimDoubleQuotes().Contains(url, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
     
@@ -673,34 +674,34 @@ public class GtfsStorage : IDataStorage
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").Equals(wheelchairBoarding.ToString("D")))),
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes().Equals(wheelchairBoarding.ToString("D")))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").Equals(wheelchairBoarding.ToString("D")))),
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes().Equals(wheelchairBoarding.ToString("D")))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").Equals(wheelchairBoarding.ToString("D")))),
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes().Equals(wheelchairBoarding.ToString("D")))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").Equals(wheelchairBoarding.ToString("D")))),
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes().Equals(wheelchairBoarding.ToString("D")))),
         };
     }
     
-    public Task<List<Stop>> GetStopsByZoneAsync(string zone, ComparisonType comparison)
+    public Task<List<Stop>> GetStopsByZoneAsync(string id, ComparisonType comparison)
     {
         return comparison switch
         {
             ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Zone ?? string.Empty).Equals(zone, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Zone ?? string.Empty).TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Zone ?? string.Empty).StartsWith(zone, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Zone ?? string.Empty).TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Zone ?? string.Empty).EndsWith(zone, StringComparison.CurrentCultureIgnoreCase))),
+                (s.Zone ?? string.Empty).TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
             
             _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Zone ?? string.Empty).Contains(zone, StringComparison.CurrentCultureIgnoreCase)))
+                (s.Zone ?? string.Empty).TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase)))
         };
     }
 }

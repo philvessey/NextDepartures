@@ -1,0 +1,23 @@
+<Solution>
+
+    <Folder Name="/Solution Items/">
+        <File Path="azure-pipelines.yml" />
+        <File Path="CODE_OF_CONDUCT.md" />
+        <File Path="CONTRIBUTING.md" />
+        <File Path="CONTRIBUTORS.md" />
+        <File Path="Directory.Build.props" />
+        <File Path="LICENSE" />
+        <File Path="README.md" />
+        <File Path="SECURITY.md" />
+    </Folder>
+
+    <Project Path="NextDepartures.Database\NextDepartures.Database.csproj" />
+    <Project Path="NextDepartures.Standard\NextDepartures.Standard.csproj" />
+    <Project Path="NextDepartures.Storage.GTFS\NextDepartures.Storage.GTFS.csproj" />
+    <Project Path="NextDepartures.Storage.MySql\NextDepartures.Storage.MySql.csproj" />
+    <Project Path="NextDepartures.Storage.Postgres\NextDepartures.Storage.Postgres.csproj" />
+    <Project Path="NextDepartures.Storage.Sqlite\NextDepartures.Storage.Sqlite.csproj" />
+    <Project Path="NextDepartures.Storage.SqlServer\NextDepartures.Storage.SqlServer.csproj" />
+    <Project Path="NextDepartures.Test\NextDepartures.Test.csproj" />
+
+</Solution>

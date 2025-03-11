@@ -21,6 +21,7 @@ public class MockStorage : IDataStorage
                 Name = "Bay Area Rapid Transit",
                 URL = "https://www.bart.gov/",
                 Timezone = "America/Los_Angeles",
+                LanguageCode = string.Empty,
                 Phone = "510-464-6000"
             }
         });
@@ -46,11 +47,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -65,6 +69,7 @@ public class MockStorage : IDataStorage
                 Name = "Bay Area Rapid Transit",
                 URL = "https://www.bart.gov/",
                 Timezone = "America/Los_Angeles",
+                LanguageCode = string.Empty,
                 Phone = "510-464-6000"
             }
         });
@@ -80,6 +85,7 @@ public class MockStorage : IDataStorage
                 Name = "Bay Area Rapid Transit",
                 URL = "https://www.bart.gov/",
                 Timezone = "America/Los_Angeles",
+                LanguageCode = string.Empty,
                 Phone = "510-464-6000"
             }
         });
@@ -95,6 +101,7 @@ public class MockStorage : IDataStorage
                 Name = "Bay Area Rapid Transit",
                 URL = "https://www.bart.gov/",
                 Timezone = "America/Los_Angeles",
+                LanguageCode = string.Empty,
                 Phone = "510-464-6000"
             }
         });
@@ -110,6 +117,7 @@ public class MockStorage : IDataStorage
                 Name = "Bay Area Rapid Transit",
                 URL = "https://www.bart.gov/",
                 Timezone = "America/Los_Angeles",
+                LanguageCode = string.Empty,
                 Phone = "510-464-6000"
             }
         });
@@ -125,6 +133,7 @@ public class MockStorage : IDataStorage
                 Name = "Bay Area Rapid Transit",
                 URL = "https://www.bart.gov/",
                 Timezone = "America/Los_Angeles",
+                LanguageCode = string.Empty,
                 Phone = "510-464-6000"
             }
         });
@@ -140,6 +149,7 @@ public class MockStorage : IDataStorage
                 Name = "Bay Area Rapid Transit",
                 URL = "https://www.bart.gov/",
                 Timezone = "America/Los_Angeles",
+                LanguageCode = string.Empty,
                 Phone = "510-464-6000"
             }
         });
@@ -155,6 +165,7 @@ public class MockStorage : IDataStorage
                 Name = "Bay Area Rapid Transit",
                 URL = "https://www.bart.gov/",
                 Timezone = "America/Los_Angeles",
+                LanguageCode = string.Empty,
                 Phone = "510-464-6000"
             }
         });
@@ -170,6 +181,7 @@ public class MockStorage : IDataStorage
                 Name = "Bay Area Rapid Transit",
                 URL = "https://www.bart.gov/",
                 Timezone = "America/Los_Angeles",
+                LanguageCode = string.Empty,
                 Phone = "510-464-6000"
             }
         });
@@ -185,6 +197,7 @@ public class MockStorage : IDataStorage
                 Name = "Bay Area Rapid Transit",
                 URL = "https://www.bart.gov/",
                 Timezone = "America/Los_Angeles",
+                LanguageCode = string.Empty,
                 Phone = "510-464-6000"
             }
         });
@@ -261,11 +274,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -277,11 +293,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -293,11 +312,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -309,11 +331,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -325,11 +350,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -341,11 +369,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -357,11 +388,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -373,11 +407,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -389,11 +426,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -405,11 +445,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -421,11 +464,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -437,11 +483,14 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
@@ -453,27 +502,33 @@ public class MockStorage : IDataStorage
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
     
-    public Task<List<Stop>> GetStopsByZoneAsync(string zone, ComparisonType comparison)
+    public Task<List<Stop>> GetStopsByZoneAsync(string id, ComparisonType comparison)
     {
         return Task.FromResult(new List<Stop>
         {
             new()
             {
                 Id = "16TH",
+                Code = string.Empty,
                 Name = "16th Street / Mission",
+                Description = string.Empty,
                 Latitude = 37.765176,
                 Longitude = -122.419755,
                 Zone = "16TH",
-                LocationType = LocationType.Stop
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH",
             }
         });
     }
