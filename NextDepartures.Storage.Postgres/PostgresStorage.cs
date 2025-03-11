@@ -76,7 +76,7 @@ public class PostgresStorage : IDataStorage
         return new Agency
         {
             Id = !dataReader.IsDBNull(0) ? dataReader.GetString(0) : null,
-            Name = dataReader.GetString(1).Trim().ToTitleCase(),
+            Name = dataReader.GetString(1).ToTitleCase(),
             URL = dataReader.GetString(2),
             Timezone = dataReader.GetString(3),
             LanguageCode = !dataReader.IsDBNull(4) ? dataReader.GetString(4) : null,
@@ -108,8 +108,8 @@ public class PostgresStorage : IDataStorage
             },
             
             StopId = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
-            TripId = !dataReader.IsDBNull(2) ? dataReader.GetString(2) : null,
-            ServiceId = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
+            TripId = dataReader.GetString(2),
+            ServiceId = dataReader.GetString(3),
             TripHeadsign = !dataReader.IsDBNull(4) ? dataReader.GetString(4) : null,
             TripShortName = !dataReader.IsDBNull(5) ? dataReader.GetString(5) : null,
             AgencyId = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
@@ -135,8 +135,8 @@ public class PostgresStorage : IDataStorage
             Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
             Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2) : null,
             Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
-            Latitude = dataReader.GetDouble(4),
-            Longitude = dataReader.GetDouble(5),
+            Latitude = !dataReader.IsDBNull(4) ? dataReader.GetDouble(4) : 0,
+            Longitude = !dataReader.IsDBNull(5) ? dataReader.GetDouble(5) : 0,
             Zone = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
             Url = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null,
             LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
@@ -154,10 +154,10 @@ public class PostgresStorage : IDataStorage
         {
             Id = dataReader.GetString(0),
             Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
-            Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2).Trim().ToTitleCase() : null,
+            Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2).ToTitleCase() : null,
             Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
-            Latitude = dataReader.GetDouble(4),
-            Longitude = dataReader.GetDouble(5),
+            Latitude = !dataReader.IsDBNull(4) ? dataReader.GetDouble(4) : 0,
+            Longitude = !dataReader.IsDBNull(5) ? dataReader.GetDouble(5) : 0,
             Zone = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
             Url = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null,
             LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
@@ -763,31 +763,31 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " + 
                                     "from gtfs_stops " + 
-                                        $"where stop_lon >= {minimumLongitude} " + 
-                                          $"and stop_lat >= {minimumLatitude} " + 
-                                          $"and stop_lon <= {maximumLongitude} " + 
-                                          $"and stop_lat <= {maximumLatitude}",
+                                        $"where coalesce(nullif(stop_lon, ''), 0) >= {minimumLongitude} " + 
+                                          $"and coalesce(nullif(stop_lat, ''), 0) >= {minimumLatitude} " + 
+                                          $"and coalesce(nullif(stop_lon, ''), 0) <= {maximumLongitude} " + 
+                                          $"and coalesce(nullif(stop_lat, ''), 0) <= {maximumLatitude}",
             
             ComparisonType.Starts => "select * " + 
                                      "from gtfs_stops " + 
-                                        $"where stop_lon >= {minimumLongitude} " + 
-                                          $"and stop_lat >= {minimumLatitude} " + 
-                                          $"and stop_lon <= {maximumLongitude} " + 
-                                          $"and stop_lat <= {maximumLatitude}",
+                                        $"where coalesce(nullif(stop_lon, ''), 0) >= {minimumLongitude} " + 
+                                          $"and coalesce(nullif(stop_lat, ''), 0) >= {minimumLatitude} " + 
+                                          $"and coalesce(nullif(stop_lon, ''), 0) <= {maximumLongitude} " + 
+                                          $"and coalesce(nullif(stop_lat, ''), 0) <= {maximumLatitude}",
             
             ComparisonType.Ends => "select * " + 
                                    "from gtfs_stops " + 
-                                        $"where stop_lon >= {minimumLongitude} " + 
-                                          $"and stop_lat >= {minimumLatitude} " + 
-                                          $"and stop_lon <= {maximumLongitude} " + 
-                                          $"and stop_lat <= {maximumLatitude}",
+                                        $"where coalesce(nullif(stop_lon, ''), 0) >= {minimumLongitude} " + 
+                                          $"and coalesce(nullif(stop_lat, ''), 0) >= {minimumLatitude} " + 
+                                          $"and coalesce(nullif(stop_lon, ''), 0) <= {maximumLongitude} " + 
+                                          $"and coalesce(nullif(stop_lat, ''), 0) <= {maximumLatitude}",
             
             _ => "select * " + 
                  "from gtfs_stops " + 
-                    $"where stop_lon >= {minimumLongitude} " + 
-                      $"and stop_lat >= {minimumLatitude} " + 
-                      $"and stop_lon <= {maximumLongitude} " + 
-                      $"and stop_lat <= {maximumLatitude}"
+                    $"where coalesce(nullif(stop_lon, ''), 0) >= {minimumLongitude} " + 
+                      $"and coalesce(nullif(stop_lat, ''), 0) >= {minimumLatitude} " + 
+                      $"and coalesce(nullif(stop_lon, ''), 0) <= {maximumLongitude} " + 
+                      $"and coalesce(nullif(stop_lat, ''), 0) <= {maximumLatitude}"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);

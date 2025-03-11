@@ -76,7 +76,7 @@ public class MySqlStorage : IDataStorage
         return new Agency
         {
             Id = !dataReader.IsDBNull(0) ? dataReader.GetString(0) : null,
-            Name = dataReader.GetString(1).Trim().ToTitleCase(),
+            Name = dataReader.GetString(1).ToTitleCase(),
             URL = dataReader.GetString(2),
             Timezone = dataReader.GetString(3),
             LanguageCode = !dataReader.IsDBNull(4) ? dataReader.GetString(4) : null,
@@ -108,8 +108,8 @@ public class MySqlStorage : IDataStorage
             },
             
             StopId = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
-            TripId = !dataReader.IsDBNull(2) ? dataReader.GetString(2) : null,
-            ServiceId = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
+            TripId = dataReader.GetString(2),
+            ServiceId = dataReader.GetString(3),
             TripHeadsign = !dataReader.IsDBNull(4) ? dataReader.GetString(4) : null,
             TripShortName = !dataReader.IsDBNull(5) ? dataReader.GetString(5) : null,
             AgencyId = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
@@ -135,8 +135,8 @@ public class MySqlStorage : IDataStorage
             Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
             Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2) : null,
             Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
-            Latitude = dataReader.GetDouble(4),
-            Longitude = dataReader.GetDouble(5),
+            Latitude = !dataReader.IsDBNull(4) ? dataReader.GetDouble(4) : 0,
+            Longitude = !dataReader.IsDBNull(5) ? dataReader.GetDouble(5) : 0,
             Zone = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
             Url = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null,
             LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
@@ -154,10 +154,10 @@ public class MySqlStorage : IDataStorage
         {
             Id = dataReader.GetString(0),
             Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
-            Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2).Trim().ToTitleCase() : null,
+            Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2).ToTitleCase() : null,
             Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
-            Latitude = dataReader.GetDouble(4),
-            Longitude = dataReader.GetDouble(5),
+            Latitude = !dataReader.IsDBNull(4) ? dataReader.GetDouble(4) : 0,
+            Longitude = !dataReader.IsDBNull(5) ? dataReader.GetDouble(5) : 0,
             Zone = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
             Url = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null,
             LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
@@ -763,31 +763,31 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " + 
                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE StopLon >= {minimumLongitude} " + 
-                                          $"AND StopLat >= {minimumLatitude} " + 
-                                          $"AND StopLon <= {maximumLongitude} " + 
-                                          $"AND StopLat <= {maximumLatitude}",
+                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " + 
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " + 
+                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " + 
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
             
             ComparisonType.Starts => "SELECT * " + 
                                      "FROM GTFS_STOPS " + 
-                                        $"WHERE StopLon >= {minimumLongitude} " + 
-                                          $"AND StopLat >= {minimumLatitude} " + 
-                                          $"AND StopLon <= {maximumLongitude} " + 
-                                          $"AND StopLat <= {maximumLatitude}",
+                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " + 
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " + 
+                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " + 
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
             
             ComparisonType.Ends => "SELECT * " + 
                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE StopLon >= {minimumLongitude} " + 
-                                          $"AND StopLat >= {minimumLatitude} " + 
-                                          $"AND StopLon <= {maximumLongitude} " + 
-                                          $"AND StopLat <= {maximumLatitude}",
+                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " + 
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " + 
+                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " + 
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
             
             _ => "SELECT * " + 
                  "FROM GTFS_STOPS " + 
-                    $"WHERE StopLon >= {minimumLongitude} " + 
-                      $"AND StopLat >= {minimumLatitude} " + 
-                      $"AND StopLon <= {maximumLongitude} " + 
-                      $"AND StopLat <= {maximumLatitude}"
+                    $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " + 
+                      $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " + 
+                      $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " + 
+                      $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}"
         };
         
         return ExecuteCommand(sql, GetStopFromDataReaderByCondition);

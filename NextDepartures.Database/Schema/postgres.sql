@@ -13,7 +13,7 @@ create table gtfs_agency (
 drop table if exists gtfs_calendar;
 
 create table gtfs_calendar (
-    service_id character varying(255) primary key,
+    service_id character varying(255) not null primary key,
     monday smallint not null,
     tuesday smallint not null,
     wednesday smallint not null,
@@ -86,7 +86,7 @@ create table gtfs_pathways (
 drop table if exists gtfs_routes;
 
 create table gtfs_routes (
-    route_id character varying(255) primary key,
+    route_id character varying(255) not null primary key,
     agency_id character varying(255),
     route_short_name character varying(255),
     route_long_name character varying(255),
@@ -109,7 +109,7 @@ create table gtfs_shapes (
 drop table if exists gtfs_stops;
 
 create table gtfs_stops (
-    stop_id character varying(255) primary key,
+    stop_id character varying(255) not null primary key,
     stop_code character varying(255),
     stop_name character varying(255),
     stop_desc character varying(255),
@@ -151,7 +151,7 @@ drop table if exists gtfs_trips;
 create table gtfs_trips (
     route_id character varying(255) not null,
     service_id character varying(255) not null,
-    trip_id character varying(255) primary key,
+    trip_id character varying(255) not null primary key,
     trip_headsign character varying(255),
     trip_short_name character varying(255),
     direction_id smallint,
