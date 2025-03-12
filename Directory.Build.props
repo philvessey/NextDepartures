@@ -1,17 +1,31 @@
 <Project>
+    
     <PropertyGroup>
         <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-
-        <MySQL>2.4.0</MySQL> <!-- MySqlConnector -->
-        <PgSQL>9.0.3</PgSQL> <!-- Npgsql -->
-        <SQLite>9.0.2</SQLite> <!-- Microsoft.Data.Sqlite -->
-        <SQLServer>6.0.1</SQLServer> <!-- Microsoft.Data.SqlClient -->
-
-        <TestDevelopmentVersion>17.13.0</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
-        <TestFrameworkVersion>3.8.2</TestFrameworkVersion> <!-- MSTest.TestFramework -->
-        
+    </PropertyGroup>
+    
+    <PropertyGroup>
         <DateTimeLibraryVersion>3.2.1</DateTimeLibraryVersion> <!-- NodaTime -->
         <JetBrainsLibraryVersion>2024.3.0</JetBrainsLibraryVersion> <!-- JetBrains.Annotations -->
         <TransitFeedLibraryVersion>3.0.0-pre006</TransitFeedLibraryVersion> <!-- GTFS -->
     </PropertyGroup>
+    
+    <PropertyGroup>
+        <MySQL>2.4.0</MySQL> <!-- MySqlConnector -->
+        <PgSQL>9.0.3</PgSQL> <!-- Npgsql -->
+        <SQLite>9.0.2</SQLite> <!-- Microsoft.Data.Sqlite -->
+        <SQLServer>6.0.1</SQLServer> <!-- Microsoft.Data.SqlClient -->
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <MySQL-Aspire>9.1.0</MySQL-Aspire> <!-- Aspire.MySqlConnector -->
+        <PgSQL-Aspire>9.1.0</PgSQL-Aspire> <!-- Aspire.Npgsql -->
+        <SQLServer-Aspire>9.1.0</SQLServer-Aspire> <!-- Aspire.Microsoft.Data.SqlClient -->
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <TestDevelopmentVersion>17.13.0</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
+        <TestFrameworkVersion>3.8.2</TestFrameworkVersion> <!-- MSTest.TestFramework -->
+    </PropertyGroup>
+    
 </Project>
