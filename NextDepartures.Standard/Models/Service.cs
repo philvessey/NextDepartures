@@ -35,7 +35,7 @@ public class Service
     
     [UsedImplicitly]
     public string Type { get; set; }
-        
+    
     public override string ToString()
     {
         return Type != "trip" ? $"[{DepartureDateTime}] {DestinationName}" : $"[{DepartureDateTime}] {StopName}";

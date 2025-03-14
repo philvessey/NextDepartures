@@ -8,7 +8,7 @@ public static class IntExtensions
     {
         return baseInt == 0 ? ExceptionType.Added : ExceptionType.Removed;
     }
-
+    
     public static LocationType ToLocationType(this int baseInt)
     {
         return baseInt switch

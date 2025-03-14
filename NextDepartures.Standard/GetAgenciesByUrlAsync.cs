@@ -15,22 +15,25 @@ public partial class Feed
     /// <param name="comparison">The ComparisonType to use when searching. Default is partial.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of agencies.</returns>
-    public async Task<List<Agency>> GetAgenciesByUrlAsync(string url = "", ComparisonType comparison = ComparisonType.Partial, int results = 0)
-    {
+    public async Task<List<Agency>> GetAgenciesByUrlAsync(
+        string url = null,
+        ComparisonType comparison = ComparisonType.Partial,
+        int results = 0) {
+        
         try
         {
-            var agenciesFromStorage = await _dataStorage.GetAgenciesByUrlAsync(url, comparison);
+            var agenciesFromStorage = await _dataStorage.GetAgenciesByUrlAsync(
+                url: url,
+                comparison: comparison);
             
             if (results > 0)
-            {
                 return agenciesFromStorage
-                    .OrderBy(a => a.Name)
-                    .Take(results)
+                    .OrderBy(keySelector: a => a.Name)
+                    .Take(count: results)
                     .ToList();
-            }
             
             return agenciesFromStorage
-                .OrderBy(a => a.Name)
+                .OrderBy(keySelector: a => a.Name)
                 .ToList();
         }
         catch

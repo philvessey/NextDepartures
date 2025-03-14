@@ -6,11 +6,14 @@ namespace NextDepartures.Standard.Extensions;
 
 public static class DateTimeExtensions
 {
-    public static DateTime ToZonedDateTime(this DateTime baseDateTime, string timezone)
-    {
-        return baseDateTime.ToUniversalTime()
+    public static DateTime ToZonedDateTime(
+        this DateTime baseDateTime,
+        string timezone) {
+        
+        return baseDateTime
+            .ToUniversalTime()
             .ToInstant()
-            .InZone(DateTimeZoneProviders.Tzdb[timezone])
+            .InZone(zone: DateTimeZoneProviders.Tzdb[timezone])
             .ToDateTimeUnspecified();
     }
 }
