@@ -10,15 +10,30 @@ using NextDepartures.Standard.Models;
 using NextDepartures.Standard.Storage;
 using NextDepartures.Standard.Types;
 
-namespace NextDepartures.Storage.SqlServer;
+namespace NextDepartures.Storage.SqlServer.Aspire;
 
 public class SqlServerStorage : IDataStorage
 {
+    private readonly SqlConnection _connection;
     private readonly string _connectionString;
+    
+    private SqlServerStorage(SqlConnection connection)
+    {
+        _connection = connection;
+    }
     
     private SqlServerStorage(string connectionString)
     {
         _connectionString = connectionString;
+    }
+    
+    /// <summary>
+    /// Loads a SQL Server data storage.
+    /// </summary>
+    /// <param name="connection">The database connection.</param>
+    public static SqlServerStorage Load(SqlConnection connection)
+    {
+        return new SqlServerStorage(connection: connection);
     }
     
     /// <summary>
@@ -36,7 +51,7 @@ public class SqlServerStorage : IDataStorage
         
         List<T> results = [];
         
-        await using var connection = new SqlConnection(connectionString: _connectionString);
+        await using var connection = _connection ?? new SqlConnection(connectionString: _connectionString);
         await connection.OpenAsync();
         
         SqlCommand command = new();
@@ -428,7 +443,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(AgencyTimezone) LIKE '%{(timezone ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByUrlAsync(
@@ -883,8 +898,7 @@ public class SqlServerStorage : IDataStorage
     }
     
     public Task<List<Stop>> GetStopsByParentStationAsync(
-        string id,
-        ComparisonType comparison) {
+        string id, ComparisonType comparison) {
         
         var sql = comparison switch
         {

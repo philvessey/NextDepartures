@@ -16,12 +16,12 @@ namespace NextDepartures.Storage.GTFS;
 public class GtfsStorage : IDataStorage
 {
     private readonly GTFSFeed _feed;
-        
+    
     private GtfsStorage(GTFSFeed feed)
     {
         _feed = feed;
     }
-
+    
     /// <summary>
     /// Loads a GTFS data storage.
     /// </summary>
@@ -29,13 +29,13 @@ public class GtfsStorage : IDataStorage
     public static GtfsStorage Load(string path)
     {
         GTFSReader<GTFSFeed> reader = new();
-        return new GtfsStorage(reader.Read(path));
+        return new GtfsStorage(feed: reader.Read(path: path));
     }
-
+    
     private List<Agency> GetAgenciesFromFeed()
     {
         return _feed.Agencies
-            .Select(a => new Agency
+            .Select(selector: a => new Agency
             {
                 Id = a.Id?.TrimDoubleQuotes(),
                 Name = a.Name.TrimDoubleQuotes(),
@@ -48,12 +48,12 @@ public class GtfsStorage : IDataStorage
             })
             .ToList();
     }
-
+    
     private List<Agency> GetAgenciesFromFeedByCondition(Func<Agency, bool> condition)
     {
         return _feed.Agencies
-            .Where(condition)
-            .Select(a => new Agency
+            .Where(predicate: condition)
+            .Select(selector: a => new Agency
             {
                 Id = a.Id?.TrimDoubleQuotes(),
                 Name = a.Name.TrimDoubleQuotes().ToTitleCase(),
@@ -70,7 +70,7 @@ public class GtfsStorage : IDataStorage
     private List<CalendarDate> GetCalendarDatesFromFeed()
     {
         return _feed.CalendarDates
-            .Select(d => new CalendarDate
+            .Select(selector: d => new CalendarDate
             {
                 ServiceId = d.ServiceId.TrimDoubleQuotes(),
                 Date = d.Date,
@@ -82,12 +82,12 @@ public class GtfsStorage : IDataStorage
     private List<Departure> GetDeparturesFromFeedByCondition(Func<StopTime, bool> condition)
     {
         return _feed.StopTimes
-            .Where(s => condition(s) && (s.PickupType != null && s.PickupType.ToString() != string.Empty ? s.PickupType : PickupType.Regular) != PickupType.NoPickup)
-            .Join(_feed.Trips, s => s.TripId.TrimDoubleQuotes(), t => t.Id.TrimDoubleQuotes(), (s, t) => (s, t))
-            .Join(_feed.Routes, e => e.t.RouteId.TrimDoubleQuotes(), r => r.Id.TrimDoubleQuotes(), (e, r) => (e.s, e.t, r))
-            .Join(_feed.Calendars, e => e.t.ServiceId.TrimDoubleQuotes(), c => c.ServiceId.TrimDoubleQuotes(), (e, c) => (e.s, e.t, e.r, c))
-            .OrderBy(e => e.s.DepartureTime)
-            .Select(e => new Departure
+            .Where(predicate: s => condition(s) && (s.PickupType != null && s.PickupType.ToString() != string.Empty ? s.PickupType : PickupType.Regular) != PickupType.NoPickup)
+            .Join(inner: _feed.Trips, s => s.TripId.TrimDoubleQuotes(), t => t.Id.TrimDoubleQuotes(), (s, t) => (s, t))
+            .Join(inner: _feed.Routes, e => e.t.RouteId.TrimDoubleQuotes(), r => r.Id.TrimDoubleQuotes(), (e, r) => (e.s, e.t, r))
+            .Join(inner: _feed.Calendars, e => e.t.ServiceId.TrimDoubleQuotes(), c => c.ServiceId.TrimDoubleQuotes(), (e, c) => (e.s, e.t, e.r, c))
+            .OrderBy(keySelector: e => e.s.DepartureTime)
+            .Select(selector: e => new Departure
             {
                 DepartureTime = new TimeOfDay
                 {
@@ -120,7 +120,7 @@ public class GtfsStorage : IDataStorage
     private List<Stop> GetStopsFromFeed()
     {
         return _feed.Stops
-            .Select(s => new Stop
+            .Select(selector: s => new Stop
             {
                 Id = s.Id.TrimDoubleQuotes(),
                 Code = s.Code?.TrimDoubleQuotes(),
@@ -139,12 +139,12 @@ public class GtfsStorage : IDataStorage
             })
             .ToList();
     }
-
+    
     private List<Stop> GetStopsFromFeedByCondition(Func<Stop, bool> condition)
     {
         return _feed.Stops
-            .Where(condition)
-            .Select(s => new Stop
+            .Where(predicate: condition)
+            .Select(selector: s => new Stop
             {
                 Id = s.Id.TrimDoubleQuotes(),
                 Code = s.Code?.TrimDoubleQuotes(),
@@ -166,542 +166,1117 @@ public class GtfsStorage : IDataStorage
     
     public Task<List<Agency>> GetAgenciesAsync()
     {
-        return Task.FromResult(GetAgenciesFromFeed());
+        return Task.FromResult(result: GetAgenciesFromFeed());
     }
     
     public Task<List<CalendarDate>> GetCalendarDatesAsync()
     {
-        return Task.FromResult(GetCalendarDatesFromFeed());
+        return Task.FromResult(result: GetCalendarDatesFromFeed());
     }
     
     public Task<List<Stop>> GetStopsAsync()
     {
-        return Task.FromResult(GetStopsFromFeed());
+        return Task.FromResult(result: GetStopsFromFeed());
     }
     
-    public Task<List<Agency>> GetAgenciesByEmailAsync(string email, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Agency>> GetAgenciesByEmailAsync(
+        string email,
+        ComparisonType comparison) {
+        
+        Func<Agency, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Email ?? string.Empty).TrimDoubleQuotes().Equals(email, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => a =>
+                (a.Email ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: email ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Email ?? string.Empty).TrimDoubleQuotes().StartsWith(email, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => a =>
+                (a.Email ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: email ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Email ?? string.Empty).TrimDoubleQuotes().EndsWith(email, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => a =>
+                (a.Email ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: email ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Email ?? string.Empty).TrimDoubleQuotes().Contains(email, StringComparison.CurrentCultureIgnoreCase)))
+            _ => a =>
+                (a.Email ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: email ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
-    }
-
-    public Task<List<Agency>> GetAgenciesByFareUrlAsync(string fareUrl, ComparisonType comparison)
-    {
-        return comparison switch
-        {
-            ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.FareURL ?? string.Empty).TrimDoubleQuotes().Equals(fareUrl, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.FareURL ?? string.Empty).TrimDoubleQuotes().StartsWith(fareUrl, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.FareURL ?? string.Empty).TrimDoubleQuotes().EndsWith(fareUrl, StringComparison.CurrentCultureIgnoreCase))),
-            
-            _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.FareURL ?? string.Empty).TrimDoubleQuotes().Contains(fareUrl, StringComparison.CurrentCultureIgnoreCase)))
-        };
+        
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Agency>> GetAgenciesByIdAsync(string id, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Agency>> GetAgenciesByFareUrlAsync(
+        string fareUrl,
+        ComparisonType comparison) {
+        
+        Func<Agency, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Id ?? string.Empty).TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => a =>
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: fareUrl ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Id ?? string.Empty).TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => a =>
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: fareUrl ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Id ?? string.Empty).TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => a =>
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: fareUrl ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Id ?? string.Empty).TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase)))
+            _ => a =>
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: fareUrl ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
-    }
-
-    public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode, ComparisonType comparison)
-    {
-        return comparison switch
-        {
-            ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().Equals(languageCode, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().StartsWith(languageCode, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().EndsWith(languageCode, StringComparison.CurrentCultureIgnoreCase))),
-            
-            _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().Contains(languageCode, StringComparison.CurrentCultureIgnoreCase)))
-        };
+        
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Agency>> GetAgenciesByNameAsync(string name, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Agency>> GetAgenciesByIdAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        Func<Agency, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.TrimDoubleQuotes().Equals(name, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => a =>
+                (a.Id ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.TrimDoubleQuotes().StartsWith(name, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => a =>
+                (a.Id ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.TrimDoubleQuotes().EndsWith(name, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => a =>
+                (a.Id ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.TrimDoubleQuotes().Contains(name, StringComparison.CurrentCultureIgnoreCase)))
+            _ => a =>
+                (a.Id ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
-    }
-
-    public Task<List<Agency>> GetAgenciesByPhoneAsync(string phone, ComparisonType comparison)
-    {
-        return comparison switch
-        {
-            ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Phone ?? string.Empty).TrimDoubleQuotes().Equals(phone, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Phone ?? string.Empty).TrimDoubleQuotes().StartsWith(phone, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Phone ?? string.Empty).TrimDoubleQuotes().EndsWith(phone, StringComparison.CurrentCultureIgnoreCase))),
-            
-            _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                (a.Phone ?? string.Empty).TrimDoubleQuotes().Contains(phone, StringComparison.CurrentCultureIgnoreCase)))
-        };
-    }
-
-    public Task<List<Agency>> GetAgenciesByQueryAsync(string search, ComparisonType comparison)
-    {
-        return comparison switch
-        {
-            ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.URL.TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.Timezone.TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Id ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Phone ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.FareURL ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Email ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.URL.TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.Timezone.TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Id ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Phone ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.FareURL ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Email ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.URL.TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.Timezone.TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Id ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Phone ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.FareURL ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Email ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase))),
-            
-            _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Name.TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.URL.TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                a.Timezone.TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Id ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Phone ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.FareURL ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (a.Email ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase)))
-        };
-    }
-
-    public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone, ComparisonType comparison)
-    {
-        return comparison switch
-        {
-            ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Timezone.TrimDoubleQuotes().Equals(timezone, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Timezone.TrimDoubleQuotes().StartsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Timezone.TrimDoubleQuotes().EndsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
-            
-            _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.Timezone.TrimDoubleQuotes().Contains(timezone, StringComparison.CurrentCultureIgnoreCase)))
-        };
-    }
-
-    public Task<List<Agency>> GetAgenciesByUrlAsync(string url, ComparisonType comparison)
-    {
-        return comparison switch
-        {
-            ComparisonType.Exact => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.URL.TrimDoubleQuotes().Equals(url, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Starts => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.URL.TrimDoubleQuotes().StartsWith(url, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Ends => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.URL.TrimDoubleQuotes().EndsWith(url, StringComparison.CurrentCultureIgnoreCase))),
-            
-            _ => Task.FromResult(GetAgenciesFromFeedByCondition(a =>
-                a.URL.TrimDoubleQuotes().Contains(url, StringComparison.CurrentCultureIgnoreCase)))
-        };
+        
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Departure>> GetDeparturesForStopAsync(string id, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(
+        string languageCode,
+        ComparisonType comparison) {
+        
+        Func<Agency, bool> condition = comparison switch
         {
-            ComparisonType.Partial => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.StopId.TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => a =>
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: languageCode ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.StopId.TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => a =>
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: languageCode ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.StopId.TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => a =>
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: languageCode ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.StopId.TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase)))
+            _ => a =>
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: languageCode ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
-    }
-
-    public Task<List<Departure>> GetDeparturesForTripAsync(string id, ComparisonType comparison)
-    {
-        return comparison switch
-        {
-            ComparisonType.Partial => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.TripId.TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Starts => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.TripId.TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
-            
-            ComparisonType.Ends => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.TripId.TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
-            
-            _ => Task.FromResult(GetDeparturesFromFeedByCondition(s =>
-                s.TripId.TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase)))
-        };
+        
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByCodeAsync(string code, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Agency>> GetAgenciesByNameAsync(
+        string name,
+        ComparisonType comparison) {
+        
+        Func<Agency, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Code ?? string.Empty).TrimDoubleQuotes().Equals(code, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => a =>
+                a.Name.TrimDoubleQuotes()
+                    .Equals(
+                        value: name ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Code ?? string.Empty).TrimDoubleQuotes().StartsWith(code, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => a =>
+                a.Name.TrimDoubleQuotes()
+                    .StartsWith(
+                        value: name ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Code ?? string.Empty).TrimDoubleQuotes().EndsWith(code, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => a =>
+                a.Name.TrimDoubleQuotes()
+                    .EndsWith(
+                        value: name ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Code ?? string.Empty).TrimDoubleQuotes().Contains(code, StringComparison.CurrentCultureIgnoreCase)))
+            _ => a =>
+                a.Name.TrimDoubleQuotes()
+                    .Contains(
+                        value: name ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByDescriptionAsync(string description, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Agency>> GetAgenciesByPhoneAsync(
+        string phone,
+        ComparisonType comparison) {
+        
+        Func<Agency, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Description ?? string.Empty).TrimDoubleQuotes().Equals(description, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => a =>
+                (a.Phone ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: phone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Description ?? string.Empty).TrimDoubleQuotes().StartsWith(description, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => a =>
+                (a.Phone ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: phone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Description ?? string.Empty).TrimDoubleQuotes().EndsWith(description, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => a =>
+                (a.Phone ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: phone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Description ?? string.Empty).TrimDoubleQuotes().Contains(description, StringComparison.CurrentCultureIgnoreCase)))
+            _ => a =>
+                (a.Phone ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: phone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByIdAsync(string id, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Agency>> GetAgenciesByQueryAsync(
+        string search,
+        ComparisonType comparison) {
+        
+        Func<Agency, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => a =>
+                a.Name.TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                a.URL.TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                a.Timezone.TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Id ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Phone ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Email ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => a =>
+                a.Name.TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                a.URL.TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                a.Timezone.TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Id ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Phone ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Email ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => a =>
+                a.Name.TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                a.URL.TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                a.Timezone.TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Id ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Phone ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Email ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase)))
+            _ => a =>
+                a.Name.TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                a.URL.TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                a.Timezone.TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Id ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.LanguageCode ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Phone ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.FareURL ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (a.Email ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByLevelAsync(string id, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Agency>> GetAgenciesByTimezoneAsync(
+        string timezone,
+        ComparisonType comparison) {
+        
+        Func<Agency, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LevelId ?? string.Empty).TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => a =>
+                a.Timezone.TrimDoubleQuotes()
+                    .Equals(
+                        value: timezone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LevelId ?? string.Empty).TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => a =>
+                a.Timezone.TrimDoubleQuotes()
+                    .StartsWith(
+                        value: timezone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LevelId ?? string.Empty).TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => a =>
+                a.Timezone.TrimDoubleQuotes()
+                    .EndsWith(
+                        value: timezone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LevelId ?? string.Empty).TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase)))
+            _ => a =>
+                a.Timezone.TrimDoubleQuotes()
+                    .Contains(
+                        value: timezone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Agency>> GetAgenciesByUrlAsync(
+        string url,
+        ComparisonType comparison) {
+        
+        Func<Agency, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
+            ComparisonType.Exact => a =>
+                a.URL.TrimDoubleQuotes()
+                    .Equals(
+                        value: url ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Starts => a =>
+                a.URL.TrimDoubleQuotes()
+                    .StartsWith(
+                        value: url ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Ends => a =>
+                a.URL.TrimDoubleQuotes()
+                    .EndsWith(
+                        value: url ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            _ => a =>
+                a.URL.TrimDoubleQuotes()
+                    .Contains(
+                        value: url ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
+        };
+        
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
+    }
+    
+    public Task<List<Departure>> GetDeparturesForStopAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        Func<StopTime, bool> condition = comparison switch
+        {
+            ComparisonType.Partial => s =>
+                s.StopId.TrimDoubleQuotes()
+                    .Contains(
+                        value: id,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Starts => s =>
+                s.StopId.TrimDoubleQuotes()
+                    .StartsWith(
+                        value: id,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Ends => s =>
+                s.StopId.TrimDoubleQuotes()
+                    .EndsWith(
+                        value: id,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            _ => s =>
+                s.StopId.TrimDoubleQuotes()
+                    .Equals(
+                        value: id,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
+        };
+        
+        return Task.FromResult(result: GetDeparturesFromFeedByCondition(condition: condition));
+    }
+    
+    public Task<List<Departure>> GetDeparturesForTripAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        Func<StopTime, bool> condition = comparison switch
+        {
+            ComparisonType.Partial => s =>
+                s.TripId.TrimDoubleQuotes()
+                    .Contains(
+                        value: id,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Starts => s =>
+                s.TripId.TrimDoubleQuotes()
+                    .StartsWith(
+                        value: id,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Ends => s =>
+                s.TripId.TrimDoubleQuotes()
+                    .EndsWith(
+                        value: id,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            _ => s =>
+                s.TripId.TrimDoubleQuotes()
+                    .Equals(
+                        value: id,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
+        };
+        
+        return Task.FromResult(result: GetDeparturesFromFeedByCondition(condition: condition));
+    }
+    
+    public Task<List<Stop>> GetStopsByCodeAsync(
+        string code,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
+        {
+            ComparisonType.Exact => s =>
+                (s.Code ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: code ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Starts => s =>
+                (s.Code ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: code ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Ends => s =>
+                (s.Code ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: code ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            _ => s =>
+                (s.Code ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: code ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
+        };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+    }
+    
+    public Task<List<Stop>> GetStopsByDescriptionAsync(
+        string description,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
+        {
+            ComparisonType.Exact => s =>
+                (s.Description ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: description ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Starts => s =>
+                (s.Description ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: description ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Ends => s =>
+                (s.Description ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: description ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            _ => s =>
+                (s.Description ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: description ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
+        };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+    }
+    
+    public Task<List<Stop>> GetStopsByIdAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
+        {
+            ComparisonType.Exact => s =>
+                s.Id.TrimDoubleQuotes()
+                    .Equals(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Starts => s =>
+                s.Id.TrimDoubleQuotes()
+                    .StartsWith(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Ends => s =>
+                s.Id.TrimDoubleQuotes()
+                    .EndsWith(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            _ => s =>
+                s.Id.TrimDoubleQuotes()
+                    .Contains(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
+        };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+    }
+    
+    public Task<List<Stop>> GetStopsByLevelAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
+        {
+            ComparisonType.Exact => s =>
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Starts => s =>
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            ComparisonType.Ends => s =>
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
+            
+            _ => s =>
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
+        };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+    }
+    
+    public Task<List<Stop>> GetStopsByLocationAsync(
+        double minimumLongitude,
+        double minimumLatitude,
+        double maximumLongitude,
+        double maximumLatitude,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
+        {
+            ComparisonType.Exact => s =>
                 s.Longitude >= minimumLongitude &&
                 s.Latitude >= minimumLatitude &&
                 s.Longitude <= maximumLongitude &&
-                s.Latitude <= maximumLatitude)),
+                s.Latitude <= maximumLatitude,
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
+            ComparisonType.Starts => s =>
                 s.Longitude >= minimumLongitude &&
                 s.Latitude >= minimumLatitude &&
                 s.Longitude <= maximumLongitude &&
-                s.Latitude <= maximumLatitude)),
+                s.Latitude <= maximumLatitude,
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
+            ComparisonType.Ends => s =>
                 s.Longitude >= minimumLongitude &&
                 s.Latitude >= minimumLatitude &&
                 s.Longitude <= maximumLongitude &&
-                s.Latitude <= maximumLatitude)),
+                s.Latitude <= maximumLatitude,
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
+            _ => s =>
                 s.Longitude >= minimumLongitude &&
                 s.Latitude >= minimumLatitude &&
                 s.Longitude <= maximumLongitude &&
-                s.Latitude <= maximumLatitude))
+                s.Latitude <= maximumLatitude
         };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Stop>> GetStopsByLocationTypeAsync(
+        LocationType locationType,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop).Equals(locationType))),
+            ComparisonType.Exact => s =>
+                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop)
+                    .Equals(other: locationType),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop).Equals(locationType))),
+            ComparisonType.Starts => s =>
+                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop)
+                    .Equals(other: locationType),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop).Equals(locationType))),
+            ComparisonType.Ends => s =>
+                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop)
+                    .Equals(other: locationType),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop).Equals(locationType))),
+            _ => s =>
+                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop)
+                    .Equals(other: locationType)
         };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByNameAsync(string name, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Stop>> GetStopsByNameAsync(
+        string name,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Name ?? string.Empty).TrimDoubleQuotes().Equals(name, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => s =>
+                (s.Name ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: name ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Name ?? string.Empty).TrimDoubleQuotes().StartsWith(name, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => s =>
+                (s.Name ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: name ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Name ?? string.Empty).TrimDoubleQuotes().EndsWith(name, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => s =>
+                (s.Name ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: name ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Name ?? string.Empty).TrimDoubleQuotes().Contains(name, StringComparison.CurrentCultureIgnoreCase)))
+            _ => s =>
+                (s.Name ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: name ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByParentStationAsync(string id, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Stop>> GetStopsByParentStationAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => s =>
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => s =>
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => s =>
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase)))
+            _ => s =>
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Stop>> GetStopsByPlatformCodeAsync(
+        string platformCode,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().Equals(platformCode, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => s =>
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: platformCode ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().StartsWith(platformCode, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => s =>
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: platformCode ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().EndsWith(platformCode, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => s =>
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: platformCode ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().Contains(platformCode, StringComparison.CurrentCultureIgnoreCase)))
+            _ => s =>
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: platformCode ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByQueryAsync(string search, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Stop>> GetStopsByQueryAsync(
+        string search,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Code ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Name ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Description ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Zone ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Url ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Timezone ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.LevelId ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().Equals(search, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => s =>
+                s.Id.TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Code ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Name ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Description ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Zone ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Url ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Code ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Name ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Description ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Zone ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Url ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Timezone ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.LevelId ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().StartsWith(search, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => s =>
+                s.Id.TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Code ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Name ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Description ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Zone ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Url ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Code ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Name ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Description ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Zone ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Url ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Timezone ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.LevelId ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().EndsWith(search, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => s =>
+                s.Id.TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Code ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Name ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Description ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Zone ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Url ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                s.Id.TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Code ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Name ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Description ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Zone ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Url ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.ParentStation ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.Timezone ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.LevelId ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase) ||
-                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes().Contains(search, StringComparison.CurrentCultureIgnoreCase)))
+            _ => s =>
+                s.Id.TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Code ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Name ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Description ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Zone ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Url ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.ParentStation ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.LevelId ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                (s.PlatformCode ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: search ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Stop>> GetStopsByTimezoneAsync(
+        string timezone,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Timezone ?? string.Empty).TrimDoubleQuotes().Equals(timezone, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => s =>
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: timezone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Timezone ?? string.Empty).TrimDoubleQuotes().StartsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => s =>
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: timezone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Timezone ?? string.Empty).TrimDoubleQuotes().EndsWith(timezone, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => s =>
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: timezone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Timezone ?? string.Empty).TrimDoubleQuotes().Contains(timezone, StringComparison.CurrentCultureIgnoreCase)))
+            _ => s =>
+                (s.Timezone ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: timezone ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByUrlAsync(string url, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Stop>> GetStopsByUrlAsync(
+        string url,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Url ?? string.Empty).TrimDoubleQuotes().Equals(url, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => s =>
+                (s.Url ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: url ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Url ?? string.Empty).TrimDoubleQuotes().StartsWith(url, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => s =>
+                (s.Url ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: url ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Url ?? string.Empty).TrimDoubleQuotes().EndsWith(url, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => s =>
+                (s.Url ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: url ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Url ?? string.Empty).TrimDoubleQuotes().Contains(url, StringComparison.CurrentCultureIgnoreCase)))
+            _ => s =>
+                (s.Url ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: url ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(WheelchairAccessibilityType wheelchairBoarding, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(
+        WheelchairAccessibilityType wheelchairBoarding,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes().Equals(wheelchairBoarding.ToString("D")))),
+            ComparisonType.Exact => s =>
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes()
+                    .Equals(
+                        value: wheelchairBoarding.ToString(format: "D"),
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes().Equals(wheelchairBoarding.ToString("D")))),
+            ComparisonType.Starts => s =>
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes()
+                    .Equals(
+                        value: wheelchairBoarding.ToString(format: "D"),
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes().Equals(wheelchairBoarding.ToString("D")))),
+            ComparisonType.Ends => s =>
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes()
+                    .Equals(
+                        value: wheelchairBoarding.ToString(format: "D"),
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes().Equals(wheelchairBoarding.ToString("D")))),
+            _ => s =>
+                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes()
+                    .Equals(
+                        value: wheelchairBoarding.ToString(format: "D"),
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
     }
     
-    public Task<List<Stop>> GetStopsByZoneAsync(string id, ComparisonType comparison)
-    {
-        return comparison switch
+    public Task<List<Stop>> GetStopsByZoneAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Zone ?? string.Empty).TrimDoubleQuotes().Equals(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Exact => s =>
+                (s.Zone ?? string.Empty).TrimDoubleQuotes()
+                    .Equals(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Starts => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Zone ?? string.Empty).TrimDoubleQuotes().StartsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Starts => s =>
+                (s.Zone ?? string.Empty).TrimDoubleQuotes()
+                    .StartsWith(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            ComparisonType.Ends => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Zone ?? string.Empty).TrimDoubleQuotes().EndsWith(id, StringComparison.CurrentCultureIgnoreCase))),
+            ComparisonType.Ends => s =>
+                (s.Zone ?? string.Empty).TrimDoubleQuotes()
+                    .EndsWith(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
             
-            _ => Task.FromResult(GetStopsFromFeedByCondition(s =>
-                (s.Zone ?? string.Empty).TrimDoubleQuotes().Contains(id, StringComparison.CurrentCultureIgnoreCase)))
+            _ => s =>
+                (s.Zone ?? string.Empty).TrimDoubleQuotes()
+                    .Contains(
+                        value: id ?? string.Empty,
+                        comparisonType: StringComparison.CurrentCultureIgnoreCase)
         };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
     }
 }

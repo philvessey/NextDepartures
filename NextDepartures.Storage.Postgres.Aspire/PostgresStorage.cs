@@ -10,15 +10,30 @@ using NextDepartures.Standard.Storage;
 using NextDepartures.Standard.Types;
 using Npgsql;
 
-namespace NextDepartures.Storage.Postgres;
+namespace NextDepartures.Storage.Postgres.Aspire;
 
 public class PostgresStorage : IDataStorage
 {
+    private readonly NpgsqlDataSource _dataSource;
     private readonly string _connectionString;
+    
+    private PostgresStorage(NpgsqlDataSource dataSource)
+    {
+        _dataSource = dataSource;
+    }
     
     private PostgresStorage(string connectionString)
     {
         _connectionString = connectionString;
+    }
+    
+    /// <summary>
+    /// Loads a Postgres data storage.
+    /// </summary>
+    /// <param name="dataSource">The database data source.</param>
+    public static PostgresStorage Load(NpgsqlDataSource dataSource)
+    {
+        return new PostgresStorage(dataSource: dataSource);
     }
     
     /// <summary>
@@ -36,7 +51,7 @@ public class PostgresStorage : IDataStorage
         
         List<T> results = [];
         
-        await using var connection = new NpgsqlConnection(connectionString: _connectionString);
+        await using var connection = _dataSource != null ? _dataSource.CreateConnection() : new NpgsqlConnection(connectionString: _connectionString);
         await connection.OpenAsync();
         
         NpgsqlCommand command = new();

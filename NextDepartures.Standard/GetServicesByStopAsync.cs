@@ -25,6 +25,9 @@ public partial class Feed
         TimeSpan tolerance = default,
         int results = 0) {
         
+        if (string.IsNullOrWhiteSpace(value: id))
+            return [];
+        
         try
         {
             var agenciesFromStorage = await _dataStorage.GetAgenciesAsync();
@@ -116,6 +119,15 @@ public partial class Feed
         TimeSpan tolerance = default,
         int results = 0) {
         
+        if (string.IsNullOrWhiteSpace(value: id))
+            return [];
+        
+        if (target == DateTime.MinValue || target == DateTime.MaxValue)
+            return [];
+        
+        if (offset == TimeSpan.MinValue || offset == TimeSpan.MaxValue)
+            return [];
+        
         try
         {
             var agenciesFromStorage = await _dataStorage.GetAgenciesAsync();
@@ -202,6 +214,9 @@ public partial class Feed
         ComparisonType comparison = ComparisonType.Exact,
         TimeSpan tolerance = default,
         int results = 0) {
+        
+        if (stop == null)
+            return [];
         
         try
         {
@@ -293,6 +308,15 @@ public partial class Feed
         ComparisonType comparison = ComparisonType.Exact,
         TimeSpan tolerance = default,
         int results = 0) {
+        
+        if (stop == null)
+            return [];
+        
+        if (target == DateTime.MinValue || target == DateTime.MaxValue)
+            return [];
+        
+        if (offset == TimeSpan.MinValue || offset == TimeSpan.MaxValue)
+            return [];
         
         try
         {

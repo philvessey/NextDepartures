@@ -24,6 +24,12 @@
     </PropertyGroup>
     
     <PropertyGroup>
+        <ExtensionsDependencyVersion>9.0.3</ExtensionsDependencyVersion> <!-- Microsoft.Extensions.DependencyInjection.Abstractions -->
+        <ExtensionsLoggingVersion>9.0.3</ExtensionsLoggingVersion> <!-- Microsoft.Extensions.Logging.Abstractions -->
+        <ExtensionsOptionsVersion>9.0.3</ExtensionsOptionsVersion> <!-- Microsoft.Extensions.Options -->
+    </PropertyGroup>
+    
+    <PropertyGroup>
         <TestDevelopmentVersion>17.13.0</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
         <TestFrameworkVersion>3.8.2</TestFrameworkVersion> <!-- MSTest.TestFramework -->
     </PropertyGroup>

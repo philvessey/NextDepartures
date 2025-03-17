@@ -4,42 +4,57 @@ using System.Data;
 using System.Threading.Tasks;
 using GTFS.Entities;
 using GTFS.Entities.Enumerations;
-using Microsoft.Data.SqlClient;
+using MySqlConnector;
 using NextDepartures.Standard.Extensions;
 using NextDepartures.Standard.Models;
 using NextDepartures.Standard.Storage;
 using NextDepartures.Standard.Types;
 
-namespace NextDepartures.Storage.SqlServer;
+namespace NextDepartures.Storage.MySql.Aspire;
 
-public class SqlServerStorage : IDataStorage
+public class MySqlStorage : IDataStorage
 {
+    private readonly MySqlDataSource _dataSource;
     private readonly string _connectionString;
     
-    private SqlServerStorage(string connectionString)
+    private MySqlStorage(MySqlDataSource dataSource)
+    {
+        _dataSource = dataSource;
+    }
+    
+    private MySqlStorage(string connectionString)
     {
         _connectionString = connectionString;
     }
     
     /// <summary>
-    /// Loads a SQL Server data storage.
+    /// Loads a MySQL data storage.
+    /// </summary>
+    /// <param name="dataSource">The database data source.</param>
+    public static MySqlStorage Load(MySqlDataSource dataSource)
+    {
+        return new MySqlStorage(dataSource: dataSource);
+    }
+    
+    /// <summary>
+    /// Loads a MySQL data storage.
     /// </summary>
     /// <param name="connectionString">The database connection string.</param>
-    public static SqlServerStorage Load(string connectionString)
+    public static MySqlStorage Load(string connectionString)
     {
-        return new SqlServerStorage(connectionString: connectionString);
+        return new MySqlStorage(connectionString: connectionString);
     }
     
     private async Task<List<T>> ExecuteCommand<T>(
         string sql,
-        Func<SqlDataReader, T> entryProcessor) where T : class {
+        Func<MySqlDataReader, T> entryProcessor) where T : class {
         
         List<T> results = [];
         
-        await using var connection = new SqlConnection(connectionString: _connectionString);
+        await using var connection = _dataSource != null ? _dataSource.CreateConnection() : new MySqlConnection(connectionString: _connectionString);
         await connection.OpenAsync();
         
-        SqlCommand command = new();
+        MySqlCommand command = new();
         command.CommandText = sql;
         command.CommandTimeout = 0;
         command.CommandType = CommandType.Text;
@@ -58,116 +73,116 @@ public class SqlServerStorage : IDataStorage
         return results;
     }
     
-    private static Agency GetAgencyFromDataReader(SqlDataReader dataReader)
+    private static Agency GetAgencyFromDataReader(MySqlDataReader dataReader)
     {
         return new Agency
         {
-            Id = !dataReader.IsDBNull(i: 0) ? dataReader.GetString(i: 0) : null,
-            Name = dataReader.GetString(i: 1),
-            URL = dataReader.GetString(i: 2),
-            Timezone = dataReader.GetString(i: 3),
-            LanguageCode = !dataReader.IsDBNull(i: 4) ? dataReader.GetString(i: 4) : null,
-            Phone = !dataReader.IsDBNull(i: 5) ? dataReader.GetString(i: 5) : null,
-            FareURL = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
-            Email = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null
+            Id = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0) : null,
+            Name = dataReader.GetString(ordinal: 1),
+            URL = dataReader.GetString(ordinal: 2),
+            Timezone = dataReader.GetString(ordinal: 3),
+            LanguageCode = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetString(ordinal: 4) : null,
+            Phone = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetString(ordinal: 5) : null,
+            FareURL = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
+            Email = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null
         };
     }
     
-    private static Agency GetAgencyFromDataReaderByCondition(SqlDataReader dataReader)
+    private static Agency GetAgencyFromDataReaderByCondition(MySqlDataReader dataReader)
     {
         return new Agency
         {
-            Id = !dataReader.IsDBNull(i: 0) ? dataReader.GetString(i: 0) : null,
-            Name = dataReader.GetString(i: 1).ToTitleCase(),
-            URL = dataReader.GetString(i: 2),
-            Timezone = dataReader.GetString(i: 3),
-            LanguageCode = !dataReader.IsDBNull(i: 4) ? dataReader.GetString(i: 4) : null,
-            Phone = !dataReader.IsDBNull(i: 5) ? dataReader.GetString(i: 5) : null,
-            FareURL = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
-            Email = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null
+            Id = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0) : null,
+            Name = dataReader.GetString(ordinal: 1).ToTitleCase(),
+            URL = dataReader.GetString(ordinal: 2),
+            Timezone = dataReader.GetString(ordinal: 3),
+            LanguageCode = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetString(ordinal: 4) : null,
+            Phone = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetString(ordinal: 5) : null,
+            FareURL = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
+            Email = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null
         };
     }
     
-    private static CalendarDate GetCalendarDateFromDataReader(SqlDataReader dataReader)
+    private static CalendarDate GetCalendarDateFromDataReader(MySqlDataReader dataReader)
     {
         return new CalendarDate
         {
-            ServiceId = dataReader.GetString(i: 0),
-            Date = dataReader.GetDateTime(i: 1),
-            ExceptionType = dataReader.GetInt32(i: 2).ToExceptionType()
+            ServiceId = dataReader.GetString(ordinal: 0),
+            Date = dataReader.GetDateTime(ordinal: 1),
+            ExceptionType = dataReader.GetInt32(ordinal: 2).ToExceptionType()
         };
     }
     
-    private static Departure GetDepartureFromDataReaderByCondition(SqlDataReader dataReader)
+    private static Departure GetDepartureFromDataReaderByCondition(MySqlDataReader dataReader)
     {
         return new Departure
         {
             DepartureTime = new TimeOfDay
             {
-                Hours = !dataReader.IsDBNull(i: 0) ? dataReader.GetString(i: 0).ToTimeOfDay().Hours : 0,
-                Minutes = !dataReader.IsDBNull(i: 0) ? dataReader.GetString(i: 0).ToTimeOfDay().Minutes : 0,
-                Seconds = !dataReader.IsDBNull(i: 0) ? dataReader.GetString(i: 0).ToTimeOfDay().Seconds : 0
+                Hours = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Hours : 0,
+                Minutes = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Minutes : 0,
+                Seconds = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Seconds : 0
             },
             
-            StopId = !dataReader.IsDBNull(i: 1) ? dataReader.GetString(i: 1) : null,
-            TripId = dataReader.GetString(i: 2),
-            ServiceId = dataReader.GetString(i: 3),
-            TripHeadsign = !dataReader.IsDBNull(i: 4) ? dataReader.GetString(i: 4) : null,
-            TripShortName = !dataReader.IsDBNull(i: 5) ? dataReader.GetString(i: 5) : null,
-            AgencyId = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
-            RouteShortName = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null,
-            RouteLongName = !dataReader.IsDBNull(i: 8) ? dataReader.GetString(i: 8) : null,
-            Monday = dataReader.GetBoolean(i: 9),
-            Tuesday = dataReader.GetBoolean(i: 10),
-            Wednesday = dataReader.GetBoolean(i: 11),
-            Thursday = dataReader.GetBoolean(i: 12),
-            Friday = dataReader.GetBoolean(i: 13),
-            Saturday = dataReader.GetBoolean(i: 14),
-            Sunday = dataReader.GetBoolean(i: 15),
-            StartDate = dataReader.GetDateTime(i: 16),
-            EndDate = dataReader.GetDateTime(i: 17)
+            StopId = !dataReader.IsDBNull(ordinal: 1) ? dataReader.GetString(ordinal: 1) : null,
+            TripId = dataReader.GetString(ordinal: 2),
+            ServiceId = dataReader.GetString(ordinal: 3),
+            TripHeadsign = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetString(ordinal: 4) : null,
+            TripShortName = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetString(ordinal: 5) : null,
+            AgencyId = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
+            RouteShortName = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
+            RouteLongName = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetString(ordinal: 8) : null,
+            Monday = dataReader.GetBoolean(ordinal: 9),
+            Tuesday = dataReader.GetBoolean(ordinal: 10),
+            Wednesday = dataReader.GetBoolean(ordinal: 11),
+            Thursday = dataReader.GetBoolean(ordinal: 12),
+            Friday = dataReader.GetBoolean(ordinal: 13),
+            Saturday = dataReader.GetBoolean(ordinal: 14),
+            Sunday = dataReader.GetBoolean(ordinal: 15),
+            StartDate = dataReader.GetDateTime(ordinal: 16),
+            EndDate = dataReader.GetDateTime(ordinal: 17)
         };
     }
     
-    private static Stop GetStopFromDataReader(SqlDataReader dataReader)
+    private static Stop GetStopFromDataReader(MySqlDataReader dataReader)
     {
         return new Stop
         {
-            Id = dataReader.GetString(i: 0),
-            Code = !dataReader.IsDBNull(i: 1) ? dataReader.GetString(i: 1) : null,
-            Name = !dataReader.IsDBNull(i: 2) ? dataReader.GetString(i: 2) : null,
-            Description = !dataReader.IsDBNull(i: 3) ? dataReader.GetString(i: 3) : null,
-            Latitude = !dataReader.IsDBNull(i: 4) ? dataReader.GetDouble(i: 4) : 0,
-            Longitude = !dataReader.IsDBNull(i: 5) ? dataReader.GetDouble(i: 5) : 0,
-            Zone = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
-            Url = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null,
-            LocationType = !dataReader.IsDBNull(i: 8) ? dataReader.GetInt32(i: 8).ToLocationType() : null,
-            ParentStation = !dataReader.IsDBNull(i: 9) ? dataReader.GetString(i: 9) : null,
-            Timezone = !dataReader.IsDBNull(i: 10) ? dataReader.GetString(i: 10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(i: 11) ? dataReader.GetInt32(i: 11).ToString() : null,
-            LevelId = !dataReader.IsDBNull(i: 12) ? dataReader.GetString(i: 12) : null,
-            PlatformCode = !dataReader.IsDBNull(i: 13) ? dataReader.GetString(i: 13) : null
+            Id = dataReader.GetString(ordinal: 0),
+            Code = !dataReader.IsDBNull(ordinal: 1) ? dataReader.GetString(ordinal: 1) : null,
+            Name = !dataReader.IsDBNull(ordinal: 2) ? dataReader.GetString(ordinal: 2) : null,
+            Description = !dataReader.IsDBNull(ordinal: 3) ? dataReader.GetString(ordinal: 3) : null,
+            Latitude = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetDouble(ordinal: 4) : 0,
+            Longitude = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetDouble(ordinal: 5) : 0,
+            Zone = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
+            Url = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
+            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetInt32(ordinal: 8).ToLocationType() : null,
+            ParentStation = !dataReader.IsDBNull(ordinal: 9) ? dataReader.GetString(ordinal: 9) : null,
+            Timezone = !dataReader.IsDBNull(ordinal: 10) ? dataReader.GetString(ordinal: 10) : null,
+            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetInt32(ordinal: 11).ToString() : null,
+            LevelId = !dataReader.IsDBNull(ordinal: 12) ? dataReader.GetString(ordinal: 12) : null,
+            PlatformCode = !dataReader.IsDBNull(ordinal: 13) ? dataReader.GetString(ordinal: 13) : null
         };
     }
     
-    private static Stop GetStopFromDataReaderByCondition(SqlDataReader dataReader)
+    private static Stop GetStopFromDataReaderByCondition(MySqlDataReader dataReader)
     {
         return new Stop
         {
-            Id = dataReader.GetString(i: 0),
-            Code = !dataReader.IsDBNull(i: 1) ? dataReader.GetString(i: 1) : null,
-            Name = !dataReader.IsDBNull(i: 2) ? dataReader.GetString(i: 2).ToTitleCase() : null,
-            Description = !dataReader.IsDBNull(i: 3) ? dataReader.GetString(i: 3) : null,
-            Latitude = !dataReader.IsDBNull(i: 4) ? dataReader.GetDouble(i: 4) : 0,
-            Longitude = !dataReader.IsDBNull(i: 5) ? dataReader.GetDouble(i: 5) : 0,
-            Zone = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
-            Url = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null,
-            LocationType = !dataReader.IsDBNull(i: 8) ? dataReader.GetInt32(i: 8).ToLocationType() : null,
-            ParentStation = !dataReader.IsDBNull(i: 9) ? dataReader.GetString(i: 9) : null,
-            Timezone = !dataReader.IsDBNull(i: 10) ? dataReader.GetString(i: 10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(i: 11) ? dataReader.GetInt32(i: 11).ToString() : null,
-            LevelId = !dataReader.IsDBNull(i: 12) ? dataReader.GetString(i: 12) : null,
-            PlatformCode = !dataReader.IsDBNull(i: 13) ? dataReader.GetString(i: 13) : null
+            Id = dataReader.GetString(ordinal: 0),
+            Code = !dataReader.IsDBNull(ordinal: 1) ? dataReader.GetString(ordinal: 1) : null,
+            Name = !dataReader.IsDBNull(ordinal: 2) ? dataReader.GetString(ordinal: 2).ToTitleCase() : null,
+            Description = !dataReader.IsDBNull(ordinal: 3) ? dataReader.GetString(ordinal: 3) : null,
+            Latitude = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetDouble(ordinal: 4) : 0,
+            Longitude = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetDouble(ordinal: 5) : 0,
+            Zone = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
+            Url = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
+            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetInt32(ordinal: 8).ToLocationType() : null,
+            ParentStation = !dataReader.IsDBNull(ordinal: 9) ? dataReader.GetString(ordinal: 9) : null,
+            Timezone = !dataReader.IsDBNull(ordinal: 10) ? dataReader.GetString(ordinal: 10) : null,
+            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetInt32(ordinal: 11).ToString() : null,
+            LevelId = !dataReader.IsDBNull(ordinal: 12) ? dataReader.GetString(ordinal: 12) : null,
+            PlatformCode = !dataReader.IsDBNull(ordinal: 13) ? dataReader.GetString(ordinal: 13) : null
         };
     }
     
@@ -428,7 +443,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(AgencyTimezone) LIKE '%{(timezone ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByUrlAsync(
