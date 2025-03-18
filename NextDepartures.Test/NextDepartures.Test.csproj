@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+    
     <PropertyGroup>
         <Authors>Phil Vessey</Authors>
         <Copyright>Copyright © 2025 Phil Vessey and Contributors</Copyright>
@@ -9,34 +9,40 @@
         <Product>NextDepartures.Test</Product>
         <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
         <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-        <Version>3.6.4</Version>
+        <Version>3.6.5</Version>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestDevelopmentVersion)" />
         <PackageReference Include="MSTest.TestAdapter" Version="$(TestFrameworkVersion)" />
         <PackageReference Include="MSTest.TestFramework" Version="$(TestFrameworkVersion)" />
     </ItemGroup>
-
+    
     <ItemGroup>
         <ProjectReference Include="..\NextDepartures.Standard\NextDepartures.Standard.csproj" />
         <ProjectReference Include="..\NextDepartures.Storage.GTFS\NextDepartures.Storage.GTFS.csproj" />
         <ProjectReference Include="..\NextDepartures.Storage.MySql\NextDepartures.Storage.MySql.csproj" />
+        <ProjectReference Include="..\NextDepartures.Storage.MySql.Aspire\NextDepartures.Storage.MySql.Aspire.csproj" />
         <ProjectReference Include="..\NextDepartures.Storage.Postgres\NextDepartures.Storage.Postgres.csproj" />
+        <ProjectReference Include="..\NextDepartures.Storage.Postgres.Aspire\NextDepartures.Storage.Postgres.Aspire.csproj" />
         <ProjectReference Include="..\NextDepartures.Storage.Sqlite\NextDepartures.Storage.Sqlite.csproj" />
         <ProjectReference Include="..\NextDepartures.Storage.SqlServer\NextDepartures.Storage.SqlServer.csproj" />
+        <ProjectReference Include="..\NextDepartures.Storage.SqlServer.Aspire\NextDepartures.Storage.SqlServer.Aspire.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
         <Folder Include="Data\" />
         <Folder Include="Mock\" />
         <Folder Include="Storage.GTFS\" />
         <Folder Include="Storage.MySql\" />
+        <Folder Include="Storage.MySql.Aspire\" />
         <Folder Include="Storage.Postgres\" />
+        <Folder Include="Storage.Postgres.Aspire\" />
         <Folder Include="Storage.Sqlite\" />
         <Folder Include="Storage.SqlServer\" />
+        <Folder Include="Storage.SqlServer.Aspire\" />
     </ItemGroup>
-
+    
     <ItemGroup>
         <None Update="Data\feed.db">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -51,5 +57,5 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-
+    
 </Project>

@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
 using NextDepartures.Test.Mock;
 
-namespace NextDepartures.Test.Storage.MySql;
+namespace NextDepartures.Test.Storage.MySql.Aspire;
 
 [TestClass]
 public class Agencies

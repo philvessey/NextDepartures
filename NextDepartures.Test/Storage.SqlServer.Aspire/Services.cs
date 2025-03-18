@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NextDepartures.Standard;
 using NextDepartures.Standard.Types;
-using NextDepartures.Storage.GTFS;
+using NextDepartures.Test.Mock;
 
-namespace NextDepartures.Test.Storage.GTFS;
+namespace NextDepartures.Test.Storage.SqlServer.Aspire;
 
 [TestClass]
 public class Services
@@ -14,7 +14,7 @@ public class Services
     [TestMethod]
     public async Task GetServicesByParentStationAsync()
     {
-        var feed = await Feed.Load(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
+        var feed = await Feed.Load(dataStorage: new MockStorage());
         
         var resultsByParentStation = await feed.GetServicesByParentStationAsync(
             ids: ["16TH", "24TH"],
@@ -32,11 +32,11 @@ public class Services
         
         Assert.IsTrue(condition: resultsByParentStation.Count > 0);
     }
-    
+
     [TestMethod]
     public async Task GetServicesByStopAsync()
     {
-        var feed = await Feed.Load(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
+        var feed = await Feed.Load(dataStorage: new MockStorage());
         
         var resultsByStop = await feed.GetServicesByStopAsync(
             id: "16TH",
@@ -54,11 +54,11 @@ public class Services
         
         Assert.IsTrue(condition: resultsByStop.Count > 0);
     }
-    
+
     [TestMethod]
     public async Task GetServicesByTripAsync()
     {
-        var feed = await Feed.Load(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
+        var feed = await Feed.Load(dataStorage: new MockStorage());
         
         var resultsByStop = await feed.GetServicesByStopAsync(
             id: "24TH",
