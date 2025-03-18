@@ -1,27 +1,27 @@
 DROP TABLE IF EXISTS GTFS_AGENCY;
 
 CREATE TABLE GTFS_AGENCY (
-    AgencyId VARCHAR(255), 
-    AgencyName VARCHAR(255) NOT NULL, 
-    AgencyUrl VARCHAR(255) NOT NULL, 
-    AgencyTimezone VARCHAR(255) NOT NULL, 
-    AgencyLang VARCHAR(255), 
-    AgencyPhone VARCHAR(255), 
-    AgencyFareUrl VARCHAR(255), 
+    AgencyId VARCHAR(255),
+    AgencyName VARCHAR(255) NOT NULL,
+    AgencyUrl VARCHAR(255) NOT NULL,
+    AgencyTimezone VARCHAR(255) NOT NULL,
+    AgencyLang VARCHAR(255),
+    AgencyPhone VARCHAR(255),
+    AgencyFareUrl VARCHAR(255),
     AgencyEmail VARCHAR(255));
 
 DROP TABLE IF EXISTS GTFS_CALENDAR;
 
 CREATE TABLE GTFS_CALENDAR (
-    ServiceId VARCHAR(255) NOT NULL PRIMARY KEY, 
-    Monday SMALLINT NOT NULL, 
-    Tuesday SMALLINT NOT NULL, 
-    Wednesday SMALLINT NOT NULL, 
-    Thursday SMALLINT NOT NULL, 
-    Friday SMALLINT NOT NULL, 
-    Saturday SMALLINT NOT NULL, 
-    Sunday SMALLINT NOT NULL, 
-    StartDate DATE NOT NULL, 
+    ServiceId VARCHAR(255) NOT NULL PRIMARY KEY,
+    Monday SMALLINT NOT NULL,
+    Tuesday SMALLINT NOT NULL,
+    Wednesday SMALLINT NOT NULL,
+    Thursday SMALLINT NOT NULL,
+    Friday SMALLINT NOT NULL,
+    Saturday SMALLINT NOT NULL,
+    Sunday SMALLINT NOT NULL,
+    StartDate DATE NOT NULL,
     EndDate DATE NOT NULL);
 
 DROP TABLE IF EXISTS GTFS_CALENDAR_DATES;

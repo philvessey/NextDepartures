@@ -62,7 +62,7 @@ public class Departure
     
     [UsedImplicitly]
     public DateTime EndDate { get; set; }
-
+    
     public override string ToString()
     {
         return $"[{DepartureDateTime}] {ServiceId}";

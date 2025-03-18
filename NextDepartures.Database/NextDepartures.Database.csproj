@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+    
     <PropertyGroup>
         <Authors>Phil Vessey</Authors>
         <Copyright>Copyright © 2025 Phil Vessey and Contributors</Copyright>
@@ -9,9 +9,9 @@
         <Product>NextDepartures.Database</Product>
         <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
         <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-        <Version>3.6.4</Version>
+        <Version>3.6.5</Version>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <PackageReference Include="GTFS" Version="$(TransitFeedLibraryVersion)" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="$(SQLite)" />
@@ -19,13 +19,13 @@
         <PackageReference Include="MySqlConnector" Version="$(MySQL)" />
         <PackageReference Include="Npgsql" Version="$(PgSQL)" />
     </ItemGroup>
-
+    
     <ItemGroup>
         <Folder Include="Data\" />
         <Folder Include="Extensions\" />
         <Folder Include="Schema\" />
     </ItemGroup>
-
+    
     <ItemGroup>
         <None Update="Data\feed.db">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -34,5 +34,5 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-
+    
 </Project>

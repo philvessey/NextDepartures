@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    
+    <PropertyGroup>
+        <Authors>Phil Vessey</Authors>
+        <Copyright>Copyright © 2025 Phil Vessey and Contributors</Copyright>
+        <Description>NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, or in a
+            database such as MySQL, PostgreSQL, SQLite or SQL Server. The library will work with any well-formed GTFS data set.</Description>
+        <PackageId>NextDepartures.Storage.SqlServer.Aspire</PackageId>
+        <PackageLicense>MIT</PackageLicense>
+        <PackageLicenseUrl>https://raw.github.com/philvessey/NextDepartures/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/philvessey/NextDepartures</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Product>NextDepartures.Storage.SqlServer.Aspire</Product>
+        <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
+        <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
+        <Version>3.6.5</Version>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Aspire.Microsoft.Data.SqlClient" Version="$(SQLServer-Aspire)" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(ExtensionsDependencyVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(ExtensionsLoggingVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="$(ExtensionsOptionsVersion)" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\NextDepartures.Standard\NextDepartures.Standard.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include=".\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+    
+</Project>

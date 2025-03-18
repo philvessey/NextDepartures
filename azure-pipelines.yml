@@ -1,4 +1,4 @@
-name: '3.6.4'
+name: '3.6.5'
 
 trigger:
 - master
@@ -11,13 +11,13 @@ variables:
 stages:
 - stage: 'buildSolution'
   displayName: 'Build Solution Stage'
-
+  
   jobs:
   - job: 'buildSolution'
     displayName: 'Build Solution Job'
     pool:
       vmImage: '$(vmImageName)'
-
+    
     steps:
     - task: UseDotNet@2
       displayName: 'Use Required SDKs'
@@ -30,26 +30,26 @@ stages:
       inputs:
         packageType: 'sdk'
         version: '9.0.x'
-
+    
     - task: CmdLine@2
       displayName: 'List Installed SDKs'
       inputs:
         script: 'dotnet --list-sdks'
-
+    
     - task: DotNetCoreCLI@2
       displayName: 'Build All Projects'
       inputs:
         command: 'build'
         projects: '**/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
-
+    
     - task: DotNetCoreCLI@2
       displayName: 'Run All Tests'
       inputs:
         command: 'test'
         projects: '**/NextDepartures.Test/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
-
+    
     - task: DotNetCoreCLI@2
       displayName: 'Pack NuGet Packages'
       inputs:
@@ -58,11 +58,14 @@ stages:
           **/NextDepartures.Standard/*.csproj;
           **/NextDepartures.Storage.GTFS/*.csproj;
           **/NextDepartures.Storage.MySql/*.csproj;
+          **/NextDepartures.Storage.MySql.Aspire/*.csproj;
           **/NextDepartures.Storage.Postgres/*.csproj;
+          **/NextDepartures.Storage.Postgres.Aspire/*.csproj;
           **/NextDepartures.Storage.Sqlite/*.csproj;
           **/NextDepartures.Storage.SqlServer/*.csproj;
+          **/NextDepartures.Storage.SqlServer.Aspire/*.csproj;
         versioningScheme: 'off'
-
+    
     - publish: '$(Build.ArtifactStagingDirectory)'
       displayName: 'Publish Pipeline Artifact'
       artifact: 'drop'
@@ -70,24 +73,24 @@ stages:
 - stage: 'deployPackages'
   displayName: 'Deploy Packages Stage'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-
+  
   jobs:
   - deployment: 'deployPackages'
     displayName: 'Deploy Packages Job'
     environment: 'development'
     pool:
       vmImage: '$(vmImageName)'
-
+    
     strategy:
       runOnce:
         deploy:
-
+          
           steps:
           - task: NuGetToolInstaller@1
             displayName: 'Install NuGet Version'
             inputs:
               versionSpec: '5.8.x'
-
+          
           - task: NuGetCommand@2
             displayName: 'Push NuGet Packages'
             inputs:
@@ -95,7 +98,7 @@ stages:
               packagesToPush: '$(Pipeline.Workspace)/drop/*.nupkg'
               nuGetFeedType: 'external'
               publishFeedCredentials: 'NuGet'
-
+          
           - task: GitHubRelease@1
             displayName: 'Publish GitHub Release'
             inputs:

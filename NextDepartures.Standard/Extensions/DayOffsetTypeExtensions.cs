@@ -4,8 +4,14 @@ namespace NextDepartures.Standard.Extensions;
 
 public static class DayOffsetTypeExtensions
 {
-    public static int GetNumeric(this DayOffsetType baseDayOffsetType)
+    public static int ToInt32(this DayOffsetType baseDayOffsetType)
     {
-        return (int)baseDayOffsetType;
+        return baseDayOffsetType switch
+        {
+            DayOffsetType.Yesterday => -1,
+            DayOffsetType.Today => 0,
+            DayOffsetType.Tomorrow => 1,
+            _ => 0
+        };
     }
 }

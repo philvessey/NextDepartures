@@ -15,22 +15,25 @@ public partial class Feed
     /// <param name="comparison">The ComparisonType to use when searching. Default is partial.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of stops.</returns>
-    public async Task<List<Stop>> GetStopsByParentStationAsync(string id = "", ComparisonType comparison = ComparisonType.Partial, int results = 0)
-    {
+    public async Task<List<Stop>> GetStopsByParentStationAsync(
+        string id = null,
+        ComparisonType comparison = ComparisonType.Partial,
+        int results = 0) {
+        
         try
         {
-            var stopsFromStorage = await _dataStorage.GetStopsByParentStationAsync(id, comparison);
+            var stopsFromStorage = await _dataStorage.GetStopsByParentStationAsync(
+                id: id,
+                comparison: comparison);
             
             if (results > 0)
-            {
                 return stopsFromStorage
-                    .OrderBy(s => s.Name)
-                    .Take(results)
+                    .OrderBy(keySelector: s => s.Name)
+                    .Take(count: results)
                     .ToList();
-            }
             
             return stopsFromStorage
-                .OrderBy(s => s.Name)
+                .OrderBy(keySelector: s => s.Name)
                 .ToList();
         }
         catch

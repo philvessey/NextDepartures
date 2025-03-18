@@ -14,75 +14,77 @@ namespace NextDepartures.Storage.MySql;
 
 public class MySqlStorage : IDataStorage
 {
-    private readonly string _connection;
-        
-    private MySqlStorage(string connection)
+    private readonly string _connectionString;
+    
+    private MySqlStorage(string connectionString)
     {
-        _connection = connection;
+        _connectionString = connectionString;
     }
-
+    
     /// <summary>
     /// Loads a MySQL data storage.
     /// </summary>
-    /// <param name="connection">The database connection string.</param>
-    public static MySqlStorage Load(string connection)
+    /// <param name="connectionString">The database connection string.</param>
+    public static MySqlStorage Load(string connectionString)
     {
-        return new MySqlStorage(connection);
+        return new MySqlStorage(connectionString: connectionString);
     }
-
-    private async Task<List<T>> ExecuteCommand<T>(string sql, Func<MySqlDataReader, T> entryProcessor) where T : class
-    {
+    
+    private async Task<List<T>> ExecuteCommand<T>(
+        string sql,
+        Func<MySqlDataReader, T> entryProcessor) where T : class {
+        
         List<T> results = [];
-
-        await using MySqlConnection connection = new(_connection);
+        
+        await using var connection = new MySqlConnection(connectionString: _connectionString);
         await connection.OpenAsync();
-
-        MySqlCommand command = new(sql, connection)
-        {
-            CommandTimeout = 0,
-            CommandType = CommandType.Text
-        };
-
+        
+        MySqlCommand command = new();
+        command.CommandText = sql;
+        command.CommandTimeout = 0;
+        command.CommandType = CommandType.Text;
+        command.Connection = connection;
+        
         var dataReader = await command.ExecuteReaderAsync();
-
+        
         while (await dataReader.ReadAsync())
         {
-            results.Add(entryProcessor(dataReader));
+            results.Add(item: entryProcessor(dataReader));
         }
-
+        
         await dataReader.CloseAsync();
         await command.DisposeAsync();
-
+        
         return results;
     }
-
+    
     private static Agency GetAgencyFromDataReader(MySqlDataReader dataReader)
     {
         return new Agency
         {
-            Id = !dataReader.IsDBNull(0) ? dataReader.GetString(0) : null,
-            Name = dataReader.GetString(1),
-            URL = dataReader.GetString(2),
-            Timezone = dataReader.GetString(3),
-            LanguageCode = !dataReader.IsDBNull(4) ? dataReader.GetString(4) : null,
-            Phone = !dataReader.IsDBNull(5) ? dataReader.GetString(5) : null,
-            FareURL = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
-            Email = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null
+            Id = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0) : null,
+            Name = dataReader.GetString(ordinal: 1),
+            URL = dataReader.GetString(ordinal: 2),
+            Timezone = dataReader.GetString(ordinal: 3),
+            LanguageCode = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetString(ordinal: 4) : null,
+            Phone = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetString(ordinal: 5) : null,
+            FareURL = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
+            Email = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null
         };
     }
-
+    
     private static Agency GetAgencyFromDataReaderByCondition(MySqlDataReader dataReader)
     {
         return new Agency
         {
-            Id = !dataReader.IsDBNull(0) ? dataReader.GetString(0) : null,
-            Name = dataReader.GetString(1).ToTitleCase(),
-            URL = dataReader.GetString(2),
-            Timezone = dataReader.GetString(3),
-            LanguageCode = !dataReader.IsDBNull(4) ? dataReader.GetString(4) : null,
-            Phone = !dataReader.IsDBNull(5) ? dataReader.GetString(5) : null,
-            FareURL = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
-            Email = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null
+            Id = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0) : null,
+            Name = dataReader.GetString(ordinal: 1).ToTitleCase(),
+            URL = dataReader.GetString(ordinal: 2),
+            Timezone = dataReader.GetString(ordinal: 3),
+            LanguageCode = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetString(ordinal: 4) : null,
+            Phone = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetString(ordinal: 5) : null,
+            FareURL = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
+            Email = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null
         };
     }
     
@@ -90,9 +92,9 @@ public class MySqlStorage : IDataStorage
     {
         return new CalendarDate
         {
-            ServiceId = dataReader.GetString(0),
-            Date = dataReader.GetDateTime(1),
-            ExceptionType = dataReader.GetInt32(2).ToExceptionType()
+            ServiceId = dataReader.GetString(ordinal: 0),
+            Date = dataReader.GetDateTime(ordinal: 1),
+            ExceptionType = dataReader.GetInt32(ordinal: 2).ToExceptionType()
         };
     }
     
@@ -102,28 +104,28 @@ public class MySqlStorage : IDataStorage
         {
             DepartureTime = new TimeOfDay
             {
-                Hours = !dataReader.IsDBNull(0) ? dataReader.GetString(0).ToTimeOfDay().Hours : 0,
-                Minutes = !dataReader.IsDBNull(0) ? dataReader.GetString(0).ToTimeOfDay().Minutes : 0,
-                Seconds = !dataReader.IsDBNull(0) ? dataReader.GetString(0).ToTimeOfDay().Seconds : 0,
+                Hours = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Hours : 0,
+                Minutes = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Minutes : 0,
+                Seconds = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Seconds : 0
             },
             
-            StopId = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
-            TripId = dataReader.GetString(2),
-            ServiceId = dataReader.GetString(3),
-            TripHeadsign = !dataReader.IsDBNull(4) ? dataReader.GetString(4) : null,
-            TripShortName = !dataReader.IsDBNull(5) ? dataReader.GetString(5) : null,
-            AgencyId = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
-            RouteShortName = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null,
-            RouteLongName = !dataReader.IsDBNull(8) ? dataReader.GetString(8) : null,
-            Monday = dataReader.GetBoolean(9),
-            Tuesday = dataReader.GetBoolean(10),
-            Wednesday = dataReader.GetBoolean(11),
-            Thursday = dataReader.GetBoolean(12),
-            Friday = dataReader.GetBoolean(13),
-            Saturday = dataReader.GetBoolean(14),
-            Sunday = dataReader.GetBoolean(15),
-            StartDate = dataReader.GetDateTime(16),
-            EndDate = dataReader.GetDateTime(17)
+            StopId = !dataReader.IsDBNull(ordinal: 1) ? dataReader.GetString(ordinal: 1) : null,
+            TripId = dataReader.GetString(ordinal: 2),
+            ServiceId = dataReader.GetString(ordinal: 3),
+            TripHeadsign = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetString(ordinal: 4) : null,
+            TripShortName = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetString(ordinal: 5) : null,
+            AgencyId = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
+            RouteShortName = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
+            RouteLongName = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetString(ordinal: 8) : null,
+            Monday = dataReader.GetBoolean(ordinal: 9),
+            Tuesday = dataReader.GetBoolean(ordinal: 10),
+            Wednesday = dataReader.GetBoolean(ordinal: 11),
+            Thursday = dataReader.GetBoolean(ordinal: 12),
+            Friday = dataReader.GetBoolean(ordinal: 13),
+            Saturday = dataReader.GetBoolean(ordinal: 14),
+            Sunday = dataReader.GetBoolean(ordinal: 15),
+            StartDate = dataReader.GetDateTime(ordinal: 16),
+            EndDate = dataReader.GetDateTime(ordinal: 17)
         };
     }
     
@@ -131,20 +133,20 @@ public class MySqlStorage : IDataStorage
     {
         return new Stop
         {
-            Id = dataReader.GetString(0),
-            Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
-            Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2) : null,
-            Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
-            Latitude = !dataReader.IsDBNull(4) ? dataReader.GetDouble(4) : 0,
-            Longitude = !dataReader.IsDBNull(5) ? dataReader.GetDouble(5) : 0,
-            Zone = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
-            Url = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null,
-            LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
-            ParentStation = !dataReader.IsDBNull(9) ? dataReader.GetString(9) : null,
-            Timezone = !dataReader.IsDBNull(10) ? dataReader.GetString(10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(11) ? dataReader.GetInt32(11).ToString() : null,
-            LevelId = !dataReader.IsDBNull(12) ? dataReader.GetString(12) : null,
-            PlatformCode = !dataReader.IsDBNull(13) ? dataReader.GetString(13) : null
+            Id = dataReader.GetString(ordinal: 0),
+            Code = !dataReader.IsDBNull(ordinal: 1) ? dataReader.GetString(ordinal: 1) : null,
+            Name = !dataReader.IsDBNull(ordinal: 2) ? dataReader.GetString(ordinal: 2) : null,
+            Description = !dataReader.IsDBNull(ordinal: 3) ? dataReader.GetString(ordinal: 3) : null,
+            Latitude = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetDouble(ordinal: 4) : 0,
+            Longitude = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetDouble(ordinal: 5) : 0,
+            Zone = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
+            Url = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
+            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetInt32(ordinal: 8).ToLocationType() : null,
+            ParentStation = !dataReader.IsDBNull(ordinal: 9) ? dataReader.GetString(ordinal: 9) : null,
+            Timezone = !dataReader.IsDBNull(ordinal: 10) ? dataReader.GetString(ordinal: 10) : null,
+            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetInt32(ordinal: 11).ToString() : null,
+            LevelId = !dataReader.IsDBNull(ordinal: 12) ? dataReader.GetString(ordinal: 12) : null,
+            PlatformCode = !dataReader.IsDBNull(ordinal: 13) ? dataReader.GetString(ordinal: 13) : null
         };
     }
     
@@ -152,896 +154,949 @@ public class MySqlStorage : IDataStorage
     {
         return new Stop
         {
-            Id = dataReader.GetString(0),
-            Code = !dataReader.IsDBNull(1) ? dataReader.GetString(1) : null,
-            Name = !dataReader.IsDBNull(2) ? dataReader.GetString(2).ToTitleCase() : null,
-            Description = !dataReader.IsDBNull(3) ? dataReader.GetString(3) : null,
-            Latitude = !dataReader.IsDBNull(4) ? dataReader.GetDouble(4) : 0,
-            Longitude = !dataReader.IsDBNull(5) ? dataReader.GetDouble(5) : 0,
-            Zone = !dataReader.IsDBNull(6) ? dataReader.GetString(6) : null,
-            Url = !dataReader.IsDBNull(7) ? dataReader.GetString(7) : null,
-            LocationType = !dataReader.IsDBNull(8) ? dataReader.GetInt32(8).ToLocationType() : null,
-            ParentStation = !dataReader.IsDBNull(9) ? dataReader.GetString(9) : null,
-            Timezone = !dataReader.IsDBNull(10) ? dataReader.GetString(10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(11) ? dataReader.GetInt32(11).ToString() : null,
-            LevelId = !dataReader.IsDBNull(12) ? dataReader.GetString(12) : null,
-            PlatformCode = !dataReader.IsDBNull(13) ? dataReader.GetString(13) : null
+            Id = dataReader.GetString(ordinal: 0),
+            Code = !dataReader.IsDBNull(ordinal: 1) ? dataReader.GetString(ordinal: 1) : null,
+            Name = !dataReader.IsDBNull(ordinal: 2) ? dataReader.GetString(ordinal: 2).ToTitleCase() : null,
+            Description = !dataReader.IsDBNull(ordinal: 3) ? dataReader.GetString(ordinal: 3) : null,
+            Latitude = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetDouble(ordinal: 4) : 0,
+            Longitude = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetDouble(ordinal: 5) : 0,
+            Zone = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
+            Url = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
+            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetInt32(ordinal: 8).ToLocationType() : null,
+            ParentStation = !dataReader.IsDBNull(ordinal: 9) ? dataReader.GetString(ordinal: 9) : null,
+            Timezone = !dataReader.IsDBNull(ordinal: 10) ? dataReader.GetString(ordinal: 10) : null,
+            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetInt32(ordinal: 11).ToString() : null,
+            LevelId = !dataReader.IsDBNull(ordinal: 12) ? dataReader.GetString(ordinal: 12) : null,
+            PlatformCode = !dataReader.IsDBNull(ordinal: 13) ? dataReader.GetString(ordinal: 13) : null
         };
     }
     
     public Task<List<Agency>> GetAgenciesAsync()
     {
-        const string sql = "SELECT * " + 
+        const string sql = "SELECT * " +
                            "FROM GTFS_AGENCY";
-
-        return ExecuteCommand(sql, GetAgencyFromDataReader);
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReader);
     }
     
     public Task<List<CalendarDate>> GetCalendarDatesAsync()
     {
-        const string sql = "SELECT * " + 
+        const string sql = "SELECT * " +
                            "FROM GTFS_CALENDAR_DATES";
         
-        return ExecuteCommand(sql, GetCalendarDateFromDataReader);
+        return ExecuteCommand(sql: sql, entryProcessor: GetCalendarDateFromDataReader);
     }
     
     public Task<List<Stop>> GetStopsAsync()
     {
-        const string sql = "SELECT * " + 
+        const string sql = "SELECT * " +
                            "FROM GTFS_STOPS";
         
-        return ExecuteCommand(sql, GetStopFromDataReader);
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReader);
     }
     
-    public Task<List<Agency>> GetAgenciesByEmailAsync(string email, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(AgencyEmail, '')) = '{email.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(AgencyEmail, '')) LIKE '{email.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(AgencyEmail, '')) LIKE '%{email.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_AGENCY " +
-                    $"WHERE LOWER(COALESCE(AgencyEmail, '')) LIKE '%{email.ToLower()}%'"
-        };
-
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
-    }
-    
-    public Task<List<Agency>> GetAgenciesByFareUrlAsync(string fareUrl, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) = '{fareUrl.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) LIKE '{fareUrl.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{fareUrl.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_AGENCY " +
-                    $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{fareUrl.ToLower()}%'"
-        };
-
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
-    }
-    
-    public Task<List<Agency>> GetAgenciesByIdAsync(string id, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(AgencyId, '')) = '{id.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(AgencyId, '')) LIKE '{id.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_AGENCY " +
-                                        $"WHERE LOWER(COALESCE(AgencyId, '')) LIKE '%{id.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_AGENCY " +
-                    $"WHERE LOWER(COALESCE(AgencyId, '')) LIKE '%{id.ToLower()}%'"
-        };
-
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
-    }
-    
-    public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(string languageCode, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(AgencyLang, '')) = '{languageCode.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(AgencyLang, '')) LIKE '{languageCode.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(AgencyLang, '')) LIKE '%{languageCode.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(COALESCE(AgencyLang, '')) LIKE '%{languageCode.ToLower()}%'"
-        };
-
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
-    }
-    
-    public Task<List<Agency>> GetAgenciesByNameAsync(string name, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyName) = '{name.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyName) LIKE '{name.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyName) LIKE '%{name.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(AgencyName) LIKE '%{name.ToLower()}%'"
-        };
-
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
-    }
-    
-    public Task<List<Agency>> GetAgenciesByPhoneAsync(string phone, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(AgencyPhone, '')) = '{phone.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(AgencyPhone, '')) LIKE '{phone.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(COALESCE(AgencyPhone, '')) LIKE '%{phone.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(COALESCE(AgencyPhone, '')) LIKE '%{phone.ToLower()}%'"
-        };
-
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
-    }
-    
-    public Task<List<Agency>> GetAgenciesByQueryAsync(string search, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyName) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(AgencyUrl) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(AgencyTimezone) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(AgencyId, '')) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(AgencyLang, '')) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(AgencyPhone, '')) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(AgencyFareUrl, '')) = '{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(AgencyEmail, '')) = '{search.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyName) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(AgencyUrl) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(AgencyTimezone) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(AgencyId, '')) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(AgencyLang, '')) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(AgencyPhone, '')) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(AgencyFareUrl, '')) LIKE '{search.ToLower()}%' " + 
-                                           $"OR LOWER(COALESCE(AgencyEmail, '')) LIKE '{search.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " +
-                                   "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyName) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(AgencyUrl) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(AgencyTimezone) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(AgencyId, '')) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(AgencyLang, '')) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(AgencyPhone, '')) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{search.ToLower()}' " + 
-                                           $"OR LOWER(COALESCE(AgencyEmail, '')) LIKE '%{search.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(AgencyName) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(AgencyUrl) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(AgencyTimezone) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(AgencyId, '')) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(AgencyLang, '')) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(AgencyPhone, '')) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{search.ToLower()}%' " + 
-                       $"OR LOWER(COALESCE(AgencyEmail, '')) LIKE '%{search.ToLower()}%'"
-        };
+    public Task<List<Agency>> GetAgenciesByEmailAsync(
+        string email,
+        ComparisonType comparison) {
         
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
-    }
-    
-    public Task<List<Agency>> GetAgenciesByTimezoneAsync(string timezone, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyTimezone) = '{timezone.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyTimezone) LIKE '{timezone.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyTimezone) LIKE '%{timezone.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(AgencyTimezone) LIKE '%{timezone.ToLower()}%'"
-        };
-
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
-    }
-    
-    public Task<List<Agency>> GetAgenciesByUrlAsync(string url, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyUrl) = '{url.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyUrl) LIKE '{url.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_AGENCY " + 
-                                        $"WHERE LOWER(AgencyUrl) LIKE '%{url.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_AGENCY " + 
-                    $"WHERE LOWER(AgencyUrl) LIKE '%{url.ToLower()}%'"
-        };
-
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
-    }
-    
-    public Task<List<Departure>> GetDeparturesForStopAsync(string id, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Partial => "SELECT s.DepartureTime, " + 
-                                             "s.StopId, " + 
-                                             "t.TripId, " + 
-                                             "t.ServiceId, " + 
-                                             "t.TripHeadsign, " + 
-                                             "t.TripShortName, " + 
-                                             "r.AgencyId, " + 
-                                             "r.RouteShortName, " + 
-                                             "r.RouteLongName, " + 
-                                             "c.Monday, " + 
-                                             "c.Tuesday, " + 
-                                             "c.Wednesday, " + 
-                                             "c.Thursday, " + 
-                                             "c.Friday, " + 
-                                             "c.Saturday, " + 
-                                             "c.Sunday, " + 
-                                             "c.StartDate, " + 
-                                             "c.EndDate " + 
-                                      "FROM GTFS_STOP_TIMES s " + 
-                                      "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
-                                      "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
-                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
-                                             $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}%' " + 
-                                                "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
-                                      "ORDER BY s.DepartureTime",
-
-            ComparisonType.Starts => "SELECT s.DepartureTime, " + 
-                                            "s.StopId, " + 
-                                            "t.TripId, " + 
-                                            "t.ServiceId, " + 
-                                            "t.TripHeadsign, " + 
-                                            "t.TripShortName, " + 
-                                            "r.AgencyId, " + 
-                                            "r.RouteShortName, " + 
-                                            "r.RouteLongName, " + 
-                                            "c.Monday, " + 
-                                            "c.Tuesday, " + 
-                                            "c.Wednesday, " + 
-                                            "c.Thursday, " + 
-                                            "c.Friday, " + 
-                                            "c.Saturday, " + 
-                                            "c.Sunday, " + 
-                                            "c.StartDate, " + 
-                                            "c.EndDate " + 
-                                     "FROM GTFS_STOP_TIMES s " + 
-                                     "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
-                                     "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
-                                     "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
-                                            $"WHERE LOWER(s.StopId) LIKE '{id.ToLower()}%' " + 
-                                               "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
-                                     "ORDER BY s.DepartureTime",
-
-            ComparisonType.Ends => "SELECT s.DepartureTime, " + 
-                                          "s.StopId, " + 
-                                          "t.TripId, " + 
-                                          "t.ServiceId, " + 
-                                          "t.TripHeadsign, " + 
-                                          "t.TripShortName, " + 
-                                          "r.AgencyId, " + 
-                                          "r.RouteShortName, " + 
-                                          "r.RouteLongName, " + 
-                                          "c.Monday, " + 
-                                          "c.Tuesday, " + 
-                                          "c.Wednesday, " + 
-                                          "c.Thursday, " + 
-                                          "c.Friday, " + 
-                                          "c.Saturday, " + 
-                                          "c.Sunday, " + 
-                                          "c.StartDate, " + 
-                                          "c.EndDate " + 
-                                   "FROM GTFS_STOP_TIMES s " + 
-                                   "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
-                                   "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
-                                   "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
-                                          $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}' " + 
-                                             "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
-                                   "ORDER BY s.DepartureTime",
-
-            _ => "SELECT s.DepartureTime, " + 
-                        "s.StopId, " + 
-                        "t.TripId, " + 
-                        "t.ServiceId, " + 
-                        "t.TripHeadsign, " + 
-                        "t.TripShortName, " + 
-                        "r.AgencyId, " + 
-                        "r.RouteShortName, " + 
-                        "r.RouteLongName, " + 
-                        "c.Monday, " + 
-                        "c.Tuesday, " + 
-                        "c.Wednesday, " + 
-                        "c.Thursday, " + 
-                        "c.Friday, " + 
-                        "c.Saturday, " + 
-                        "c.Sunday, " + 
-                        "c.StartDate, " + 
-                        "c.EndDate " + 
-                 "FROM GTFS_STOP_TIMES s " + 
-                 "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
-                 "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
-                 "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
-                        $"WHERE LOWER(s.StopId) = '{id.ToLower()}' " + 
-                           "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
-                 "ORDER BY s.DepartureTime"
-        };
-        
-        return ExecuteCommand(sql, GetDepartureFromDataReaderByCondition);
-    }
-    
-    public Task<List<Departure>> GetDeparturesForTripAsync(string id, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Partial => "SELECT s.DepartureTime, " + 
-                                             "s.StopId, " + 
-                                             "t.TripId, " + 
-                                             "t.ServiceId, " + 
-                                             "t.TripHeadsign, " + 
-                                             "t.TripShortName, " + 
-                                             "r.AgencyId, " + 
-                                             "r.RouteShortName, " + 
-                                             "r.RouteLongName, " + 
-                                             "c.Monday, " + 
-                                             "c.Tuesday, " + 
-                                             "c.Wednesday, " + 
-                                             "c.Thursday, " + 
-                                             "c.Friday, " + 
-                                             "c.Saturday, " + 
-                                             "c.Sunday, " + 
-                                             "c.StartDate, " + 
-                                             "c.EndDate " + 
-                                      "FROM GTFS_STOP_TIMES s " + 
-                                      "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
-                                      "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
-                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
-                                             $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}%' " + 
-                                                "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
-                                      "ORDER BY s.DepartureTime",
-
-            ComparisonType.Starts => "SELECT s.DepartureTime, " + 
-                                            "s.StopId, " + 
-                                            "t.TripId, " + 
-                                            "t.ServiceId, " + 
-                                            "t.TripHeadsign, " + 
-                                            "t.TripShortName, " + 
-                                            "r.AgencyId, " + 
-                                            "r.RouteShortName, " + 
-                                            "r.RouteLongName, " + 
-                                            "c.Monday, " + 
-                                            "c.Tuesday, " + 
-                                            "c.Wednesday, " + 
-                                            "c.Thursday, " + 
-                                            "c.Friday, " + 
-                                            "c.Saturday, " + 
-                                            "c.Sunday, " + 
-                                            "c.StartDate, " + 
-                                            "c.EndDate " + 
-                                     "FROM GTFS_STOP_TIMES s " + 
-                                     "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
-                                     "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
-                                     "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
-                                            $"WHERE LOWER(s.TripId) LIKE '{id.ToLower()}%' " + 
-                                               "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
-                                     "ORDER BY s.DepartureTime",
-
-            ComparisonType.Ends => "SELECT s.DepartureTime, " + 
-                                          "s.StopId, " + 
-                                          "t.TripId, " + 
-                                          "t.ServiceId, " + 
-                                          "t.TripHeadsign, " + 
-                                          "t.TripShortName, " + 
-                                          "r.AgencyId, " + 
-                                          "r.RouteShortName, " + 
-                                          "r.RouteLongName, " + 
-                                          "c.Monday, " + 
-                                          "c.Tuesday, " + 
-                                          "c.Wednesday, " + 
-                                          "c.Thursday, " + 
-                                          "c.Friday, " + 
-                                          "c.Saturday, " + 
-                                          "c.Sunday, " + 
-                                          "c.StartDate, " + 
-                                          "c.EndDate " + 
-                                   "FROM GTFS_STOP_TIMES s " + 
-                                   "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
-                                   "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
-                                   "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
-                                          $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}' " + 
-                                             "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
-                                   "ORDER BY s.DepartureTime",
-
-            _ => "SELECT s.DepartureTime, " + 
-                        "s.StopId, " + 
-                        "t.TripId, " + 
-                        "t.ServiceId, " + 
-                        "t.TripHeadsign, " + 
-                        "t.TripShortName, " + 
-                        "r.AgencyId, " + 
-                        "r.RouteShortName, " + 
-                        "r.RouteLongName, " + 
-                        "c.Monday, " + 
-                        "c.Tuesday, " + 
-                        "c.Wednesday, " + 
-                        "c.Thursday, " + 
-                        "c.Friday, " + 
-                        "c.Saturday, " + 
-                        "c.Sunday, " + 
-                        "c.StartDate, " + 
-                        "c.EndDate " + 
-                 "FROM GTFS_STOP_TIMES s " + 
-                 "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " + 
-                 "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " + 
-                 "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " + 
-                        $"WHERE LOWER(s.TripId) = '{id.ToLower()}' " + 
-                           "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " + 
-                 "ORDER BY s.DepartureTime"
-        };
-        
-        return ExecuteCommand(sql, GetDepartureFromDataReaderByCondition);
-    }
-    
-    public Task<List<Stop>> GetStopsByCodeAsync(string code, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopCode, '')) = '{code.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopCode, '')) LIKE '{code.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopCode, '')) LIKE '%{code.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE LOWER(COALESCE(StopCode, '')) LIKE '%{code.ToLower()}%'"
-        };
-        
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
-    }
-    
-    public Task<List<Stop>> GetStopsByDescriptionAsync(string description, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopDesc, '')) = '{description.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopDesc, '')) LIKE '{description.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopDesc, '')) LIKE '%{description.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE LOWER(COALESCE(StopDesc, '')) LIKE '%{description.ToLower()}%'"
-        };
-        
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
-    }
-    
-    public Task<List<Stop>> GetStopsByIdAsync(string id, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(StopId) = '{id.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(StopId) LIKE '{id.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(StopId) LIKE '%{id.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE LOWER(StopId) LIKE '%{id.ToLower()}%'"
-        };
-        
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
-    }
-    
-    public Task<List<Stop>> GetStopsByLevelAsync(string id, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(LevelId, '')) = '{id.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(LevelId, '')) LIKE '{id.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(LevelId, '')) LIKE '%{id.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE LOWER(COALESCE(LevelId, '')) LIKE '%{id.ToLower()}%'"
-        };
-        
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
-    }
-    
-    public Task<List<Stop>> GetStopsByLocationAsync(double minimumLongitude, double minimumLatitude, double maximumLongitude, double maximumLatitude, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " + 
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " + 
-                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " + 
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " + 
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " + 
-                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " + 
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " + 
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " + 
-                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " + 
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " + 
-                      $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " + 
-                      $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " + 
-                      $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}"
-        };
-        
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
-    }
-    
-    public Task<List<Stop>> GetStopsByLocationTypeAsync(LocationType locationType, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}"
-        };
-        
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
-    }
-    
-    public Task<List<Stop>> GetStopsByNameAsync(string name, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopName, '')) = '{name.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopName, '')) LIKE '{name.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopName, '')) LIKE '%{name.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE LOWER(COALESCE(StopName, '')) LIKE '%{name.ToLower()}%'"
-        };
-        
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
-    }
-    
-    public Task<List<Stop>> GetStopsByParentStationAsync(string id, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(ParentStation, '')) = '{id.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(ParentStation, '')) LIKE '{id.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(ParentStation, '')) LIKE '%{id.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE LOWER(COALESCE(ParentStation, '')) LIKE '%{id.ToLower()}%'"
-        };
-        
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
-    }
-    
-    public Task<List<Stop>> GetStopsByPlatformCodeAsync(string platformCode, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(PlatformCode, '')) = '{platformCode.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(PlatformCode, '')) LIKE '{platformCode.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(PlatformCode, '')) LIKE '%{platformCode.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE LOWER(COALESCE(PlatformCode, '')) LIKE '%{platformCode.ToLower()}%'"
-        };
-        
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
-    }
-    
-    public Task<List<Stop>> GetStopsByQueryAsync(string search, ComparisonType comparison)
-    {
         var sql = comparison switch
         {
             ComparisonType.Exact => "SELECT * " +
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(StopId) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(StopCode, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(StopName, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(StopDesc, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(ZoneId, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(StopUrl, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(ParentStation, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(StopTimezone, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(LevelId, '')) = '{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(PlatformCode, '')) = '{search.ToLower()}'",
-
+                                    "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyEmail, '')) = '{(email ?? string.Empty).ToLower()}'",
+            
             ComparisonType.Starts => "SELECT * " +
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(StopId) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(StopCode, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(StopName, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(StopDesc, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(ZoneId, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(StopUrl, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(ParentStation, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(StopTimezone, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(LevelId, '')) LIKE '{search.ToLower()}%' " +
-                                           $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '{search.ToLower()}%'",
-
+                                     "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyEmail, '')) LIKE '{(email ?? string.Empty).ToLower()}%'",
+            
             ComparisonType.Ends => "SELECT * " +
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(StopId) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(StopCode, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(StopName, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(StopDesc, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(ZoneId, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(StopUrl, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(ParentStation, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(StopTimezone, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(LevelId, '')) LIKE '%{search.ToLower()}' " +
-                                           $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '%{search.ToLower()}'",
-
+                                   "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyEmail, '')) LIKE '%{(email ?? string.Empty).ToLower()}'",
+            
             _ => "SELECT * " +
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE LOWER(StopId) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(StopCode, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(StopName, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(StopDesc, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(ZoneId, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(StopUrl, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(ParentStation, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(StopTimezone, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(LevelId, '')) LIKE '%{search.ToLower()}%' " +
-                       $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '%{search.ToLower()}%'"
-        };
-
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
-    }
-    
-    public Task<List<Stop>> GetStopsByTimezoneAsync(string timezone, ComparisonType comparison)
-    {
-        var sql = comparison switch
-        {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopTimezone, '')) = '{timezone.ToLower()}'",
-            
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopTimezone, '')) LIKE '{timezone.ToLower()}%'",
-            
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopTimezone, '')) LIKE '%{timezone.ToLower()}'",
-            
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE LOWER(COALESCE(StopTimezone, '')) LIKE '%{timezone.ToLower()}%'"
+                 "FROM GTFS_AGENCY " +
+                    $"WHERE LOWER(COALESCE(AgencyEmail, '')) LIKE '%{(email ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
-    public Task<List<Stop>> GetStopsByUrlAsync(string url, ComparisonType comparison)
-    {
+    public Task<List<Agency>> GetAgenciesByFareUrlAsync(
+        string fareUrl,
+        ComparisonType comparison) {
+        
         var sql = comparison switch
         {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopUrl, '')) = '{url.ToLower()}'",
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) = '{(fareUrl ?? string.Empty).ToLower()}'",
             
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopUrl, '')) LIKE '{url.ToLower()}%'",
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) LIKE '{(fareUrl ?? string.Empty).ToLower()}%'",
             
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(StopUrl, '')) LIKE '%{url.ToLower()}'",
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{(fareUrl ?? string.Empty).ToLower()}'",
             
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE LOWER(COALESCE(StopUrl, '')) LIKE '%{url.ToLower()}%'"
+            _ => "SELECT * " +
+                 "FROM GTFS_AGENCY " +
+                    $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{(fareUrl ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
-    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(WheelchairAccessibilityType wheelchairBoarding, ComparisonType comparison)
-    {
+    public Task<List<Agency>> GetAgenciesByIdAsync(
+        string id,
+        ComparisonType comparison) {
+        
         var sql = comparison switch
         {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyId, '')) = '{(id ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyId, '')) LIKE '{(id ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyId, '')) LIKE '%{(id ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_AGENCY " +
+                    $"WHERE LOWER(COALESCE(AgencyId, '')) LIKE '%{(id ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+    }
+    
+    public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(
+        string languageCode,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyLang, '')) = '{(languageCode ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyLang, '')) LIKE '{(languageCode ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyLang, '')) LIKE '%{(languageCode ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_AGENCY " +
+                    $"WHERE LOWER(COALESCE(AgencyLang, '')) LIKE '%{(languageCode ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+    }
+    
+    public Task<List<Agency>> GetAgenciesByNameAsync(
+        string name,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyName) = '{(name ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyName) LIKE '{(name ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyName) LIKE '%{(name ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_AGENCY " +
+                    $"WHERE LOWER(AgencyName) LIKE '%{(name ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+    }
+    
+    public Task<List<Agency>> GetAgenciesByPhoneAsync(
+        string phone,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyPhone, '')) = '{(phone ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyPhone, '')) LIKE '{(phone ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(COALESCE(AgencyPhone, '')) LIKE '%{(phone ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_AGENCY " +
+                    $"WHERE LOWER(COALESCE(AgencyPhone, '')) LIKE '%{(phone ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+    }
+    
+    public Task<List<Agency>> GetAgenciesByQueryAsync(
+        string search,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyName) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(AgencyUrl) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(AgencyTimezone) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(AgencyId, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(AgencyLang, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(AgencyPhone, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(AgencyFareUrl, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(AgencyEmail, '')) = '{(search ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyName) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(AgencyUrl) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(AgencyTimezone) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(AgencyId, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(AgencyLang, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(AgencyPhone, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(AgencyFareUrl, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(AgencyEmail, '')) LIKE '{(search ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyName) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(AgencyUrl) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(AgencyTimezone) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(AgencyId, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(AgencyLang, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(AgencyPhone, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(AgencyEmail, '')) LIKE '%{(search ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_AGENCY " +
+                    $"WHERE LOWER(AgencyName) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(AgencyUrl) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(AgencyTimezone) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(AgencyId, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(AgencyLang, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(AgencyPhone, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(AgencyEmail, '')) LIKE '%{(search ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+    }
+    
+    public Task<List<Agency>> GetAgenciesByTimezoneAsync(
+        string timezone,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyTimezone) = '{(timezone ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyTimezone) LIKE '{(timezone ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyTimezone) LIKE '%{(timezone ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_AGENCY " +
+                    $"WHERE LOWER(AgencyTimezone) LIKE '%{(timezone ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+    }
+    
+    public Task<List<Agency>> GetAgenciesByUrlAsync(
+        string url,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyUrl) = '{(url ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyUrl) LIKE '{(url ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_AGENCY " +
+                                        $"WHERE LOWER(AgencyUrl) LIKE '%{(url ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_AGENCY " +
+                    $"WHERE LOWER(AgencyUrl) LIKE '%{(url ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+    }
+    
+    public Task<List<Departure>> GetDeparturesForStopAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Partial => "SELECT s.DepartureTime, " +
+                                             "s.StopId, " +
+                                             "t.TripId, " +
+                                             "t.ServiceId, " +
+                                             "t.TripHeadsign, " +
+                                             "t.TripShortName, " +
+                                             "r.AgencyId, " +
+                                             "r.RouteShortName, " +
+                                             "r.RouteLongName, " +
+                                             "c.Monday, " +
+                                             "c.Tuesday, " +
+                                             "c.Wednesday, " +
+                                             "c.Thursday, " +
+                                             "c.Friday, " +
+                                             "c.Saturday, " +
+                                             "c.Sunday, " +
+                                             "c.StartDate, " +
+                                             "c.EndDate " +
+                                      "FROM GTFS_STOP_TIMES s " +
+                                      "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " +
+                                      "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
+                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
+                                             $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}%' " +
+                                                "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                      "ORDER BY s.DepartureTime",
+            
+            ComparisonType.Starts => "SELECT s.DepartureTime, " +
+                                            "s.StopId, " +
+                                            "t.TripId, " +
+                                            "t.ServiceId, " +
+                                            "t.TripHeadsign, " +
+                                            "t.TripShortName, " +
+                                            "r.AgencyId, " +
+                                            "r.RouteShortName, " +
+                                            "r.RouteLongName, " +
+                                            "c.Monday, " +
+                                            "c.Tuesday, " +
+                                            "c.Wednesday, " +
+                                            "c.Thursday, " +
+                                            "c.Friday, " +
+                                            "c.Saturday, " +
+                                            "c.Sunday, " +
+                                            "c.StartDate, " +
+                                            "c.EndDate " +
+                                     "FROM GTFS_STOP_TIMES s " +
+                                     "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " +
+                                     "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
+                                     "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
+                                            $"WHERE LOWER(s.StopId) LIKE '{id.ToLower()}%' " +
+                                               "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                     "ORDER BY s.DepartureTime",
+            
+            ComparisonType.Ends => "SELECT s.DepartureTime, " +
+                                          "s.StopId, " +
+                                          "t.TripId, " +
+                                          "t.ServiceId, " +
+                                          "t.TripHeadsign, " +
+                                          "t.TripShortName, " +
+                                          "r.AgencyId, " +
+                                          "r.RouteShortName, " +
+                                          "r.RouteLongName, " +
+                                          "c.Monday, " +
+                                          "c.Tuesday, " +
+                                          "c.Wednesday, " +
+                                          "c.Thursday, " +
+                                          "c.Friday, " +
+                                          "c.Saturday, " +
+                                          "c.Sunday, " +
+                                          "c.StartDate, " +
+                                          "c.EndDate " +
+                                   "FROM GTFS_STOP_TIMES s " +
+                                   "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " +
+                                   "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
+                                   "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
+                                          $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}' " +
+                                             "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                   "ORDER BY s.DepartureTime",
+            
+            _ => "SELECT s.DepartureTime, " +
+                        "s.StopId, " +
+                        "t.TripId, " +
+                        "t.ServiceId, " +
+                        "t.TripHeadsign, " +
+                        "t.TripShortName, " +
+                        "r.AgencyId, " +
+                        "r.RouteShortName, " +
+                        "r.RouteLongName, " +
+                        "c.Monday, " +
+                        "c.Tuesday, " +
+                        "c.Wednesday, " +
+                        "c.Thursday, " +
+                        "c.Friday, " +
+                        "c.Saturday, " +
+                        "c.Sunday, " +
+                        "c.StartDate, " +
+                        "c.EndDate " +
+                 "FROM GTFS_STOP_TIMES s " +
+                 "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " +
+                 "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
+                 "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
+                        $"WHERE LOWER(s.StopId) = '{id.ToLower()}' " +
+                           "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                 "ORDER BY s.DepartureTime"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
+    }
+    
+    public Task<List<Departure>> GetDeparturesForTripAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Partial => "SELECT s.DepartureTime, " +
+                                             "s.StopId, " +
+                                             "t.TripId, " +
+                                             "t.ServiceId, " +
+                                             "t.TripHeadsign, " +
+                                             "t.TripShortName, " +
+                                             "r.AgencyId, " +
+                                             "r.RouteShortName, " +
+                                             "r.RouteLongName, " +
+                                             "c.Monday, " +
+                                             "c.Tuesday, " +
+                                             "c.Wednesday, " +
+                                             "c.Thursday, " +
+                                             "c.Friday, " +
+                                             "c.Saturday, " +
+                                             "c.Sunday, " +
+                                             "c.StartDate, " +
+                                             "c.EndDate " +
+                                      "FROM GTFS_STOP_TIMES s " +
+                                      "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " +
+                                      "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
+                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
+                                             $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}%' " +
+                                                "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                      "ORDER BY s.DepartureTime",
+            
+            ComparisonType.Starts => "SELECT s.DepartureTime, " +
+                                            "s.StopId, " +
+                                            "t.TripId, " +
+                                            "t.ServiceId, " +
+                                            "t.TripHeadsign, " +
+                                            "t.TripShortName, " +
+                                            "r.AgencyId, " +
+                                            "r.RouteShortName, " +
+                                            "r.RouteLongName, " +
+                                            "c.Monday, " +
+                                            "c.Tuesday, " +
+                                            "c.Wednesday, " +
+                                            "c.Thursday, " +
+                                            "c.Friday, " +
+                                            "c.Saturday, " +
+                                            "c.Sunday, " +
+                                            "c.StartDate, " +
+                                            "c.EndDate " +
+                                     "FROM GTFS_STOP_TIMES s " +
+                                     "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " +
+                                     "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
+                                     "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
+                                            $"WHERE LOWER(s.TripId) LIKE '{id.ToLower()}%' " +
+                                               "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                     "ORDER BY s.DepartureTime",
+            
+            ComparisonType.Ends => "SELECT s.DepartureTime, " +
+                                          "s.StopId, " +
+                                          "t.TripId, " +
+                                          "t.ServiceId, " +
+                                          "t.TripHeadsign, " +
+                                          "t.TripShortName, " +
+                                          "r.AgencyId, " +
+                                          "r.RouteShortName, " +
+                                          "r.RouteLongName, " +
+                                          "c.Monday, " +
+                                          "c.Tuesday, " +
+                                          "c.Wednesday, " +
+                                          "c.Thursday, " +
+                                          "c.Friday, " +
+                                          "c.Saturday, " +
+                                          "c.Sunday, " +
+                                          "c.StartDate, " +
+                                          "c.EndDate " +
+                                   "FROM GTFS_STOP_TIMES s " +
+                                   "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " +
+                                   "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
+                                   "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
+                                          $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}' " +
+                                             "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                   "ORDER BY s.DepartureTime",
+            
+            _ => "SELECT s.DepartureTime, " +
+                        "s.StopId, " +
+                        "t.TripId, " +
+                        "t.ServiceId, " +
+                        "t.TripHeadsign, " +
+                        "t.TripShortName, " +
+                        "r.AgencyId, " +
+                        "r.RouteShortName, " +
+                        "r.RouteLongName, " +
+                        "c.Monday, " +
+                        "c.Tuesday, " +
+                        "c.Wednesday, " +
+                        "c.Thursday, " +
+                        "c.Friday, " +
+                        "c.Saturday, " +
+                        "c.Sunday, " +
+                        "c.StartDate, " +
+                        "c.EndDate " +
+                 "FROM GTFS_STOP_TIMES s " +
+                 "LEFT JOIN GTFS_TRIPS t ON (s.TripId = t.TripId) " +
+                 "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
+                 "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
+                        $"WHERE LOWER(s.TripId) = '{id.ToLower()}' " +
+                           "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                 "ORDER BY s.DepartureTime"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByCodeAsync(
+        string code,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopCode, '')) = '{(code ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopCode, '')) LIKE '{(code ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopCode, '')) LIKE '%{(code ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE LOWER(COALESCE(StopCode, '')) LIKE '%{(code ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByDescriptionAsync(
+        string description,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopDesc, '')) = '{(description ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopDesc, '')) LIKE '{(description ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopDesc, '')) LIKE '%{(description ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE LOWER(COALESCE(StopDesc, '')) LIKE '%{(description ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByIdAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(StopId) = '{(id ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(StopId) LIKE '{(id ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(StopId) LIKE '%{(id ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE LOWER(StopId) LIKE '%{(id ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByLevelAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(LevelId, '')) = '{(id ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(LevelId, '')) LIKE '{(id ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(LevelId, '')) LIKE '%{(id ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE LOWER(COALESCE(LevelId, '')) LIKE '%{(id ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByLocationAsync(
+        double minimumLongitude,
+        double minimumLatitude,
+        double maximumLongitude,
+        double maximumLatitude,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " +
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " +
+                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " +
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " +
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " +
+                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " +
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " +
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " +
+                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " +
+                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " +
+                      $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " +
+                      $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " +
+                      $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByLocationTypeAsync(
+        LocationType locationType,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByNameAsync(
+        string name,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopName, '')) = '{(name ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopName, '')) LIKE '{(name ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopName, '')) LIKE '%{(name ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE LOWER(COALESCE(StopName, '')) LIKE '%{(name ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByParentStationAsync(
+        string id,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(ParentStation, '')) = '{(id ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(ParentStation, '')) LIKE '{(id ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(ParentStation, '')) LIKE '%{(id ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE LOWER(COALESCE(ParentStation, '')) LIKE '%{(id ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByPlatformCodeAsync(
+        string platformCode,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(PlatformCode, '')) = '{(platformCode ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(PlatformCode, '')) LIKE '{(platformCode ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(PlatformCode, '')) LIKE '%{(platformCode ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE LOWER(COALESCE(PlatformCode, '')) LIKE '%{(platformCode ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByQueryAsync(
+        string search,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(StopId) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopCode, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopName, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopDesc, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(ZoneId, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopUrl, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(ParentStation, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopTimezone, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(LevelId, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(PlatformCode, '')) = '{(search ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(StopId) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(StopCode, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(StopName, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(StopDesc, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(ZoneId, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(StopUrl, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(ParentStation, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(StopTimezone, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(LevelId, '')) LIKE '{(search ?? string.Empty).ToLower()}%' " +
+                                           $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '{(search ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(StopId) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopCode, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopName, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopDesc, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(ZoneId, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopUrl, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(ParentStation, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(StopTimezone, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(LevelId, '')) LIKE '%{(search ?? string.Empty).ToLower()}' " +
+                                           $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '%{(search ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE LOWER(StopId) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(StopCode, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(StopName, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(StopDesc, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(ZoneId, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(StopUrl, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(ParentStation, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(StopTimezone, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(LevelId, '')) LIKE '%{(search ?? string.Empty).ToLower()}%' " +
+                       $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '%{(search ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByTimezoneAsync(
+        string timezone,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopTimezone, '')) = '{(timezone ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopTimezone, '')) LIKE '{(timezone ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopTimezone, '')) LIKE '%{(timezone ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE LOWER(COALESCE(StopTimezone, '')) LIKE '%{(timezone ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByUrlAsync(
+        string url,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopUrl, '')) = '{(url ?? string.Empty).ToLower()}'",
+            
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopUrl, '')) LIKE '{(url ?? string.Empty).ToLower()}%'",
+            
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(StopUrl, '')) LIKE '%{(url ?? string.Empty).ToLower()}'",
+            
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE LOWER(COALESCE(StopUrl, '')) LIKE '%{(url ?? string.Empty).ToLower()}%'"
+        };
+        
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(
+        WheelchairAccessibilityType wheelchairBoarding,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
                                         $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
                                         $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
                                         $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
             
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
                     $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}"
         };
         
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
-    public Task<List<Stop>> GetStopsByZoneAsync(string id, ComparisonType comparison)
-    {
+    public Task<List<Stop>> GetStopsByZoneAsync(
+        string id,
+        ComparisonType comparison) {
+        
         var sql = comparison switch
         {
-            ComparisonType.Exact => "SELECT * " + 
-                                    "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(ZoneId, '')) = '{id.ToLower()}'",
+            ComparisonType.Exact => "SELECT * " +
+                                    "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(ZoneId, '')) = '{(id ?? string.Empty).ToLower()}'",
             
-            ComparisonType.Starts => "SELECT * " + 
-                                     "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(ZoneId, '')) LIKE '{id.ToLower()}%'",
+            ComparisonType.Starts => "SELECT * " +
+                                     "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(ZoneId, '')) LIKE '{(id ?? string.Empty).ToLower()}%'",
             
-            ComparisonType.Ends => "SELECT * " + 
-                                   "FROM GTFS_STOPS " + 
-                                        $"WHERE LOWER(COALESCE(ZoneId, '')) LIKE '%{id.ToLower()}'",
+            ComparisonType.Ends => "SELECT * " +
+                                   "FROM GTFS_STOPS " +
+                                        $"WHERE LOWER(COALESCE(ZoneId, '')) LIKE '%{(id ?? string.Empty).ToLower()}'",
             
-            _ => "SELECT * " + 
-                 "FROM GTFS_STOPS " + 
-                    $"WHERE LOWER(COALESCE(ZoneId, '')) LIKE '%{id.ToLower()}%'"
+            _ => "SELECT * " +
+                 "FROM GTFS_STOPS " +
+                    $"WHERE LOWER(COALESCE(ZoneId, '')) LIKE '%{(id ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql, GetStopFromDataReaderByCondition);
+        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
 }
