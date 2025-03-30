@@ -93,9 +93,9 @@ create table gtfs_routes (
     route_desc character varying(255),
     route_type smallint not null,
     route_url character varying(255),
-    route_color smallint,
+    route_color character varying(255),
     route_text_color character varying(255),
-    route_sort_order character varying(255));
+    route_sort_order smallint);
 
 drop table if exists gtfs_shapes;
 
