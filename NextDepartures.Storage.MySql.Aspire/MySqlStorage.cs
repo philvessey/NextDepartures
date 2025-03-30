@@ -156,10 +156,10 @@ public class MySqlStorage : IDataStorage
             Longitude = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetDouble(ordinal: 5) : 0,
             Zone = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
             Url = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
-            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetInt32(ordinal: 8).ToLocationType() : null,
+            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetString(ordinal: 8).ToLocationType() : null,
             ParentStation = !dataReader.IsDBNull(ordinal: 9) ? dataReader.GetString(ordinal: 9) : null,
             Timezone = !dataReader.IsDBNull(ordinal: 10) ? dataReader.GetString(ordinal: 10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetInt32(ordinal: 11).ToString() : null,
+            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetString(ordinal: 11) : null,
             LevelId = !dataReader.IsDBNull(ordinal: 12) ? dataReader.GetString(ordinal: 12) : null,
             PlatformCode = !dataReader.IsDBNull(ordinal: 13) ? dataReader.GetString(ordinal: 13) : null
         };
@@ -177,10 +177,10 @@ public class MySqlStorage : IDataStorage
             Longitude = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetDouble(ordinal: 5) : 0,
             Zone = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
             Url = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
-            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetInt32(ordinal: 8).ToLocationType() : null,
+            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetString(ordinal: 8).ToLocationType() : null,
             ParentStation = !dataReader.IsDBNull(ordinal: 9) ? dataReader.GetString(ordinal: 9) : null,
             Timezone = !dataReader.IsDBNull(ordinal: 10) ? dataReader.GetString(ordinal: 10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetInt32(ordinal: 11).ToString() : null,
+            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetString(ordinal: 11) : null,
             LevelId = !dataReader.IsDBNull(ordinal: 12) ? dataReader.GetString(ordinal: 12) : null,
             PlatformCode = !dataReader.IsDBNull(ordinal: 13) ? dataReader.GetString(ordinal: 13) : null
         };
@@ -501,7 +501,7 @@ public class MySqlStorage : IDataStorage
                                       "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                       "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                              $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}%' " +
-                                                "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                                "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
                                       "ORDER BY s.DepartureTime",
             
             ComparisonType.Starts => "SELECT s.DepartureTime, " +
@@ -527,7 +527,7 @@ public class MySqlStorage : IDataStorage
                                      "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                             $"WHERE LOWER(s.StopId) LIKE '{id.ToLower()}%' " +
-                                               "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                               "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
                                      "ORDER BY s.DepartureTime",
             
             ComparisonType.Ends => "SELECT s.DepartureTime, " +
@@ -553,7 +553,7 @@ public class MySqlStorage : IDataStorage
                                    "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                    "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                           $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}' " +
-                                             "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                             "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
                                    "ORDER BY s.DepartureTime",
             
             _ => "SELECT s.DepartureTime, " +
@@ -579,7 +579,7 @@ public class MySqlStorage : IDataStorage
                  "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                  "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                         $"WHERE LOWER(s.StopId) = '{id.ToLower()}' " +
-                           "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                           "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
                  "ORDER BY s.DepartureTime"
         };
         
@@ -615,7 +615,7 @@ public class MySqlStorage : IDataStorage
                                       "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                       "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                              $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}%' " +
-                                                "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                                "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
                                       "ORDER BY s.DepartureTime",
             
             ComparisonType.Starts => "SELECT s.DepartureTime, " +
@@ -641,7 +641,7 @@ public class MySqlStorage : IDataStorage
                                      "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                             $"WHERE LOWER(s.TripId) LIKE '{id.ToLower()}%' " +
-                                               "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                               "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
                                      "ORDER BY s.DepartureTime",
             
             ComparisonType.Ends => "SELECT s.DepartureTime, " +
@@ -667,7 +667,7 @@ public class MySqlStorage : IDataStorage
                                    "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                    "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                           $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}' " +
-                                             "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                                             "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
                                    "ORDER BY s.DepartureTime",
             
             _ => "SELECT s.DepartureTime, " +
@@ -693,7 +693,7 @@ public class MySqlStorage : IDataStorage
                  "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                  "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                         $"WHERE LOWER(s.TripId) = '{id.ToLower()}' " +
-                           "AND COALESCE(NULLIF(s.PickupType, ''), 0) != 1 " +
+                           "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
                  "ORDER BY s.DepartureTime"
         };
         
@@ -815,31 +815,31 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " +
                                     "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " +
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " +
-                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " +
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
+                                        $"WHERE COALESCE(StopLon, 0) >= {minimumLongitude} " +
+                                          $"AND COALESCE(StopLat, 0) >= {minimumLatitude} " +
+                                          $"AND COALESCE(StopLon, 0) <= {maximumLongitude} " +
+                                          $"AND COALESCE(StopLat, 0) <= {maximumLatitude}",
             
             ComparisonType.Starts => "SELECT * " +
                                      "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " +
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " +
-                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " +
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
+                                        $"WHERE COALESCE(StopLon, 0) >= {minimumLongitude} " +
+                                          $"AND COALESCE(StopLat, 0) >= {minimumLatitude} " +
+                                          $"AND COALESCE(StopLon, 0) <= {maximumLongitude} " +
+                                          $"AND COALESCE(StopLat, 0) <= {maximumLatitude}",
             
             ComparisonType.Ends => "SELECT * " +
                                    "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " +
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " +
-                                          $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " +
-                                          $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}",
+                                        $"WHERE COALESCE(StopLon, 0) >= {minimumLongitude} " +
+                                          $"AND COALESCE(StopLat, 0) >= {minimumLatitude} " +
+                                          $"AND COALESCE(StopLon, 0) <= {maximumLongitude} " +
+                                          $"AND COALESCE(StopLat, 0) <= {maximumLatitude}",
             
             _ => "SELECT * " +
                  "FROM GTFS_STOPS " +
-                    $"WHERE COALESCE(NULLIF(StopLon, ''), 0) >= {minimumLongitude} " +
-                      $"AND COALESCE(NULLIF(StopLat, ''), 0) >= {minimumLatitude} " +
-                      $"AND COALESCE(NULLIF(StopLon, ''), 0) <= {maximumLongitude} " +
-                      $"AND COALESCE(NULLIF(StopLat, ''), 0) <= {maximumLatitude}"
+                    $"WHERE COALESCE(StopLon, 0) >= {minimumLongitude} " +
+                      $"AND COALESCE(StopLat, 0) >= {minimumLatitude} " +
+                      $"AND COALESCE(StopLon, 0) <= {maximumLongitude} " +
+                      $"AND COALESCE(StopLat, 0) <= {maximumLatitude}"
         };
         
         return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
@@ -853,19 +853,19 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " +
                                     "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
+                                        $"WHERE COALESCE(NULLIF(LocationType, ''), '0') = '{locationType.ToInt32()}'",
             
             ComparisonType.Starts => "SELECT * " +
                                      "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
+                                        $"WHERE COALESCE(NULLIF(LocationType, ''), '0') = '{locationType.ToInt32()}'",
             
             ComparisonType.Ends => "SELECT * " +
                                    "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}",
+                                        $"WHERE COALESCE(NULLIF(LocationType, ''), '0') = '{locationType.ToInt32()}'",
             
             _ => "SELECT * " +
                  "FROM GTFS_STOPS " +
-                    $"WHERE COALESCE(NULLIF(LocationType, ''), 0) = {locationType.ToInt32()}"
+                    $"WHERE COALESCE(NULLIF(LocationType, ''), '0') = '{locationType.ToInt32()}'"
         };
         
         return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
@@ -1071,19 +1071,19 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Exact => "SELECT * " +
                                     "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
+                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
             
             ComparisonType.Starts => "SELECT * " +
                                      "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
+                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
             
             ComparisonType.Ends => "SELECT * " +
                                    "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
+                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
             
             _ => "SELECT * " +
                  "FROM GTFS_STOPS " +
-                    $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), 0) = {wheelchairBoarding.ToInt32()}"
+                    $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'"
         };
         
         return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);

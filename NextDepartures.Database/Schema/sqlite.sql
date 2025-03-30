@@ -38,7 +38,7 @@ CREATE TABLE GTFS_FARE_ATTRIBUTES (
     Price REAL NOT NULL,
     CurrencyType VARCHAR(255) NOT NULL,
     PaymentMethod SMALLINT NOT NULL,
-    Transfers SMALLINT NOT NULL,
+    Transfers VARCHAR(255) NOT NULL,
     AgencyId VARCHAR(255),
     TransferDuration SMALLINT);
 
@@ -58,7 +58,7 @@ CREATE TABLE GTFS_FREQUENCIES (
     StartTime VARCHAR(255) NOT NULL,
     EndTime VARCHAR(255) NOT NULL,
     HeadwaySecs SMALLINT NOT NULL,
-    ExactTimes SMALLINT);
+    ExactTimes VARCHAR(255));
 
 DROP TABLE IF EXISTS GTFS_LEVELS;
 
@@ -78,7 +78,7 @@ CREATE TABLE GTFS_PATHWAYS (
     Length REAL,
     TraversalTime SMALLINT,
     StairCount SMALLINT,
-    MaxSlope REAL,
+    MaxSlope VARCHAR(255),
     MinWidth REAL,
     SignpostedAs VARCHAR(255),
     ReversedSignpostedAs VARCHAR(255));
@@ -94,8 +94,8 @@ CREATE TABLE GTFS_ROUTES (
     RouteType SMALLINT NOT NULL,
     RouteUrl VARCHAR(255),
     RouteColor SMALLINT,
-    RouteTextColor SMALLINT,
-    RouteSortOrder SMALLINT);
+    RouteTextColor VARCHAR(255),
+    RouteSortOrder VARCHAR(255));
 
 DROP TABLE IF EXISTS GTFS_SHAPES;
 
@@ -117,10 +117,10 @@ CREATE TABLE GTFS_STOPS (
     StopLon REAL,
     ZoneId VARCHAR(255),
     StopUrl VARCHAR(255),
-    LocationType SMALLINT,
+    LocationType VARCHAR(255),
     ParentStation VARCHAR(255),
     StopTimezone VARCHAR(255),
-    WheelchairBoarding SMALLINT,
+    WheelchairBoarding VARCHAR(255),
     LevelId VARCHAR(255),
     PlatformCode VARCHAR(255));
 
@@ -133,8 +133,8 @@ CREATE TABLE GTFS_STOP_TIMES (
     StopId VARCHAR(255),
     StopSequence SMALLINT NOT NULL,
     StopHeadsign VARCHAR(255),
-    PickupType SMALLINT,
-    DropOffType SMALLINT,
+    PickupType VARCHAR(255),
+    DropOffType VARCHAR(255),
     ShapeDistTravelled REAL,
     Timepoint SMALLINT);
 
@@ -143,7 +143,7 @@ DROP TABLE IF EXISTS GTFS_TRANSFERS;
 CREATE TABLE GTFS_TRANSFERS (
     FromStopId VARCHAR(255),
     ToStopId VARCHAR(255),
-    TransferType SMALLINT NOT NULL,
+    TransferType VARCHAR(255) NOT NULL,
     MinTransferTime SMALLINT);
 
 DROP TABLE IF EXISTS GTFS_TRIPS;
@@ -157,5 +157,5 @@ CREATE TABLE GTFS_TRIPS (
     DirectionId SMALLINT,
     BlockId VARCHAR(255),
     ShapeId VARCHAR(255),
-    WheelchairAccessible SMALLINT,
-    BikesAllowed SMALLINT);
+    WheelchairAccessible VARCHAR(255),
+    BikesAllowed VARCHAR(255));

@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Linq;
 using GTFS.Entities;
+using GTFS.Entities.Enumerations;
 
 namespace NextDepartures.Standard.Extensions;
 
@@ -20,6 +21,19 @@ public static class StringExtensions
         string prefix) {
         
         return prefix + baseString;
+    }
+    
+    public static LocationType ToLocationType(this string baseString)
+    {
+        return baseString switch
+        {
+            "0" => LocationType.Stop,
+            "1" => LocationType.Station,
+            "2" => LocationType.EntranceExit,
+            "3" => LocationType.GenericNode,
+            "4" => LocationType.BoardingArea,
+            _ => LocationType.Stop
+        };
     }
     
     public static TimeOfDay ToTimeOfDay(this string baseString)
