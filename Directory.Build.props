@@ -5,7 +5,7 @@
     </PropertyGroup>
     
     <PropertyGroup>
-        <DateTimeLibraryVersion>3.2.1</DateTimeLibraryVersion> <!-- NodaTime -->
+        <DateTimeLibraryVersion>3.2.2</DateTimeLibraryVersion> <!-- NodaTime -->
         <JetBrainsLibraryVersion>2024.3.0</JetBrainsLibraryVersion> <!-- JetBrains.Annotations -->
         <TransitFeedLibraryVersion>3.0.0-pre006</TransitFeedLibraryVersion> <!-- GTFS -->
     </PropertyGroup>
@@ -31,7 +31,7 @@
     
     <PropertyGroup>
         <TestDevelopmentVersion>17.13.0</TestDevelopmentVersion> <!-- Microsoft.NET.Test.Sdk -->
-        <TestFrameworkVersion>3.8.2</TestFrameworkVersion> <!-- MSTest.TestFramework -->
+        <TestFrameworkVersion>3.8.3</TestFrameworkVersion> <!-- MSTest.TestFramework -->
     </PropertyGroup>
     
 </Project>
