@@ -93,9 +93,9 @@ CREATE TABLE GTFS_ROUTES (
     RouteDesc VARCHAR(255),
     RouteType SMALLINT NOT NULL,
     RouteUrl VARCHAR(255),
-    RouteColor SMALLINT,
+    RouteColor VARCHAR(255),
     RouteTextColor VARCHAR(255),
-    RouteSortOrder VARCHAR(255));
+    RouteSortOrder SMALLINT);
 
 DROP TABLE IF EXISTS GTFS_SHAPES;
 
