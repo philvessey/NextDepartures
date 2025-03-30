@@ -156,10 +156,10 @@ public class PostgresStorage : IDataStorage
             Longitude = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetDouble(ordinal: 5) : 0,
             Zone = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
             Url = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
-            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetInt32(ordinal: 8).ToLocationType() : null,
+            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetString(ordinal: 8).ToLocationType() : null,
             ParentStation = !dataReader.IsDBNull(ordinal: 9) ? dataReader.GetString(ordinal: 9) : null,
             Timezone = !dataReader.IsDBNull(ordinal: 10) ? dataReader.GetString(ordinal: 10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetInt32(ordinal: 11).ToString() : null,
+            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetString(ordinal: 11) : null,
             LevelId = !dataReader.IsDBNull(ordinal: 12) ? dataReader.GetString(ordinal: 12) : null,
             PlatformCode = !dataReader.IsDBNull(ordinal: 13) ? dataReader.GetString(ordinal: 13) : null
         };
@@ -177,10 +177,10 @@ public class PostgresStorage : IDataStorage
             Longitude = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetDouble(ordinal: 5) : 0,
             Zone = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
             Url = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
-            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetInt32(ordinal: 8).ToLocationType() : null,
+            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetString(ordinal: 8).ToLocationType() : null,
             ParentStation = !dataReader.IsDBNull(ordinal: 9) ? dataReader.GetString(ordinal: 9) : null,
             Timezone = !dataReader.IsDBNull(ordinal: 10) ? dataReader.GetString(ordinal: 10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetInt32(ordinal: 11).ToString() : null,
+            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetString(ordinal: 11) : null,
             LevelId = !dataReader.IsDBNull(ordinal: 12) ? dataReader.GetString(ordinal: 12) : null,
             PlatformCode = !dataReader.IsDBNull(ordinal: 13) ? dataReader.GetString(ordinal: 13) : null
         };
@@ -501,7 +501,7 @@ public class PostgresStorage : IDataStorage
                                       "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                       "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                              $"where lower(s.stop_id) like '%{id.ToLower()}%' " +
-                                                "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " +
+                                                "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
                                       "order by s.departure_time",
             
             ComparisonType.Starts => "select s.departure_time, " +
@@ -527,7 +527,7 @@ public class PostgresStorage : IDataStorage
                                      "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                      "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                             $"where lower(s.stop_id) like '{id.ToLower()}%' " +
-                                               "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " +
+                                               "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
                                      "order by s.departure_time",
             
             ComparisonType.Ends => "select s.departure_time, " +
@@ -553,7 +553,7 @@ public class PostgresStorage : IDataStorage
                                    "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                    "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                           $"where lower(s.stop_id) like '%{id.ToLower()}' " +
-                                             "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " +
+                                             "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
                                    "order by s.departure_time",
             
             _ => "select s.departure_time, " +
@@ -579,7 +579,7 @@ public class PostgresStorage : IDataStorage
                  "left join gtfs_routes r on (t.route_id = r.route_id) " +
                  "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                         $"where lower(s.stop_id) = '{id.ToLower()}' " +
-                           "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " +
+                           "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
                  "order by s.departure_time"
         };
         
@@ -615,7 +615,7 @@ public class PostgresStorage : IDataStorage
                                       "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                       "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                              $"where lower(s.trip_id) like '%{id.ToLower()}%' " +
-                                                "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " +
+                                                "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
                                       "order by s.departure_time",
             
             ComparisonType.Starts => "select s.departure_time, " +
@@ -641,7 +641,7 @@ public class PostgresStorage : IDataStorage
                                      "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                      "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                             $"where lower(s.trip_id) like '{id.ToLower()}%' " +
-                                               "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " +
+                                               "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
                                      "order by s.departure_time",
             
             ComparisonType.Ends => "select s.departure_time, " +
@@ -667,7 +667,7 @@ public class PostgresStorage : IDataStorage
                                    "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                    "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                           $"where lower(s.trip_id) like '%{id.ToLower()}' " +
-                                             "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " +
+                                             "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
                                    "order by s.departure_time",
             
             _ => "select s.departure_time, " +
@@ -693,7 +693,7 @@ public class PostgresStorage : IDataStorage
                  "left join gtfs_routes r on (t.route_id = r.route_id) " +
                  "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                         $"where lower(s.trip_id) = '{id.ToLower()}' " +
-                           "and coalesce(nullif(s.pickup_type, ''), 0) != 1 " +
+                           "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
                  "order by s.departure_time"
         };
         
@@ -815,31 +815,31 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where coalesce(nullif(stop_lon, ''), 0) >= {minimumLongitude} " +
-                                          $"and coalesce(nullif(stop_lat, ''), 0) >= {minimumLatitude} " +
-                                          $"and coalesce(nullif(stop_lon, ''), 0) <= {maximumLongitude} " +
-                                          $"and coalesce(nullif(stop_lat, ''), 0) <= {maximumLatitude}",
+                                        $"where coalesce(stop_lon, 0) >= {minimumLongitude} " +
+                                          $"and coalesce(stop_lat, 0) >= {minimumLatitude} " +
+                                          $"and coalesce(stop_lon, 0) <= {maximumLongitude} " +
+                                          $"and coalesce(stop_lat, 0) <= {maximumLatitude}",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where coalesce(nullif(stop_lon, ''), 0) >= {minimumLongitude} " +
-                                          $"and coalesce(nullif(stop_lat, ''), 0) >= {minimumLatitude} " +
-                                          $"and coalesce(nullif(stop_lon, ''), 0) <= {maximumLongitude} " +
-                                          $"and coalesce(nullif(stop_lat, ''), 0) <= {maximumLatitude}",
+                                        $"where coalesce(stop_lon, 0) >= {minimumLongitude} " +
+                                          $"and coalesce(stop_lat, 0) >= {minimumLatitude} " +
+                                          $"and coalesce(stop_lon, 0) <= {maximumLongitude} " +
+                                          $"and coalesce(stop_lat, 0) <= {maximumLatitude}",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where coalesce(nullif(stop_lon, ''), 0) >= {minimumLongitude} " +
-                                          $"and coalesce(nullif(stop_lat, ''), 0) >= {minimumLatitude} " +
-                                          $"and coalesce(nullif(stop_lon, ''), 0) <= {maximumLongitude} " +
-                                          $"and coalesce(nullif(stop_lat, ''), 0) <= {maximumLatitude}",
+                                        $"where coalesce(stop_lon, 0) >= {minimumLongitude} " +
+                                          $"and coalesce(stop_lat, 0) >= {minimumLatitude} " +
+                                          $"and coalesce(stop_lon, 0) <= {maximumLongitude} " +
+                                          $"and coalesce(stop_lat, 0) <= {maximumLatitude}",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where coalesce(nullif(stop_lon, ''), 0) >= {minimumLongitude} " +
-                      $"and coalesce(nullif(stop_lat, ''), 0) >= {minimumLatitude} " +
-                      $"and coalesce(nullif(stop_lon, ''), 0) <= {maximumLongitude} " +
-                      $"and coalesce(nullif(stop_lat, ''), 0) <= {maximumLatitude}"
+                    $"where coalesce(stop_lon, 0) >= {minimumLongitude} " +
+                      $"and coalesce(stop_lat, 0) >= {minimumLatitude} " +
+                      $"and coalesce(stop_lon, 0) <= {maximumLongitude} " +
+                      $"and coalesce(stop_lat, 0) <= {maximumLatitude}"
         };
         
         return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
@@ -853,19 +853,19 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where coalesce(nullif(location_type, ''), 0) = {locationType.ToInt32()}",
+                                        $"where coalesce(nullif(location_type, ''), '0') = '{locationType.ToInt32()}'",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where coalesce(nullif(location_type, ''), 0) = {locationType.ToInt32()}",
+                                        $"where coalesce(nullif(location_type, ''), '0') = '{locationType.ToInt32()}'",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where coalesce(nullif(location_type, ''), 0) = {locationType.ToInt32()}",
+                                        $"where coalesce(nullif(location_type, ''), '0') = '{locationType.ToInt32()}'",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where coalesce(nullif(location_type, ''), 0) = {locationType.ToInt32()}"
+                    $"where coalesce(nullif(location_type, ''), '0') = '{locationType.ToInt32()}'"
         };
         
         return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
@@ -1071,19 +1071,19 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where coalesce(nullif(wheelchair_boarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
+                                        $"where coalesce(nullif(wheelchair_boarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where coalesce(nullif(wheelchair_boarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
+                                        $"where coalesce(nullif(wheelchair_boarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where coalesce(nullif(wheelchair_boarding, ''), 0) = {wheelchairBoarding.ToInt32()}",
+                                        $"where coalesce(nullif(wheelchair_boarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where coalesce(nullif(wheelchair_boarding, ''), 0) = {wheelchairBoarding.ToInt32()}"
+                    $"where coalesce(nullif(wheelchair_boarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'"
         };
         
         return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);

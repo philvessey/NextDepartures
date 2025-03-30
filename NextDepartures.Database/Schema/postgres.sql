@@ -38,7 +38,7 @@ create table gtfs_fare_attributes (
     price real not null,
     currency_type character varying(255) not null,
     payment_method smallint not null,
-    transfers smallint not null,
+    transfers character varying(255) not null,
     agency_id character varying(255),
     transfer_duration smallint);
 
@@ -58,7 +58,7 @@ create table gtfs_frequencies (
     start_time character varying(255) not null,
     end_time character varying(255) not null,
     headway_secs smallint not null,
-    exact_times smallint);
+    exact_times character varying(255));
 
 drop table if exists gtfs_levels;
 
@@ -78,7 +78,7 @@ create table gtfs_pathways (
     length real,
     traversal_time smallint,
     stair_count smallint,
-    max_slope real,
+    max_slope character varying(255),
     min_width real,
     signposted_as character varying(255),
     reversed_signposted_as character varying(255));
@@ -94,8 +94,8 @@ create table gtfs_routes (
     route_type smallint not null,
     route_url character varying(255),
     route_color smallint,
-    route_text_color smallint,
-    route_sort_order smallint);
+    route_text_color character varying(255),
+    route_sort_order character varying(255));
 
 drop table if exists gtfs_shapes;
 
@@ -117,10 +117,10 @@ create table gtfs_stops (
     stop_lon real,
     zone_id character varying(255),
     stop_url character varying(255),
-    location_type smallint,
+    location_type character varying(255),
     parent_station character varying(255),
     stop_timezone character varying(255),
-    wheelchair_boarding smallint,
+    wheelchair_boarding character varying(255),
     level_id character varying(255),
     platform_code character varying(255));
 
@@ -133,8 +133,8 @@ create table gtfs_stop_times (
     stop_id character varying(255),
     stop_sequence smallint not null,
     stop_headsign character varying(255),
-    pickup_type smallint,
-    drop_off_type smallint,
+    pickup_type character varying(255),
+    drop_off_type character varying(255),
     shape_dist_travelled real,
     timepoint smallint);
 
@@ -143,7 +143,7 @@ drop table if exists gtfs_transfers;
 create table gtfs_transfers (
     from_stop_id character varying(255),
     to_stop_id character varying(255),
-    transfer_type smallint not null,
+    transfer_type character varying(255) not null,
     min_transfer_time smallint);
 
 drop table if exists gtfs_trips;
@@ -157,5 +157,5 @@ create table gtfs_trips (
     direction_id smallint,
     block_id character varying(255),
     shape_id character varying(255),
-    wheelchair_accessible smallint,
-    bikes_allowed smallint);
+    wheelchair_accessible character varying(255),
+    bikes_allowed character varying(255));
