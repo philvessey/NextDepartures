@@ -17,10 +17,10 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Aspire.Microsoft.Data.SqlClient" Version="$(SQLServer-Aspire)" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(ExtensionsDependencyVersion)" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(ExtensionsLoggingVersion)" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="$(ExtensionsOptionsVersion)" />
+        <PackageReference Include="Aspire.Microsoft.Data.SqlClient" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+        <PackageReference Include="Microsoft.Extensions.Options" />
     </ItemGroup>
     
     <ItemGroup>

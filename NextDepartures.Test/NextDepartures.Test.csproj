@@ -13,9 +13,9 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestDevelopmentVersion)" />
-        <PackageReference Include="MSTest.TestAdapter" Version="$(TestFrameworkVersion)" />
-        <PackageReference Include="MSTest.TestFramework" Version="$(TestFrameworkVersion)" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="MSTest.TestAdapter" />
+        <PackageReference Include="MSTest.TestFramework" />
     </ItemGroup>
     
     <ItemGroup>

@@ -17,9 +17,9 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="GTFS" Version="$(TransitFeedLibraryVersion)" />
-        <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsLibraryVersion)" />
-        <PackageReference Include="NodaTime" Version="$(DateTimeLibraryVersion)" />
+        <PackageReference Include="GTFS" />
+        <PackageReference Include="JetBrains.Annotations" />
+        <PackageReference Include="NodaTime" />
     </ItemGroup>
     
     <ItemGroup>

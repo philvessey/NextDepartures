@@ -17,7 +17,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Npgsql" Version="$(PgSQL)" />
+        <PackageReference Include="Npgsql" />
     </ItemGroup>
     
     <ItemGroup>
