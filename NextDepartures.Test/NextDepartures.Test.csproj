@@ -9,13 +9,13 @@
         <Product>NextDepartures.Test</Product>
         <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
         <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-        <Version>3.6.7</Version>
+        <Version>3.6.8</Version>
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestDevelopmentVersion)" />
-        <PackageReference Include="MSTest.TestAdapter" Version="$(TestFrameworkVersion)" />
-        <PackageReference Include="MSTest.TestFramework" Version="$(TestFrameworkVersion)" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="MSTest.TestAdapter" />
+        <PackageReference Include="MSTest.TestFramework" />
     </ItemGroup>
     
     <ItemGroup>

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GTFS.Entities;
+using NextDepartures.Standard.Exceptions;
 using NextDepartures.Standard.Types;
 
 namespace NextDepartures.Standard;
@@ -36,9 +38,11 @@ public partial class Feed
                 .OrderBy(keySelector: a => a.Name)
                 .ToList();
         }
-        catch
+        catch (Exception e)
         {
-            return [];
+            throw new AgencyException(
+                message: "An error occurred while getting agencies by fare url.",
+                innerException: e);
         }
     }
 }

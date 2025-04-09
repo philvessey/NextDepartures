@@ -13,11 +13,11 @@
         <Product>NextDepartures.Storage.Postgres.Aspire</Product>
         <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
         <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-        <Version>3.6.7</Version>
+        <Version>3.6.8</Version>
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql" Version="$(PgSQL-Aspire)" />
+        <PackageReference Include="Aspire.Npgsql" />
     </ItemGroup>
     
     <ItemGroup>

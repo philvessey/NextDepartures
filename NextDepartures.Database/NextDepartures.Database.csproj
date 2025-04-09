@@ -9,15 +9,15 @@
         <Product>NextDepartures.Database</Product>
         <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
         <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-        <Version>3.6.7</Version>
+        <Version>3.6.8</Version>
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="GTFS" Version="$(TransitFeedLibraryVersion)" />
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="$(SQLite)" />
-        <PackageReference Include="Microsoft.Data.SqlClient" Version="$(SQLServer)" />
-        <PackageReference Include="MySqlConnector" Version="$(MySQL)" />
-        <PackageReference Include="Npgsql" Version="$(PgSQL)" />
+        <PackageReference Include="GTFS" />
+        <PackageReference Include="Microsoft.Data.Sqlite" />
+        <PackageReference Include="Microsoft.Data.SqlClient" />
+        <PackageReference Include="MySqlConnector" />
+        <PackageReference Include="Npgsql" />
     </ItemGroup>
     
     <ItemGroup>
