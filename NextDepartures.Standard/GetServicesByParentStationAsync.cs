@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GTFS.Entities;
+using NextDepartures.Standard.Exceptions;
 using NextDepartures.Standard.Extensions;
 using NextDepartures.Standard.Models;
 using NextDepartures.Standard.Types;
@@ -26,7 +27,7 @@ public partial class Feed
         int results = 0) {
         
         if (string.IsNullOrEmpty(value: id))
-            return [];
+            throw new ServiceException(message: "Invalid id.");
         
         try
         {
@@ -103,9 +104,11 @@ public partial class Feed
                         type: "station"))
                 .ToList();
         }
-        catch
+        catch (Exception e)
         {
-            return [];
+            throw new ServiceException(
+                message: "An error occurred while retrieving services by parent station.",
+                innerException: e);
         }
     }
     
@@ -128,13 +131,13 @@ public partial class Feed
         int results = 0) {
         
         if (string.IsNullOrEmpty(value: id))
-            return [];
+            throw new ServiceException(message: "Invalid id.");
         
         if (target == DateTime.MinValue || target == DateTime.MaxValue)
-            return [];
+            throw new ServiceException(message: "Invalid target.");
         
         if (offset == TimeSpan.MinValue || offset == TimeSpan.MaxValue)
-            return [];
+            throw new ServiceException(message: "Invalid offset.");
         
         try
         {
@@ -211,9 +214,11 @@ public partial class Feed
                         type: "station"))
                 .ToList();
         }
-        catch
+        catch (Exception e)
         {
-            return [];
+            throw new ServiceException(
+                message: "An error occurred while retrieving services by parent station.",
+                innerException: e);
         }
     }
     
@@ -232,7 +237,7 @@ public partial class Feed
         int results = 0) {
         
         if (ids == null || ids.Length == 0)
-            return [];
+            throw new ServiceException(message: "Invalid ids.");
         
         try
         {
@@ -312,9 +317,11 @@ public partial class Feed
                         type: "station"))
                 .ToList();
         }
-        catch
+        catch (Exception e)
         {
-            return [];
+            throw new ServiceException(
+                message: "An error occurred while retrieving services by parent station.",
+                innerException: e);
         }
     }
     
@@ -337,13 +344,13 @@ public partial class Feed
         int results = 0) {
         
         if (ids == null || ids.Length == 0)
-            return [];
+            throw new ServiceException(message: "Invalid ids.");
         
         if (target == DateTime.MinValue || target == DateTime.MaxValue)
-            return [];
+            throw new ServiceException(message: "Invalid target.");
         
         if (offset == TimeSpan.MinValue || offset == TimeSpan.MaxValue)
-            return [];
+            throw new ServiceException(message: "Invalid offset.");
         
         try
         {
@@ -423,9 +430,11 @@ public partial class Feed
                         type: "station"))
                 .ToList();
         }
-        catch
+        catch (Exception e)
         {
-            return [];
+            throw new ServiceException(
+                message: "An error occurred while retrieving services by parent station.",
+                innerException: e);
         }
     }
     
@@ -444,7 +453,7 @@ public partial class Feed
         int results = 0) {
         
         if (stops == null || stops.Count == 0)
-            return [];
+            throw new ServiceException(message: "Invalid stops.");
         
         try
         {
@@ -524,9 +533,11 @@ public partial class Feed
                         type: "station"))
                 .ToList();
         }
-        catch
+        catch (Exception e)
         {
-            return [];
+            throw new ServiceException(
+                message: "An error occurred while retrieving services by parent station.",
+                innerException: e);
         }
     }
     
@@ -549,13 +560,13 @@ public partial class Feed
         int results = 0) {
         
         if (stops == null || stops.Count == 0)
-            return [];
+            throw new ServiceException(message: "Invalid stops.");
         
         if (target == DateTime.MinValue || target == DateTime.MaxValue)
-            return [];
+            throw new ServiceException(message: "Invalid target.");
         
         if (offset == TimeSpan.MinValue || offset == TimeSpan.MaxValue)
-            return [];
+            throw new ServiceException(message: "Invalid offset.");
         
         try
         {
@@ -635,9 +646,11 @@ public partial class Feed
                         type: "station"))
                 .ToList();
         }
-        catch
+        catch (Exception e)
         {
-            return [];
+            throw new ServiceException(
+                message: "An error occurred while retrieving services by parent station.",
+                innerException: e);
         }
     }
 }
