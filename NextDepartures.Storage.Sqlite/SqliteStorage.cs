@@ -94,7 +94,7 @@ public class SqliteStorage : IDataStorage
         {
             ServiceId = dataReader.GetString(ordinal: 0),
             Date = dataReader.GetDateTime(ordinal: 1),
-            ExceptionType = dataReader.GetInt32(ordinal: 2).ToExceptionType()
+            ExceptionType = dataReader.GetInt16(ordinal: 2).ToExceptionType()
         };
     }
     
@@ -117,13 +117,13 @@ public class SqliteStorage : IDataStorage
             AgencyId = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
             RouteShortName = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
             RouteLongName = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetString(ordinal: 8) : null,
-            Monday = dataReader.GetBoolean(ordinal: 9),
-            Tuesday = dataReader.GetBoolean(ordinal: 10),
-            Wednesday = dataReader.GetBoolean(ordinal: 11),
-            Thursday = dataReader.GetBoolean(ordinal: 12),
-            Friday = dataReader.GetBoolean(ordinal: 13),
-            Saturday = dataReader.GetBoolean(ordinal: 14),
-            Sunday = dataReader.GetBoolean(ordinal: 15),
+            Monday = dataReader.GetInt16(ordinal: 9).ToBool(),
+            Tuesday = dataReader.GetInt16(ordinal: 10).ToBool(),
+            Wednesday = dataReader.GetInt16(ordinal: 11).ToBool(),
+            Thursday = dataReader.GetInt16(ordinal: 12).ToBool(),
+            Friday = dataReader.GetInt16(ordinal: 13).ToBool(),
+            Saturday = dataReader.GetInt16(ordinal: 14).ToBool(),
+            Sunday = dataReader.GetInt16(ordinal: 15).ToBool(),
             StartDate = dataReader.GetDateTime(ordinal: 16),
             EndDate = dataReader.GetDateTime(ordinal: 17)
         };
