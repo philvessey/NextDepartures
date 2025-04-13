@@ -109,7 +109,7 @@ public class SqlServerStorage : IDataStorage
         {
             ServiceId = dataReader.GetString(i: 0),
             Date = dataReader.GetDateTime(i: 1),
-            ExceptionType = dataReader.GetInt32(i: 2).ToExceptionType()
+            ExceptionType = dataReader.GetInt16(i: 2).ToExceptionType()
         };
     }
     
@@ -132,13 +132,13 @@ public class SqlServerStorage : IDataStorage
             AgencyId = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
             RouteShortName = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null,
             RouteLongName = !dataReader.IsDBNull(i: 8) ? dataReader.GetString(i: 8) : null,
-            Monday = dataReader.GetBoolean(i: 9),
-            Tuesday = dataReader.GetBoolean(i: 10),
-            Wednesday = dataReader.GetBoolean(i: 11),
-            Thursday = dataReader.GetBoolean(i: 12),
-            Friday = dataReader.GetBoolean(i: 13),
-            Saturday = dataReader.GetBoolean(i: 14),
-            Sunday = dataReader.GetBoolean(i: 15),
+            Monday = dataReader.GetInt16(i: 9).ToBool(),
+            Tuesday = dataReader.GetInt16(i: 10).ToBool(),
+            Wednesday = dataReader.GetInt16(i: 11).ToBool(),
+            Thursday = dataReader.GetInt16(i: 12).ToBool(),
+            Friday = dataReader.GetInt16(i: 13).ToBool(),
+            Saturday = dataReader.GetInt16(i: 14).ToBool(),
+            Sunday = dataReader.GetInt16(i: 15).ToBool(),
             StartDate = dataReader.GetDateTime(i: 16),
             EndDate = dataReader.GetDateTime(i: 17)
         };

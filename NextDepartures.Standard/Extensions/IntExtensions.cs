@@ -4,12 +4,17 @@ namespace NextDepartures.Standard.Extensions;
 
 public static class IntExtensions
 {
-    public static ExceptionType ToExceptionType(this int baseInt)
+    public static bool ToBool(this short baseInt)
+    {
+        return baseInt == 1;
+    }
+    
+    public static ExceptionType ToExceptionType(this short baseInt)
     {
         return baseInt == 0 ? ExceptionType.Added : ExceptionType.Removed;
     }
     
-    public static LocationType ToLocationType(this int baseInt)
+    public static LocationType ToLocationType(this short baseInt)
     {
         return baseInt switch
         {
