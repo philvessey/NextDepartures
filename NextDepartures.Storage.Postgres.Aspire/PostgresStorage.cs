@@ -93,7 +93,7 @@ public class PostgresStorage : IDataStorage
         return new Agency
         {
             Id = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0) : null,
-            Name = dataReader.GetString(ordinal: 1).ToTitleCase(),
+            Name = dataReader.GetString(ordinal: 1),
             URL = dataReader.GetString(ordinal: 2),
             Timezone = dataReader.GetString(ordinal: 3),
             LanguageCode = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetString(ordinal: 4) : null,
@@ -171,7 +171,7 @@ public class PostgresStorage : IDataStorage
         {
             Id = dataReader.GetString(ordinal: 0),
             Code = !dataReader.IsDBNull(ordinal: 1) ? dataReader.GetString(ordinal: 1) : null,
-            Name = !dataReader.IsDBNull(ordinal: 2) ? dataReader.GetString(ordinal: 2).ToTitleCase() : null,
+            Name = !dataReader.IsDBNull(ordinal: 2) ? dataReader.GetString(ordinal: 2) : null,
             Description = !dataReader.IsDBNull(ordinal: 3) ? dataReader.GetString(ordinal: 3) : null,
             Latitude = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetDouble(ordinal: 4) : 0,
             Longitude = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetDouble(ordinal: 5) : 0,
@@ -813,27 +813,6 @@ public class PostgresStorage : IDataStorage
         
         var sql = comparison switch
         {
-            ComparisonType.Exact => "select * " +
-                                    "from gtfs_stops " +
-                                        $"where coalesce(stop_lon, 0) >= {minimumLongitude} " +
-                                          $"and coalesce(stop_lat, 0) >= {minimumLatitude} " +
-                                          $"and coalesce(stop_lon, 0) <= {maximumLongitude} " +
-                                          $"and coalesce(stop_lat, 0) <= {maximumLatitude}",
-            
-            ComparisonType.Starts => "select * " +
-                                     "from gtfs_stops " +
-                                        $"where coalesce(stop_lon, 0) >= {minimumLongitude} " +
-                                          $"and coalesce(stop_lat, 0) >= {minimumLatitude} " +
-                                          $"and coalesce(stop_lon, 0) <= {maximumLongitude} " +
-                                          $"and coalesce(stop_lat, 0) <= {maximumLatitude}",
-            
-            ComparisonType.Ends => "select * " +
-                                   "from gtfs_stops " +
-                                        $"where coalesce(stop_lon, 0) >= {minimumLongitude} " +
-                                          $"and coalesce(stop_lat, 0) >= {minimumLatitude} " +
-                                          $"and coalesce(stop_lon, 0) <= {maximumLongitude} " +
-                                          $"and coalesce(stop_lat, 0) <= {maximumLatitude}",
-            
             _ => "select * " +
                  "from gtfs_stops " +
                     $"where coalesce(stop_lon, 0) >= {minimumLongitude} " +
@@ -851,18 +830,6 @@ public class PostgresStorage : IDataStorage
         
         var sql = comparison switch
         {
-            ComparisonType.Exact => "select * " +
-                                    "from gtfs_stops " +
-                                        $"where coalesce(nullif(location_type, ''), '0') = '{locationType.ToInt32()}'",
-            
-            ComparisonType.Starts => "select * " +
-                                     "from gtfs_stops " +
-                                        $"where coalesce(nullif(location_type, ''), '0') = '{locationType.ToInt32()}'",
-            
-            ComparisonType.Ends => "select * " +
-                                   "from gtfs_stops " +
-                                        $"where coalesce(nullif(location_type, ''), '0') = '{locationType.ToInt32()}'",
-            
             _ => "select * " +
                  "from gtfs_stops " +
                     $"where coalesce(nullif(location_type, ''), '0') = '{locationType.ToInt32()}'"
@@ -1069,18 +1036,6 @@ public class PostgresStorage : IDataStorage
         
         var sql = comparison switch
         {
-            ComparisonType.Exact => "select * " +
-                                    "from gtfs_stops " +
-                                        $"where coalesce(nullif(wheelchair_boarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
-            
-            ComparisonType.Starts => "select * " +
-                                     "from gtfs_stops " +
-                                        $"where coalesce(nullif(wheelchair_boarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
-            
-            ComparisonType.Ends => "select * " +
-                                   "from gtfs_stops " +
-                                        $"where coalesce(nullif(wheelchair_boarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
-            
             _ => "select * " +
                  "from gtfs_stops " +
                     $"where coalesce(nullif(wheelchair_boarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'"

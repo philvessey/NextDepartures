@@ -32,7 +32,7 @@ public class Services
         
         Assert.IsTrue(condition: resultsByParentStation.Count > 0);
     }
-
+    
     [TestMethod]
     public async Task GetServicesByStopAsync()
     {
@@ -54,7 +54,7 @@ public class Services
         
         Assert.IsTrue(condition: resultsByStop.Count > 0);
     }
-
+    
     [TestMethod]
     public async Task GetServicesByTripAsync()
     {

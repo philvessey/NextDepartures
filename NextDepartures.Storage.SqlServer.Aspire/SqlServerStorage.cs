@@ -93,7 +93,7 @@ public class SqlServerStorage : IDataStorage
         return new Agency
         {
             Id = !dataReader.IsDBNull(i: 0) ? dataReader.GetString(i: 0) : null,
-            Name = dataReader.GetString(i: 1).ToTitleCase(),
+            Name = dataReader.GetString(i: 1),
             URL = dataReader.GetString(i: 2),
             Timezone = dataReader.GetString(i: 3),
             LanguageCode = !dataReader.IsDBNull(i: 4) ? dataReader.GetString(i: 4) : null,
@@ -171,7 +171,7 @@ public class SqlServerStorage : IDataStorage
         {
             Id = dataReader.GetString(i: 0),
             Code = !dataReader.IsDBNull(i: 1) ? dataReader.GetString(i: 1) : null,
-            Name = !dataReader.IsDBNull(i: 2) ? dataReader.GetString(i: 2).ToTitleCase() : null,
+            Name = !dataReader.IsDBNull(i: 2) ? dataReader.GetString(i: 2) : null,
             Description = !dataReader.IsDBNull(i: 3) ? dataReader.GetString(i: 3) : null,
             Latitude = !dataReader.IsDBNull(i: 4) ? dataReader.GetDouble(i: 4) : 0,
             Longitude = !dataReader.IsDBNull(i: 5) ? dataReader.GetDouble(i: 5) : 0,
@@ -813,27 +813,6 @@ public class SqlServerStorage : IDataStorage
         
         var sql = comparison switch
         {
-            ComparisonType.Exact => "SELECT * " +
-                                    "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(StopLon, 0) >= {minimumLongitude} " +
-                                          $"AND COALESCE(StopLat, 0) >= {minimumLatitude} " +
-                                          $"AND COALESCE(StopLon, 0) <= {maximumLongitude} " +
-                                          $"AND COALESCE(StopLat, 0) <= {maximumLatitude}",
-            
-            ComparisonType.Starts => "SELECT * " +
-                                     "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(StopLon, 0) >= {minimumLongitude} " +
-                                          $"AND COALESCE(StopLat, 0) >= {minimumLatitude} " +
-                                          $"AND COALESCE(StopLon, 0) <= {maximumLongitude} " +
-                                          $"AND COALESCE(StopLat, 0) <= {maximumLatitude}",
-            
-            ComparisonType.Ends => "SELECT * " +
-                                   "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(StopLon, 0) >= {minimumLongitude} " +
-                                          $"AND COALESCE(StopLat, 0) >= {minimumLatitude} " +
-                                          $"AND COALESCE(StopLon, 0) <= {maximumLongitude} " +
-                                          $"AND COALESCE(StopLat, 0) <= {maximumLatitude}",
-            
             _ => "SELECT * " +
                  "FROM GTFS_STOPS " +
                     $"WHERE COALESCE(StopLon, 0) >= {minimumLongitude} " +
@@ -851,18 +830,6 @@ public class SqlServerStorage : IDataStorage
         
         var sql = comparison switch
         {
-            ComparisonType.Exact => "SELECT * " +
-                                    "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(LocationType, ''), '0') = '{locationType.ToInt32()}'",
-            
-            ComparisonType.Starts => "SELECT * " +
-                                     "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(LocationType, ''), '0') = '{locationType.ToInt32()}'",
-            
-            ComparisonType.Ends => "SELECT * " +
-                                   "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(LocationType, ''), '0') = '{locationType.ToInt32()}'",
-            
             _ => "SELECT * " +
                  "FROM GTFS_STOPS " +
                     $"WHERE COALESCE(NULLIF(LocationType, ''), '0') = '{locationType.ToInt32()}'"
@@ -1068,18 +1035,6 @@ public class SqlServerStorage : IDataStorage
         
         var sql = comparison switch
         {
-            ComparisonType.Exact => "SELECT * " +
-                                    "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
-            
-            ComparisonType.Starts => "SELECT * " +
-                                     "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
-            
-            ComparisonType.Ends => "SELECT * " +
-                                   "FROM GTFS_STOPS " +
-                                        $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'",
-            
             _ => "SELECT * " +
                  "FROM GTFS_STOPS " +
                     $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'"

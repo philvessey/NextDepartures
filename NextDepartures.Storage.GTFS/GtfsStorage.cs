@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using GTFS;
 using GTFS.Entities;
 using GTFS.Entities.Enumerations;
-using NextDepartures.Standard.Extensions;
 using NextDepartures.Standard.Models;
 using NextDepartures.Standard.Storage;
 using NextDepartures.Standard.Types;
@@ -56,7 +55,7 @@ public class GtfsStorage : IDataStorage
             .Select(selector: a => new Agency
             {
                 Id = a.Id?.TrimDoubleQuotes(),
-                Name = a.Name.TrimDoubleQuotes().ToTitleCase(),
+                Name = a.Name.TrimDoubleQuotes(),
                 URL = a.URL.TrimDoubleQuotes(),
                 Timezone = a.Timezone.TrimDoubleQuotes(),
                 LanguageCode = a.LanguageCode?.TrimDoubleQuotes(),
@@ -148,7 +147,7 @@ public class GtfsStorage : IDataStorage
             {
                 Id = s.Id.TrimDoubleQuotes(),
                 Code = s.Code?.TrimDoubleQuotes(),
-                Name = s.Name?.TrimDoubleQuotes().ToTitleCase(),
+                Name = s.Name?.TrimDoubleQuotes(),
                 Description = s.Description?.TrimDoubleQuotes(),
                 Latitude = s.Latitude,
                 Longitude = s.Longitude,

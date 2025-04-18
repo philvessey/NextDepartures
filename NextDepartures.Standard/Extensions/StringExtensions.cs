@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using GTFS.Entities;
 using GTFS.Entities.Enumerations;
 
@@ -49,10 +48,5 @@ public static class StringExtensions
             Minutes = value[1],
             Seconds = value[2]
         };
-    }
-    
-    public static string ToTitleCase(this string baseString)
-    {
-        return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(str: baseString.ToLower());
     }
 }

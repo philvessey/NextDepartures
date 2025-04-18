@@ -141,13 +141,13 @@ public partial class Feed
         return new Service
         {
             AgencyId = agencyId,
-            AgencyName = agencyName.ToTitleCase(),
+            AgencyName = agencyName,
             DepartureDateTime = departure.DepartureDateTime,
             DepartureTime = departure.DepartureTime,
-            DestinationName = destinationName.ToTitleCase(),
-            RouteName = routeName.ToTitleCase(),
+            DestinationName = destinationName,
+            RouteName = routeName,
             StopId = departure.StopId,
-            StopName = stopName.ToTitleCase(),
+            StopName = stopName,
             TripId = departure.TripId,
             Type = type
         };
