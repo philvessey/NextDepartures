@@ -3,7 +3,7 @@
     <PropertyGroup>
         <Authors>Phil Vessey</Authors>
         <Copyright>Copyright © 2025 Phil Vessey and Contributors</Copyright>
-        <Description>NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, or in a
+        <Description>NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, or in a 
             database such as MySQL, PostgreSQL, SQLite or SQL Server. The library will work with any well-formed GTFS data set.</Description>
         <PackageId>NextDepartures.Standard</PackageId>
         <PackageLicense>MIT</PackageLicense>
@@ -13,7 +13,7 @@
         <Product>NextDepartures.Standard</Product>
         <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
         <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-        <Version>3.6.9</Version>
+        <Version>3.7.0</Version>
     </PropertyGroup>
     
     <ItemGroup>
