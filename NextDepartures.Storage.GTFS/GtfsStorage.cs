@@ -809,24 +809,6 @@ public class GtfsStorage : IDataStorage
         
         Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => s =>
-                s.Longitude >= minimumLongitude &&
-                s.Latitude >= minimumLatitude &&
-                s.Longitude <= maximumLongitude &&
-                s.Latitude <= maximumLatitude,
-            
-            ComparisonType.Starts => s =>
-                s.Longitude >= minimumLongitude &&
-                s.Latitude >= minimumLatitude &&
-                s.Longitude <= maximumLongitude &&
-                s.Latitude <= maximumLatitude,
-            
-            ComparisonType.Ends => s =>
-                s.Longitude >= minimumLongitude &&
-                s.Latitude >= minimumLatitude &&
-                s.Longitude <= maximumLongitude &&
-                s.Latitude <= maximumLatitude,
-            
             _ => s =>
                 s.Longitude >= minimumLongitude &&
                 s.Latitude >= minimumLatitude &&
@@ -843,18 +825,6 @@ public class GtfsStorage : IDataStorage
         
         Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => s =>
-                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop)
-                    .Equals(other: locationType),
-            
-            ComparisonType.Starts => s =>
-                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop)
-                    .Equals(other: locationType),
-            
-            ComparisonType.Ends => s =>
-                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop)
-                    .Equals(other: locationType),
-            
             _ => s =>
                 (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop)
                     .Equals(other: locationType)
@@ -1217,24 +1187,6 @@ public class GtfsStorage : IDataStorage
         
         Func<Stop, bool> condition = comparison switch
         {
-            ComparisonType.Exact => s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes()
-                    .Equals(
-                        value: wheelchairBoarding.ToString(format: "D"),
-                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
-            
-            ComparisonType.Starts => s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes()
-                    .Equals(
-                        value: wheelchairBoarding.ToString(format: "D"),
-                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
-            
-            ComparisonType.Ends => s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes()
-                    .Equals(
-                        value: wheelchairBoarding.ToString(format: "D"),
-                        comparisonType: StringComparison.CurrentCultureIgnoreCase),
-            
             _ => s =>
                 (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes()
                     .Equals(
