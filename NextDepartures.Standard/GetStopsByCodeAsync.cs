@@ -31,11 +31,13 @@ public partial class Feed
             if (results > 0)
                 return stopsFromStorage
                     .OrderBy(keySelector: s => s.Name)
+                    .ThenBy(keySelector: s => s.Id)
                     .Take(count: results)
                     .ToList();
             
             return stopsFromStorage
                 .OrderBy(keySelector: s => s.Name)
+                .ThenBy(keySelector: s => s.Id)
                 .ToList();
         }
         catch (Exception e)
