@@ -81,7 +81,7 @@ public class GtfsStorage : IDataStorage
     private List<Departure> GetDeparturesFromFeedByCondition(Func<StopTime, bool> condition)
     {
         return _feed.StopTimes
-            .Where(predicate: s => condition(s) && (s.PickupType != null && s.PickupType.ToString() != string.Empty ? s.PickupType : PickupType.Regular) != PickupType.NoPickup)
+            .Where(predicate: s => condition(s) && (s.PickupType is not null && s.PickupType.ToString() != string.Empty ? s.PickupType : PickupType.Regular) != PickupType.NoPickup)
             .Join(inner: _feed.Trips, s => s.TripId.TrimDoubleQuotes(), t => t.Id.TrimDoubleQuotes(), (s, t) => (s, t))
             .Join(inner: _feed.Routes, e => e.t.RouteId.TrimDoubleQuotes(), r => r.Id.TrimDoubleQuotes(), (e, r) => (e.s, e.t, r))
             .Join(inner: _feed.Calendars, e => e.t.ServiceId.TrimDoubleQuotes(), c => c.ServiceId.TrimDoubleQuotes(), (e, c) => (e.s, e.t, e.r, c))
@@ -826,7 +826,7 @@ public class GtfsStorage : IDataStorage
         Func<Stop, bool> condition = comparison switch
         {
             _ => s =>
-                (s.LocationType != null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop)
+                (s.LocationType is not null && s.LocationType.ToString() != string.Empty ? s.LocationType : LocationType.Stop)
                     .Equals(other: locationType)
         };
         
@@ -1188,7 +1188,7 @@ public class GtfsStorage : IDataStorage
         Func<Stop, bool> condition = comparison switch
         {
             _ => s =>
-                (s.WheelchairBoarding != null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes()
+                (s.WheelchairBoarding is not null && s.WheelchairBoarding.ToString() != string.Empty ? s.WheelchairBoarding : "0").TrimDoubleQuotes()
                     .Equals(
                         value: wheelchairBoarding.ToString(format: "D"),
                         comparisonType: StringComparison.CurrentCultureIgnoreCase)

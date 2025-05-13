@@ -8,7 +8,7 @@ public static class StringUtils
         string fallback,
         params Func<string>[] steps) {
         
-        if (steps == null || steps.Length == 0)
+        if (steps is null || steps.Length == 0)
             return fallback;
         
         foreach (var t in steps)

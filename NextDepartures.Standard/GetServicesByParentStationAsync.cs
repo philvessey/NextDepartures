@@ -236,7 +236,7 @@ public partial class Feed
         TimeSpan tolerance = default,
         int results = 0) {
         
-        if (ids == null || ids.Length == 0)
+        if (ids is null || ids.Length == 0)
             throw new ServiceException(message: "Invalid ids.");
         
         try
@@ -343,7 +343,7 @@ public partial class Feed
         TimeSpan tolerance = default,
         int results = 0) {
         
-        if (ids == null || ids.Length == 0)
+        if (ids is null || ids.Length == 0)
             throw new ServiceException(message: "Invalid ids.");
         
         if (target == DateTime.MinValue || target == DateTime.MaxValue)
@@ -452,7 +452,7 @@ public partial class Feed
         TimeSpan tolerance = default,
         int results = 0) {
         
-        if (stops == null || stops.Count == 0)
+        if (stops is null || stops.Count == 0)
             throw new ServiceException(message: "Invalid stops.");
         
         try
@@ -559,7 +559,7 @@ public partial class Feed
         TimeSpan tolerance = default,
         int results = 0) {
         
-        if (stops == null || stops.Count == 0)
+        if (stops is null || stops.Count == 0)
             throw new ServiceException(message: "Invalid stops.");
         
         if (target == DateTime.MinValue || target == DateTime.MaxValue)

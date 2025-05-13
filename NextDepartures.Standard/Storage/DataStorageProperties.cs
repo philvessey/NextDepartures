@@ -16,6 +16,6 @@ public class DataStorageProperties
     {
         DoesSupportParallelPreload = dataStorage
             .GetType()
-            .GetCustomAttribute<SupportsParallelPreloadAttribute>() != null;
+            .GetCustomAttribute<SupportsParallelPreloadAttribute>() is not null;
     }
 }

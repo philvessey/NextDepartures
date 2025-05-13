@@ -51,7 +51,7 @@ public class MySqlStorage : IDataStorage
         
         List<T> results = [];
         
-        await using var connection = _dataSource != null ? _dataSource.CreateConnection() : new MySqlConnection(connectionString: _connectionString);
+        await using var connection = _dataSource is not null ? _dataSource.CreateConnection() : new MySqlConnection(connectionString: _connectionString);
         await connection.OpenAsync();
         
         MySqlCommand command = new();

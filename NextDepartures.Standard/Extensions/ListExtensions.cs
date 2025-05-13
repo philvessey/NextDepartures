@@ -9,7 +9,7 @@ public static class ListExtensions
         this List<T> baseList,
         T item) where T : class {
         
-        if (item != null)
+        if (item is not null)
             baseList.Add(item: item);
     }
     
