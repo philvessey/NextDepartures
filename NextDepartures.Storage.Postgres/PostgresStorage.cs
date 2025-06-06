@@ -110,7 +110,7 @@ public class PostgresStorage : IDataStorage
             },
             
             StopId = !dataReader.IsDBNull(ordinal: 1) ? dataReader.GetString(ordinal: 1) : null,
-            StopSequence = dataReader.GetInt32(ordinal: 2),
+            StopSequence = dataReader.GetInt16(ordinal: 2),
             TripId = dataReader.GetString(ordinal: 3),
             ServiceId = dataReader.GetString(ordinal: 4),
             TripHeadsign = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetString(ordinal: 5) : null,

@@ -110,7 +110,7 @@ public class SqlServerStorage : IDataStorage
             },
             
             StopId = !dataReader.IsDBNull(i: 1) ? dataReader.GetString(i: 1) : null,
-            StopSequence = dataReader.GetInt32(i: 2),
+            StopSequence = dataReader.GetInt16(i: 2),
             TripId = dataReader.GetString(i: 3),
             ServiceId = dataReader.GetString(i: 4),
             TripHeadsign = !dataReader.IsDBNull(i: 5) ? dataReader.GetString(i: 5) : null,
