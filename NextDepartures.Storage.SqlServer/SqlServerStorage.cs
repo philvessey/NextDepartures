@@ -110,22 +110,23 @@ public class SqlServerStorage : IDataStorage
             },
             
             StopId = !dataReader.IsDBNull(i: 1) ? dataReader.GetString(i: 1) : null,
-            TripId = dataReader.GetString(i: 2),
-            ServiceId = dataReader.GetString(i: 3),
-            TripHeadsign = !dataReader.IsDBNull(i: 4) ? dataReader.GetString(i: 4) : null,
-            TripShortName = !dataReader.IsDBNull(i: 5) ? dataReader.GetString(i: 5) : null,
-            AgencyId = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
-            RouteShortName = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null,
-            RouteLongName = !dataReader.IsDBNull(i: 8) ? dataReader.GetString(i: 8) : null,
-            Monday = dataReader.GetInt16(i: 9).ToBool(),
-            Tuesday = dataReader.GetInt16(i: 10).ToBool(),
-            Wednesday = dataReader.GetInt16(i: 11).ToBool(),
-            Thursday = dataReader.GetInt16(i: 12).ToBool(),
-            Friday = dataReader.GetInt16(i: 13).ToBool(),
-            Saturday = dataReader.GetInt16(i: 14).ToBool(),
-            Sunday = dataReader.GetInt16(i: 15).ToBool(),
-            StartDate = dataReader.GetDateTime(i: 16),
-            EndDate = dataReader.GetDateTime(i: 17)
+            StopSequence = dataReader.GetInt16(i: 2),
+            TripId = dataReader.GetString(i: 3),
+            ServiceId = dataReader.GetString(i: 4),
+            TripHeadsign = !dataReader.IsDBNull(i: 5) ? dataReader.GetString(i: 5) : null,
+            TripShortName = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
+            AgencyId = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null,
+            RouteShortName = !dataReader.IsDBNull(i: 8) ? dataReader.GetString(i: 8) : null,
+            RouteLongName = !dataReader.IsDBNull(i: 9) ? dataReader.GetString(i: 9) : null,
+            Monday = dataReader.GetInt16(i: 10).ToBool(),
+            Tuesday = dataReader.GetInt16(i: 11).ToBool(),
+            Wednesday = dataReader.GetInt16(i: 12).ToBool(),
+            Thursday = dataReader.GetInt16(i: 13).ToBool(),
+            Friday = dataReader.GetInt16(i: 14).ToBool(),
+            Saturday = dataReader.GetInt16(i: 15).ToBool(),
+            Sunday = dataReader.GetInt16(i: 16).ToBool(),
+            StartDate = dataReader.GetDateTime(i: 17),
+            EndDate = dataReader.GetDateTime(i: 18)
         };
     }
     
@@ -465,6 +466,7 @@ public class SqlServerStorage : IDataStorage
         {
             ComparisonType.Partial => "SELECT s.DepartureTime, " +
                                              "s.StopId, " +
+                                             "s.StopSequence, " +
                                              "t.TripId, " +
                                              "t.ServiceId, " +
                                              "t.TripHeadsign, " +
@@ -491,6 +493,7 @@ public class SqlServerStorage : IDataStorage
             
             ComparisonType.Starts => "SELECT s.DepartureTime, " +
                                             "s.StopId, " +
+                                            "s.StopSequence, " +
                                             "t.TripId, " +
                                             "t.ServiceId, " +
                                             "t.TripHeadsign, " +
@@ -517,6 +520,7 @@ public class SqlServerStorage : IDataStorage
             
             ComparisonType.Ends => "SELECT s.DepartureTime, " +
                                           "s.StopId, " +
+                                          "s.StopSequence, " +
                                           "t.TripId, " +
                                           "t.ServiceId, " +
                                           "t.TripHeadsign, " +
@@ -543,6 +547,7 @@ public class SqlServerStorage : IDataStorage
             
             _ => "SELECT s.DepartureTime, " +
                         "s.StopId, " +
+                        "s.StopSequence, " +
                         "t.TripId, " +
                         "t.ServiceId, " +
                         "t.TripHeadsign, " +
@@ -579,6 +584,7 @@ public class SqlServerStorage : IDataStorage
         {
             ComparisonType.Partial => "SELECT s.DepartureTime, " +
                                              "s.StopId, " +
+                                             "s.StopSequence, " +
                                              "t.TripId, " +
                                              "t.ServiceId, " +
                                              "t.TripHeadsign, " +
@@ -605,6 +611,7 @@ public class SqlServerStorage : IDataStorage
             
             ComparisonType.Starts => "SELECT s.DepartureTime, " +
                                             "s.StopId, " +
+                                            "s.StopSequence, " +
                                             "t.TripId, " +
                                             "t.ServiceId, " +
                                             "t.TripHeadsign, " +
@@ -631,6 +638,7 @@ public class SqlServerStorage : IDataStorage
             
             ComparisonType.Ends => "SELECT s.DepartureTime, " +
                                           "s.StopId, " +
+                                          "s.StopSequence, " +
                                           "t.TripId, " +
                                           "t.ServiceId, " +
                                           "t.TripHeadsign, " +
@@ -657,6 +665,7 @@ public class SqlServerStorage : IDataStorage
             
             _ => "SELECT s.DepartureTime, " +
                         "s.StopId, " +
+                        "s.StopSequence, " +
                         "t.TripId, " +
                         "t.ServiceId, " +
                         "t.TripHeadsign, " +
