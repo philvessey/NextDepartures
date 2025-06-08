@@ -42,10 +42,10 @@ public partial class Feed
                 id: id,
                 comparison: comparison));
             
-            foreach (var stop in stopsForStation)
+            foreach (var s in stopsForStation)
             {
                 var departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(
-                    id: stop.Id,
+                    id: s.Id,
                     comparison: comparison);
                 
                 departuresForStation.AddRange(collection: new List<Departure>()
@@ -58,7 +58,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Yesterday,
                         timeOffset: TimeSpan.Zero,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -68,7 +68,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Today,
                         timeOffset: TimeSpan.Zero,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -78,7 +78,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Tomorrow,
                         timeOffset: TimeSpan.Zero,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                 );
             }
             
@@ -152,10 +152,10 @@ public partial class Feed
                 id: id,
                 comparison: comparison));
             
-            foreach (var stop in stopsForStation)
+            foreach (var s in stopsForStation)
             {
                 var departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(
-                    id: stop.Id,
+                    id: s.Id,
                     comparison: comparison);
                 
                 departuresForStation.AddRange(collection: new List<Departure>()
@@ -168,7 +168,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Yesterday,
                         timeOffset: offset,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -178,7 +178,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Today,
                         timeOffset: offset,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -188,7 +188,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Tomorrow,
                         timeOffset: offset,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                 );
             }
             
@@ -225,18 +225,18 @@ public partial class Feed
     /// <summary>
     /// Gets the services by parent station
     /// </summary>
-    /// <param name="ids">An array of stop id's to group as a parent station. Required.</param>
+    /// <param name="stops">An array of stop id's to group as a parent station. Required.</param>
     /// <param name="comparison">The ComparisonType to use when searching. Default is exact.</param>
     /// <param name="tolerance">The TimeSpan tolerance to search over. Default is all.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of services.</returns>
     public async Task<List<Service>> GetServicesByParentStationAsync(
-        string[] ids,
+        string[] stops,
         ComparisonType comparison = ComparisonType.Exact,
         TimeSpan tolerance = default,
         int results = 0) {
         
-        if (ids is null || ids.Length == 0)
+        if (stops is null || stops.Length is 0)
             throw new ServiceException(message: "Invalid ids.");
         
         try
@@ -248,17 +248,15 @@ public partial class Feed
             List<Stop> stopsForStation = [];
             List<Departure> departuresForStation = [];
             
-            foreach (var id in ids)
-            {
+            foreach (var s in stops)
                 stopsForStation.AddRange(collection: await _dataStorage.GetStopsByIdAsync(
-                    id: id,
+                    id: s,
                     comparison: comparison));
-            }
             
-            foreach (var stop in stopsForStation)
+            foreach (var s in stopsForStation)
             {
                 var departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(
-                    id: stop.Id,
+                    id: s.Id,
                     comparison: comparison);
                 
                 departuresForStation.AddRange(collection: new List<Departure>()
@@ -271,7 +269,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Yesterday,
                         timeOffset: TimeSpan.Zero,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -281,7 +279,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Today,
                         timeOffset: TimeSpan.Zero,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -291,7 +289,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Tomorrow,
                         timeOffset: TimeSpan.Zero,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                 );
             }
             
@@ -328,7 +326,7 @@ public partial class Feed
     /// <summary>
     /// Gets the services by parent station
     /// </summary>
-    /// <param name="ids">An array of stop id's to group as a parent station. Required.</param>
+    /// <param name="stops">An array of stop id's to group as a parent station. Required.</param>
     /// <param name="target">The DateTime target to search from. Required.</param>
     /// <param name="offset">The TimeSpan offset to filter by. Required.</param>
     /// <param name="comparison">The ComparisonType to use when searching. Default is exact.</param>
@@ -336,14 +334,14 @@ public partial class Feed
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of services.</returns>
     public async Task<List<Service>> GetServicesByParentStationAsync(
-        string[] ids,
+        string[] stops,
         DateTime target,
         TimeSpan offset,
         ComparisonType comparison = ComparisonType.Exact,
         TimeSpan tolerance = default,
         int results = 0) {
         
-        if (ids is null || ids.Length == 0)
+        if (stops is null || stops.Length is 0)
             throw new ServiceException(message: "Invalid ids.");
         
         if (target == DateTime.MinValue || target == DateTime.MaxValue)
@@ -361,17 +359,15 @@ public partial class Feed
             List<Stop> stopsForStation = [];
             List<Departure> departuresForStation = [];
             
-            foreach (var id in ids)
-            {
+            foreach (var s in stops)
                 stopsForStation.AddRange(collection: await _dataStorage.GetStopsByIdAsync(
-                    id: id,
+                    id: s,
                     comparison: comparison));
-            }
             
-            foreach (var stop in stopsForStation)
+            foreach (var s in stopsForStation)
             {
                 var departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(
-                    id: stop.Id,
+                    id: s.Id,
                     comparison: comparison);
                 
                 departuresForStation.AddRange(collection: new List<Departure>()
@@ -384,7 +380,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Yesterday,
                         timeOffset: offset,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -394,7 +390,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Today,
                         timeOffset: offset,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -404,7 +400,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Tomorrow,
                         timeOffset: offset,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                 );
             }
             
@@ -452,7 +448,7 @@ public partial class Feed
         TimeSpan tolerance = default,
         int results = 0) {
         
-        if (stops is null || stops.Count == 0)
+        if (stops is null || stops.Count is 0)
             throw new ServiceException(message: "Invalid stops.");
         
         try
@@ -464,17 +460,15 @@ public partial class Feed
             List<Stop> stopsForStation = [];
             List<Departure> departuresForStation = [];
             
-            foreach (var stop in stops)
-            {
+            foreach (var s in stops)
                 stopsForStation.AddRange(collection: await _dataStorage.GetStopsByIdAsync(
-                    id: stop.Id,
+                    id: s.Id,
                     comparison: comparison));
-            }
             
-            foreach (var stop in stopsForStation)
+            foreach (var s in stopsForStation)
             {
                 var departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(
-                    id: stop.Id,
+                    id: s.Id,
                     comparison: comparison);
                 
                 departuresForStation.AddRange(collection: new List<Departure>()
@@ -487,7 +481,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Yesterday,
                         timeOffset: TimeSpan.Zero,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -497,7 +491,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Today,
                         timeOffset: TimeSpan.Zero,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -507,7 +501,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Tomorrow,
                         timeOffset: TimeSpan.Zero,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                 );
             }
             
@@ -552,14 +546,14 @@ public partial class Feed
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of services.</returns>
     public async Task<List<Service>> GetServicesByParentStationAsync(
-        List<Stop>stops,
+        List<Stop> stops,
         DateTime target,
         TimeSpan offset,
         ComparisonType comparison = ComparisonType.Exact,
         TimeSpan tolerance = default,
         int results = 0) {
         
-        if (stops is null || stops.Count == 0)
+        if (stops is null || stops.Count is 0)
             throw new ServiceException(message: "Invalid stops.");
         
         if (target == DateTime.MinValue || target == DateTime.MaxValue)
@@ -577,17 +571,15 @@ public partial class Feed
             List<Stop> stopsForStation = [];
             List<Departure> departuresForStation = [];
             
-            foreach (var stop in stops)
-            {
+            foreach (var s in stops)
                 stopsForStation.AddRange(collection: await _dataStorage.GetStopsByIdAsync(
-                    id: stop.Id,
+                    id: s.Id,
                     comparison: comparison));
-            }
             
-            foreach (var stop in stopsForStation)
+            foreach (var s in stopsForStation)
             {
                 var departuresFromStorage = await _dataStorage.GetDeparturesForStopAsync(
-                    id: stop.Id,
+                    id: s.Id,
                     comparison: comparison);
                 
                 departuresForStation.AddRange(collection: new List<Departure>()
@@ -600,7 +592,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Yesterday,
                         timeOffset: offset,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -610,7 +602,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Today,
                         timeOffset: offset,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                     .AddMultiple(items: GetDeparturesOnDay(
                         agencies: agenciesFromStorage,
                         calendarDates: calendarDatesFromStorage,
@@ -620,7 +612,7 @@ public partial class Feed
                         dayOffset: DayOffsetType.Tomorrow,
                         timeOffset: offset,
                         tolerance: tolerance,
-                        id: stop.Id))
+                        id: s.Id))
                 );
             }
             

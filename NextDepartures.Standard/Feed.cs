@@ -27,16 +27,16 @@ public partial class Feed
     /// <param name="dataStorage">The data storage to load into the feed. Required.</param>
     /// <param name="preload">Whether to preload the data. Default is true.</param>
     /// <returns>A new feed instance.</returns>
-    public static async Task<Feed> Load(
+    public static async Task<Feed> LoadAsync(
         IDataStorage dataStorage,
         bool preload = true) {
         
         if (preload)
-            return new Feed(await PreloadDataStorage.LoadAsync(
+            return new Feed(dataStorage: await PreloadDataStorage.LoadAsync(
                 dataStorage: dataStorage,
                 dataStorageProperties: new DataStorageProperties(dataStorage: dataStorage)));
         
-        return new Feed(dataStorage);
+        return new Feed(dataStorage: dataStorage);
     }
     
     private static Departure CreateProcessedDeparture(
@@ -102,10 +102,10 @@ public partial class Feed
         var destination = stops.FirstOrDefault(predicate: s =>
             departure.RouteShortName.Contains(
                 value: s.Id.ToIncludePrefix(prefix: "_"),
-                comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
+                comparisonType: StringComparison.InvariantCultureIgnoreCase) ||
             departure.RouteShortName.Contains(
                 value: s.Id.ToIncludePrefix(prefix: "->"),
-                comparisonType: StringComparison.CurrentCultureIgnoreCase));
+                comparisonType: StringComparison.InvariantCultureIgnoreCase));
         
         steps =
         [
@@ -183,8 +183,7 @@ public partial class Feed
         
         List<Departure> results = [];
         
-        foreach (var departure in departures)
-        {
+        foreach (var d in departures)
             results.AddIfNotNull(item: FetchProcessedDeparture(
                 agencies: agencies,
                 calendarDates: calendarDates,
@@ -194,8 +193,7 @@ public partial class Feed
                 timeOffset: timeOffset,
                 tolerance: tolerance,
                 id: id,
-                departure: departure));
-        }
+                departure: d));
         
         return results;
     }
@@ -229,7 +227,7 @@ public partial class Feed
         var isAdded = calendarDates.Any(predicate: d =>
             d.ServiceId == departure.ServiceId &&
             d.Date == targetDateTime.Date &&
-            d.ExceptionType == ExceptionType.Added);
+            d.ExceptionType is ExceptionType.Added);
         
         if (!runningToday && !isAdded)
             return false;
@@ -237,21 +235,21 @@ public partial class Feed
         var isRemoved = calendarDates.Any(predicate: d =>
             d.ServiceId == departure.ServiceId &&
             d.Date == targetDateTime.Date &&
-            d.ExceptionType == ExceptionType.Removed);
+            d.ExceptionType is ExceptionType.Removed);
         
         if (runningToday && isRemoved)
             return false;
         
         var prefixMatch = departure.RouteShortName.Contains(
             value: id.ToIncludePrefix(prefix: "_"),
-            comparisonType: StringComparison.CurrentCultureIgnoreCase);
+            comparisonType: StringComparison.InvariantCultureIgnoreCase);
         
         if (prefixMatch)
             return false;
         
         prefixMatch = departure.RouteShortName.Contains(
             value: id.ToIncludePrefix(prefix: "->"),
-            comparisonType: StringComparison.CurrentCultureIgnoreCase);
+            comparisonType: StringComparison.InvariantCultureIgnoreCase);
         
         if (prefixMatch)
             return false;
@@ -324,6 +322,8 @@ public partial class Feed
             departure: departure,
             departureDateTime: departureDateTime);
         
-        return checkProcessedDeparture ? processedDeparture : null;
+        return checkProcessedDeparture
+            ? processedDeparture
+            : null;
     }
 }

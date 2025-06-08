@@ -14,10 +14,10 @@ public class Services
     [TestMethod]
     public async Task GetServicesByParentStationAsync()
     {
-        var feed = await Feed.Load(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
+        var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         
         var resultsByParentStation = await feed.GetServicesByParentStationAsync(
-            ids: ["16TH", "24TH"],
+            stops: ["16TH", "24TH"],
             target: new DateTime(
                 year: 2025,
                 month: 1,
@@ -36,7 +36,7 @@ public class Services
     [TestMethod]
     public async Task GetServicesByStopAsync()
     {
-        var feed = await Feed.Load(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
+        var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         
         var resultsByStop = await feed.GetServicesByStopAsync(
             id: "16TH",
@@ -58,7 +58,7 @@ public class Services
     [TestMethod]
     public async Task GetServicesByTripAsync()
     {
-        var feed = await Feed.Load(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
+        var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         
         var resultsByStop = await feed.GetServicesByStopAsync(
             id: "24TH",

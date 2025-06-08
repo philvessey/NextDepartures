@@ -38,6 +38,6 @@ public class Service
     
     public override string ToString()
     {
-        return Type != "trip" ? $"[{DepartureDateTime}] {DestinationName}" : $"[{DepartureDateTime}] {StopName}";
+        return Type is not "trip" ? $"[{DepartureDateTime}] {DestinationName}" : $"[{DepartureDateTime}] {StopName}";
     }
 }
