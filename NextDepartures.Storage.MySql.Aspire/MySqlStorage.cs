@@ -167,38 +167,39 @@ public class MySqlStorage : IDataStorage
                 ? dataReader.GetString(ordinal: 1)
                 : null,
             
-            TripId = dataReader.GetString(ordinal: 2),
-            ServiceId = dataReader.GetString(ordinal: 3),
+            StopSequence = dataReader.GetInt16(ordinal: 2),
+            TripId = dataReader.GetString(ordinal: 3),
+            ServiceId = dataReader.GetString(ordinal: 4),
             
-            TripHeadsign = !dataReader.IsDBNull(ordinal: 4)
-                ? dataReader.GetString(ordinal: 4)
-                : null,
-            
-            TripShortName = !dataReader.IsDBNull(ordinal: 5)
+            TripHeadsign = !dataReader.IsDBNull(ordinal: 5)
                 ? dataReader.GetString(ordinal: 5)
                 : null,
             
-            AgencyId = !dataReader.IsDBNull(ordinal: 6)
+            TripShortName = !dataReader.IsDBNull(ordinal: 6)
                 ? dataReader.GetString(ordinal: 6)
                 : null,
             
-            RouteShortName = !dataReader.IsDBNull(ordinal: 7)
+            AgencyId = !dataReader.IsDBNull(ordinal: 7)
                 ? dataReader.GetString(ordinal: 7)
                 : null,
             
-            RouteLongName = !dataReader.IsDBNull(ordinal: 8)
+            RouteShortName = !dataReader.IsDBNull(ordinal: 8)
                 ? dataReader.GetString(ordinal: 8)
                 : null,
             
-            Monday = dataReader.GetInt16(ordinal: 9).ToBool(),
-            Tuesday = dataReader.GetInt16(ordinal: 10).ToBool(),
-            Wednesday = dataReader.GetInt16(ordinal: 11).ToBool(),
-            Thursday = dataReader.GetInt16(ordinal: 12).ToBool(),
-            Friday = dataReader.GetInt16(ordinal: 13).ToBool(),
-            Saturday = dataReader.GetInt16(ordinal: 14).ToBool(),
-            Sunday = dataReader.GetInt16(ordinal: 15).ToBool(),
-            StartDate = dataReader.GetDateTime(ordinal: 16),
-            EndDate = dataReader.GetDateTime(ordinal: 17)
+            RouteLongName = !dataReader.IsDBNull(ordinal: 9)
+                ? dataReader.GetString(ordinal: 9)
+                : null,
+            
+            Monday = dataReader.GetInt16(ordinal: 10).ToBool(),
+            Tuesday = dataReader.GetInt16(ordinal: 11).ToBool(),
+            Wednesday = dataReader.GetInt16(ordinal: 12).ToBool(),
+            Thursday = dataReader.GetInt16(ordinal: 13).ToBool(),
+            Friday = dataReader.GetInt16(ordinal: 14).ToBool(),
+            Saturday = dataReader.GetInt16(ordinal: 15).ToBool(),
+            Sunday = dataReader.GetInt16(ordinal: 16).ToBool(),
+            StartDate = dataReader.GetDateTime(ordinal: 17),
+            EndDate = dataReader.GetDateTime(ordinal: 18)
         };
     }
     
@@ -615,6 +616,7 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Partial => "SELECT s.DepartureTime, " +
                                              "s.StopId, " +
+                                             "s.StopSequence, " +
                                              "t.TripId, " +
                                              "t.ServiceId, " +
                                              "t.TripHeadsign, " +
@@ -641,6 +643,7 @@ public class MySqlStorage : IDataStorage
             
             ComparisonType.Starts => "SELECT s.DepartureTime, " +
                                             "s.StopId, " +
+                                            "s.StopSequence, " +
                                             "t.TripId, " +
                                             "t.ServiceId, " +
                                             "t.TripHeadsign, " +
@@ -667,6 +670,7 @@ public class MySqlStorage : IDataStorage
             
             ComparisonType.Ends => "SELECT s.DepartureTime, " +
                                           "s.StopId, " +
+                                          "s.StopSequence, " +
                                           "t.TripId, " +
                                           "t.ServiceId, " +
                                           "t.TripHeadsign, " +
@@ -693,6 +697,7 @@ public class MySqlStorage : IDataStorage
             
             _ => "SELECT s.DepartureTime, " +
                         "s.StopId, " +
+                        "s.StopSequence, " +
                         "t.TripId, " +
                         "t.ServiceId, " +
                         "t.TripHeadsign, " +
@@ -729,6 +734,7 @@ public class MySqlStorage : IDataStorage
         {
             ComparisonType.Partial => "SELECT s.DepartureTime, " +
                                              "s.StopId, " +
+                                             "s.StopSequence, " +
                                              "t.TripId, " +
                                              "t.ServiceId, " +
                                              "t.TripHeadsign, " +
@@ -755,6 +761,7 @@ public class MySqlStorage : IDataStorage
             
             ComparisonType.Starts => "SELECT s.DepartureTime, " +
                                             "s.StopId, " +
+                                            "s.StopSequence, " +
                                             "t.TripId, " +
                                             "t.ServiceId, " +
                                             "t.TripHeadsign, " +
@@ -781,6 +788,7 @@ public class MySqlStorage : IDataStorage
             
             ComparisonType.Ends => "SELECT s.DepartureTime, " +
                                           "s.StopId, " +
+                                          "s.StopSequence, " +
                                           "t.TripId, " +
                                           "t.ServiceId, " +
                                           "t.TripHeadsign, " +
@@ -807,6 +815,7 @@ public class MySqlStorage : IDataStorage
             
             _ => "SELECT s.DepartureTime, " +
                         "s.StopId, " +
+                        "s.StopSequence, " +
                         "t.TripId, " +
                         "t.ServiceId, " +
                         "t.TripHeadsign, " +

@@ -96,7 +96,7 @@ public class GtfsStorage : IDataStorage
                 },
                 
                 StopId = e.s.StopId?.TrimDoubleQuotes(),
-                StopSequence = (short)e.s.StopSequence,
+                StopSequence = short.Parse(s: e.s.StopSequence.ToString()),
                 TripId = e.t.Id.TrimDoubleQuotes(),
                 ServiceId = e.t.ServiceId.TrimDoubleQuotes(),
                 TripHeadsign = e.t.Headsign?.TrimDoubleQuotes(),

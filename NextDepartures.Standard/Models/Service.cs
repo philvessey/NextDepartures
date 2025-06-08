@@ -31,6 +31,9 @@ public class Service
     public string StopName { get; set; }
     
     [UsedImplicitly]
+    public short StopSequence { get; set; }
+    
+    [UsedImplicitly]
     public string TripId { get; set; }
     
     [UsedImplicitly]

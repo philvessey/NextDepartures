@@ -14,7 +14,7 @@ public class Departure
     
     [UsedImplicitly]
     public string StopId { get; set; }
-
+    
     [UsedImplicitly]
     public short StopSequence { get; set; }
     

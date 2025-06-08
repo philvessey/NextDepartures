@@ -54,6 +54,7 @@ public partial class Feed
             
             DepartureDateTime = departureDateTime,
             StopId = departure.StopId,
+            StopSequence = departure.StopSequence,
             TripId = departure.TripId,
             ServiceId = departure.ServiceId,
             TripHeadsign = departure.TripHeadsign,
@@ -148,6 +149,7 @@ public partial class Feed
             RouteName = routeName,
             StopId = departure.StopId,
             StopName = stopName,
+            StopSequence = departure.StopSequence,
             TripId = departure.TripId,
             Type = type
         };

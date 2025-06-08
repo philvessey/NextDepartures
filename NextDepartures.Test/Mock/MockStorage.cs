@@ -242,7 +242,7 @@ public class MockStorage : IDataStorage
                 },
                 
                 StopId = "16TH",
-                StopSequence = (short)1,
+                StopSequence = 0,
                 TripId = "1561190",
                 ServiceId = "2025_01_21-DX-MVS",
                 TripHeadsign = "San Francisco / Antioch",
@@ -285,7 +285,7 @@ public class MockStorage : IDataStorage
                 },
                 
                 StopId = "16TH",
-                StopSequence = (short)1,
+                StopSequence = 0,
                 TripId = "1561190",
                 ServiceId = "2025_01_21-DX-MVS",
                 TripHeadsign = "San Francisco / Antioch",
