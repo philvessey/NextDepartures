@@ -220,7 +220,7 @@ public partial class Feed
         TimeSpan tolerance = default,
         int results = 0) {
         
-        if (stop == null)
+        if (stop is null)
             throw new ServiceException(message: "Invalid stop.");
         
         try
@@ -316,7 +316,7 @@ public partial class Feed
         TimeSpan tolerance = default,
         int results = 0) {
         
-        if (stop == null)
+        if (stop is null)
             throw new ServiceException(message: "Invalid stop.");
         
         if (target == DateTime.MinValue || target == DateTime.MaxValue)

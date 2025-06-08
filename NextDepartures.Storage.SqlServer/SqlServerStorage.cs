@@ -30,7 +30,7 @@ public class SqlServerStorage : IDataStorage
         return new SqlServerStorage(connectionString: connectionString);
     }
     
-    private async Task<List<T>> ExecuteCommand<T>(
+    private async Task<List<T>> ExecuteCommandAsync<T>(
         string sql,
         Func<SqlDataReader, T> entryProcessor) where T : class {
         
@@ -48,9 +48,7 @@ public class SqlServerStorage : IDataStorage
         var dataReader = await command.ExecuteReaderAsync();
         
         while (await dataReader.ReadAsync())
-        {
             results.Add(item: entryProcessor(dataReader));
-        }
         
         await dataReader.CloseAsync();
         await command.DisposeAsync();
@@ -62,14 +60,29 @@ public class SqlServerStorage : IDataStorage
     {
         return new Agency
         {
-            Id = !dataReader.IsDBNull(i: 0) ? dataReader.GetString(i: 0) : null,
+            Id = !dataReader.IsDBNull(i: 0)
+                ? dataReader.GetString(i: 0)
+                : null,
+            
             Name = dataReader.GetString(i: 1),
             URL = dataReader.GetString(i: 2),
             Timezone = dataReader.GetString(i: 3),
-            LanguageCode = !dataReader.IsDBNull(i: 4) ? dataReader.GetString(i: 4) : null,
-            Phone = !dataReader.IsDBNull(i: 5) ? dataReader.GetString(i: 5) : null,
-            FareURL = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
-            Email = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null
+            
+            LanguageCode = !dataReader.IsDBNull(i: 4)
+                ? dataReader.GetString(i: 4)
+                : null,
+            
+            Phone = !dataReader.IsDBNull(i: 5)
+                ? dataReader.GetString(i: 5)
+                : null,
+            
+            FareURL = !dataReader.IsDBNull(i: 6)
+                ? dataReader.GetString(i: 6)
+                : null,
+            
+            Email = !dataReader.IsDBNull(i: 7)
+                ? dataReader.GetString(i: 7)
+                : null
         };
     }
     
@@ -77,14 +90,29 @@ public class SqlServerStorage : IDataStorage
     {
         return new Agency
         {
-            Id = !dataReader.IsDBNull(i: 0) ? dataReader.GetString(i: 0) : null,
+            Id = !dataReader.IsDBNull(i: 0)
+                ? dataReader.GetString(i: 0)
+                : null,
+            
             Name = dataReader.GetString(i: 1),
             URL = dataReader.GetString(i: 2),
             Timezone = dataReader.GetString(i: 3),
-            LanguageCode = !dataReader.IsDBNull(i: 4) ? dataReader.GetString(i: 4) : null,
-            Phone = !dataReader.IsDBNull(i: 5) ? dataReader.GetString(i: 5) : null,
-            FareURL = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
-            Email = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null
+            
+            LanguageCode = !dataReader.IsDBNull(i: 4)
+                ? dataReader.GetString(i: 4)
+                : null,
+            
+            Phone = !dataReader.IsDBNull(i: 5)
+                ? dataReader.GetString(i: 5)
+                : null,
+            
+            FareURL = !dataReader.IsDBNull(i: 6)
+                ? dataReader.GetString(i: 6)
+                : null,
+            
+            Email = !dataReader.IsDBNull(i: 7)
+                ? dataReader.GetString(i: 7)
+                : null
         };
     }
     
@@ -104,20 +132,47 @@ public class SqlServerStorage : IDataStorage
         {
             DepartureTime = new TimeOfDay
             {
-                Hours = !dataReader.IsDBNull(i: 0) ? dataReader.GetString(i: 0).ToTimeOfDay().Hours : 0,
-                Minutes = !dataReader.IsDBNull(i: 0) ? dataReader.GetString(i: 0).ToTimeOfDay().Minutes : 0,
-                Seconds = !dataReader.IsDBNull(i: 0) ? dataReader.GetString(i: 0).ToTimeOfDay().Seconds : 0
+                Hours = !dataReader.IsDBNull(i: 0)
+                    ? dataReader.GetString(i: 0).ToTimeOfDay().Hours
+                    : 0,
+                
+                Minutes = !dataReader.IsDBNull(i: 0)
+                    ? dataReader.GetString(i: 0).ToTimeOfDay().Minutes
+                    : 0,
+                
+                Seconds = !dataReader.IsDBNull(i: 0)
+                    ? dataReader.GetString(i: 0).ToTimeOfDay().Seconds
+                    : 0
             },
             
-            StopId = !dataReader.IsDBNull(i: 1) ? dataReader.GetString(i: 1) : null,
+            StopId = !dataReader.IsDBNull(i: 1)
+                ? dataReader.GetString(i: 1)
+                : null,
+            
             StopSequence = dataReader.GetInt16(i: 2),
             TripId = dataReader.GetString(i: 3),
             ServiceId = dataReader.GetString(i: 4),
-            TripHeadsign = !dataReader.IsDBNull(i: 5) ? dataReader.GetString(i: 5) : null,
-            TripShortName = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
-            AgencyId = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null,
-            RouteShortName = !dataReader.IsDBNull(i: 8) ? dataReader.GetString(i: 8) : null,
-            RouteLongName = !dataReader.IsDBNull(i: 9) ? dataReader.GetString(i: 9) : null,
+            
+            TripHeadsign = !dataReader.IsDBNull(i: 5)
+                ? dataReader.GetString(i: 5)
+                : null,
+            
+            TripShortName = !dataReader.IsDBNull(i: 6)
+                ? dataReader.GetString(i: 6)
+                : null,
+            
+            AgencyId = !dataReader.IsDBNull(i: 7)
+                ? dataReader.GetString(i: 7)
+                : null,
+            
+            RouteShortName = !dataReader.IsDBNull(i: 8)
+                ? dataReader.GetString(i: 8)
+                : null,
+            
+            RouteLongName = !dataReader.IsDBNull(i: 9)
+                ? dataReader.GetString(i: 9)
+                : null,
+            
             Monday = dataReader.GetInt16(i: 10).ToBool(),
             Tuesday = dataReader.GetInt16(i: 11).ToBool(),
             Wednesday = dataReader.GetInt16(i: 12).ToBool(),
@@ -135,19 +190,58 @@ public class SqlServerStorage : IDataStorage
         return new Stop
         {
             Id = dataReader.GetString(i: 0),
-            Code = !dataReader.IsDBNull(i: 1) ? dataReader.GetString(i: 1) : null,
-            Name = !dataReader.IsDBNull(i: 2) ? dataReader.GetString(i: 2) : null,
-            Description = !dataReader.IsDBNull(i: 3) ? dataReader.GetString(i: 3) : null,
-            Latitude = !dataReader.IsDBNull(i: 4) ? dataReader.GetDouble(i: 4) : 0,
-            Longitude = !dataReader.IsDBNull(i: 5) ? dataReader.GetDouble(i: 5) : 0,
-            Zone = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
-            Url = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null,
-            LocationType = !dataReader.IsDBNull(i: 8) ? dataReader.GetString(i: 8).ToLocationType() : null,
-            ParentStation = !dataReader.IsDBNull(i: 9) ? dataReader.GetString(i: 9) : null,
-            Timezone = !dataReader.IsDBNull(i: 10) ? dataReader.GetString(i: 10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(i: 11) ? dataReader.GetString(i: 11) : null,
-            LevelId = !dataReader.IsDBNull(i: 12) ? dataReader.GetString(i: 12) : null,
-            PlatformCode = !dataReader.IsDBNull(i: 13) ? dataReader.GetString(i: 13) : null
+            
+            Code = !dataReader.IsDBNull(i: 1)
+                ? dataReader.GetString(i: 1)
+                : null,
+            
+            Name = !dataReader.IsDBNull(i: 2)
+                ? dataReader.GetString(i: 2)
+                : null,
+            
+            Description = !dataReader.IsDBNull(i: 3)
+                ? dataReader.GetString(i: 3)
+                : null,
+            
+            Latitude = !dataReader.IsDBNull(i: 4)
+                ? dataReader.GetDouble(i: 4)
+                : 0,
+            
+            Longitude = !dataReader.IsDBNull(i: 5)
+                ? dataReader.GetDouble(i: 5)
+                : 0,
+            
+            Zone = !dataReader.IsDBNull(i: 6)
+                ? dataReader.GetString(i: 6)
+                : null,
+            
+            Url = !dataReader.IsDBNull(i: 7)
+                ? dataReader.GetString(i: 7)
+                : null,
+            
+            LocationType = !dataReader.IsDBNull(i: 8)
+                ? dataReader.GetString(i: 8).ToLocationType()
+                : null,
+            
+            ParentStation = !dataReader.IsDBNull(i: 9)
+                ? dataReader.GetString(i: 9)
+                : null,
+            
+            Timezone = !dataReader.IsDBNull(i: 10)
+                ? dataReader.GetString(i: 10)
+                : null,
+            
+            WheelchairBoarding = !dataReader.IsDBNull(i: 11)
+                ? dataReader.GetString(i: 11)
+                : null,
+            
+            LevelId = !dataReader.IsDBNull(i: 12)
+                ? dataReader.GetString(i: 12)
+                : null,
+            
+            PlatformCode = !dataReader.IsDBNull(i: 13)
+                ? dataReader.GetString(i: 13)
+                : null
         };
     }
     
@@ -156,19 +250,58 @@ public class SqlServerStorage : IDataStorage
         return new Stop
         {
             Id = dataReader.GetString(i: 0),
-            Code = !dataReader.IsDBNull(i: 1) ? dataReader.GetString(i: 1) : null,
-            Name = !dataReader.IsDBNull(i: 2) ? dataReader.GetString(i: 2) : null,
-            Description = !dataReader.IsDBNull(i: 3) ? dataReader.GetString(i: 3) : null,
-            Latitude = !dataReader.IsDBNull(i: 4) ? dataReader.GetDouble(i: 4) : 0,
-            Longitude = !dataReader.IsDBNull(i: 5) ? dataReader.GetDouble(i: 5) : 0,
-            Zone = !dataReader.IsDBNull(i: 6) ? dataReader.GetString(i: 6) : null,
-            Url = !dataReader.IsDBNull(i: 7) ? dataReader.GetString(i: 7) : null,
-            LocationType = !dataReader.IsDBNull(i: 8) ? dataReader.GetString(i: 8).ToLocationType() : null,
-            ParentStation = !dataReader.IsDBNull(i: 9) ? dataReader.GetString(i: 9) : null,
-            Timezone = !dataReader.IsDBNull(i: 10) ? dataReader.GetString(i: 10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(i: 11) ? dataReader.GetString(i: 11) : null,
-            LevelId = !dataReader.IsDBNull(i: 12) ? dataReader.GetString(i: 12) : null,
-            PlatformCode = !dataReader.IsDBNull(i: 13) ? dataReader.GetString(i: 13) : null
+            
+            Code = !dataReader.IsDBNull(i: 1)
+                ? dataReader.GetString(i: 1)
+                : null,
+            
+            Name = !dataReader.IsDBNull(i: 2)
+                ? dataReader.GetString(i: 2)
+                : null,
+            
+            Description = !dataReader.IsDBNull(i: 3)
+                ? dataReader.GetString(i: 3)
+                : null,
+            
+            Latitude = !dataReader.IsDBNull(i: 4)
+                ? dataReader.GetDouble(i: 4)
+                : 0,
+            
+            Longitude = !dataReader.IsDBNull(i: 5)
+                ? dataReader.GetDouble(i: 5)
+                : 0,
+            
+            Zone = !dataReader.IsDBNull(i: 6)
+                ? dataReader.GetString(i: 6)
+                : null,
+            
+            Url = !dataReader.IsDBNull(i: 7)
+                ? dataReader.GetString(i: 7)
+                : null,
+            
+            LocationType = !dataReader.IsDBNull(i: 8)
+                ? dataReader.GetString(i: 8).ToLocationType()
+                : null,
+            
+            ParentStation = !dataReader.IsDBNull(i: 9)
+                ? dataReader.GetString(i: 9)
+                : null,
+            
+            Timezone = !dataReader.IsDBNull(i: 10)
+                ? dataReader.GetString(i: 10)
+                : null,
+            
+            WheelchairBoarding = !dataReader.IsDBNull(i: 11)
+                ? dataReader.GetString(i: 11)
+                : null,
+            
+            LevelId = !dataReader.IsDBNull(i: 12)
+                ? dataReader.GetString(i: 12)
+                : null,
+            
+            PlatformCode = !dataReader.IsDBNull(i: 13)
+                ? dataReader.GetString(i: 13)
+                : null
         };
     }
     
@@ -177,7 +310,7 @@ public class SqlServerStorage : IDataStorage
         const string sql = "SELECT * " +
                            "FROM GTFS_AGENCY";
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReader);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReader);
     }
     
     public Task<List<CalendarDate>> GetCalendarDatesAsync()
@@ -185,7 +318,7 @@ public class SqlServerStorage : IDataStorage
         const string sql = "SELECT * " +
                            "FROM GTFS_CALENDAR_DATES";
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetCalendarDateFromDataReader);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetCalendarDateFromDataReader);
     }
     
     public Task<List<Stop>> GetStopsAsync()
@@ -193,7 +326,7 @@ public class SqlServerStorage : IDataStorage
         const string sql = "SELECT * " +
                            "FROM GTFS_STOPS";
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReader);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReader);
     }
     
     public Task<List<Agency>> GetAgenciesByEmailAsync(
@@ -219,7 +352,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(AgencyEmail, '')) LIKE '%{(email ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByFareUrlAsync(
@@ -245,7 +378,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(AgencyFareUrl, '')) LIKE '%{(fareUrl ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByIdAsync(
@@ -271,7 +404,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(AgencyId, '')) LIKE '%{(id ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(
@@ -297,7 +430,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(AgencyLang, '')) LIKE '%{(languageCode ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByNameAsync(
@@ -323,7 +456,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(AgencyName) LIKE '%{(name ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByPhoneAsync(
@@ -349,7 +482,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(AgencyPhone, '')) LIKE '%{(phone ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByQueryAsync(
@@ -403,7 +536,7 @@ public class SqlServerStorage : IDataStorage
                        $"OR LOWER(COALESCE(AgencyEmail, '')) LIKE '%{(search ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByTimezoneAsync(
@@ -429,7 +562,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(AgencyTimezone) LIKE '%{(timezone ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql, GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql, GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByUrlAsync(
@@ -455,7 +588,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(AgencyUrl) LIKE '%{(url ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Departure>> GetDeparturesForStopAsync(
@@ -488,7 +621,7 @@ public class SqlServerStorage : IDataStorage
                                       "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                       "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                              $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}%' " +
-                                                "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
+                                                "AND COALESCE(NULLIF(s.PickupType, ''), '0') <> '1' " +
                                       "ORDER BY s.DepartureTime",
             
             ComparisonType.Starts => "SELECT s.DepartureTime, " +
@@ -515,7 +648,7 @@ public class SqlServerStorage : IDataStorage
                                      "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                             $"WHERE LOWER(s.StopId) LIKE '{id.ToLower()}%' " +
-                                               "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
+                                               "AND COALESCE(NULLIF(s.PickupType, ''), '0') <> '1' " +
                                      "ORDER BY s.DepartureTime",
             
             ComparisonType.Ends => "SELECT s.DepartureTime, " +
@@ -542,7 +675,7 @@ public class SqlServerStorage : IDataStorage
                                    "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                    "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                           $"WHERE LOWER(s.StopId) LIKE '%{id.ToLower()}' " +
-                                             "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
+                                             "AND COALESCE(NULLIF(s.PickupType, ''), '0') <> '1' " +
                                    "ORDER BY s.DepartureTime",
             
             _ => "SELECT s.DepartureTime, " +
@@ -569,11 +702,11 @@ public class SqlServerStorage : IDataStorage
                  "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                  "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                         $"WHERE LOWER(s.StopId) = '{id.ToLower()}' " +
-                           "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
+                           "AND COALESCE(NULLIF(s.PickupType, ''), '0') <> '1' " +
                  "ORDER BY s.DepartureTime"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
     }
     
     public Task<List<Departure>> GetDeparturesForTripAsync(
@@ -606,7 +739,7 @@ public class SqlServerStorage : IDataStorage
                                       "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                       "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                              $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}%' " +
-                                                "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
+                                                "AND COALESCE(NULLIF(s.PickupType, ''), '0') <> '1' " +
                                       "ORDER BY s.DepartureTime",
             
             ComparisonType.Starts => "SELECT s.DepartureTime, " +
@@ -633,7 +766,7 @@ public class SqlServerStorage : IDataStorage
                                      "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                      "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                             $"WHERE LOWER(s.TripId) LIKE '{id.ToLower()}%' " +
-                                               "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
+                                               "AND COALESCE(NULLIF(s.PickupType, ''), '0') <> '1' " +
                                      "ORDER BY s.DepartureTime",
             
             ComparisonType.Ends => "SELECT s.DepartureTime, " +
@@ -660,7 +793,7 @@ public class SqlServerStorage : IDataStorage
                                    "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                                    "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                                           $"WHERE LOWER(s.TripId) LIKE '%{id.ToLower()}' " +
-                                             "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
+                                             "AND COALESCE(NULLIF(s.PickupType, ''), '0') <> '1' " +
                                    "ORDER BY s.DepartureTime",
             
             _ => "SELECT s.DepartureTime, " +
@@ -687,11 +820,11 @@ public class SqlServerStorage : IDataStorage
                  "LEFT JOIN GTFS_ROUTES r ON (t.RouteId = r.RouteId) " +
                  "LEFT JOIN GTFS_CALENDAR c ON (t.ServiceId = c.ServiceId) " +
                         $"WHERE LOWER(s.TripId) = '{id.ToLower()}' " +
-                           "AND COALESCE(NULLIF(s.PickupType, ''), '0') != '1' " +
+                           "AND COALESCE(NULLIF(s.PickupType, ''), '0') <> '1' " +
                  "ORDER BY s.DepartureTime"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByCodeAsync(
@@ -717,7 +850,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(StopCode, '')) LIKE '%{(code ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByDescriptionAsync(
@@ -743,7 +876,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(StopDesc, '')) LIKE '%{(description ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByIdAsync(
@@ -769,7 +902,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(StopId) LIKE '%{(id ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByLevelAsync(
@@ -795,7 +928,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(LevelId, '')) LIKE '%{(id ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByLocationAsync(
@@ -815,7 +948,7 @@ public class SqlServerStorage : IDataStorage
                       $"AND COALESCE(StopLat, 0) <= {maximumLatitude}"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByLocationTypeAsync(
@@ -829,7 +962,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE COALESCE(NULLIF(LocationType, ''), '0') = '{locationType.ToInt32()}'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByNameAsync(
@@ -855,7 +988,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(StopName, '')) LIKE '%{(name ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByParentStationAsync(
@@ -881,7 +1014,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(ParentStation, '')) LIKE '%{(id ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByPlatformCodeAsync(
@@ -907,7 +1040,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(PlatformCode, '')) LIKE '%{(platformCode ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByQueryAsync(
@@ -969,7 +1102,7 @@ public class SqlServerStorage : IDataStorage
                        $"OR LOWER(COALESCE(PlatformCode, '')) LIKE '%{(search ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByTimezoneAsync(
@@ -995,7 +1128,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(StopTimezone, '')) LIKE '%{(timezone ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByUrlAsync(
@@ -1021,7 +1154,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(StopUrl, '')) LIKE '%{(url ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(
@@ -1035,7 +1168,7 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE COALESCE(NULLIF(WheelchairBoarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByZoneAsync(
@@ -1061,6 +1194,6 @@ public class SqlServerStorage : IDataStorage
                     $"WHERE LOWER(COALESCE(ZoneId, '')) LIKE '%{(id ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
 }
