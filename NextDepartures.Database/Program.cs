@@ -982,3 +982,6 @@ command.CommandText = "CREATE INDEX GTFS_STOP_TIMES_INDEX ON GTFS_STOP_TIMES (" 
                             "Timepoint)";
 
 await command.ExecuteNonQueryAsync();
+
+await command.DisposeAsync();
+await connection.CloseAsync();

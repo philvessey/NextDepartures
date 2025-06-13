@@ -52,6 +52,7 @@ public class PostgresStorage : IDataStorage
         
         await dataReader.CloseAsync();
         await command.DisposeAsync();
+        await connection.CloseAsync();
         
         return results;
     }
