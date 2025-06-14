@@ -31,6 +31,9 @@ public class Service
     public string StopName { get; set; }
     
     [UsedImplicitly]
+    public short StopSequence { get; set; }
+    
+    [UsedImplicitly]
     public string TripId { get; set; }
     
     [UsedImplicitly]
@@ -38,6 +41,6 @@ public class Service
     
     public override string ToString()
     {
-        return Type != "trip" ? $"[{DepartureDateTime}] {DestinationName}" : $"[{DepartureDateTime}] {StopName}";
+        return Type is not "trip" ? $"[{DepartureDateTime}] {DestinationName}" : $"[{DepartureDateTime}] {StopName}";
     }
 }

@@ -11,5 +11,5 @@ library will work with any well-formed GTFS data set.
 using NextDepartures.Standard;
 using NextDepartures.Storage.Postgres.Aspire;
 
-var feed = await Feed.Load(PostgresStorage.Load());
+var feed = await Feed.LoadAsync(PostgresStorage.Load());
 ```

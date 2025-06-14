@@ -6,12 +6,14 @@ public static class IntExtensions
 {
     public static bool ToBool(this short baseInt)
     {
-        return baseInt == 1;
+        return baseInt is 1;
     }
     
     public static ExceptionType ToExceptionType(this short baseInt)
     {
-        return baseInt == 0 ? ExceptionType.Added : ExceptionType.Removed;
+        return baseInt is 0
+            ? ExceptionType.Added
+            : ExceptionType.Removed;
     }
     
     public static LocationType ToLocationType(this short baseInt)

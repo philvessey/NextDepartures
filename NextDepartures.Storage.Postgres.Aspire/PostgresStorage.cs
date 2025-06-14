@@ -45,13 +45,16 @@ public class PostgresStorage : IDataStorage
         return new PostgresStorage(connectionString: connectionString);
     }
     
-    private async Task<List<T>> ExecuteCommand<T>(
+    private async Task<List<T>> ExecuteCommandAsync<T>(
         string sql,
         Func<NpgsqlDataReader, T> entryProcessor) where T : class {
         
         List<T> results = [];
         
-        await using var connection = _dataSource != null ? _dataSource.CreateConnection() : new NpgsqlConnection(connectionString: _connectionString);
+        await using var connection = _dataSource is not null
+            ? _dataSource.CreateConnection()
+            : new NpgsqlConnection(connectionString: _connectionString);
+        
         await connection.OpenAsync();
         
         NpgsqlCommand command = new();
@@ -63,12 +66,11 @@ public class PostgresStorage : IDataStorage
         var dataReader = await command.ExecuteReaderAsync();
         
         while (await dataReader.ReadAsync())
-        {
             results.Add(item: entryProcessor(dataReader));
-        }
         
         await dataReader.CloseAsync();
         await command.DisposeAsync();
+        await connection.CloseAsync();
         
         return results;
     }
@@ -77,14 +79,29 @@ public class PostgresStorage : IDataStorage
     {
         return new Agency
         {
-            Id = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0) : null,
+            Id = !dataReader.IsDBNull(ordinal: 0)
+                ? dataReader.GetString(ordinal: 0)
+                : null,
+            
             Name = dataReader.GetString(ordinal: 1),
             URL = dataReader.GetString(ordinal: 2),
             Timezone = dataReader.GetString(ordinal: 3),
-            LanguageCode = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetString(ordinal: 4) : null,
-            Phone = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetString(ordinal: 5) : null,
-            FareURL = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
-            Email = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null
+            
+            LanguageCode = !dataReader.IsDBNull(ordinal: 4)
+                ? dataReader.GetString(ordinal: 4)
+                : null,
+            
+            Phone = !dataReader.IsDBNull(ordinal: 5)
+                ? dataReader.GetString(ordinal: 5)
+                : null,
+            
+            FareURL = !dataReader.IsDBNull(ordinal: 6)
+                ? dataReader.GetString(ordinal: 6)
+                : null,
+            
+            Email = !dataReader.IsDBNull(ordinal: 7)
+                ? dataReader.GetString(ordinal: 7)
+                : null
         };
     }
     
@@ -92,14 +109,29 @@ public class PostgresStorage : IDataStorage
     {
         return new Agency
         {
-            Id = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0) : null,
+            Id = !dataReader.IsDBNull(ordinal: 0)
+                ? dataReader.GetString(ordinal: 0)
+                : null,
+            
             Name = dataReader.GetString(ordinal: 1),
             URL = dataReader.GetString(ordinal: 2),
             Timezone = dataReader.GetString(ordinal: 3),
-            LanguageCode = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetString(ordinal: 4) : null,
-            Phone = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetString(ordinal: 5) : null,
-            FareURL = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
-            Email = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null
+            
+            LanguageCode = !dataReader.IsDBNull(ordinal: 4)
+                ? dataReader.GetString(ordinal: 4)
+                : null,
+            
+            Phone = !dataReader.IsDBNull(ordinal: 5)
+                ? dataReader.GetString(ordinal: 5)
+                : null,
+            
+            FareURL = !dataReader.IsDBNull(ordinal: 6)
+                ? dataReader.GetString(ordinal: 6)
+                : null,
+            
+            Email = !dataReader.IsDBNull(ordinal: 7)
+                ? dataReader.GetString(ordinal: 7)
+                : null
         };
     }
     
@@ -119,28 +151,56 @@ public class PostgresStorage : IDataStorage
         {
             DepartureTime = new TimeOfDay
             {
-                Hours = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Hours : 0,
-                Minutes = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Minutes : 0,
-                Seconds = !dataReader.IsDBNull(ordinal: 0) ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Seconds : 0
+                Hours = !dataReader.IsDBNull(ordinal: 0)
+                    ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Hours
+                    : 0,
+                
+                Minutes = !dataReader.IsDBNull(ordinal: 0)
+                    ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Minutes
+                    : 0,
+                
+                Seconds = !dataReader.IsDBNull(ordinal: 0)
+                    ? dataReader.GetString(ordinal: 0).ToTimeOfDay().Seconds
+                    : 0
             },
             
-            StopId = !dataReader.IsDBNull(ordinal: 1) ? dataReader.GetString(ordinal: 1) : null,
-            TripId = dataReader.GetString(ordinal: 2),
-            ServiceId = dataReader.GetString(ordinal: 3),
-            TripHeadsign = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetString(ordinal: 4) : null,
-            TripShortName = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetString(ordinal: 5) : null,
-            AgencyId = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
-            RouteShortName = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
-            RouteLongName = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetString(ordinal: 8) : null,
-            Monday = dataReader.GetInt16(ordinal: 9).ToBool(),
-            Tuesday = dataReader.GetInt16(ordinal: 10).ToBool(),
-            Wednesday = dataReader.GetInt16(ordinal: 11).ToBool(),
-            Thursday = dataReader.GetInt16(ordinal: 12).ToBool(),
-            Friday = dataReader.GetInt16(ordinal: 13).ToBool(),
-            Saturday = dataReader.GetInt16(ordinal: 14).ToBool(),
-            Sunday = dataReader.GetInt16(ordinal: 15).ToBool(),
-            StartDate = dataReader.GetDateTime(ordinal: 16),
-            EndDate = dataReader.GetDateTime(ordinal: 17)
+            StopId = !dataReader.IsDBNull(ordinal: 1)
+                ? dataReader.GetString(ordinal: 1)
+                : null,
+            
+            StopSequence = dataReader.GetInt16(ordinal: 2),
+            TripId = dataReader.GetString(ordinal: 3),
+            ServiceId = dataReader.GetString(ordinal: 4),
+            
+            TripHeadsign = !dataReader.IsDBNull(ordinal: 5)
+                ? dataReader.GetString(ordinal: 5)
+                : null,
+            
+            TripShortName = !dataReader.IsDBNull(ordinal: 6)
+                ? dataReader.GetString(ordinal: 6)
+                : null,
+            
+            AgencyId = !dataReader.IsDBNull(ordinal: 7)
+                ? dataReader.GetString(ordinal: 7)
+                : null,
+            
+            RouteShortName = !dataReader.IsDBNull(ordinal: 8)
+                ? dataReader.GetString(ordinal: 8)
+                : null,
+            
+            RouteLongName = !dataReader.IsDBNull(ordinal: 9)
+                ? dataReader.GetString(ordinal: 9)
+                : null,
+            
+            Monday = dataReader.GetInt16(ordinal: 10).ToBool(),
+            Tuesday = dataReader.GetInt16(ordinal: 11).ToBool(),
+            Wednesday = dataReader.GetInt16(ordinal: 12).ToBool(),
+            Thursday = dataReader.GetInt16(ordinal: 13).ToBool(),
+            Friday = dataReader.GetInt16(ordinal: 14).ToBool(),
+            Saturday = dataReader.GetInt16(ordinal: 15).ToBool(),
+            Sunday = dataReader.GetInt16(ordinal: 16).ToBool(),
+            StartDate = dataReader.GetDateTime(ordinal: 17),
+            EndDate = dataReader.GetDateTime(ordinal: 18)
         };
     }
     
@@ -149,19 +209,58 @@ public class PostgresStorage : IDataStorage
         return new Stop
         {
             Id = dataReader.GetString(ordinal: 0),
-            Code = !dataReader.IsDBNull(ordinal: 1) ? dataReader.GetString(ordinal: 1) : null,
-            Name = !dataReader.IsDBNull(ordinal: 2) ? dataReader.GetString(ordinal: 2) : null,
-            Description = !dataReader.IsDBNull(ordinal: 3) ? dataReader.GetString(ordinal: 3) : null,
-            Latitude = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetDouble(ordinal: 4) : 0,
-            Longitude = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetDouble(ordinal: 5) : 0,
-            Zone = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
-            Url = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
-            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetString(ordinal: 8).ToLocationType() : null,
-            ParentStation = !dataReader.IsDBNull(ordinal: 9) ? dataReader.GetString(ordinal: 9) : null,
-            Timezone = !dataReader.IsDBNull(ordinal: 10) ? dataReader.GetString(ordinal: 10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetString(ordinal: 11) : null,
-            LevelId = !dataReader.IsDBNull(ordinal: 12) ? dataReader.GetString(ordinal: 12) : null,
-            PlatformCode = !dataReader.IsDBNull(ordinal: 13) ? dataReader.GetString(ordinal: 13) : null
+            
+            Code = !dataReader.IsDBNull(ordinal: 1)
+                ? dataReader.GetString(ordinal: 1)
+                : null,
+            
+            Name = !dataReader.IsDBNull(ordinal: 2)
+                ? dataReader.GetString(ordinal: 2)
+                : null,
+            
+            Description = !dataReader.IsDBNull(ordinal: 3)
+                ? dataReader.GetString(ordinal: 3)
+                : null,
+            
+            Latitude = !dataReader.IsDBNull(ordinal: 4)
+                ? dataReader.GetDouble(ordinal: 4)
+                : 0,
+            
+            Longitude = !dataReader.IsDBNull(ordinal: 5)
+                ? dataReader.GetDouble(ordinal: 5)
+                : 0,
+            
+            Zone = !dataReader.IsDBNull(ordinal: 6)
+                ? dataReader.GetString(ordinal: 6)
+                : null,
+            
+            Url = !dataReader.IsDBNull(ordinal: 7)
+                ? dataReader.GetString(ordinal: 7)
+                : null,
+            
+            LocationType = !dataReader.IsDBNull(ordinal: 8)
+                ? dataReader.GetString(ordinal: 8).ToLocationType()
+                : null,
+            
+            ParentStation = !dataReader.IsDBNull(ordinal: 9)
+                ? dataReader.GetString(ordinal: 9)
+                : null,
+            
+            Timezone = !dataReader.IsDBNull(ordinal: 10)
+                ? dataReader.GetString(ordinal: 10)
+                : null,
+            
+            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11)
+                ? dataReader.GetString(ordinal: 11)
+                : null,
+            
+            LevelId = !dataReader.IsDBNull(ordinal: 12)
+                ? dataReader.GetString(ordinal: 12)
+                : null,
+            
+            PlatformCode = !dataReader.IsDBNull(ordinal: 13)
+                ? dataReader.GetString(ordinal: 13)
+                : null
         };
     }
     
@@ -170,19 +269,58 @@ public class PostgresStorage : IDataStorage
         return new Stop
         {
             Id = dataReader.GetString(ordinal: 0),
-            Code = !dataReader.IsDBNull(ordinal: 1) ? dataReader.GetString(ordinal: 1) : null,
-            Name = !dataReader.IsDBNull(ordinal: 2) ? dataReader.GetString(ordinal: 2) : null,
-            Description = !dataReader.IsDBNull(ordinal: 3) ? dataReader.GetString(ordinal: 3) : null,
-            Latitude = !dataReader.IsDBNull(ordinal: 4) ? dataReader.GetDouble(ordinal: 4) : 0,
-            Longitude = !dataReader.IsDBNull(ordinal: 5) ? dataReader.GetDouble(ordinal: 5) : 0,
-            Zone = !dataReader.IsDBNull(ordinal: 6) ? dataReader.GetString(ordinal: 6) : null,
-            Url = !dataReader.IsDBNull(ordinal: 7) ? dataReader.GetString(ordinal: 7) : null,
-            LocationType = !dataReader.IsDBNull(ordinal: 8) ? dataReader.GetString(ordinal: 8).ToLocationType() : null,
-            ParentStation = !dataReader.IsDBNull(ordinal: 9) ? dataReader.GetString(ordinal: 9) : null,
-            Timezone = !dataReader.IsDBNull(ordinal: 10) ? dataReader.GetString(ordinal: 10) : null,
-            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11) ? dataReader.GetString(ordinal: 11) : null,
-            LevelId = !dataReader.IsDBNull(ordinal: 12) ? dataReader.GetString(ordinal: 12) : null,
-            PlatformCode = !dataReader.IsDBNull(ordinal: 13) ? dataReader.GetString(ordinal: 13) : null
+            
+            Code = !dataReader.IsDBNull(ordinal: 1)
+                ? dataReader.GetString(ordinal: 1)
+                : null,
+            
+            Name = !dataReader.IsDBNull(ordinal: 2)
+                ? dataReader.GetString(ordinal: 2)
+                : null,
+            
+            Description = !dataReader.IsDBNull(ordinal: 3)
+                ? dataReader.GetString(ordinal: 3)
+                : null,
+            
+            Latitude = !dataReader.IsDBNull(ordinal: 4)
+                ? dataReader.GetDouble(ordinal: 4)
+                : 0,
+            
+            Longitude = !dataReader.IsDBNull(ordinal: 5)
+                ? dataReader.GetDouble(ordinal: 5)
+                : 0,
+            
+            Zone = !dataReader.IsDBNull(ordinal: 6)
+                ? dataReader.GetString(ordinal: 6)
+                : null,
+            
+            Url = !dataReader.IsDBNull(ordinal: 7)
+                ? dataReader.GetString(ordinal: 7)
+                : null,
+            
+            LocationType = !dataReader.IsDBNull(ordinal: 8)
+                ? dataReader.GetString(ordinal: 8).ToLocationType()
+                : null,
+            
+            ParentStation = !dataReader.IsDBNull(ordinal: 9)
+                ? dataReader.GetString(ordinal: 9)
+                : null,
+            
+            Timezone = !dataReader.IsDBNull(ordinal: 10)
+                ? dataReader.GetString(ordinal: 10)
+                : null,
+            
+            WheelchairBoarding = !dataReader.IsDBNull(ordinal: 11)
+                ? dataReader.GetString(ordinal: 11)
+                : null,
+            
+            LevelId = !dataReader.IsDBNull(ordinal: 12)
+                ? dataReader.GetString(ordinal: 12)
+                : null,
+            
+            PlatformCode = !dataReader.IsDBNull(ordinal: 13)
+                ? dataReader.GetString(ordinal: 13)
+                : null
         };
     }
     
@@ -191,7 +329,7 @@ public class PostgresStorage : IDataStorage
         const string sql = "select * " +
                            "from gtfs_agency";
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReader);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReader);
     }
     
     public Task<List<CalendarDate>> GetCalendarDatesAsync()
@@ -199,7 +337,7 @@ public class PostgresStorage : IDataStorage
         const string sql = "select * " +
                            "from gtfs_calendar_dates";
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetCalendarDateFromDataReader);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetCalendarDateFromDataReader);
     }
     
     public Task<List<Stop>> GetStopsAsync()
@@ -207,7 +345,7 @@ public class PostgresStorage : IDataStorage
         const string sql = "select * " +
                            "from gtfs_stops";
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReader);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReader);
     }
     
     public Task<List<Agency>> GetAgenciesByEmailAsync(
@@ -233,7 +371,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(agency_email, '')) like '%{(email ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByFareUrlAsync(
@@ -259,7 +397,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(agency_fare_url, '')) like '%{(fareUrl ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByIdAsync(
@@ -285,7 +423,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(agency_id, '')) like '%{(id ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(
@@ -311,7 +449,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(agency_lang, '')) like '%{(languageCode ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByNameAsync(
@@ -337,7 +475,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(agency_name) like '%{(name ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByPhoneAsync(
@@ -363,7 +501,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(agency_phone, '')) like '%{(phone ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByQueryAsync(
@@ -417,7 +555,7 @@ public class PostgresStorage : IDataStorage
                        $"or lower(coalesce(agency_email, '')) like '%{(search ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByTimezoneAsync(
@@ -443,7 +581,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(agency_timezone) like '%{(timezone ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByUrlAsync(
@@ -469,7 +607,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(agency_url) like '%{(url ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Departure>> GetDeparturesForStopAsync(
@@ -480,6 +618,7 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Partial => "select s.departure_time, " +
                                              "s.stop_id, " +
+                                             "s.stop_sequence, " +
                                              "t.trip_id, " +
                                              "t.service_id, " +
                                              "t.trip_headsign, " +
@@ -501,11 +640,12 @@ public class PostgresStorage : IDataStorage
                                       "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                       "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                              $"where lower(s.stop_id) like '%{id.ToLower()}%' " +
-                                                "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
+                                                "and coalesce(nullif(s.pickup_type, ''), '0') <> '1' " +
                                       "order by s.departure_time",
             
             ComparisonType.Starts => "select s.departure_time, " +
                                             "s.stop_id, " +
+                                            "s.stop_sequence, " +
                                             "t.trip_id, " +
                                             "t.service_id, " +
                                             "t.trip_headsign, " +
@@ -527,11 +667,12 @@ public class PostgresStorage : IDataStorage
                                      "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                      "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                             $"where lower(s.stop_id) like '{id.ToLower()}%' " +
-                                               "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
+                                               "and coalesce(nullif(s.pickup_type, ''), '0') <> '1' " +
                                      "order by s.departure_time",
             
             ComparisonType.Ends => "select s.departure_time, " +
                                           "s.stop_id, " +
+                                          "s.stop_sequence, " +
                                           "t.trip_id, " +
                                           "t.service_id, " +
                                           "t.trip_headsign, " +
@@ -553,11 +694,12 @@ public class PostgresStorage : IDataStorage
                                    "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                    "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                           $"where lower(s.stop_id) like '%{id.ToLower()}' " +
-                                             "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
+                                             "and coalesce(nullif(s.pickup_type, ''), '0') <> '1' " +
                                    "order by s.departure_time",
             
             _ => "select s.departure_time, " +
                         "s.stop_id, " +
+                        "s.stop_sequence, " +
                         "t.trip_id, " +
                         "t.service_id, " +
                         "t.trip_headsign, " +
@@ -579,11 +721,11 @@ public class PostgresStorage : IDataStorage
                  "left join gtfs_routes r on (t.route_id = r.route_id) " +
                  "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                         $"where lower(s.stop_id) = '{id.ToLower()}' " +
-                           "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
+                           "and coalesce(nullif(s.pickup_type, ''), '0') <> '1' " +
                  "order by s.departure_time"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
     }
     
     public Task<List<Departure>> GetDeparturesForTripAsync(
@@ -594,6 +736,7 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Partial => "select s.departure_time, " +
                                              "s.stop_id, " +
+                                             "s.stop_sequence, " +
                                              "t.trip_id, " +
                                              "t.service_id, " +
                                              "t.trip_headsign, " +
@@ -615,11 +758,12 @@ public class PostgresStorage : IDataStorage
                                       "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                       "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                              $"where lower(s.trip_id) like '%{id.ToLower()}%' " +
-                                                "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
+                                                "and coalesce(nullif(s.pickup_type, ''), '0') <> '1' " +
                                       "order by s.departure_time",
             
             ComparisonType.Starts => "select s.departure_time, " +
                                             "s.stop_id, " +
+                                            "s.stop_sequence, " +
                                             "t.trip_id, " +
                                             "t.service_id, " +
                                             "t.trip_headsign, " +
@@ -641,11 +785,12 @@ public class PostgresStorage : IDataStorage
                                      "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                      "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                             $"where lower(s.trip_id) like '{id.ToLower()}%' " +
-                                               "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
+                                               "and coalesce(nullif(s.pickup_type, ''), '0') <> '1' " +
                                      "order by s.departure_time",
             
             ComparisonType.Ends => "select s.departure_time, " +
                                           "s.stop_id, " +
+                                          "s.stop_sequence, " +
                                           "t.trip_id, " +
                                           "t.service_id, " +
                                           "t.trip_headsign, " +
@@ -667,11 +812,12 @@ public class PostgresStorage : IDataStorage
                                    "left join gtfs_routes r on (t.route_id = r.route_id) " +
                                    "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                                           $"where lower(s.trip_id) like '%{id.ToLower()}' " +
-                                             "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
+                                             "and coalesce(nullif(s.pickup_type, ''), '0') <> '1' " +
                                    "order by s.departure_time",
             
             _ => "select s.departure_time, " +
                         "s.stop_id, " +
+                        "s.stop_sequence, " +
                         "t.trip_id, " +
                         "t.service_id, " +
                         "t.trip_headsign, " +
@@ -693,11 +839,11 @@ public class PostgresStorage : IDataStorage
                  "left join gtfs_routes r on (t.route_id = r.route_id) " +
                  "left join gtfs_calendar c on (t.service_id = c.service_id) " +
                         $"where lower(s.trip_id) = '{id.ToLower()}' " +
-                           "and coalesce(nullif(s.pickup_type, ''), '0') != '1' " +
+                           "and coalesce(nullif(s.pickup_type, ''), '0') <> '1' " +
                  "order by s.departure_time"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByCodeAsync(
@@ -723,7 +869,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(stop_code, '')) like '%{(code ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByDescriptionAsync(
@@ -749,7 +895,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(stop_desc, '')) like '%{(description ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByIdAsync(
@@ -775,7 +921,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(stop_id) like '%{(id ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByLevelAsync(
@@ -801,7 +947,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(level_id, '')) like '%{(id ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByLocationAsync(
@@ -821,7 +967,7 @@ public class PostgresStorage : IDataStorage
                       $"and coalesce(stop_lat, 0) <= {maximumLatitude}"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByLocationTypeAsync(
@@ -835,7 +981,7 @@ public class PostgresStorage : IDataStorage
                     $"where coalesce(nullif(location_type, ''), '0') = '{locationType.ToInt32()}'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByNameAsync(
@@ -861,7 +1007,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(stop_name, '')) like '%{(name ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByParentStationAsync(
@@ -887,7 +1033,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(parent_station, '')) like '%{(id ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByPlatformCodeAsync(
@@ -913,7 +1059,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(platform_code, '')) like '%{(platformCode ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByQueryAsync(
@@ -975,7 +1121,7 @@ public class PostgresStorage : IDataStorage
                        $"or lower(coalesce(platform_code, '')) like '%{(search ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByTimezoneAsync(
@@ -1001,7 +1147,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(stop_timezone, '')) like '%{(timezone ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByUrlAsync(
@@ -1027,7 +1173,7 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(stop_url, '')) like '%{(url ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(
@@ -1041,7 +1187,7 @@ public class PostgresStorage : IDataStorage
                     $"where coalesce(nullif(wheelchair_boarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByZoneAsync(
@@ -1067,6 +1213,6 @@ public class PostgresStorage : IDataStorage
                     $"where lower(coalesce(zone_id, '')) like '%{(id ?? string.Empty).ToLower()}%'"
         };
         
-        return ExecuteCommand(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
     }
 }

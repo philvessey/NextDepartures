@@ -11,5 +11,5 @@ library will work with any well-formed GTFS data set.
 using NextDepartures.Standard;
 using NextDepartures.Storage.SqlServer;
 
-var feed = await Feed.Load(SqlServerStorage.Load());
+var feed = await Feed.LoadAsync(SqlServerStorage.Load());
 ```

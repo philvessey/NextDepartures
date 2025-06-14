@@ -44,9 +44,9 @@ public static class StringExtensions
         
         return new TimeOfDay
         {
-            Hours = value[0],
-            Minutes = value[1],
-            Seconds = value[2]
+            Hours = value.ElementAt(index: 0),
+            Minutes = value.ElementAt(index: 1),
+            Seconds = value.ElementAt(index: 2)
         };
     }
 }
