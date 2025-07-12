@@ -96,6 +96,12 @@ public interface IDataStorage
         string platformCode,
         ComparisonType comparison);
     
+    Task<List<Stop>> GetStopsByPointAsync(
+        double longitude,
+        double latitude,
+        double distance,
+        ComparisonType comparison);
+    
     Task<List<Stop>> GetStopsByQueryAsync(
         string search,
         ComparisonType comparison);

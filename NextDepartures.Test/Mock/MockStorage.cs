@@ -504,6 +504,29 @@ public class MockStorage : IDataStorage
         });
     }
     
+    public Task<List<Stop>> GetStopsByPointAsync(
+        double longitude,
+        double latitude,
+        double distance,
+        ComparisonType comparison) {
+        
+        return Task.FromResult(result: new List<Stop>
+        {
+            new()
+            {
+                Id = "16TH",
+                Code = string.Empty,
+                Name = "16th Street / Mission",
+                Description = string.Empty,
+                Latitude = 37.765176,
+                Longitude = -122.419755,
+                Zone = "16TH",
+                LocationType = LocationType.Stop,
+                ParentStation = "place_16TH"
+            }
+        });
+    }
+    
     public Task<List<Stop>> GetStopsByQueryAsync(
         string search,
         ComparisonType comparison) {

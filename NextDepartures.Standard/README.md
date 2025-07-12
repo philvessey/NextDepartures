@@ -39,6 +39,7 @@ var results = await feed.GetStopsByLocationTypeAsync();
 var results = await feed.GetStopsByNameAsync();
 var results = await feed.GetStopsByParentStationAsync();
 var results = await feed.GetStopsByPlatformCodeAsync();
+var results = await feed.GetStopsByPointAsync();
 var results = await feed.GetStopsByQueryAsync();
 var results = await feed.GetStopsByTimezoneAsync();
 var results = await feed.GetStopsByUrlAsync();

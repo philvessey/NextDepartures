@@ -11,21 +11,27 @@ namespace NextDepartures.Standard;
 public partial class Feed
 {
     /// <summary>
-    /// Gets stops by search query
+    /// Gets stops by point distance
     /// </summary>
-    /// <param name="search">The search query. Default is all.</param>
+    /// <param name="longitude">The longitude of the point. Default is -180.</param>
+    /// <param name="latitude">The latitude of the point. Default is -90.</param>
+    /// <param name="distance">The distance from the point in kilometres. Default is 20,000.</param>
     /// <param name="comparison">The ComparisonType to use when searching. Default is partial.</param>
     /// <param name="results">The number of results to return. Default is all.</param>
     /// <returns>A list of stops.</returns>
-    public async Task<List<Stop>> GetStopsByQueryAsync(
-        string search = null,
+    public async Task<List<Stop>> GetStopsByPointAsync(
+        double longitude = -180,
+        double latitude = -90,
+        double distance = 20000,
         ComparisonType comparison = ComparisonType.Partial,
         int results = 0) {
         
         try
         {
-            var stopsFromStorage = await _dataStorage.GetStopsByQueryAsync(
-                search: search,
+            var stopsFromStorage = await _dataStorage.GetStopsByPointAsync(
+                longitude: longitude,
+                latitude: latitude,
+                distance: distance,
                 comparison: comparison);
             
             if (results > 0)
@@ -38,7 +44,7 @@ public partial class Feed
         catch (Exception e)
         {
             throw new StopException(
-                message: "An error occurred while retrieving stops by search query.",
+                message: "An error occurred while retrieving stops by point.",
                 innerException: e);
         }
     }

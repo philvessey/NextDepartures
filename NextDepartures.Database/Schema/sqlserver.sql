@@ -159,3 +159,37 @@ CREATE TABLE GTFS_TRIPS (
     ShapeId VARCHAR(255),
     WheelchairAccessible VARCHAR(255),
     BikesAllowed VARCHAR(255));
+
+DROP FUNCTION IF EXISTS GET_FROM_POINT
+
+CREATE FUNCTION GET_FROM_POINT (
+    @originLongitude REAL,
+    @originLatitude REAL,
+    @destinationLongitude REAL,
+    @destinationLatitude REAL
+) RETURNS REAL AS
+
+BEGIN
+    DECLARE @angle REAL;
+    DECLARE @deltaLatitude REAL;
+    DECLARE @deltaLongitude REAL;
+    DECLARE @distance REAL;
+    
+    DECLARE @a REAL;
+    DECLARE @b REAL;
+    
+    SET @deltaLatitude = RADIANS(@destinationLatitude - @originLatitude);
+    SET @deltaLongitude = RADIANS(@destinationLongitude - @originLongitude);
+    
+    SET @a = SIN(@deltaLatitude / 2) *
+             SIN(@deltaLatitude / 2);
+    SET @b = COS(RADIANS(@originLatitude)) *
+             COS(RADIANS(@destinationLatitude)) *
+             SIN(@deltaLongitude / 2) *
+             SIN(@deltaLongitude / 2);
+    
+    SET @angle = 2 * ATAN2(SQRT(@a + @b), SQRT(1 - (@a + @b)));
+    SET @distance = @angle * 6371;
+    
+    RETURN @distance;
+END

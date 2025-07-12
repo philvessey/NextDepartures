@@ -159,3 +159,40 @@ create table gtfs_trips (
     shape_id character varying(255),
     wheelchair_accessible character varying(255),
     bikes_allowed character varying(255));
+
+drop function if exists get_from_point;
+
+create function get_from_point(
+    originLongitude real,
+    originLatitude real,
+    destinationLongitude real,
+    destinationLatitude real
+) returns real AS $$
+    
+    declare
+        angle real;
+        deltaLatitude real;
+        deltaLongitude real;
+        distance real;
+        
+        a real;
+        b real;
+        
+    begin
+        deltaLatitude := radians(destinationLatitude - originLatitude);
+        deltaLongitude := radians(destinationLongitude - originLongitude);
+        
+        a := sin(deltaLatitude / 2) *
+             sin(deltaLatitude / 2);
+        b := cos(radians(originLatitude)) *
+             cos(radians(destinationLatitude)) *
+             sin(deltaLongitude / 2) *
+             sin(deltaLongitude / 2);
+        
+        angle := 2 * atan2(sqrt(a + b), sqrt(1 - (a + b)));
+        distance := angle * 6371;
+        
+        return distance;
+    end;
+    
+$$ language plpgsql immutable;

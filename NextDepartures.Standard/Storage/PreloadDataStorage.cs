@@ -256,6 +256,19 @@ public class PreloadDataStorage : IDataStorage
             comparison: comparison);
     }
     
+    public Task<List<Stop>> GetStopsByPointAsync(
+        double longitude,
+        double latitude,
+        double distance,
+        ComparisonType comparison) {
+        
+        return _dataStorage.GetStopsByPointAsync(
+            longitude: longitude,
+            latitude: latitude,
+            distance: distance,
+            comparison: comparison);
+    }
+    
     public Task<List<Stop>> GetStopsByQueryAsync(
         string search,
         ComparisonType comparison) {

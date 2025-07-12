@@ -329,7 +329,9 @@ public class PostgresStorage : IDataStorage
         const string sql = "select * " +
                            "from gtfs_agency";
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReader);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetAgencyFromDataReader);
     }
     
     public Task<List<CalendarDate>> GetCalendarDatesAsync()
@@ -337,7 +339,9 @@ public class PostgresStorage : IDataStorage
         const string sql = "select * " +
                            "from gtfs_calendar_dates";
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetCalendarDateFromDataReader);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetCalendarDateFromDataReader);
     }
     
     public Task<List<Stop>> GetStopsAsync()
@@ -345,7 +349,9 @@ public class PostgresStorage : IDataStorage
         const string sql = "select * " +
                            "from gtfs_stops";
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReader);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReader);
     }
     
     public Task<List<Agency>> GetAgenciesByEmailAsync(
@@ -356,22 +362,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_email, '')) = '{(email ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(agency_email, '')) = '{(email ?? string.Empty).ToLower()}' " +
+                                    "order by agency_name",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_email, '')) like '{(email ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(agency_email, '')) like '{(email ?? string.Empty).ToLower()}%' " +
+                                     "order by agency_name",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_email, '')) like '%{(email ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(agency_email, '')) like '%{(email ?? string.Empty).ToLower()}' " +
+                                   "order by agency_name",
             
             _ => "select * " +
                  "from gtfs_agency " +
-                    $"where lower(coalesce(agency_email, '')) like '%{(email ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(agency_email, '')) like '%{(email ?? string.Empty).ToLower()}%' " +
+                 "order by agency_name"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByFareUrlAsync(
@@ -382,22 +394,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_fare_url, '')) = '{(fareUrl ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(agency_fare_url, '')) = '{(fareUrl ?? string.Empty).ToLower()}' " +
+                                    "order by agency_name",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_fare_url, '')) like '{(fareUrl ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(agency_fare_url, '')) like '{(fareUrl ?? string.Empty).ToLower()}%' " +
+                                     "order by agency_name",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_fare_url, '')) like '%{(fareUrl ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(agency_fare_url, '')) like '%{(fareUrl ?? string.Empty).ToLower()}' " +
+                                   "order by agency_name",
             
             _ => "select * " +
                  "from gtfs_agency " +
-                    $"where lower(coalesce(agency_fare_url, '')) like '%{(fareUrl ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(agency_fare_url, '')) like '%{(fareUrl ?? string.Empty).ToLower()}%' " +
+                 "order by agency_name"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByIdAsync(
@@ -408,22 +426,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_id, '')) = '{(id ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(agency_id, '')) = '{(id ?? string.Empty).ToLower()}' " +
+                                    "order by agency_name",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_id, '')) like '{(id ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(agency_id, '')) like '{(id ?? string.Empty).ToLower()}%' " +
+                                     "order by agency_name",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_id, '')) like '%{(id ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(agency_id, '')) like '%{(id ?? string.Empty).ToLower()}' " +
+                                   "order by agency_name",
             
             _ => "select * " +
                  "from gtfs_agency " +
-                    $"where lower(coalesce(agency_id, '')) like '%{(id ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(agency_id, '')) like '%{(id ?? string.Empty).ToLower()}%' " +
+                 "order by agency_name"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(
@@ -434,22 +458,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_lang, '')) = '{(languageCode ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(agency_lang, '')) = '{(languageCode ?? string.Empty).ToLower()}' " +
+                                    "order by agency_name",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_lang, '')) like '{(languageCode ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(agency_lang, '')) like '{(languageCode ?? string.Empty).ToLower()}%' " +
+                                     "order by agency_name",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_lang, '')) like '%{(languageCode ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(agency_lang, '')) like '%{(languageCode ?? string.Empty).ToLower()}' " +
+                                   "order by agency_name",
             
             _ => "select * " +
                  "from gtfs_agency " +
-                    $"where lower(coalesce(agency_lang, '')) like '%{(languageCode ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(agency_lang, '')) like '%{(languageCode ?? string.Empty).ToLower()}%' " +
+                 "order by agency_name"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByNameAsync(
@@ -460,22 +490,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_agency " +
-                                        $"where lower(agency_name) = '{(name ?? string.Empty).ToLower()}'",
+                                        $"where lower(agency_name) = '{(name ?? string.Empty).ToLower()}' " +
+                                    "order by agency_name",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_agency " +
-                                        $"where lower(agency_name) like '{(name ?? string.Empty).ToLower()}%'",
+                                        $"where lower(agency_name) like '{(name ?? string.Empty).ToLower()}%' " +
+                                     "order by agency_name",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_agency " +
-                                        $"where lower(agency_name) like '%{(name ?? string.Empty).ToLower()}'",
+                                        $"where lower(agency_name) like '%{(name ?? string.Empty).ToLower()}' " +
+                                   "order by agency_name",
             
             _ => "select * " +
                  "from gtfs_agency " +
-                    $"where lower(agency_name) like '%{(name ?? string.Empty).ToLower()}%'"
+                    $"where lower(agency_name) like '%{(name ?? string.Empty).ToLower()}%' " +
+                 "order by agency_name"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByPhoneAsync(
@@ -486,22 +522,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_phone, '')) = '{(phone ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(agency_phone, '')) = '{(phone ?? string.Empty).ToLower()}' " +
+                                    "order by agency_name",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_phone, '')) like '{(phone ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(agency_phone, '')) like '{(phone ?? string.Empty).ToLower()}%' " +
+                                     "order by agency_name",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_agency " +
-                                        $"where lower(coalesce(agency_phone, '')) like '%{(phone ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(agency_phone, '')) like '%{(phone ?? string.Empty).ToLower()}' " +
+                                   "order by agency_name",
             
             _ => "select * " +
                  "from gtfs_agency " +
-                    $"where lower(coalesce(agency_phone, '')) like '%{(phone ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(agency_phone, '')) like '%{(phone ?? string.Empty).ToLower()}%' " +
+                 "order by agency_name"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByQueryAsync(
@@ -519,7 +561,8 @@ public class PostgresStorage : IDataStorage
                                            $"or lower(coalesce(agency_lang, '')) = '{(search ?? string.Empty).ToLower()}' " +
                                            $"or lower(coalesce(agency_phone, '')) = '{(search ?? string.Empty).ToLower()}' " +
                                            $"or lower(coalesce(agency_fare_url, '')) = '{(search ?? string.Empty).ToLower()}' " +
-                                           $"or lower(coalesce(agency_email, '')) = '{(search ?? string.Empty).ToLower()}'",
+                                           $"or lower(coalesce(agency_email, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                    "order by agency_name",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_agency " +
@@ -530,7 +573,8 @@ public class PostgresStorage : IDataStorage
                                            $"or lower(coalesce(agency_lang, '')) like '{(search ?? string.Empty).ToLower()}%' " +
                                            $"or lower(coalesce(agency_phone, '')) like '{(search ?? string.Empty).ToLower()}%' " +
                                            $"or lower(coalesce(agency_fare_url, '')) like '{(search ?? string.Empty).ToLower()}%' " +
-                                           $"or lower(coalesce(agency_email, '')) like '{(search ?? string.Empty).ToLower()}%'",
+                                           $"or lower(coalesce(agency_email, '')) like '{(search ?? string.Empty).ToLower()}%' " +
+                                     "order by agency_name",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_agency " +
@@ -541,7 +585,8 @@ public class PostgresStorage : IDataStorage
                                            $"or lower(coalesce(agency_lang, '')) like '%{(search ?? string.Empty).ToLower()}' " +
                                            $"or lower(coalesce(agency_phone, '')) like '%{(search ?? string.Empty).ToLower()}' " +
                                            $"or lower(coalesce(agency_fare_url, '')) like '%{(search ?? string.Empty).ToLower()}' " +
-                                           $"or lower(coalesce(agency_email, '')) like '%{(search ?? string.Empty).ToLower()}'",
+                                           $"or lower(coalesce(agency_email, '')) like '%{(search ?? string.Empty).ToLower()}' " +
+                                   "order by agency_name",
             
             _ => "select * " +
                  "from gtfs_agency " +
@@ -552,10 +597,13 @@ public class PostgresStorage : IDataStorage
                        $"or lower(coalesce(agency_lang, '')) like '%{(search ?? string.Empty).ToLower()}%' " +
                        $"or lower(coalesce(agency_phone, '')) like '%{(search ?? string.Empty).ToLower()}%' " +
                        $"or lower(coalesce(agency_fare_url, '')) like '%{(search ?? string.Empty).ToLower()}%' " +
-                       $"or lower(coalesce(agency_email, '')) like '%{(search ?? string.Empty).ToLower()}%'"
+                       $"or lower(coalesce(agency_email, '')) like '%{(search ?? string.Empty).ToLower()}%' " +
+                 "order by agency_name"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByTimezoneAsync(
@@ -566,22 +614,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_agency " +
-                                        $"where lower(agency_timezone) = '{(timezone ?? string.Empty).ToLower()}'",
+                                        $"where lower(agency_timezone) = '{(timezone ?? string.Empty).ToLower()}' " +
+                                    "order by agency_name",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_agency " +
-                                        $"where lower(agency_timezone) like '{(timezone ?? string.Empty).ToLower()}%'",
+                                        $"where lower(agency_timezone) like '{(timezone ?? string.Empty).ToLower()}%' " +
+                                     "order by agency_name",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_agency " +
-                                        $"where lower(agency_timezone) like '%{(timezone ?? string.Empty).ToLower()}'",
+                                        $"where lower(agency_timezone) like '%{(timezone ?? string.Empty).ToLower()}' " +
+                                   "order by agency_name",
             
             _ => "select * " +
                  "from gtfs_agency " +
-                    $"where lower(agency_timezone) like '%{(timezone ?? string.Empty).ToLower()}%'"
+                    $"where lower(agency_timezone) like '%{(timezone ?? string.Empty).ToLower()}%' " +
+                 "order by agency_name"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Agency>> GetAgenciesByUrlAsync(
@@ -592,22 +646,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_agency " +
-                                        $"where lower(agency_url) = '{(url ?? string.Empty).ToLower()}'",
+                                        $"where lower(agency_url) = '{(url ?? string.Empty).ToLower()}' " +
+                                    "order by agency_name",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_agency " +
-                                        $"where lower(agency_url) like '{(url ?? string.Empty).ToLower()}%'",
+                                        $"where lower(agency_url) like '{(url ?? string.Empty).ToLower()}%' " +
+                                     "order by agency_name",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_agency " +
-                                        $"where lower(agency_url) like '%{(url ?? string.Empty).ToLower()}'",
+                                        $"where lower(agency_url) like '%{(url ?? string.Empty).ToLower()}' " +
+                                   "order by agency_name",
             
             _ => "select * " +
                  "from gtfs_agency " +
-                    $"where lower(agency_url) like '%{(url ?? string.Empty).ToLower()}%'"
+                    $"where lower(agency_url) like '%{(url ?? string.Empty).ToLower()}%' " +
+                 "order by agency_name"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetAgencyFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetAgencyFromDataReaderByCondition);
     }
     
     public Task<List<Departure>> GetDeparturesForStopAsync(
@@ -725,7 +785,9 @@ public class PostgresStorage : IDataStorage
                  "order by s.departure_time"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetDepartureFromDataReaderByCondition);
     }
     
     public Task<List<Departure>> GetDeparturesForTripAsync(
@@ -843,7 +905,9 @@ public class PostgresStorage : IDataStorage
                  "order by s.departure_time"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetDepartureFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetDepartureFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByCodeAsync(
@@ -854,22 +918,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_code, '')) = '{(code ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(stop_code, '')) = '{(code ?? string.Empty).ToLower()}' " +
+                                    "order by stop_name, stop_id",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_code, '')) like '{(code ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(stop_code, '')) like '{(code ?? string.Empty).ToLower()}%' " +
+                                     "order by stop_name, stop_id",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_code, '')) like '%{(code ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(stop_code, '')) like '%{(code ?? string.Empty).ToLower()}' " +
+                                   "order by stop_name, stop_id",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where lower(coalesce(stop_code, '')) like '%{(code ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(stop_code, '')) like '%{(code ?? string.Empty).ToLower()}%' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByDescriptionAsync(
@@ -880,22 +950,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_desc, '')) = '{(description ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(stop_desc, '')) = '{(description ?? string.Empty).ToLower()}' " +
+                                    "order by stop_name, stop_id",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_desc, '')) like '{(description ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(stop_desc, '')) like '{(description ?? string.Empty).ToLower()}%' " +
+                                     "order by stop_name, stop_id",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_desc, '')) like '%{(description ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(stop_desc, '')) like '%{(description ?? string.Empty).ToLower()}' " +
+                                   "order by stop_name, stop_id",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where lower(coalesce(stop_desc, '')) like '%{(description ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(stop_desc, '')) like '%{(description ?? string.Empty).ToLower()}%' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByIdAsync(
@@ -906,22 +982,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where lower(stop_id) = '{(id ?? string.Empty).ToLower()}'",
+                                        $"where lower(stop_id) = '{(id ?? string.Empty).ToLower()}' " +
+                                    "order by stop_name, stop_id",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where lower(stop_id) like '{(id ?? string.Empty).ToLower()}%'",
+                                        $"where lower(stop_id) like '{(id ?? string.Empty).ToLower()}%' " +
+                                     "order by stop_name, stop_id",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where lower(stop_id) like '%{(id ?? string.Empty).ToLower()}'",
+                                        $"where lower(stop_id) like '%{(id ?? string.Empty).ToLower()}' " +
+                                   "order by stop_name, stop_id",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where lower(stop_id) like '%{(id ?? string.Empty).ToLower()}%'"
+                    $"where lower(stop_id) like '%{(id ?? string.Empty).ToLower()}%' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByLevelAsync(
@@ -932,22 +1014,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where lower(coalesce(level_id, '')) = '{(id ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(level_id, '')) = '{(id ?? string.Empty).ToLower()}' " +
+                                    "order by stop_name, stop_id",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where lower(coalesce(level_id, '')) like '{(id ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(level_id, '')) like '{(id ?? string.Empty).ToLower()}%' " +
+                                     "order by stop_name, stop_id",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where lower(coalesce(level_id, '')) like '%{(id ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(level_id, '')) like '%{(id ?? string.Empty).ToLower()}' " +
+                                   "order by stop_name, stop_id",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where lower(coalesce(level_id, '')) like '%{(id ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(level_id, '')) like '%{(id ?? string.Empty).ToLower()}%' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByLocationAsync(
@@ -957,17 +1045,24 @@ public class PostgresStorage : IDataStorage
         double maximumLatitude,
         ComparisonType comparison) {
         
+        var longitude = (minimumLongitude + maximumLongitude) / 2;
+        var latitude = (minimumLatitude + maximumLatitude) / 2;
+        
         var sql = comparison switch
         {
-            _ => "select * " +
-                 "from gtfs_stops " +
+            _ => $"select *, " +
+                    $"get_from_point({longitude}, {latitude}, coalesce(stop_lon, 0), coalesce(stop_lat, 0)) AS distance " +
+                 $"from gtfs_stops " +
                     $"where coalesce(stop_lon, 0) >= {minimumLongitude} " +
                       $"and coalesce(stop_lat, 0) >= {minimumLatitude} " +
                       $"and coalesce(stop_lon, 0) <= {maximumLongitude} " +
-                      $"and coalesce(stop_lat, 0) <= {maximumLatitude}"
+                      $"and coalesce(stop_lat, 0) <= {maximumLatitude} " +
+                 $"order by distance"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByLocationTypeAsync(
@@ -978,10 +1073,13 @@ public class PostgresStorage : IDataStorage
         {
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where coalesce(nullif(location_type, ''), '0') = '{locationType.ToInt32()}'"
+                    $"where coalesce(nullif(location_type, ''), '0') = '{locationType.ToInt32()}' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByNameAsync(
@@ -992,22 +1090,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_name, '')) = '{(name ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(stop_name, '')) = '{(name ?? string.Empty).ToLower()}' " +
+                                    "order by stop_name, stop_id",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_name, '')) like '{(name ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(stop_name, '')) like '{(name ?? string.Empty).ToLower()}%' " +
+                                     "order by stop_name, stop_id",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_name, '')) like '%{(name ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(stop_name, '')) like '%{(name ?? string.Empty).ToLower()}' " +
+                                   "order by stop_name, stop_id",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where lower(coalesce(stop_name, '')) like '%{(name ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(stop_name, '')) like '%{(name ?? string.Empty).ToLower()}%' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByParentStationAsync(
@@ -1018,22 +1122,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where lower(coalesce(parent_station, '')) = '{(id ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(parent_station, '')) = '{(id ?? string.Empty).ToLower()}' " +
+                                    "order by stop_name, stop_id",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where lower(coalesce(parent_station, '')) like '{(id ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(parent_station, '')) like '{(id ?? string.Empty).ToLower()}%' " +
+                                     "order by stop_name, stop_id",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where lower(coalesce(parent_station, '')) like '%{(id ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(parent_station, '')) like '%{(id ?? string.Empty).ToLower()}' " +
+                                   "order by stop_name, stop_id",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where lower(coalesce(parent_station, '')) like '%{(id ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(parent_station, '')) like '%{(id ?? string.Empty).ToLower()}%' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByPlatformCodeAsync(
@@ -1044,22 +1154,48 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where lower(coalesce(platform_code, '')) = '{(platformCode ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(platform_code, '')) = '{(platformCode ?? string.Empty).ToLower()}' " +
+                                    "order by stop_name, stop_id",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where lower(coalesce(platform_code, '')) like '{(platformCode ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(platform_code, '')) like '{(platformCode ?? string.Empty).ToLower()}%' " +
+                                     "order by stop_name, stop_id",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where lower(coalesce(platform_code, '')) like '%{(platformCode ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(platform_code, '')) like '%{(platformCode ?? string.Empty).ToLower()}' " +
+                                   "order by stop_name, stop_id",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where lower(coalesce(platform_code, '')) like '%{(platformCode ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(platform_code, '')) like '%{(platformCode ?? string.Empty).ToLower()}%' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
+    }
+    
+    public Task<List<Stop>> GetStopsByPointAsync(
+        double longitude,
+        double latitude,
+        double distance,
+        ComparisonType comparison) {
+        
+        var sql = comparison switch
+        {
+            _ => $"select *, " +
+                    $"get_from_point({longitude}, {latitude}, coalesce(stop_lon, 0), coalesce(stop_lat, 0)) AS distance " +
+                 $"from gtfs_stops " +
+                    $"where get_from_point({longitude}, {latitude}, coalesce(stop_lon, 0), coalesce(stop_lat, 0)) <= {distance} " +
+                 $"order by distance"
+        };
+        
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByQueryAsync(
@@ -1079,7 +1215,8 @@ public class PostgresStorage : IDataStorage
                                            $"or lower(coalesce(parent_station, '')) = '{(search ?? string.Empty).ToLower()}' " +
                                            $"or lower(coalesce(stop_timezone, '')) = '{(search ?? string.Empty).ToLower()}' " +
                                            $"or lower(coalesce(level_id, '')) = '{(search ?? string.Empty).ToLower()}' " +
-                                           $"or lower(coalesce(platform_code, '')) = '{(search ?? string.Empty).ToLower()}'",
+                                           $"or lower(coalesce(platform_code, '')) = '{(search ?? string.Empty).ToLower()}' " +
+                                    "order by stop_name, stop_id",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
@@ -1092,7 +1229,8 @@ public class PostgresStorage : IDataStorage
                                            $"or lower(coalesce(parent_station, '')) like '{(search ?? string.Empty).ToLower()}%' " +
                                            $"or lower(coalesce(stop_timezone, '')) like '{(search ?? string.Empty).ToLower()}%' " +
                                            $"or lower(coalesce(level_id, '')) like '{(search ?? string.Empty).ToLower()}%' " +
-                                           $"or lower(coalesce(platform_code, '')) like '{(search ?? string.Empty).ToLower()}%'",
+                                           $"or lower(coalesce(platform_code, '')) like '{(search ?? string.Empty).ToLower()}%' " +
+                                     "order by stop_name, stop_id",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
@@ -1105,7 +1243,8 @@ public class PostgresStorage : IDataStorage
                                            $"or lower(coalesce(parent_station, '')) like '%{(search ?? string.Empty).ToLower()}' " +
                                            $"or lower(coalesce(stop_timezone, '')) like '%{(search ?? string.Empty).ToLower()}' " +
                                            $"or lower(coalesce(level_id, '')) like '%{(search ?? string.Empty).ToLower()}' " +
-                                           $"or lower(coalesce(platform_code, '')) like '%{(search ?? string.Empty).ToLower()}'",
+                                           $"or lower(coalesce(platform_code, '')) like '%{(search ?? string.Empty).ToLower()}' " +
+                                   "order by stop_name, stop_id",
             
             _ => "select * " +
                  "from gtfs_stops " +
@@ -1118,10 +1257,13 @@ public class PostgresStorage : IDataStorage
                        $"or lower(coalesce(parent_station, '')) like '%{(search ?? string.Empty).ToLower()}%' " +
                        $"or lower(coalesce(stop_timezone, '')) like '%{(search ?? string.Empty).ToLower()}%' " +
                        $"or lower(coalesce(level_id, '')) like '%{(search ?? string.Empty).ToLower()}%' " +
-                       $"or lower(coalesce(platform_code, '')) like '%{(search ?? string.Empty).ToLower()}%'"
+                       $"or lower(coalesce(platform_code, '')) like '%{(search ?? string.Empty).ToLower()}%' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByTimezoneAsync(
@@ -1132,22 +1274,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_timezone, '')) = '{(timezone ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(stop_timezone, '')) = '{(timezone ?? string.Empty).ToLower()}' " +
+                                    "order by stop_name, stop_id",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_timezone, '')) like '{(timezone ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(stop_timezone, '')) like '{(timezone ?? string.Empty).ToLower()}%' " +
+                                     "order by stop_name, stop_id",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_timezone, '')) like '%{(timezone ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(stop_timezone, '')) like '%{(timezone ?? string.Empty).ToLower()}' " +
+                                   "order by stop_name, stop_id",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where lower(coalesce(stop_timezone, '')) like '%{(timezone ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(stop_timezone, '')) like '%{(timezone ?? string.Empty).ToLower()}%' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByUrlAsync(
@@ -1158,22 +1306,28 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_url, '')) = '{(url ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(stop_url, '')) = '{(url ?? string.Empty).ToLower()}' " +
+                                    "order by stop_name, stop_id",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_url, '')) like '{(url ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(stop_url, '')) like '{(url ?? string.Empty).ToLower()}%' " +
+                                     "order by stop_name, stop_id",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where lower(coalesce(stop_url, '')) like '%{(url ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(stop_url, '')) like '%{(url ?? string.Empty).ToLower()}' " +
+                                   "order by stop_name, stop_id",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where lower(coalesce(stop_url, '')) like '%{(url ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(stop_url, '')) like '%{(url ?? string.Empty).ToLower()}%' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(
@@ -1184,10 +1338,13 @@ public class PostgresStorage : IDataStorage
         {
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where coalesce(nullif(wheelchair_boarding, ''), '0') = '{wheelchairBoarding.ToInt32()}'"
+                    $"where coalesce(nullif(wheelchair_boarding, ''), '0') = '{wheelchairBoarding.ToInt32()}' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
     
     public Task<List<Stop>> GetStopsByZoneAsync(
@@ -1198,21 +1355,27 @@ public class PostgresStorage : IDataStorage
         {
             ComparisonType.Exact => "select * " +
                                     "from gtfs_stops " +
-                                        $"where lower(coalesce(zone_id, '')) = '{(id ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(zone_id, '')) = '{(id ?? string.Empty).ToLower()}' " +
+                                    "order by stop_name, stop_id",
             
             ComparisonType.Starts => "select * " +
                                      "from gtfs_stops " +
-                                        $"where lower(coalesce(zone_id, '')) like '{(id ?? string.Empty).ToLower()}%'",
+                                        $"where lower(coalesce(zone_id, '')) like '{(id ?? string.Empty).ToLower()}%' " +
+                                     "order by stop_name, stop_id",
             
             ComparisonType.Ends => "select * " +
                                    "from gtfs_stops " +
-                                        $"where lower(coalesce(zone_id, '')) like '%{(id ?? string.Empty).ToLower()}'",
+                                        $"where lower(coalesce(zone_id, '')) like '%{(id ?? string.Empty).ToLower()}' " +
+                                   "order by stop_name, stop_id",
             
             _ => "select * " +
                  "from gtfs_stops " +
-                    $"where lower(coalesce(zone_id, '')) like '%{(id ?? string.Empty).ToLower()}%'"
+                    $"where lower(coalesce(zone_id, '')) like '%{(id ?? string.Empty).ToLower()}%' " +
+                 "order by stop_name, stop_id"
         };
         
-        return ExecuteCommandAsync(sql: sql, entryProcessor: GetStopFromDataReaderByCondition);
+        return ExecuteCommandAsync(
+            sql: sql,
+            entryProcessor: GetStopFromDataReaderByCondition);
     }
 }
