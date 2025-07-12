@@ -90,6 +90,15 @@ public class Stops
     }
     
     [TestMethod]
+    public async Task GetStopsByPointAsync()
+    {
+        var feed = await Feed.LoadAsync(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
+        var results = await feed.GetStopsByPointAsync();
+        
+        Assert.IsTrue(condition: results.Count > 0);
+    }
+    
+    [TestMethod]
     public async Task GetStopsByQueryAsync()
     {
         var feed = await Feed.LoadAsync(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));

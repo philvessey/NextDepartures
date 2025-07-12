@@ -90,6 +90,15 @@ public class Stops
     }
     
     [TestMethod]
+    public async Task GetStopsByPointAsync()
+    {
+        var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
+        var results = await feed.GetStopsByPointAsync();
+        
+        Assert.IsTrue(condition: results.Count > 0);
+    }
+    
+    [TestMethod]
     public async Task GetStopsByQueryAsync()
     {
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));

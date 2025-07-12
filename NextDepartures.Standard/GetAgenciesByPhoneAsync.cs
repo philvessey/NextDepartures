@@ -30,13 +30,10 @@ public partial class Feed
             
             if (results > 0)
                 return agenciesFromStorage
-                    .OrderBy(keySelector: a => a.Name)
                     .Take(count: results)
                     .ToList();
             
-            return agenciesFromStorage
-                .OrderBy(keySelector: a => a.Name)
-                .ToList();
+            return agenciesFromStorage;
         }
         catch (Exception e)
         {

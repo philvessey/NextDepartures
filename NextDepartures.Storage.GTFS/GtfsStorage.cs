@@ -9,6 +9,7 @@ using NextDepartures.Standard.Models;
 using NextDepartures.Standard.Storage;
 using NextDepartures.Standard.Types;
 using NextDepartures.Storage.GTFS.Extensions;
+using NextDepartures.Storage.GTFS.Utils;
 
 namespace NextDepartures.Storage.GTFS;
 
@@ -85,7 +86,6 @@ public class GtfsStorage : IDataStorage
             .Join(inner: _feed.Trips, s => s.TripId.TrimDoubleQuotes(), t => t.Id.TrimDoubleQuotes(), (s, t) => (s, t))
             .Join(inner: _feed.Routes, e => e.t.RouteId.TrimDoubleQuotes(), r => r.Id.TrimDoubleQuotes(), (e, r) => (e.s, e.t, r))
             .Join(inner: _feed.Calendars, e => e.t.ServiceId.TrimDoubleQuotes(), c => c.ServiceId.TrimDoubleQuotes(), (e, c) => (e.s, e.t, e.r, c))
-            .OrderBy(keySelector: e => e.s.DepartureTime)
             .Select(selector: e => new Departure
             {
                 DepartureTime = new TimeOfDay
@@ -210,7 +210,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: a => a.Name)
+            .ToList());
     }
     
     public Task<List<Agency>> GetAgenciesByFareUrlAsync(
@@ -244,7 +246,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: a => a.Name)
+            .ToList());
     }
     
     public Task<List<Agency>> GetAgenciesByIdAsync(
@@ -278,7 +282,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: a => a.Name)
+            .ToList());
     }
     
     public Task<List<Agency>> GetAgenciesByLanguageCodeAsync(
@@ -312,7 +318,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: a => a.Name)
+            .ToList());
     }
     
     public Task<List<Agency>> GetAgenciesByNameAsync(
@@ -346,7 +354,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: a => a.Name)
+            .ToList());
     }
     
     public Task<List<Agency>> GetAgenciesByPhoneAsync(
@@ -380,7 +390,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: a => a.Name)
+            .ToList());
     }
     
     public Task<List<Agency>> GetAgenciesByQueryAsync(
@@ -526,7 +538,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: a => a.Name)
+            .ToList());
     }
     
     public Task<List<Agency>> GetAgenciesByTimezoneAsync(
@@ -560,7 +574,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: a => a.Name)
+            .ToList());
     }
     
     public Task<List<Agency>> GetAgenciesByUrlAsync(
@@ -594,7 +610,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetAgenciesFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: a => a.Name)
+            .ToList());
     }
     
     public Task<List<Departure>> GetDeparturesForStopAsync(
@@ -628,7 +646,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetDeparturesFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetDeparturesFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: d => d.DepartureTime)
+            .ToList());
     }
     
     public Task<List<Departure>> GetDeparturesForTripAsync(
@@ -662,7 +682,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetDeparturesFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetDeparturesFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: d => d.DepartureTime)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByCodeAsync(
@@ -696,7 +718,10 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByDescriptionAsync(
@@ -730,7 +755,10 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByIdAsync(
@@ -764,7 +792,10 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByLevelAsync(
@@ -798,7 +829,10 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByLocationAsync(
@@ -807,6 +841,9 @@ public class GtfsStorage : IDataStorage
         double maximumLongitude,
         double maximumLatitude,
         ComparisonType comparison) {
+        
+        var longitude = (minimumLongitude + maximumLongitude) / 2;
+        var latitude = (minimumLatitude + maximumLatitude) / 2;
         
         Func<Stop, bool> condition = comparison switch
         {
@@ -817,7 +854,13 @@ public class GtfsStorage : IDataStorage
                 s.Latitude <= maximumLatitude
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(s => DistanceUtils.GetFromPoint(
+                originLongitude: longitude,
+                originLatitude: latitude,
+                destinationLongitude: s.Longitude,
+                destinationLatitude: s.Latitude))
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByLocationTypeAsync(
@@ -831,7 +874,10 @@ public class GtfsStorage : IDataStorage
                     .Equals(other: locationType)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByNameAsync(
@@ -865,7 +911,10 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByParentStationAsync(
@@ -899,7 +948,10 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByPlatformCodeAsync(
@@ -933,7 +985,35 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
+    }
+    
+    public Task<List<Stop>> GetStopsByPointAsync(
+        double longitude,
+        double latitude,
+        double distance,
+        ComparisonType comparison) {
+        
+        Func<Stop, bool> condition = comparison switch
+        {
+            _ => s =>
+                DistanceUtils.GetFromPoint(
+                    originLongitude: longitude,
+                    originLatitude: latitude,
+                    destinationLongitude: s.Longitude,
+                    destinationLatitude: s.Latitude) <= distance
+        };
+        
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(s => DistanceUtils.GetFromPoint(
+                originLongitude: longitude,
+                originLatitude: latitude,
+                destinationLongitude: s.Longitude,
+                destinationLatitude: s.Latitude))
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByQueryAsync(
@@ -1111,7 +1191,10 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByTimezoneAsync(
@@ -1145,7 +1228,10 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByUrlAsync(
@@ -1179,7 +1265,10 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByWheelchairBoardingAsync(
@@ -1195,7 +1284,10 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
     
     public Task<List<Stop>> GetStopsByZoneAsync(
@@ -1229,6 +1321,9 @@ public class GtfsStorage : IDataStorage
                         comparisonType: StringComparison.InvariantCultureIgnoreCase)
         };
         
-        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition));
+        return Task.FromResult(result: GetStopsFromFeedByCondition(condition: condition)
+            .OrderBy(keySelector: s => s.Name)
+            .ThenBy(keySelector: s => s.Id)
+            .ToList());
     }
 }
