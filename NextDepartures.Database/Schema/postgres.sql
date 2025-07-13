@@ -195,4 +195,4 @@ create function get_from_point(
         return distance;
     end;
     
-$$ language plpgsql immutable;
+$$ language plpgsql;
