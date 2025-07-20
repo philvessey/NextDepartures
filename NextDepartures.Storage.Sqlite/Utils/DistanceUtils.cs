@@ -26,9 +26,12 @@ public static class DistanceUtils
             deltaLatitude: deltaLatitude / 2,
             deltaLongitude: deltaLongitude / 2);
         
+        var y = Math.Sqrt(d: a + b);
+        var x = Math.Sqrt(d: 1 - (a + b));
+        
         var angle = 2 * Math.Atan2(
-            y: Math.Sqrt(d: a + b),
-            x: Math.Sqrt(d: 1 - (a + b)));
+            y: y,
+            x: x);
         
         return angle * 6371;
     }
