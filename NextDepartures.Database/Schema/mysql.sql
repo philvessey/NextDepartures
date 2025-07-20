@@ -177,6 +177,8 @@ BEGIN
     
     DECLARE a REAL;
     DECLARE b REAL;
+    DECLARE x REAL;
+    DECLARE y REAL;
     
     SET deltaLatitude = RADIANS(destinationLatitude - originLatitude);
     SET deltaLongitude = RADIANS(destinationLongitude - originLongitude);
@@ -188,7 +190,10 @@ BEGIN
             SIN(deltaLongitude / 2) *
             SIN(deltaLongitude / 2);
     
-    SET angle = 2 * ATAN2(SQRT(a + b), SQRT(1 - (a + b)));
+    SET y = SQRT(a + b);
+    SET x = SQRT(1 - (a + b));
+    
+    SET angle = 2 * ATAN2(y, x);
     SET distance = angle * 6371;
     
     RETURN distance;
