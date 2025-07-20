@@ -1,6 +1,7 @@
 <Project>
     
     <PropertyGroup>
+        <NoWarn>NU1900</NoWarn>
         <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
