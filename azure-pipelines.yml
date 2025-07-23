@@ -1,6 +1,6 @@
-name: '3.7.7'
+name: '3.7.8'
 
-trigger:
+pr:
 - master
 
 variables:
