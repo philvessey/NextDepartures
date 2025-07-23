@@ -13,7 +13,7 @@
         <Product>NextDepartures.Storage.MySql</Product>
         <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
         <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-        <Version>3.7.8</Version>
+        <Version>3.7.9</Version>
     </PropertyGroup>
     
     <ItemGroup>
