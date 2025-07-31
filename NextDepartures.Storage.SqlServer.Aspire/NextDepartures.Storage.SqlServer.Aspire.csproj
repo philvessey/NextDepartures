@@ -13,7 +13,7 @@
         <Product>NextDepartures.Storage.SqlServer.Aspire</Product>
         <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
         <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-        <Version>3.7.9</Version>
+        <Version>3.8.0</Version>
     </PropertyGroup>
     
     <ItemGroup>

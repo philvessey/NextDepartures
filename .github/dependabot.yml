@@ -14,7 +14,3 @@ updates:
       - 'philvessey'
     reviewers:
       - 'philvessey'
-    
-    allow:
-      - dependency-name: 'GTFS'
-        versions: 'prereleases'
