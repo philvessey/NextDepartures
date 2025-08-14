@@ -163,16 +163,16 @@ create table gtfs_trips (
 drop function if exists get_from_point;
 
 create function get_from_point(
-    originLongitude real,
-    originLatitude real,
-    destinationLongitude real,
-    destinationLatitude real
-) returns real AS $$
+    origin_longitude real,
+    origin_latitude real,
+    destination_longitude real,
+    destination_latitude real
+) returns real as $$
     
     declare
         angle real;
-        deltaLatitude real;
-        deltaLongitude real;
+        delta_latitude real;
+        delta_longitude real;
         distance real;
         
         a real;
@@ -181,15 +181,15 @@ create function get_from_point(
         y real;
         
     begin
-        deltaLatitude := radians(destinationLatitude - originLatitude);
-        deltaLongitude := radians(destinationLongitude - originLongitude);
+        delta_latitude := radians(destination_latitude - origin_latitude);
+        delta_longitude := radians(destination_longitude - origin_longitude);
         
-        a := sin(deltaLatitude / 2) *
-             sin(deltaLatitude / 2);
-        b := cos(radians(originLatitude)) *
-             cos(radians(destinationLatitude)) *
-             sin(deltaLongitude / 2) *
-             sin(deltaLongitude / 2);
+        a := sin(delta_latitude / 2) *
+             sin(delta_latitude / 2);
+        b := cos(radians(origin_latitude)) *
+             cos(radians(destination_latitude)) *
+             sin(delta_longitude / 2) *
+             sin(delta_longitude / 2);
         
         y := sqrt(a + b);
         x := sqrt(1 - (a + b));
