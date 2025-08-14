@@ -13,7 +13,7 @@
         <Product>NextDepartures.Storage.Sqlite</Product>
         <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
         <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-        <Version>3.8.0</Version>
+        <Version>3.8.1</Version>
     </PropertyGroup>
     
     <ItemGroup>
