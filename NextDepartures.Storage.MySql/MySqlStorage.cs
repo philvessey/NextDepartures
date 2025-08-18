@@ -39,20 +39,16 @@ public class MySqlStorage : IDataStorage
         await using var connection = new MySqlConnection(connectionString: _connectionString);
         await connection.OpenAsync();
         
-        MySqlCommand command = new();
+        await using var command = new MySqlCommand();
         command.CommandText = sql;
         command.CommandTimeout = 0;
         command.CommandType = CommandType.Text;
         command.Connection = connection;
         
-        var dataReader = await command.ExecuteReaderAsync();
+        await using var dataReader = await command.ExecuteReaderAsync();
         
         while (await dataReader.ReadAsync())
             results.Add(item: entryProcessor(dataReader));
-        
-        await dataReader.CloseAsync();
-        await command.DisposeAsync();
-        await connection.CloseAsync();
         
         return results;
     }

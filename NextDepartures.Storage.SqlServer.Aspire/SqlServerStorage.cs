@@ -54,20 +54,16 @@ public class SqlServerStorage : IDataStorage
         await using var connection = _connection ?? new SqlConnection(connectionString: _connectionString);
         await connection.OpenAsync();
         
-        SqlCommand command = new();
+        await using var command = new SqlCommand();
         command.CommandText = sql;
         command.CommandTimeout = 0;
         command.CommandType = CommandType.Text;
         command.Connection = connection;
         
-        var dataReader = await command.ExecuteReaderAsync();
+        await using var dataReader = await command.ExecuteReaderAsync();
         
         while (await dataReader.ReadAsync())
             results.Add(item: entryProcessor(dataReader));
-        
-        await dataReader.CloseAsync();
-        await command.DisposeAsync();
-        await connection.CloseAsync();
         
         return results;
     }

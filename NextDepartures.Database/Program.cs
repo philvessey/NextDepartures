@@ -7,15 +7,13 @@ using NextDepartures.Database.Extensions;
 GTFSReader<GTFSFeed> reader = new();
 var feed = reader.Read(path: "Data/feed.zip");
 
-await using SqliteConnection connection = new(connectionString: "Data Source=Data/feed.db;");
+await using var connection = new SqliteConnection(connectionString: "Data Source=Data/feed.db;");
 connection.Open();
 
-var command = new SqliteCommand
-{
-    CommandTimeout = 0,
-    CommandType = CommandType.Text,
-    Connection = connection
-};
+await using var command = new SqliteCommand();
+command.CommandTimeout = 0;
+command.CommandType = CommandType.Text;
+command.Connection = connection;
 
 command.CommandText = "INSERT INTO GTFS_AGENCY (" +
                             "AgencyId, " +
@@ -982,6 +980,3 @@ command.CommandText = "CREATE INDEX GTFS_STOP_TIMES_INDEX ON GTFS_STOP_TIMES (" 
                             "Timepoint)";
 
 await command.ExecuteNonQueryAsync();
-
-await command.DisposeAsync();
-await connection.CloseAsync();
