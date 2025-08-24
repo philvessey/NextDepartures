@@ -47,7 +47,7 @@ git commit -m "Your commit message."
 git push
 ```
 
-* Open a pull request against the `master` branch of the original 
+* Open a pull request against the `dev` branch of the original 
   repository (ex: https://github.com/philvessey/NextDepartures).
 
 ## Code Style
@@ -57,7 +57,7 @@ code. Please make sure your code adheres to this style guide
 before submitting a pull request.  Pull requests will not be 
 accepted without a passing build from Azure DevOps. Tests will 
 run automatically when you create a pull request against 
-the `master` branch of the original repository.
+the `dev` branch of the original repository.
 
 ## Unit Tests
 
