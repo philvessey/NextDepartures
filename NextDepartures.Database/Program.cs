@@ -8,7 +8,7 @@ GTFSReader<GTFSFeed> reader = new();
 var feed = reader.Read(path: "Data/feed.zip");
 
 await using var connection = new SqliteConnection(connectionString: "Data Source=Data/feed.db;");
-connection.Open();
+await connection.OpenAsync();
 
 await using var command = new SqliteCommand();
 command.CommandTimeout = 0;
