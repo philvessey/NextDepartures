@@ -5,7 +5,7 @@
         <PackageVersion Include="Aspire.MySqlConnector" Version="9.4.2" />
         <PackageVersion Include="Aspire.Npgsql" Version="9.4.2" />
         <PackageVersion Include="GTFS" Version="3.0.0-pre006" />
-        <PackageVersion Include="JetBrains.Annotations" Version="2025.2.1" />
+        <PackageVersion Include="JetBrains.Annotations" Version="2025.2.2" />
         <PackageVersion Include="Microsoft.Data.Sqlite" Version="9.0.8" />
         <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.1.1" />
         <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.8" />
