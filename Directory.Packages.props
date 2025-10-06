@@ -11,7 +11,7 @@
         <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9" />
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.9" />
         <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.9" />
-        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
         <PackageVersion Include="MSTest.TestAdapter" Version="3.10.4" />
         <PackageVersion Include="MSTest.TestFramework" Version="3.10.4" />
         <PackageVersion Include="MySqlConnector" Version="2.4.0" />
