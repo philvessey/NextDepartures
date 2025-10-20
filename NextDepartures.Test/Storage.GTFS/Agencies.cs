@@ -14,7 +14,7 @@ public class Agencies
         var feed = await Feed.LoadAsync(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
         var results = await feed.GetAgenciesByEmailAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -23,7 +23,7 @@ public class Agencies
         var feed = await Feed.LoadAsync(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
         var results = await feed.GetAgenciesByFareUrlAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -32,7 +32,7 @@ public class Agencies
         var feed = await Feed.LoadAsync(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
         var results = await feed.GetAgenciesByIdAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -41,7 +41,7 @@ public class Agencies
         var feed = await Feed.LoadAsync(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
         var results = await feed.GetAgenciesByLanguageCodeAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -50,7 +50,7 @@ public class Agencies
         var feed = await Feed.LoadAsync(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
         var results = await feed.GetAgenciesByNameAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -59,7 +59,7 @@ public class Agencies
         var feed = await Feed.LoadAsync(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
         var results = await feed.GetAgenciesByPhoneAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -68,7 +68,7 @@ public class Agencies
         var feed = await Feed.LoadAsync(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
         var results = await feed.GetAgenciesByQueryAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -77,7 +77,7 @@ public class Agencies
         var feed = await Feed.LoadAsync(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
         var results = await feed.GetAgenciesByTimezoneAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -86,6 +86,6 @@ public class Agencies
         var feed = await Feed.LoadAsync(dataStorage: GtfsStorage.Load(path: "Data/feed.zip"));
         var results = await feed.GetAgenciesByUrlAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
 }
