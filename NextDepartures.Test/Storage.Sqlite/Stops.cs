@@ -14,7 +14,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByCodeAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -23,7 +23,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByDescriptionAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -32,7 +32,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByIdAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -41,7 +41,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByLevelAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -50,7 +50,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByLocationAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -59,7 +59,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByLocationTypeAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -68,7 +68,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByNameAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -77,7 +77,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByParentStationAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -86,7 +86,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByPlatformCodeAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -95,7 +95,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByPointAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -104,7 +104,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByQueryAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -113,7 +113,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByTimezoneAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -122,7 +122,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByUrlAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -131,7 +131,7 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByWheelchairBoardingAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
     
     [TestMethod]
@@ -140,6 +140,6 @@ public class Stops
         var feed = await Feed.LoadAsync(dataStorage: SqliteStorage.Load(connectionString: "Data Source=Data/feed.db;"));
         var results = await feed.GetStopsByZoneAsync();
         
-        Assert.IsTrue(condition: results.Count > 0);
+        Assert.IsNotEmpty(collection: results);
     }
 }

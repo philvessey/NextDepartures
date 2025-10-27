@@ -30,7 +30,7 @@ public class Services
             tolerance: TimeSpan.FromHours(value: 1),
             results: 10);
         
-        Assert.IsTrue(condition: resultsByParentStation.Count > 0);
+        Assert.IsNotEmpty(collection: resultsByParentStation);
     }
     
     [TestMethod]
@@ -52,7 +52,7 @@ public class Services
             tolerance: TimeSpan.FromHours(value: 1),
             results: 10);
         
-        Assert.IsTrue(condition: resultsByStop.Count > 0);
+        Assert.IsNotEmpty(collection: resultsByStop);
     }
     
     [TestMethod]
@@ -88,6 +88,6 @@ public class Services
             tolerance: TimeSpan.FromHours(value: 1),
             results: 2);
         
-        Assert.IsTrue(condition: resultsByTrip.Count > 0);
+        Assert.IsNotEmpty(collection: resultsByTrip);
     }
 }
