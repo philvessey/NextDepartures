@@ -1,7 +1,7 @@
 <Project>
     
     <ItemGroup>
-        <PackageVersion Include="Aspire.Microsoft.Data.SqlClient" Version="9.5.1" />
+        <PackageVersion Include="Aspire.Microsoft.Data.SqlClient" Version="9.5.2" />
         <PackageVersion Include="Aspire.MySqlConnector" Version="9.5.1" />
         <PackageVersion Include="Aspire.Npgsql" Version="9.5.1" />
         <PackageVersion Include="GTFS" Version="3.0.0-pre006" />
