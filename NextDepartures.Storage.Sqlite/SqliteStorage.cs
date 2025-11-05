@@ -46,7 +46,6 @@ public class SqliteStorage : IDataStorage
         
         await using var command = new SqliteCommand();
         command.CommandText = sql;
-        command.CommandTimeout = 0;
         command.CommandType = CommandType.Text;
         command.Connection = connection;
         

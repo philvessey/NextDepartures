@@ -41,7 +41,6 @@ public class MySqlStorage : IDataStorage
         
         await using var command = new MySqlCommand();
         command.CommandText = sql;
-        command.CommandTimeout = 0;
         command.CommandType = CommandType.Text;
         command.Connection = connection;
         
