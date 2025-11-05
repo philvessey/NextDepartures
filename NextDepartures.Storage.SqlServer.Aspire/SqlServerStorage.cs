@@ -56,7 +56,6 @@ public class SqlServerStorage : IDataStorage
         
         await using var command = new SqlCommand();
         command.CommandText = sql;
-        command.CommandTimeout = 0;
         command.CommandType = CommandType.Text;
         command.Connection = connection;
         
