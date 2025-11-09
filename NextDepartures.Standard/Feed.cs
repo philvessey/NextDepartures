@@ -259,20 +259,20 @@ public partial class Feed
         DateTime minimumDateTime;
         DateTime maximumDateTime;
         
-        if (timeOffset > TimeSpan.Zero && tolerance > TimeSpan.Zero)
+        if (timeOffset != TimeSpan.Zero && tolerance > TimeSpan.Zero)
         {
             minimumDateTime = zonedDateTime.Add(value: timeOffset);
             maximumDateTime = zonedDateTime.Add(value: timeOffset + tolerance);
+        }
+        else if (timeOffset != TimeSpan.Zero)
+        {
+            minimumDateTime = zonedDateTime.Add(value: timeOffset);
+            maximumDateTime = DateTime.MaxValue;
         }
         else if (tolerance > TimeSpan.Zero)
         {
             minimumDateTime = zonedDateTime;
             maximumDateTime = zonedDateTime.Add(value: tolerance);
-        }
-        else if (timeOffset > TimeSpan.Zero)
-        {
-            minimumDateTime = zonedDateTime.Add(value: timeOffset);
-            maximumDateTime = DateTime.MaxValue;
         }
         else
         {

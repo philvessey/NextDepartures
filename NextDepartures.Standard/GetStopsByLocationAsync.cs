@@ -28,6 +28,21 @@ public partial class Feed
         ComparisonType comparison = ComparisonType.Partial,
         int results = 0) {
         
+        if (minimumLongitude is < -180 or > 180)
+            throw new StopException(message: "Invalid minimum longitude.");
+        
+        if (minimumLatitude is < -90 or > 90)
+            throw new StopException(message: "Invalid minimum latitude.");
+        
+        if (maximumLongitude is < -180 or > 180)
+            throw new StopException(message: "Invalid maximum longitude.");
+        
+        if (maximumLatitude is < -90 or > 90)
+            throw new StopException(message: "Invalid maximum latitude.");
+        
+        if (results < 0)
+            throw new StopException(message: "Invalid results.");
+        
         try
         {
             var stopsFromStorage = await _dataStorage.GetStopsByLocationAsync(
