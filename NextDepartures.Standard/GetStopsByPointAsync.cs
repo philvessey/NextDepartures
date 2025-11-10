@@ -26,6 +26,18 @@ public partial class Feed
         ComparisonType comparison = ComparisonType.Partial,
         int results = 0) {
         
+        if (longitude is < -180 or > 180)
+            throw new StopException(message: "Invalid longitude.");
+        
+        if (latitude is < -90 or > 90)
+            throw new StopException(message: "Invalid latitude.");
+        
+        if (distance < 0)
+            throw new StopException(message: "Invalid distance.");
+        
+        if (results < 0)
+            throw new StopException(message: "Invalid results.");
+        
         try
         {
             var stopsFromStorage = await _dataStorage.GetStopsByPointAsync(

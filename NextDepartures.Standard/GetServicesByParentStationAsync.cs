@@ -29,6 +29,12 @@ public partial class Feed
         if (string.IsNullOrEmpty(value: id))
             throw new ServiceException(message: "Invalid id.");
         
+        if (tolerance < TimeSpan.Zero)
+            throw new ServiceException(message: "Invalid tolerance.");
+        
+        if (results < 0)
+            throw new ServiceException(message: "Invalid results.");
+        
         try
         {
             var agenciesFromStorage = await _dataStorage.GetAgenciesAsync();
@@ -133,11 +139,17 @@ public partial class Feed
         if (string.IsNullOrEmpty(value: id))
             throw new ServiceException(message: "Invalid id.");
         
-        if (target == DateTime.MinValue || target == DateTime.MaxValue)
+        if (target < DateTime.MinValue || target > DateTime.MaxValue)
             throw new ServiceException(message: "Invalid target.");
         
-        if (offset == TimeSpan.MinValue || offset == TimeSpan.MaxValue)
+        if (offset < TimeSpan.MinValue || offset > TimeSpan.MaxValue)
             throw new ServiceException(message: "Invalid offset.");
+        
+        if (tolerance < TimeSpan.Zero)
+            throw new ServiceException(message: "Invalid tolerance.");
+        
+        if (results < 0)
+            throw new ServiceException(message: "Invalid results.");
         
         try
         {
@@ -239,6 +251,12 @@ public partial class Feed
         if (stops is null || stops.Length is 0)
             throw new ServiceException(message: "Invalid ids.");
         
+        if (tolerance < TimeSpan.Zero)
+            throw new ServiceException(message: "Invalid tolerance.");
+        
+        if (results < 0)
+            throw new ServiceException(message: "Invalid results.");
+        
         try
         {
             var agenciesFromStorage = await _dataStorage.GetAgenciesAsync();
@@ -344,11 +362,17 @@ public partial class Feed
         if (stops is null || stops.Length is 0)
             throw new ServiceException(message: "Invalid ids.");
         
-        if (target == DateTime.MinValue || target == DateTime.MaxValue)
+        if (target < DateTime.MinValue || target > DateTime.MaxValue)
             throw new ServiceException(message: "Invalid target.");
         
-        if (offset == TimeSpan.MinValue || offset == TimeSpan.MaxValue)
+        if (offset < TimeSpan.MinValue || offset > TimeSpan.MaxValue)
             throw new ServiceException(message: "Invalid offset.");
+        
+        if (tolerance < TimeSpan.Zero)
+            throw new ServiceException(message: "Invalid tolerance.");
+        
+        if (results < 0)
+            throw new ServiceException(message: "Invalid results.");
         
         try
         {
@@ -450,6 +474,12 @@ public partial class Feed
         
         if (stops is null || stops.Count is 0)
             throw new ServiceException(message: "Invalid stops.");
+        
+        if (tolerance < TimeSpan.Zero)
+            throw new ServiceException(message: "Invalid tolerance.");
+        
+        if (results < 0)
+            throw new ServiceException(message: "Invalid results.");
         
         try
         {
@@ -556,11 +586,17 @@ public partial class Feed
         if (stops is null || stops.Count is 0)
             throw new ServiceException(message: "Invalid stops.");
         
-        if (target == DateTime.MinValue || target == DateTime.MaxValue)
+        if (target < DateTime.MinValue || target > DateTime.MaxValue)
             throw new ServiceException(message: "Invalid target.");
         
-        if (offset == TimeSpan.MinValue || offset == TimeSpan.MaxValue)
+        if (offset < TimeSpan.MinValue || offset > TimeSpan.MaxValue)
             throw new ServiceException(message: "Invalid offset.");
+        
+        if (tolerance < TimeSpan.Zero)
+            throw new ServiceException(message: "Invalid tolerance.");
+        
+        if (results < 0)
+            throw new ServiceException(message: "Invalid results.");
         
         try
         {

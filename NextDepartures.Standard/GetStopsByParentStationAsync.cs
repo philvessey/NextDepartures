@@ -22,6 +22,9 @@ public partial class Feed
         ComparisonType comparison = ComparisonType.Partial,
         int results = 0) {
         
+        if (results < 0)
+            throw new StopException(message: "Invalid results.");
+        
         try
         {
             var stopsFromStorage = await _dataStorage.GetStopsByParentStationAsync(
