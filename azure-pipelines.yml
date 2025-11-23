@@ -1,4 +1,4 @@
-name: '3.8.8'
+name: '3.9.0'
 
 pr:
 - master
@@ -30,6 +30,12 @@ stages:
       inputs:
         packageType: 'sdk'
         version: '9.0.x'
+    
+    - task: UseDotNet@2
+      displayName: 'Use Required SDKs'
+      inputs:
+        packageType: 'sdk'
+        version: '10.0.x'
     
     - task: CmdLine@2
       displayName: 'List Installed SDKs'
