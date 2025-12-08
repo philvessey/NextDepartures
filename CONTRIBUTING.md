@@ -10,7 +10,7 @@ following prerequisites for local development. If you are
 developing in the cloud then GitHub Codespaces will install 
 what you need when you create the codespace. For local development:
 
-* Ensure you have a .NET 8 and .NET 9 SDK installed on your 
+* Ensure you have a .NET 8, .NET 9 and .NET 10 SDK installed on your 
   machine. The [.NET Website](https://dotnet.microsoft.com/en-us/download) has what you need.
 * Ensure you have a code editor installed such as 
   [Visual Studio](https://visualstudio.com), [Visual Studio Code](https://code.visualstudio.com) or [Rider](https://www.jetbrains.com/rider).
