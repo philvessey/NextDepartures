@@ -15,7 +15,7 @@
         <PackageVersion Include="MSTest.TestAdapter" Version="4.0.2" />
         <PackageVersion Include="MSTest.TestFramework" Version="4.0.2" />
         <PackageVersion Include="MySqlConnector" Version="2.5.0" />
-        <PackageVersion Include="NodaTime" Version="3.2.3" />
+        <PackageVersion Include="NodaTime" Version="3.3.0" />
         <PackageVersion Include="Npgsql" Version="10.0.1" />
     </ItemGroup>
     
