@@ -1,16 +1,16 @@
 <Project>
     
     <ItemGroup>
-        <PackageVersion Include="Aspire.Microsoft.Data.SqlClient" Version="13.1.0" />
-        <PackageVersion Include="Aspire.MySqlConnector" Version="13.1.0" />
-        <PackageVersion Include="Aspire.Npgsql" Version="13.1.0" />
+        <PackageVersion Include="Aspire.Microsoft.Data.SqlClient" Version="13.1.1" />
+        <PackageVersion Include="Aspire.MySqlConnector" Version="13.1.1" />
+        <PackageVersion Include="Aspire.Npgsql" Version="13.1.1" />
         <PackageVersion Include="GTFS" Version="3.0.0-pre006" />
         <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
-        <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.2" />
+        <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.3" />
         <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.1.4" />
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.2" />
-        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
-        <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.2" />
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.3" />
+        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
+        <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.3" />
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
         <PackageVersion Include="MSTest.TestAdapter" Version="4.1.0" />
         <PackageVersion Include="MSTest.TestFramework" Version="4.1.0" />
