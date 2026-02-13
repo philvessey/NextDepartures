@@ -6,8 +6,7 @@
         <Description>NextDepartures is a .NET Library that queries GTFS (General Transit Feed Specification) data sets stored locally, or in a 
             database such as MySQL, PostgreSQL, SQLite or SQL Server. The library will work with any well-formed GTFS data set.</Description>
         <PackageId>NextDepartures.Storage.Postgres.Aspire</PackageId>
-        <PackageLicense>MIT</PackageLicense>
-        <PackageLicenseUrl>https://raw.github.com/philvessey/NextDepartures/master/LICENSE</PackageLicenseUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/philvessey/NextDepartures</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <Product>NextDepartures.Storage.Postgres.Aspire</Product>
