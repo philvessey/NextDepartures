@@ -17,11 +17,11 @@ public class Services
         var feed = await Feed.LoadAsync(dataStorage: new MockStorage());
         
         var resultsByParentStation = await feed.GetServicesByParentStationAsync(
-            stops: ["16TH", "24TH"],
+            stops: ["M50-1", "M50-2"],
             target: new DateTime(
-                year: 2025,
+                year: 2026,
                 month: 1,
-                day: 21,
+                day: 12,
                 hour: 18,
                 minute: 0,
                 second: 0),
@@ -39,11 +39,11 @@ public class Services
         var feed = await Feed.LoadAsync(dataStorage: new MockStorage());
         
         var resultsByStop = await feed.GetServicesByStopAsync(
-            id: "16TH",
+            id: "M50-1",
             target: new DateTime(
-                year: 2025,
+                year: 2026,
                 month: 1,
-                day: 21,
+                day: 12,
                 hour: 18,
                 minute: 0,
                 second: 0),
@@ -61,11 +61,11 @@ public class Services
         var feed = await Feed.LoadAsync(dataStorage: new MockStorage());
         
         var resultsByStop = await feed.GetServicesByStopAsync(
-            id: "24TH",
+            id: "M50-1",
             target: new DateTime(
-                year: 2025,
+                year: 2026,
                 month: 1,
-                day: 21,
+                day: 12,
                 hour: 18,
                 minute: 0,
                 second: 0),
@@ -77,9 +77,9 @@ public class Services
         var resultsByTrip = await feed.GetServicesByTripAsync(
             id: resultsByStop.First().TripId,
             target: new DateTime(
-                year: 2025,
+                year: 2026,
                 month: 1,
-                day: 21,
+                day: 12,
                 hour: 18,
                 minute: 0,
                 second: 0),
