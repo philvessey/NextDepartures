@@ -11,6 +11,8 @@ namespace NextDepartures.Test.Mock;
 
 public class MockStorage : IDataStorage
 {
+    private readonly Guid _serviceId = Guid.NewGuid();
+    
     public Task<List<Agency>> GetAgenciesAsync()
     {
         return Task.FromResult(result: new List<Agency>
@@ -33,7 +35,7 @@ public class MockStorage : IDataStorage
         {
             new()
             {
-                ServiceId = "2026_01_12-DX-MVS",
+                ServiceId = _serviceId.ToString(),
                 
                 Date = new DateTime(
                     year: 2026,
@@ -59,7 +61,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -237,17 +240,17 @@ public class MockStorage : IDataStorage
                 DepartureTime = new TimeOfDay
                 {
                     Hours = 10,
-                    Minutes = 30,
+                    Minutes = 2,
                     Seconds = 0
                 },
                 
                 StopId = "M50-1",
-                StopSequence = 12,
-                TripId = "1561190",
-                ServiceId = "2026_01_12-DX-MVS",
-                TripHeadsign = "San Francisco / Antioch",
-                RouteShortName = "Yellow",
-                RouteLongName = "Millbrae/SFIA to Antioch",
+                StopSequence = 18,
+                TripId = "1842097",
+                ServiceId = _serviceId.ToString(),
+                TripHeadsign = "OAK Airport / SF / Daly City",
+                RouteShortName = "Green-S",
+                RouteLongName = "Green-S",
                 Monday = true,
                 Tuesday = true,
                 Wednesday = true,
@@ -280,17 +283,17 @@ public class MockStorage : IDataStorage
                 DepartureTime = new TimeOfDay
                 {
                     Hours = 10,
-                    Minutes = 30,
+                    Minutes = 7,
                     Seconds = 0
                 },
                 
-                StopId = "M50-1",
-                StopSequence = 12,
-                TripId = "1561190",
-                ServiceId = "2026_01_12-DX-MVS",
-                TripHeadsign = "San Francisco / Antioch",
-                RouteShortName = "Yellow",
-                RouteLongName = "Millbrae/SFIA to Antioch",
+                StopId = "M70-1",
+                StopSequence = 20,
+                TripId = "1842097",
+                ServiceId = _serviceId.ToString(),
+                TripHeadsign = "OAK Airport / SF / Daly City",
+                RouteShortName = "Green-S",
+                RouteLongName = "Green-S",
                 Monday = true,
                 Tuesday = true,
                 Wednesday = true,
@@ -328,7 +331,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -349,7 +353,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -370,7 +375,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -391,7 +397,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -415,7 +422,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -436,7 +444,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -457,7 +466,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -478,7 +488,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -499,7 +510,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -522,7 +534,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -543,7 +556,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -564,7 +578,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -585,7 +600,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -606,7 +622,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
@@ -627,7 +644,8 @@ public class MockStorage : IDataStorage
                 Longitude = -122.419755,
                 Zone = "16TH",
                 LocationType = LocationType.Stop,
-                ParentStation = "16TH"
+                ParentStation = "16TH",
+                PlatformCode = "1"
             }
         });
     }
