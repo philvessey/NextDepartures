@@ -12,7 +12,7 @@
         <Product>NextDepartures.Storage.SqlServer</Product>
         <RepositoryUrl>https://github.com/philvessey/NextDepartures</RepositoryUrl>
         <TargetFrameworks>$(TargetFrameworks)</TargetFrameworks>
-        <Version>3.9.5</Version>
+        <Version>3.9.6</Version>
     </PropertyGroup>
     
     <ItemGroup>
